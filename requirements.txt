@@ -1,0 +1,14 @@
+pandas==1.0.3
+numpy==1.18.2
+flask==1.0.2
+requests==2.19.1
+matplotlib==3.2.1
+Frozen-Flask==0.15
+scipy==1.4.1
+scikit-learn==0.22.2
+seaborn==0.10.0
+snfpy==0.2.2
+tinydb==3.15.0
+ipykernel==5.1.0
+jupyter==1.0.0
+xlrd==1.2.0
