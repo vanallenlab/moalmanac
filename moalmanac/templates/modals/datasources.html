@@ -1,0 +1,77 @@
+<div id="datasourceModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">About: Datasources</h4>
+      </div>
+      <div class="modal-body">
+          <p>Molecular Oncology Almanac leverages <a href="https://github.com/vanallenlab/almanac/tree/master/databases">several datasources</a> to evaluate the predictive implication of each feature. Datasources and versions used to create this report are:</p>
+        <table class="table table-hover table-striped table-condensed">
+			<colgroup>
+                <col class="col-xs-8">
+                <col class="col-xs-4">
+            </colgroup>
+        	<thead>
+        		<th>Datasource</th>
+        		<th>Release</th>
+        	</thead>
+
+        	<tbody>
+        		<tr>
+        			<td>Molecular Oncology Almanac - Interpreter</td>
+        			<td>{{ version_dict['software'] }}</td>
+        		</tr>
+				<tr>
+        			<td>Molecular Oncology Almanac - Database</td>
+					<td>{{ version_dict['database'] }}</td>
+        		</tr>
+        		<tr>
+        			<td>American College of Medical Genetics and Genomics - Secondary Findings</td>
+        			<td>2.0</td>
+        		</tr>
+        		<tr>
+        			<td>Cancer Gene Census</td>
+        			<td>85</td>
+        		</tr>
+				<tr>
+        			<td>Cancer Hotspots</td>
+        			<td>2.0</td>
+        		</tr>
+				<tr>
+        			<td>3D Hotspots</td>
+        			<td>1.0</td>
+        		</tr>
+				<tr>
+        			<td>ClinVar</td>
+        			<td>Accessed October 25th, 2018</td>
+        		</tr>
+        		<tr>
+        			<td>COSMIC</td>
+        			<td>85</td>
+        		</tr>
+				<tr>
+        			<td>ExAC</td>
+        			<td>1.0</td>
+        		</tr>
+                <tr>
+                    <td>Molecular Signatures Database (MSigDB)</td>
+                    <td></td>
+                </tr>
+				<tr>
+        			<td>Oncotree</td>
+        			<td>Accessed June 6th, 2018</td>
+        		</tr>
+        	</tbody>
+        </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>

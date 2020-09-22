@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a name="info"></a>Patient Information</h4>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-5">
+                <h4>Identifiers</h4>
+                <table>
+                    <tr>
+                        <td>Patient ID:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['patient_id'] }}</td> <!--input -->
+                    </tr>
+                    <tr>
+                        <td>Tumor Barcode:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['tumor_barcode'] }}</td> <!--input -->
+                    </tr>
+                    <tr>
+                        <td>Normal Barcode:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['normal_barcode'] }}</td> <!--input -->
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-4">
+                <h4>Disease</h4>
+                <table>
+                    <tr>
+                        <td>Code:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['code'] }}</td> <!--input -->
+                    </tr>
+                    <tr>
+                        <td>Ontology:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['ontology'] }}</td> <!--input -->
+                    </tr>
+                    <tr>
+                        <td>Stage:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['stage'] }}</td> <!--input -->
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-3">
+                <h4>Metrics</h4>
+                <table>
+                    <tr>
+                        <td>Tumor Purity:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['purity'] }}</td> <!--input -->
+                    </tr>
+                    <tr>
+                        <td>Tumor Ploidy:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['ploidy'] }}</td> <!--input -->
+                    </tr>
+                    <tr>
+                        <td>Microsatellite Stability:&nbsp;&nbsp;</td>
+                        <td class="info-value">{{ dict['microsatellite_status'] }}</td> <!--input -->
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Molecular Oncology Almanac Patient Report</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <style>{% include 'static/css/bootstrap3.min.css' %}</style>
+	<style>{% include 'static/css/report.css' %}</style>
+    </head>
+    <body>
+
+    <div class="wrapper">
+        <div id="content" class="container">
+            {% include 'modals/link_modals.html' %}
+
+            {% include 'header.html' %}
+            {% include 'patient_info.html' %}
+            {% include 'report_table/table.html' %}
+            {% if matchmaking_on %}
+                {% include 'report_table/table_matchmaking.html' %}
+            {% endif %}
+            {% include 'footer.html' %}
+        </div>
+    </div>
+
+    <script>{% include 'static/js/jquery.min.js' %}</script>
+    <script>{% include 'static/js/bootstrap3.min.js' %}</script>
+    </body>
+</html>

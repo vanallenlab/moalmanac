@@ -1,0 +1,27 @@
+<table class="table table-hover table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>Feature</th>
+            <th>N WT tested</th>
+            <th>N Mut tested</th>
+            <th>MWW statistic</th>
+            <th>MWW p-value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for feature in preclinical_dict[index][therapy].keys() if not feature == 'figure' %}
+            <tr>
+                <td>{{ feature }}</td>
+                <td>{{ preclinical_dict[index][therapy][feature]['comparison']['n_wt_tested'] }}</td>
+                <td>{{ preclinical_dict[index][therapy][feature]['comparison']['n_mut_tested'] }}</td>
+                {% if preclinical_dict[index][therapy][feature]['comparison']['pvalue_mww'] == 'nan' %}
+                    <td></td>
+                    <td></td>
+                {% else %}
+                    <td>{{ preclinical_dict[index][therapy][feature]['comparison']['statistic'] }}</td>
+                    <td>{{ preclinical_dict[index][therapy][feature]['comparison']['pvalue_mww'] }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

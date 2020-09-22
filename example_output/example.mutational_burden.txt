@@ -1,0 +1,2 @@
+patient_id	reported_tumor_type	oncotree_term	oncotree_code	bases_covered	n_nonsyn_mutations	coding_mutational_burden_per_megabase	percentile_tcga	percentile_tcga_tissuetype	high_burden?
+example	SKCM	Cutaneous Melanoma	SKCM	29908096.0	204	6.821	83.75	25.62	False

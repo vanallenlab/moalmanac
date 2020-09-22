@@ -1,0 +1,22 @@
+.title {
+    color: #A70C36;
+}
+
+body {
+    font-family: sans-serif;
+    background: #eee;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+.brand {
+    padding: 10px;
+}
+
+.logo {
+    height: 55px;
+    padding: 10px;
+}

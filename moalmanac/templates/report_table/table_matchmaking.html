@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">Comparison of molecular profile to cancer cell lines</h4>
+        </div>
+        <div class="panel-body">
+            <p align="center">
+                The Molecular Oncology Almanac compares the somatic variants, copy number alterations, and rearrangements present in this tumor
+                <br>to identify similar cell lines and their corresponding therapeutic sensitivities to aid in treatment hypothesis generation.
+            </p>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">The 5 most similar cancer cell lines, of {{ matchmaker.shape[0] }} tested</h4>
+                </div>
+
+                <div class="panel panel-body">
+                    <table class="table table-hover table-striped table-condensed">
+                        <colgroup>
+                            <col style="width:20%">
+                            <col style="width:40%">
+                            <col style="width:40%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Cell line name (CCLE)</th>
+                                <th>Sensitive therapies</th>
+                                <th>Clinically relevant features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index in matchmaker.index.tolist()[:5] %}
+                                <tr>
+                                    <td>
+                                        {{ lookup[index]['ccle_name'] }}
+                                        <br>
+                                        {% include 'modals/cell_line_info.html' %}
+                                    </td>
+                                    <td>{{ lookup[index]['sensitive to'] }}</td>
+                                    <td>{{ lookup[index]['events'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

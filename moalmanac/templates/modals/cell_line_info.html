@@ -1,0 +1,96 @@
+<div id="cell_line_info_{{ index }}" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    {{ '{} ({})'.format(lookup[index]['ccle_name'], lookup[index]['tumor_type']) }}
+                </h4>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    <b>Aliases</b>{{ ': {} (Broad/DepMap), {} (Sanger)'.format(lookup[index]['broad_name'], lookup[index]['sanger_name']) }}
+                    <br><br>
+                    <b>Sensitive to</b>: {{ lookup[index]['sensitive to'] }}
+                    <br><br>
+                    <b>Clinically relevant features</b>: {{ lookup[index]['events'] }}
+                </p>
+                <br>
+                <p align="center">Below lists somatic variants, copy number alterations, or fusions that appear in a Molecular Oncology Almanac, Cancer Hotspot, or Cancer Gene Census gene as well as the top 10 sensitive therapies that were tested against the cell line in GDSC1/GDSC2.</p>
+                <br>
+
+                <b>Somatic variants</b>:
+                {% if lookup[index]['all somatic variants'] != '' %}
+                    <div class="well well-sm">
+                        {{ lookup[index]['all somatic variants'] }}
+                    </div>
+                {% else %}
+                    (None observed)
+                {% endif %}
+
+                <b>Copy number alterations</b>:
+                {% if lookup[index]['all copy number alterations'] != '' %}
+                    <div class="well well-sm">
+                        {{ lookup[index]['all copy number alterations'] }}
+                    </div>
+                {% else %}
+                    (None observed)
+                {% endif %}
+
+                <b>Fusions</b>:
+                {% if lookup[index]['all fusions'] != '' %}
+                    <div class="well well-sm">
+                        {{ lookup[index]['all fusions'] }}
+                    </div>
+                {% else %}
+                    (None observed)
+                {% endif %}
+
+                <br><br>
+                <b>Therapeutic sensitivity</b> (10 most sensitive):
+                <table class="table table-hover table-striped table-condensed">
+                    <colgroup>
+                        <col class="col-xs-2">
+                        <col class="col-xs-4">
+                        <col class="col-xs-2">
+                        <col class="col-xs-2">
+                        <col class="col-xs-2">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>therapy</th>
+                            <th>ln(ic50)</th>
+                            <th>AUC</th>
+                            <th>z score</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for zindex in lookup[index]['zscores'].index.tolist()[:10] %}
+                           <tr>
+                               <td>{{ lookup[index]['zscores'].loc[zindex, 'DATASET'] }}</td>
+                               <td>{{ lookup[index]['zscores'].loc[zindex, 'therapy_name'] }}</td>
+                               <td>{{ lookup[index]['zscores'].loc[zindex, 'ln_ic50'] }}</td>
+                               <td>{{ lookup[index]['zscores'].loc[zindex, 'AUC'] }}</td>
+                               <td>{{ lookup[index]['zscores'].loc[zindex, 'z_score'] }}</td>
+                           </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<a data-toggle="modal" data-target="#cell_line_info_{{ index }}">
+    [More details]
+</a>

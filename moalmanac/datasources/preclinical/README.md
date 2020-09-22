@@ -1,0 +1,2 @@
+# Directly leveraging cancer cell lines for clinical interpretation
+Data processing of cancer cell lines for usage by Molecular Oncology Almanac is discussed in the MOAlmanac paper Github repository. This repository contains the files directly utilizes by MOAlmanac to test for preclinical efficacy of relationships and to perform patient model matchmaking. 

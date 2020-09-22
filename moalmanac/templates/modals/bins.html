@@ -1,0 +1,55 @@
+<div id="binModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">About: Bins</h4>
+      </div>
+      <div class="modal-body">
+        <p>Molecular Oncology Almanac evaluates alterations based on how closely they match an alteration-action relationship, as given by catalogued assertions.
+            <br><br>
+            To illustrate by example, consider matching variants against the assertion that <i>BRAF</i> p.V600E suggests sensitivity to Vemurafenib:</p>
+        <table class="table table-hover table-striped table-condensed">
+			<colgroup>
+                <col class="col-xs-3">
+                <col class="col-xs-4">
+                <col class="col-xs-5">
+            </colgroup>
+        	<thead>
+        		<th>Bin</th>
+        		<th>Example</th>
+        		<th>Description</th>
+        	</thead>
+        	<tbody>
+        		<tr>
+        			<td>Putatively Actionable</td>
+        			<td><span class="text-success"><i>BRAF</i> Mutation Missense p.V600E</span></td>
+        			<td>An exact match</td>
+        		</tr>
+        		<tr>
+        			<td>Investigate Actionability - High</td>
+        			<td><span class="text-success"><i>BRAF</i> Mutation Missense </span><span class="text-danger">p.V500L</span></td>
+        			<td>Gene (feature), feature type, alteration type all match but not the specific alteration</td>
+        		</tr>
+        		<tr>
+        			<td>Investigate Actionability - Low</td>
+        			<td><span class="text-success"><i>BRAF</i> Mutation </span><span class="text-danger">Frameshift p.V500fs</span></td>
+        			<td>Gene (feature) and feature type match but not the alteration type or alteration</td>
+        		</tr>
+				<tr>
+        			<td>Biologically Relevant</td>
+        			<td><span class="text-success"><i>BRAF</i> </span><span class="text-danger">Amplification</span></td>
+        			<td>Gene (feature) match only</td>
+        	</tbody>
+        </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>

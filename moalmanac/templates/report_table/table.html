@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a name="actionability"></a>Actionability Report</h4>
+        </div>
+        <div class="panel-body">
+            <h4>
+                About:
+                <button type="button" class="btn btn-default" data-toggle="modal"
+                        data-target="#implicationModal">Predictive Implication</button>
+                <button type="button" class="btn btn-default" data-toggle="modal"
+                        data-target="#binModal">Bins</button>
+                <button type="button" class="btn btn-default pull-right" data-toggle="modal"
+                        data-target="#datasourceModal">Datasources</button>
+            </h4>
+            {% include 'report_table/table_sensitive.html' %}
+            {% include 'report_table/table_resistance.html' %}
+            {% include 'report_table/table_prognostic.html' %}
+            {% include 'report_table/table_biological.html' %}
+        </div>
+    </div>
+</div>

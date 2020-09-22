@@ -1,0 +1,26 @@
+feature	somatic_mutations	copy_number_alterations	fusions	germline_mutations
+ALK				Missense p.I1461V
+BCR				Missense p.N796S
+BLM		Amplification		
+BRAF	Missense p.V600E			Nonsense p.R509*
+BRCA2				Missense p.N372H, Frameshift p.S1982fs
+COL1A1			COL1A1	
+CTNNB1		Amplification		
+DNMT1			DNMT1	
+ERRFI1		Deletion		
+EWSR1		Amplification		
+FGFR4				Missense p.G388R
+HLA-B			HLA-B	
+JAK1		Deletion		
+MAP3K13	Missense p.A912V			
+MSH2	Missense p.D887N			
+MSH6				Missense p.G39E
+NTRK2	Missense p.H300Y			
+PDGFRB	Missense p.G674E			
+RRAS2		Deletion		
+RXRA		Deletion		
+STAG2	Missense p.F467I			
+TGFBR1		Deletion	TGFBR1	
+TP53				Missense p.P72R
+TSC2		Deletion		
+ZRSR2	Missense p.N261I			

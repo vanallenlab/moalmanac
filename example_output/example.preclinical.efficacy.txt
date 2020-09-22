@@ -1,0 +1,14 @@
+patient_id	feature_display	tested_subfeature	therapy_name	n_mut	n_wt	n_mut_tested	n_wt_tested	mut_ic50_median	mut_ic50_mean	mut_ic50_std	wt_ic50_median	wt_ic50_mean	wt_ic50_std	pvalue_mww	statistic
+example	BRAF p.V600E (Missense)	BRAF	Dabrafenib	264	1559	136	621	34.824	120.732	228.705	121.915	244.298	422.653	2.322e-12	58428.0
+example	BRAF p.V600E (Missense)	BRAF Somatic Variant	Dabrafenib	184	1639	98	659	19.092	80.76	176.13	120.697	243.118	416.712	7.627e-17	49130.0
+example	BRAF p.V600E (Missense)	BRAF Somatic Variant Missense	Dabrafenib	170	1653	89	668	19.04	82.289	184.013	119.74	240.726	414.446	6.330e-16	45390.0
+example	BRAF p.V600E (Missense)	BRAF Somatic Variant Missense p.V600E	Dabrafenib	101	1722	49	708	3.725	16.282	39.616	118.217	236.343	407.192	5.518e-23	31960.0
+example	BRAF p.V600E (Missense)	BRAF	Trametinib	264	1559	137	634	0.516	5.862	27.545	2.112	7.605	32.168	2.344e-09	57546.5
+example	BRAF p.V600E (Missense)	BRAF Somatic Variant	Trametinib	184	1639	99	672	0.364	4.887	30.17	2.152	7.65	31.568	9.083e-13	48043.5
+example	BRAF p.V600E (Missense)	BRAF Somatic Variant Missense	Trametinib	170	1653	90	681	0.271	5.095	31.639	2.147	7.586	31.365	2.900e-13	45139.0
+example	BRAF p.V600E (Missense)	BRAF Somatic Variant Missense p.V600E	Trametinib	101	1722	50	721	0.085	0.659	1.336	2.059	7.755	32.406	1.793e-14	29698.0
+example	COL1A1--CITED4 Fusion	COL1A1	Imatinib	130	1693	37	370	19.015	20.406	11.327	18.171	21.375	16.435	0.835	6702.0
+example	COL1A1--CITED4 Fusion	CITED4	Imatinib	53	1770	21	386	28.761	29.378	26.017	18.168	20.847	15.233	0.09	3163.5
+example	COL1A1--CITED4 Fusion	COL1A1 Fusions	Imatinib	1	1822	0	407				18.312	21.287	16.03	nan	
+example	COL1A1--CITED4 Fusion	CITED4 Fusions	Imatinib	0	1823	0	407				18.312	21.287	16.03	nan	
+example	COL1A1--CITED4 Fusion	COL1A1--CITED4	Imatinib	0	1823	0	407				18.312	21.287	16.03	nan	

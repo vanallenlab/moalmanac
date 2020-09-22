@@ -1,0 +1,11 @@
+Hugo_Symbol	NCBI_Build	Chromosome	Start_position	End_position	Variant_Classification	Reference_Allele	Tumor_Seq_Allele1	Tumor_Seq_Allele2	Tumor_Sample_Barcode	Matched_Norm_Sample_Barcode	Annotation_Transcript	Protein_Change	t_alt_count	t_ref_count
+PRDM2	37	1	14105122	14105122	In_Frame_Del	GAA	GAA	-	__UNKNOWN__	example_normal_profile		p.E282del	50	50
+ALK	37	2	29416572	29416572	Missense_Mutation	T	T	C	__UNKNOWN__	example_normal_profile		p.I1461V	50	50
+BIRC6	37	2	32667182	32667182	Missense_Mutation	G	G	C	__UNKNOWN__	example_normal_profile		p.V1332L	50	50
+MSH6	37	2	48010488	48010488	Missense_Mutation	G	G	A	__UNKNOWN__	example_normal_profile		p.G39E	50	50
+FGFR4	37	5	176520243	176520243	Missense_Mutation	G	G	A	__UNKNOWN__	example_normal_profile		p.G388R	50	50
+BRAF	37	7	140476881	140476881	Nonsense_Mutation	G	G	A	__UNKNOWN__	example_normal_profile		p.R509*	50	50
+TP53	37	17	7579472	7579472	Missense_Mutation	G	G	C	__UNKNOWN__	example_normal_profile		p.P72R	50	50
+BRCA2	37	13	32906729	32906729	Missense_Mutation	A	A	C	__UNKNOWN__	example_normal_profile		p.N372H	50	50
+BRCA2	37	13	32914438	32914438	Frame_Shift_Del	T	T	-	__UNKNOWN__	example_normal_profile		p.S1982fs	50	50
+BCR	37	22	23627369	23627369	Missense_Mutation	A	A	G	__UNKNOWN__	example_normal_profile		p.N796S	50	50
