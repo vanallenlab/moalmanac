@@ -5,6 +5,6 @@ The Molecular Oncology Almanac's docker also installs R in order to run [deconst
 ## Installation
 Build this docker with the tag base. 
 ```
-docker build -t vanallenlab/almanac:base .
-docker push vanallenlab/almanac:base
+docker build -t vanallenlab/moalmanac:base .
+docker push vanallenlab/moalmanac:base
 ```
