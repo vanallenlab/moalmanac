@@ -14,12 +14,12 @@ Molecular Oncology Almanac is a clinical interpretation algorithm for cancer gen
 - Create portable web-based actionability reports, summarizing clinically relevant findings. 
 
 ## Getting Molecular Oncology Almanac
-The codebase is available for download through this Github repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac). The method can also be run on FireCloud, without having to use FireCloud, by using [our portal](https://portal.moalmanac.org/). Accessing Molecular Oncology Almanac through Github will require building some of the [datasources](https://github.com/vanallenlab/moalmanac/tree/main/moalmanac/datasources) but they also contained in the Docker container.
+The codebase is available for download through this Github repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). The method can also be run on FireCloud, without having to use FireCloud, by using [our portal](https://portal.moalmanac.org/). Accessing Molecular Oncology Almanac through Github will require building some of the [datasources](https://github.com/vanallenlab/moalmanac/tree/main/moalmanac/datasources) but they also contained in the Docker container.
 
 ### Installation
 Molecular Oncology Almanac is a Python application using Python 3.6 but also utilizes R to run [deconstructSigs](https://github.com/raerose01/deconstructSigs) as a subprocess. This application, datasources, and all dependencies are packaged on Docker and can be downloaded with the command
  ```bash
-docker pull vanallenlab/almanac
+docker pull vanallenlab/moalmanac
 ```
 
 Alternatively, the package can be built from this Github repository. To download via Github,
@@ -67,6 +67,7 @@ Optional arguments:
     --purity                <float>     tumor purity
     --ploidy                <float>     tumor ploidy
     --wgd                   <boolean>   specify the occurence of whole genome duplication
+    --disable_matchmaking   <boolean>   remove patient-to-cell line matchmaking from report
     --description           <string>    description of patient
 ```
 
