@@ -7,6 +7,20 @@ Example inputs can be found in the [`example_data/`](/example_data/) folder, fou
     - [Patient id](#patient-id)
 * [Optional arguments](#optional-arguments)
     - [Tumor type](#tumor-type)
+    - [Stage](#stage)
+    - [Somatic single nucleotide variants](#somatic-single-nucleotide-variants)
+    - [Somatic insertion and deletion variants](#somatic-insertion-and-deletion-variants)
+    - [Bases covered](#bases-covered)
+    - [Copy number alterations](#copy-number-alterations)
+    - [Fusions](#fusions)
+    - [Germline variants](#germline-variants)
+    - [Somatic variants from validation sequencing](#somatic-variants-from-validation-sequencing)
+    - [Microsatellite status](#microsatellite-status)
+    - [Purity](#purity)
+    - [Ploidy](#ploidy)
+    - [Whole genome doubling](#whole-genome-doubling)
+    - [Disable matchmaking](#disable-matchmaking)
+    - [Description](#description)
     
 # Required arguments
 The following arguments are required to run Molecular Oncology Almanac.
