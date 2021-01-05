@@ -5,7 +5,7 @@ Molecular Oncology Almanac (MOAlmanac) is a clinical interpretation algorithm pa
 This repository is specifically for the clinical interpretation method and there are several other resources within the Molecular Oncology Almanac ecosystem: 
 - [Molecular Oncology Almanac Browser](https://moalmanac.org), a website to browse our underlying knowledge base [[Github](https://github.com/vanallenlab/almanac-browser)].
 - [Molecular Oncology Almanac Connector](https://chrome.google.com/webstore/detail/molecular-oncology-almana/jliaipolchffpaccagodphgjpfdpcbcm?hl=en), a Google Chrome extension to quickly suggest literature for cataloging [[Github](https://github.com/vanallenlab/almanac-extension)].
-- [Molecular Oncology Almanac Portal](https://portal.moalmanac.org), a website to launch this method on the Broad Institute's Google Cloud platform called Terra [[Github](https://github.com/vanallenlab/almanac-portal)].
+- [Molecular Oncology Almanac Portal](https://portal.moalmanac.org), a website to launch this method on the Broad Institute's Google Cloud platform called Terra [[Github](https://github.com/vanallenlab/moalmanac-portal)].
 
 This method is also available on [Docker](https://hub.docker.com/repository/docker/vanallenlab/moalmanac) and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/). 
 
