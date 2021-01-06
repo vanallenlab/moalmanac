@@ -4,21 +4,42 @@ All outputs will be produced by Molecular Oncology Almanac, though some may not 
 
 # Table of contents
 * [Common output columns used](#common-output-columns-used)
+  * [Identifiers](#identifiers)
   * [Standardized feature columns](#standardized-feature-columns)
   * [Feature type specific columns](#feature-type-specific-columns)
     * [Somatic and germline variants](#somatic-and-germline-variants)
+    * [Germline variants](#germline-variants)
     * [Fusions](#fusions)
+    * [Somatic variants overlap](#somatic-variants-overlap)
   * [Datasource bins](#datasource-bins)
+    * [Sorting somatic molecular features](#sorting-somatic-molecular-features)
+    * [Clinical and biological relevance](#clinical-and-biological-relevance)
+    * [Evidence of clinical assertions](#evidence-of-clinical-assertions)
+      * [Associated evidence, Predictive Implication](#associated-evidence-predictive-implication)
+      * [Therapeutic sensitivity](#therapeutic-sensitivity)
+      * [Therapeutic resistance](#therapeutic-resistance)
+      * [Disease prognosis](#disease-prognosis)
 * [Produced outputs](#produced-outputs)
+  * [Actionable](#actionable)
   * [Germline](#germline)
+    * [American College of Medical Genetics](#american-college-of-medical-genetics)
+    * [Somatic cancers](#somatic-cancers)
+    * [Hereditary Cancers](#hereditary-cancers)
   * [Integrated summary](#integrated-summary)
+  * [Microsatellite Instability variants](#microsatellite-instability-variants)
   * [Mutational burden](#mutational-burden)
   * [Mutational signatures](#mutational-signatures)
     * [Trinucleotide context counts](#trinucleotide-context-counts)
     * [COSMIC signature (v2) weights](#cosmic-signature-v2-weights)
     * [Trinucleotide context counts image](#trinucleotide-context-counts-image)
     * [Trinucleotide context normalized counts image](#trinucleotide-context-normalized-counts-image)
+  * [Preclinical efficacy](#preclinical-efficacy)
+  * [Profile-to-cell line matchmaking](#profile-to-cell-line-matchmaking)
   * [Report](#report)
+  * [Somatic molecular features](#somatic-molecular-features)
+    * [Somatic filtered](#somatic-filtered)
+    * [Somatic scored](#somatic-scored)
+  * [Validation sequencing image](#validation-sequencing-image)
 
 # Common output columns used
 Many of these columns are used by several outputs produced by Molecular Oncology Almanac. 
@@ -63,14 +84,33 @@ The following columns are included to further describe nucleotide variants:
 * `chromosome` (str) - the chromosome location of the variant
 * `start_position` (int) - genomic location of the start of the genomic event
 * `end_position` (int) - genomic location of the end of the genomic event. This will be the same as `start_position` for single nucleotide variants.
-* `reference_allele` (string) - reference allele observed
-* `observed_allele_1` (string) - observed allele observed, matches reference for single nucleotide variants.
-* `observed_allele_2` (string) - observed allele observed, base that does not match reference for single nucleotide variants.
+* `reference_allele` (str) - reference allele observed
+* `observed_allele_1` (str) - observed allele observed, matches reference for single nucleotide variants.
+* `observed_allele_2` (str) - observed allele observed, base that does not match reference for single nucleotide variants.
 * `tumor_f` (float) - variant allelic fraction, calculated by dividing the count of a given base by the count of all bases present at a genomic site. 
 * `total_coverage` (int) - total bases called at a genomic site
 * `exac_af` (float) - Allele frequency of allele across all populations in ExAC
 * `exac_common` (boolean) - Deemed common if the allele frequency in ExAC is greater than a minimum allele frequency specified in [config.ini](/moalmanac/config.ini). The default value is 0.001, or more common than 1 in 1000 alleles. 
-* `clinvar` (string) - Clinical Significance of the genomic event from ClinVar
+* `clinvar` (str) - Clinical Significance of the genomic event from ClinVar
+
+### Germline variants
+In addition to the columns the population allele frequency (`exac_af`) and a boolean to designate a variant as common (`exac_common`), germline variants are thoroughly annotated with ExAC by subpopulation. The following columns are included for germline outputs:
+* `exac_ac` (int) - allele counts of the observed allele, all subpopulations
+* `exac_an` (int) - allele number of the all alleles at genomic location, all subpopulations
+* `exac_afr_ac` (int) - allele counts of the observed allele, African / African American subpopulation
+* `exac_afr_an` (int) - allele number of the all alleles at genomic location, African / African American subpopulation
+* `exac_amr_ac` (int) - allele counts of the observed allele, Latino/Admixed American subpopulation
+* `exac_amr_an` (int) - allele number of the all alleles at genomic location, Latino/Admixed American subpopulation
+* `exac_eas_ac` (int) - allele counts of the observed allele, East Asian subpopulation
+* `exac_eas_an` (int) - allele number of the all alleles at genomic location, East Asian subpopulation
+* `exac_fin_ac` (int) - allele counts of the observed allele, European (Finish) subpopulation
+* `exac_fin_an` (int) - allele number of the all alleles at genomic location, European (Finish) subpopulation
+* `exac_nfe_ac` (int) - allele counts of the observed allele, European (non-Finish) subpopulation
+* `exac_nfe_an` (int) - allele number of the all alleles at genomic location, European (non-Finish) subpopulation
+* `exac_sas_ac` (int) - allele counts of the observed allele, South Asian subpopulation
+* `exac_sas_an` (int) - allele number of the all alleles at genomic location, South Asian subpopulation
+* `exac_oth_ac` (int) - allele counts of the observed allele, Other subpopulation
+* `exac_oth_an` (int) - allele number of the all alleles at genomic location, Other subpopulation
 
 ### Fusions
 The following columns are included to further describe fusions
@@ -82,8 +122,19 @@ The following columns are included to further describe fusions
 * `right_chr` (str) - the chromosome location of `right_gene`
 * `right_position` (int) - the genomic location that the fusion is observed at in `right_gene`
 
+### Somatic variants overlap
+The following columns are included to inspect the relationship between somatic variants, germline variants, and validation sequencing:
+* `number_germline_mutations_in_gene` (int) - the number of nonsynonymous variants in gene in provided germline MAF 
+* `validation_total_coverage` (int) - total coverage at genomic location in validation sequencing
+* `validation_tumor_f` (float) - allele frequency of observed base in validation sequencing
+* `validation_detection_power` (float) - power calculation for likelihood of observing variant in validation sequencing, if it existed. See Methods from the publication for more information.
+
 ## Datasource bins
-Molecular Oncology Almanac will match molecular features to [several datasources](/moalmanac/datasources) based on how closely a given molecular feature matches a catalogued feature. Specifically, we assign a numeric value to each somatic variant, germline variants, copy number alteration, and fusion for each appropriate datasource. 
+Molecular Oncology Almanac will match molecular features to [several datasources](/moalmanac/datasources) based on how closely a given molecular feature matches a catalogued feature. 
+
+### Sorting somatic molecular features
+The following datasources are used to sort somatic molecular features. Specifically, we assign a numeric value to each somatic variant, germline variants, copy number alteration, and fusion for each appropriate datasource. 
+
 * Molecular Oncology Almanac (`almanac_bin`):
   * `0`: the molecular feature's gene is not present in the database
   * `1`: the molecular feature's gene is present in the database
@@ -112,22 +163,142 @@ Molecular Oncology Almanac will match molecular features to [several datasources
   * `1`: the molecular feature's gene is present in the database
   * `2`: the molecular feature matches at least one entry by both gene and protein change
 
+### Clinical and biological relevance
+Each molecular feature will also receive a label in the `score_bin` column based on values for each datasource, listed above in ascending order. Molecular features which appear in the Molecular Oncology Almanac will receive labels describing the clinical actionability or biological relevance, depending on how closely the molecular feature matches a catalogued feature. Specifically, the following labels will be applied under the specified conditions:
+* `Putatively Actionable`
+  * Somatic and germline variants - Gene, variant classification, and protein change match a catalogued variant 
+  * Copy number alterations - Gene and copy number direction match a catalogued event
+  * Fusions - Both genes involved in a fusion event match a catalogued event
+* `Investigate Actionability - High`
+  * Somatic and germline variants - Gene and variant classification match a catalogued event but not a specific protein change
+* `Investigate Actionability - Low`
+  * Somatic and germline variants - Gene and feature type match a catalogued variant but not variant classification
+  * Copy number alterations - Gene and feature type match a catalogued copy number alteration but not direction
+  * Fusions - One gene fusion partner is catalogued as a fusion in Molecular Oncology Almanac but not both
+* `Biologically Relevance`
+  * The gene(s) associated with the molecular feature is present in Molecular Oncology Almanac but under a different feature type
+  
+The following second-order molecular features are evaluated in `score_bin` as follows:
+* High mutational burden is labeled as `Investigate Actionability - High` 
+* MSI-High is labeled as `Investigate Actionability - High`
+* Whole-genome doubling is labeled as `Investigate Actionability - High`
+* Mutational signatures catalogued by Molecular Oncology Almanac are labeled as `Investigate Actionability - High` and otherwise labeled as `Biologically Relevant`
+* Variants associated with microsatellite instability are listed as "Supporting variants" as `Biologically Relevant`
+
+### Evidence of clinical assertions
+If a molecular feature matched as `Putatively Actionable`, `Investigate Actionability - High`, or `Investigate Actionability - Low` in Molecular Oncology Almanac, the molecular feature will be associated with clinical evidence. A molecular feature will be matched independently on catalogued events associated with therapeutic sensitivity, therapeutic resistance, and disease prognosis.
+
+#### Associated evidence, Predictive Implication
+All catalogued events in Molecular Oncology Almanac are cited and have associated evidence. Evidence tiers are as follows:
+
+|Evidence|Description|
+|--------|-----------|
+|FDA-Approved|The Food and Drug Association (FDA) recognizes an association between the alteration and recommended clinical action.|
+|Guideline|This relationship is catalogued as a guideline for standard of care treatment.|
+|Clinical trial|The alteration is or has been used as an eligibility criterion for a clinical trial.|
+|Clinical evidence|The relationship is reported in a clinical study that did not directly involve a clinical trial.|
+|Preclinical evidence|This relationship is reported in a study involving mice, cell lines, or patient derived models.|
+|Inferential evidence|The relationship is inferred as a result of mathematical modeling or an association between molecular features.|
+
+#### Therapeutic sensitivity
+Based on the score of a moleculear feature in `almanac_bin`, Molecular Oncology Almanac will attempt to match to catalogued assertions associated with therapeutic sensitivity. The following columns will be populated, if possible:
+* `sensitivity_predictive_implication` (str) - [evidence tier of associated assertion](#associated-evidence-predictive-implication) 
+* `sensitive_score_bin` (str) - the same as `score_bin`, only for catalogued molecular features associated with therapeutic sensitivity
+* `sensitive_therapy_name` (str) - the name of the therapy associated with therapeutic sensitivity
+* `sensitive_therapy_type` (str) - the name of the therapy type associated with therapeutic sensitivity
+* `sensitive_description` (str) - the description catalogued in Molecular Oncology Almanac for the assertion
+* `sensitive_citation` (str) - the citation of the evidence
+* `sensitive_url` (str) - URL associated with the evidence
+
+#### Therapeutic resistance
+Based on the score of a moleculear feature in `almanac_bin`, Molecular Oncology Almanac will attempt to match to catalogued assertions associated with therapeutic resistance. The following columns will be populated, if possible:
+* `resistance_predictive_implication` (str) - [evidence tier of associated assertion](#associated-evidence-predictive-implication)
+* `resistance_score_bin` (str) - the same as `score_bin`, only for catalogued molecular features associated with therapeutic resistance
+* `resistance_therapy_name` (str) - the name of the therapy associated with therapeutic resistance
+* `resistance_therapy_type` (str) - the name of the therapy type associated with therapeutic resistance
+* `resistance_description` (str) - the description catalogued in Molecular Oncology Almanac for the assertion
+* `resistance_citation` (str) - the citation of the evidence
+* `resistance_url` (str) - URL associated with the evidence
+
+#### Disease prognosis
+Based on the score of a moleculear feature in `almanac_bin`, Molecular Oncology Almanac will attempt to match to catalogued assertions associated with disease prognosis. The following columns will be populated, if possible:
+* `prognostic_predictive_implication` (str) - [evidence tier of associated assertion](#associated-evidence-predictive-implication)
+* `prognostic_score_bin` (str) - the same as `score_bin`, only for catalogued molecular features associated with disease prognosis
+* `favorable_prognosis` (str) - boolean value for `1` being favorable prognosis and `0` corresponding to unfavorable prognosis
+* `prognostic_description` (str) - the description catalogued in Molecular Oncology Almanac for the assertion
+* `prognostic_citation` (str) - the citation of the evidence
+* `prognostic_url` (str) - URL associated with the evidence
+
 # Produced outputs
 The following outputs are produced by the Molecular Oncology Almanac. Each section lists the filename suffix and then a details the contents of the output.
 
-## *.actionable.txt
+## Actionable
+Filename suffix: `.actionable.txt`
 
-The file of the suffix `.actionable.txt` is a tab-delimited file and is the primary output produced by Molecular Oncology Almanac. Here, any molecular feature of biological or clinical relevance will be listed along with details of the assertion and citation, for therapeutic sensitivity, resistance, and prognosis.
+All molecular features associated with clinical or biological relevance will appear in this tab delimited output. Columns included are:
+- [Standardized features](#standardized-feature-columns)
+- [Sorting somatic molecular features](#sorting-somatic-molecular-features)
+- [Clinical and biological relevance](#clinical-and-biological-relevance)
+- [Evidence of clinical assertions](#evidence-of-clinical-assertions)
+- [Somatic variants overlap](#somatic-variants-overlap)
+- [Identifiers](#identifiers)
 
 ## Germline
 Three germline-specific outputs are produced and populated if a germline MAF is passed (through `--germline_handle`) for a given molecular profile. These three outputs are based on genes present in the [American College of Medical Genetics v2](/moalmanac/datasources/acmg), cancer-related genes (appearing in [Molecular Oncology Almanac](/moalmanac/datasources/almanac), Cancer Hotspots [Molecular Oncology Almanac](/moalmanac/datasources/cancerhotspots), or [Cancer Gene Census](/moalmanac/datasources/cancergenecensus)), or [genes related to heritable cancers](/moalmanac/datasources/hereditary). 
 
-In addition to 
+### American College of Medical Genetics
+Filename suffix: `.germline.acmg.txt`
+
+Germline variants whose gene appears in the gene list from the [American College of Medical Genetics (v2)](/moalmanac/datasources/acmg) will appear in this output. Columns included are:
+- [Standardized features](#standardized-feature-columns)
+- [Somatic and germline variants](#somatic-and-germline-variants)
+- [Germline variants](#germline-variants)
+- [Identifiers](#identifiers)
+
+### Somatic cancers
+Filename suffix: `.germline.cancer_related.txt`
+
+Germline variants whose gene appears in appearing in [Molecular Oncology Almanac](/moalmanac/datasources/almanac), Cancer Hotspots [Molecular Oncology Almanac](/moalmanac/datasources/cancerhotspots), or [Cancer Gene Census](/moalmanac/datasources/cancergenecensus) will appear in this output. Columns included are:
+- [Standardized features](#standardized-feature-columns)
+- [Somatic and germline variants](#somatic-and-germline-variants)
+- [Germline variants](#germline-variants)
+- [Sorting somatic molecular features](#sorting-somatic-molecular-features)
+- [Clinical and biological relevance](#clinical-and-biological-relevance)
+- [Identifiers](#identifiers)
+
+### Hereditary cancers
+Filename suffix: `.germline.hereditary_cancers.txt`
+
+Germline variants whose gene appears in a curated list of genes [related to hereditary cancer risk](/moalmanac/datasources/hereditary) will appear in this output. Columns included are:
+- [Standardized features](#standardized-feature-columns)
+- [Somatic and germline variants](#somatic-and-germline-variants)
+- [Germline variants](#germline-variants)
+- [Identifiers](#identifiers)
 
 ## Integrated summary
 Filename suffix: `.integrated.summary.txt`
 
 All genes catalogued in Molecular Oncology Almanac are listed along with a list of alterations that appear in somatic variants, germline variants, copy number alterations, and fusions per gene. This is written as a tab delimited file.
+
+## Microsatellite Instability variants
+Filename suffix: `.msi_variants.txt`
+
+Molecular features associated with Microsatellite Instability are displayed in this tab delimited output. Specifically, molecular features involving a gene from the list below are included:
+- _DOCK3_
+- _ESRP1_
+- _MLH1_ 
+- _MSH2_
+- _MSH6_
+- _PMS2_
+- _POLE_
+- _POLE2_
+- _PRDM2_
+
+Columns present in this file are:
+- [Standardized features](#standardized-feature-columns)
+- [Somatic and germline variants](#somatic-and-germline-variants)
+- [Datasource columns](#datasource-bins)
+- [Identifiers](#identifiers)
 
 ## Mutational burden
 Filename suffix: `.mutational_burden.txt`
@@ -173,6 +344,37 @@ Filename suffix: `.sigs.tricontext.normalized.png`
 
 Trinucleotide context normalized counts of observed somatic variants for all 96 bins are visualized in this png file.
 
+## Preclinical efficacy
+Filename suffix: `.preclinical.efficacy.txt`
+
+Therapies listed in [actionable](#actionable) that have been evaluated on cancer cell lines through the Sanger Institute's GDSC are evaluated for efficacy in the presence and absence of the associated molecular feature. This is performed for relationships associated with therapeutic sensitivity. Columns include:
+- `patient_id` (str) - the string associated with the given molecular profile (`--patient_id`)
+- `feature_display` (str) - a condensed string which captures what the molecular feature is
+- `tested_subfeature` (str) - Molecular Oncology Almanac will evalaute efficacy for the therapy on combinations of all feature information: the gene, feature type, alteration type, and alteration. For more information, see the publication's Methods section.
+- `therapy_name` (str) - the name of the therapy associated with therapeutic sensitivity
+- `n_mut` (int) - Number of cancer cell lines mutant for `tested_subfeature`
+- `n_wt` (int) - Number of cancer cell lines wild type for `tested_subfeature`
+- `n_mut_tested` (int) - Number of cancer cell lines mutant for `tested_subfeature` that were tested with `therapy_name`
+- `n_wt_tested` (int) - Number of cancer cell lines wild type for `tested_subfeature` that were tested with `therapy_name`
+- `mut_ic50_median` (float) - Median IC50 of cell lines mutant for `tested_subfeature` that were tested with `therapy_name`
+- `mut_ic50_mean` (float) - Mean IC50 of cell lines mutant for `tested_subfeature` that were tested with `therapy_name`
+- `mut_ic50_std` (float) - IC50 Standard deviation of cell lines mutant for `tested_subfeature` that were tested with `therapy_name`
+- `wt_ic50_median` (float) - Median IC50 of cell lines wild type for `tested_subfeature` that were tested with `therapy_name`
+- `wt_ic50_mean` (float) - Mean IC50 of cell lines wild type for `tested_subfeature` that were tested with `therapy_name`
+- `wt_ic50_std` (float) - IC50 Standard deviation of cell lines wild type for `tested_subfeature` that were tested with `therapy_name`
+- `pvalue_mww` (float) - P-value of Mann-Whitney-Wilcoxon test between mutant vs wild type IC50 values
+- `statistic` (float) - Test statistic of Mann-Whitney-Wilcoxon test between mutant vs wild type IC50 values
+
+An image is also generated for each relationship evaluated, named "`patient_id`.`feature_display`.`therapy_name`.png"
+
+## Profile-to-cell line matchmaking
+Filename suffix: `.matchmaker.txt`
+
+Molecular Oncology Almanac performs profile-to-cell line matchmaking on the provided molecular profile, comparing it to a population of cancer cell lines using the genomic profile. For more information, see the publication's Methods section. This file contains three columns:
+- `case` (str) - case profile being compared, the string associated with the given molecular profile (`--patient_id`)
+- `comparison` (str) - the comparison profile being compared to
+- `SNF: FDA & CGC` (float) - results from Similarity Network Fusion in ascending order. Rows higher in this list are more similar to the case profile.
+
 ## Report
 Filename suffix: `.report.txt`
 
@@ -199,3 +401,33 @@ For molecular features associated with therapeutic sensitivity that have a thera
 Molecular features which are biologically relevant are listed without clinical association. Molecular features will appear here if the associated gene is catalogued in the Molecular Oncology Almanac but under a different feature type, variants are associated with microsatellite stability, and all present COSMIC version 2 mutational signatures not associated with a clinical assertion are reported.
 
 The last section of the report, comparison of molecular profile to cancer cell lines, displays results from Molecular Oncology Almanac's patient-to-cell line matchmaking module. **This will not appear in the report if `--disable_matchmaking` is passed as an argument**. The 5 most similar cancer cell lines to the provided profile are listed each listing the cell line name, sensitive therapies from GDSC, and clinically relevant features present. Users can click `[More details]` under each cell line's name for more details about a given cell line: aliases, sensitive therapies, clinically relevant molecular features, all somatic variants, copy number alterations, and fusions occuring in cancer gene census genes, and the 10 most sensitive therapies to the cancer cell line.
+
+## Somatic molecular features
+Somatic variants, copy number alterations, and fusions will either be evaluated or filtered by Molecular Oncology Almanac. Criteria for evaluation is as follows:
+- Somatic variants: nonsynonymous variants
+- Copy number alterations: Within specified [percentiles](/moalmanac/config.ini), if using total copy number
+- Fusions: At least the [specified minimum spanning fragments](/moalmanac/config.ini)
+
+### Somatic filtered
+Filename suffix: `.somatic.filtered.txt`
+
+Somatic variants, copy number alterations, and fusions not evaluated by Molecular Oncology Almanac will appear in this tab delimited output. Columns included are: 
+- [Standardized features](#standardized-feature-columns)
+- [Feature type specific columns](#feature-type-specific-columns)
+- [Identifiers](#identifiers)
+
+### Somatic scored
+Filename suffix: `.somatic.scored.txt`
+
+Somatic variants, copy number alterations, and fusions evaluated by Molecular Oncology Almanac will appear in this tab delimited output. Columns included are: 
+- [Standardized features](#standardized-feature-columns)
+- [Feature type specific columns](#feature-type-specific-columns)
+- [Sorting somatic molecular features](#sorting-somatic-molecular-features)
+- [Clinical and biological relevance](#clinical-and-biological-relevance)
+- [Somatic variants overlap](#somatic-variants-overlap)
+- [Identifiers](#identifiers)
+
+## Validation sequencing image
+Filename suffix: `.validation_overlap.png`
+
+If somatic variants from both primary and validation sequencing are provided, the allelic fraction of variants appearing in primary sequencing from both sequencing sources will be plotted on a scatter plot. Variants will be colored and annotated on the scatter plot based on [configurable thresholds](/moalmanac/config.ini). See the publication's Methods section for more details.
