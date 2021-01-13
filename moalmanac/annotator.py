@@ -920,14 +920,20 @@ class ExAC(object):
     str_columns = [chr, ref, alt]
     int_columns = [start]
 
+    somatic = CONFIG['feature_types']['mut']
+    germline = CONFIG['feature_types']['germline']
+    feature_type = Features.feature_type
+
     @classmethod
     def append_exac_af(cls, df, ds):
+        idx = df[df[cls.feature_type].isin([cls.somatic, cls.germline])].index
+
         ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
         for col in cls.str_columns:
-            df.loc[:, col] = df.loc[:, col].astype(str)
+            df.loc[idx, col] = df.loc[idx, col].astype(str)
             ds.loc[:, col] = ds.loc[:, col].astype(str)
         for col in cls.int_columns:
-            df.loc[:, col] = df.loc[:, col].astype(int)
+            df.loc[idx, col] = df.loc[idx, col].astype(int)
             ds.loc[:, col] = ds.loc[:, col].astype(int)
 
         merged = df.merge(ds, how='left')
@@ -968,13 +974,18 @@ class ExACExtended(object):
     str_columns = ExAC.str_columns
     int_columns = ExAC.int_columns
 
+    somatic = ExAC.somatic
+    germline = ExAC.germline
+    feature_type = ExAC.feature_type
+
     @classmethod
     def append_exac_af(cls, df, ds):
+        idx = df[df[cls.feature_type].isin([cls.somatic, cls.germline])].index
         for col in cls.str_columns:
-            df.loc[:, col] = df.loc[:, col].astype(str)
+            df.loc[idx, col] = df.loc[idx, col].astype(str)
             ds.loc[:, col] = ds.loc[:, col].astype(str)
         for col in cls.int_columns:
-            df.loc[:, col] = df.loc[:, col].astype(int)
+            df.loc[idx, col] = df.loc[idx, col].astype(int)
             ds.loc[:, col] = ds.loc[:, col].astype(int)
 
         merged = df.merge(ds, how='left')

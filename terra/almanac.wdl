@@ -5,6 +5,7 @@ workflow MolecularOncologyAlmanac {
     File? snvHandle
     File? indelHandle
     File? segHandle
+    File? calledCNHandle
     File? fusionHandle
     File? burdenHandle
     File? germlineHandle
@@ -19,7 +20,7 @@ workflow MolecularOncologyAlmanac {
     Int? SSD = 25
     Int? preemptible = 3
 
-    String? docker_tag = "0.4.21"
+    String? docker_tag = "0.4.23"
 
     meta {
         author: "Brendan Reardon"
@@ -37,6 +38,7 @@ workflow MolecularOncologyAlmanac {
             snvHandle=snvHandle,
             indelHandle=indelHandle,
             segHandle=segHandle,
+            calledCNHandle=calledCNHandle,
             fusionHandle=fusionHandle,
             burdenHandle=burdenHandle,
             germlineHandle=germlineHandle,
@@ -60,6 +62,7 @@ task almanacTask {
     File? snvHandle
     File? indelHandle
     File? segHandle
+    File? calledCNHandle
     File? fusionHandle
     File? burdenHandle
     File? germlineHandle
@@ -87,11 +90,21 @@ task almanacTask {
             matchmaking_arg="";
         fi
 
-        python /moalmanac/moalmanac.py --patient_id ${patientId} --tumor_type ${tumorType} ${"--stage " + stage} \
-        ${"--snv_handle " + snvHandle} ${"--indel_handle " + indelHandle} ${"--cnv_handle " + segHandle} \
-        ${"--fusion_handle " + fusionHandle} ${"--bases_covered_handle " + burdenHandle} \
-        ${"--germline_handle " + germlineHandle} ${"--validation_handle " + validationHandle} \
-        ${"--purity " + purity} ${"--ploidy " + ploidy} ${"--ms_status " + microsatellite_status} \
+        python /moalmanac/moalmanac.py
+        --patient_id ${patientId} \
+        --tumor_type ${tumorType} \
+        ${"--stage " + stage} \
+        ${"--snv_handle " + snvHandle} \
+        ${"--indel_handle " + indelHandle} \
+        ${"--cnv_handle " + segHandle} \
+        ${"--called_cn_handle " + calledCNHandle} \
+        ${"--fusion_handle " + fusionHandle} \
+        ${"--bases_covered_handle " + burdenHandle} \
+        ${"--germline_handle " + germlineHandle} \
+        ${"--validation_handle " + validationHandle} \
+        ${"--purity " + purity} \
+        ${"--ploidy " + ploidy} \
+        ${"--ms_status " + microsatellite_status} \
         $wgd_arg $matchmaking_arg
 
         mv /moalmanac/build/index.html ${patientId}.report.html
@@ -101,7 +114,7 @@ task almanacTask {
         touch ${patientId}.validation_overlap.png
         touch ${patientId}.matchmaker.txt
 
-        tar -zcf ${patientId}.almanac.tar.gz ${patientId}*
+        tar -zcf ${patientId}.almanac.tar.gz ${patientId}* /docs/*
     }
 
     output  {

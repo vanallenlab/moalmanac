@@ -20,6 +20,7 @@ snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
 bases_covered_handle = 'bases_covered_handle'
 cnv_handle = 'cnv_handle'
+called_cn_handle = 'called_cn_handle'
 fusion_handle = 'fusion_handle'
 germline_handle = 'germline_handle'
 validation_handle = 'validation_handle'
@@ -28,6 +29,7 @@ disable_matchmaking = 'disable_matchmaking'
 snv_input = 'snv_input'
 indel_input = 'indel_input'
 seg_input = 'seg_input'
+called_cn_input = 'called_cn_input'
 fusion_input = 'fusion_input'
 germline_input = 'germline_input'
 
@@ -73,12 +75,21 @@ def main(patient, inputs):
     patient[ontology] = mapped_ontology[ontology]
     patient[code] = mapped_ontology[code]
 
+    if inputs[called_cn_handle] != '':
+        used_cn_handle = inputs[called_cn_handle]
+        used_cn_reader = features.CalledCNAReader()
+        used_cn_column_names = COLNAMES[called_cn_input]
+    else:
+        used_cn_handle = inputs[cnv_handle]
+        used_cn_reader = features.CNVReader()
+        used_cn_column_names = COLNAMES[seg_input]
+
     df_snv, df_snv_reject = features.Features.import_features(
         inputs[snv_handle], features.MutationReader(), COLNAMES[snv_input], feature_type_mut)
     df_indel, df_indel_reject = features.Features.import_features(
         inputs[indel_handle], features.MutationReader(), COLNAMES[indel_input], feature_type_mut)
     df_cnv, df_cnv_reject = features.Features.import_features(
-        inputs[cnv_handle], features.CNVReader(), COLNAMES[seg_input], feature_type_cna)
+        used_cn_handle, used_cn_reader, used_cn_column_names, feature_type_cna)
     df_fusion, df_fusion_reject = features.Features.import_features(
         inputs[fusion_handle], features.FusionReader(), COLNAMES[fusion_input], feature_type_fusion)
 
@@ -192,6 +203,9 @@ if __name__ == "__main__":
     arg_parser.add_argument('--cnv_handle',
                             default='',
                             help='handle for annotated seg file')
+    arg_parser.add_argument('--called_cn_handle',
+                            default='',
+                            help='handle for called copy number alterations file')
     arg_parser.add_argument('--fusion_handle',
                             default='',
                             help='handle for STAR Fusion output, .final.abridged')
@@ -238,6 +252,7 @@ if __name__ == "__main__":
         indel_handle: args.indel_handle,
         bases_covered_handle: args.bases_covered_handle,
         cnv_handle: args.cnv_handle,
+        called_cn_handle: args.called_cn_handle,
         fusion_handle: args.fusion_handle,
         germline_handle: args.germline_handle,
         validation_handle: args.validation_handle,

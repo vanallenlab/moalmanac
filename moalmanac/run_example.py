@@ -28,6 +28,7 @@ example_dict = {
     'snv_handle': '../example_data/example_patient.capture.somatic.snvs.maf',
     'indel_handle': '../example_data/example_patient.capture.somatic.indels.maf',
     'bases_covered_handle': '../example_data/example_patient.capture.somatic.coverage.txt',
+    'called_cn_handle': '../example_data/example_patient.capture.somatic.called.cna.txt',
     'cnv_handle': '../example_data/example_patient.capture.somatic.seg.annotated',
     'fusion_handle': '../example_data/example_patient.rna.star.fusions.txt',
     'germline_handle': '../example_data/example_patient.capture.germline.maf',
@@ -47,7 +48,7 @@ def execute_cmd(command):
     subprocess.call(command, shell=True)
 
 
-outdir = 'output'
+outdir = f"output-{patient_dict['patient_id']}"
 cmd = ''.join(['mkdir -p ', outdir])
 execute_cmd(cmd)
 cmd = ''.join(['mv ', patient_dict['patient_id'], '* ', outdir, '/'])
@@ -56,5 +57,5 @@ cmd = ''.join(['mv build/index.html ', outdir, '/', patient_dict['patient_id'], 
 execute_cmd(cmd)
 cmd = 'rm almanac.additional.matches.json'
 execute_cmd(cmd)
-cmd = 'git restore -- datasources/almanac/*.json'
+cmd = 'git checkout -- datasources/almanac/*.json'
 execute_cmd(cmd)

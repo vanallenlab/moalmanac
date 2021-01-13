@@ -7,11 +7,14 @@ RUN pip install -r requirements.txt
 
 COPY example_data/ /example_data/
 COPY example_output/ /example_output/
-COPY test/ /test/
 
 RUN mkdir /moalmanac/
 RUN mkdir /moalmanac/datasources/
+RUN mkdir /moalmanac/docs/
 
+COPY docs/* /moalmanac/docs/
+
+COPY moalmanac/test/ moalmanac/test/
 COPY moalmanac/datasources/acmg/ /moalmanac/datasources/acmg/
 COPY moalmanac/datasources/almanac/ /moalmanac/datasources/almanac/
 COPY moalmanac/datasources/cancergenecensus/ /moalmanac/datasources/cancergenecensus/
