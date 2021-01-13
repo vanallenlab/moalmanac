@@ -6,6 +6,7 @@ import scipy.stats as stats
 from annotator import Annotator, ACMG, Almanac, ExAC, OverlapValidation, PreclinicalEfficacy, PreclinicalMatchmaking
 from datasources import Datasources
 from datasources import Almanac as datasource_Almanac
+from features import Features
 from config import CONFIG
 
 
@@ -181,12 +182,24 @@ class UnitTestExAC(unittest.TestCase):
         ref = ExAC.ref
         alt = ExAC.alt
         af = ExAC.af
+        feature_type = Features.feature_type
+        somatic = CONFIG['feature_types']['mut']
+        germline = CONFIG['feature_types']['germline']
+        cn = CONFIG['feature_types']['cna']
 
-        df = pd.DataFrame({chr: [1, 2, 3], start: [100, 101, 103], ref: ["C", "A", "T"], alt: ["G", "G", "G"]})
-        exac = pd.DataFrame({chr: [1, 2, 4], start: [100, 99, 103], ref: ["C", "A", "T"], alt: ["G", "G", "G"],
-                         af: [1, 0.5, 0.001]})
+        df = pd.DataFrame({chr: [1, 2, 3, 1],
+                           start: [100, 101, 103, 100],
+                           ref: ["C", "A", "T", "C"],
+                           alt: ["G", "G", "G", "G"],
+                           feature_type: [somatic, germline, somatic, cn]
+                           })
+        exac = pd.DataFrame({chr: [1, 2, 4],
+                             start: [100, 99, 103],
+                             ref: ["C", "A", "T"],
+                             alt: ["G", "G", "G"],
+                             af: [1, 0.5, 0.001]})
         result = ExAC.append_exac_af(df, exac)
-        self.assertEqual([1, 0, 0], result[af].tolist())
+        self.assertEqual([1, 0, 0, 0], result[af].tolist())
 
     def test_annotate_common_af(self):
         exac_common_threshold = ExAC.exac_common_threshold
