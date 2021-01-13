@@ -200,12 +200,12 @@ if __name__ == "__main__":
     arg_parser.add_argument('--bases_covered_handle',
                             default='',
                             help='handle for a text file which contains the numeric number of somatic bases')
+    arg_parser.add_argument('--called_cn_handle',
+                            default='',
+                            help='handle for called copy number alterations file, used over --cnv_handle')
     arg_parser.add_argument('--cnv_handle',
                             default='',
                             help='handle for annotated seg file')
-    arg_parser.add_argument('--called_cn_handle',
-                            default='',
-                            help='handle for called copy number alterations file')
     arg_parser.add_argument('--fusion_handle',
                             default='',
                             help='handle for STAR Fusion output, .final.abridged')
