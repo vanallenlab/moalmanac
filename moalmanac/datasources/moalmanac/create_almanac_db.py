@@ -279,7 +279,7 @@ if __name__ == "__main__":
                                          description='Compiles molecular oncology almanac into TinyDB for the method.')
     arg_parser.add_argument('--directory', '-d',
                             help='Root path to database flat files of feature types',
-                            default='/Users/brendan/Github/moalmanac-admin/database/almanac/')
+                            default='/Users/brendan/Github/moalmanac-db/content/')
     arg_parser.add_argument('--version', '-v',
                             help='Version for output database',
                             default='')
