@@ -90,7 +90,7 @@ task almanacTask {
             matchmaking_arg="";
         fi
 
-        python /moalmanac/moalmanac.py
+        python /moalmanac/moalmanac.py \
         --patient_id ${patientId} \
         --tumor_type ${tumorType} \
         ${"--stage " + stage} \
