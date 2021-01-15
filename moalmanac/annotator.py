@@ -907,7 +907,7 @@ class Cosmic(object):
         return Annotator.annotate(df, dbs, datasources.Cosmic, cls.bin_name, cls.comparison_columns)
 
 
-class ExAC(object):
+class ExAC:
     chr = datasources.ExAC.chr
     start = datasources.ExAC.start
     ref = datasources.ExAC.ref
@@ -926,79 +926,70 @@ class ExAC(object):
 
     @classmethod
     def append_exac_af(cls, df, ds):
-        idx = df[df[cls.feature_type].isin([cls.somatic, cls.germline])].index
-
+        variants, not_variants = cls.subset_for_variants(df)
         ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
-        for col in cls.str_columns:
-            df.loc[idx, col] = df.loc[idx, col].astype(str)
-            ds.loc[:, col] = ds.loc[:, col].astype(str)
-        for col in cls.int_columns:
-            df.loc[idx, col] = df.loc[idx, col].astype(int)
-            ds.loc[:, col] = ds.loc[:, col].astype(int)
 
-        merged = df.merge(ds, how='left')
-        merged.loc[:, cls.af] = merged.loc[:, cls.af].fillna(0.0).astype(float).round(6)
-        return merged
+        for column, data_type in [(cls.str_columns, str), (cls.int_columns, int)]:
+            variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
+            ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
+
+        merged = variants.merge(ds, how='left')
+        merged.loc[merged.index, cls.af] = cls.fill_na(merged, cls.af, 0.0, float, 6)
+        not_variants.loc[not_variants.index, cls.af] = cls.fill_na(not_variants, cls.af, 0.0, float, 6)
+        return pd.concat([merged, not_variants]).sort_index()
 
     @classmethod
     def annotate(cls, df, dbs):
-        df.drop(df.columns[df.columns.str.contains('exac')], axis=1, inplace=True)
+        df_dropped = cls.drop_existing_columns(df)
         ds = datasources.ExAC.import_ds(dbs)
-        df = cls.append_exac_af(df, ds)
-        df[cls.bin_name] = cls.annotate_common_af(df[cls.af])
-        return Features.preallocate_missing_columns(df)
+        df_annotated = cls.append_exac_af(df_dropped, ds)
+        df_annotated[cls.bin_name] = cls.annotate_common_af(df_annotated[cls.af])
+        return Features.preallocate_missing_columns(df_annotated)
 
     @classmethod
     def annotate_common_af(cls, series_exac_af):
         if not series_exac_af.empty:
             series = pd.Series(float(0.0), index=series_exac_af.index.tolist())
-            condition = series_exac_af.astype(str).str.split(',', expand=True).fillna(value=np.nan).astype(float).mean(
-                axis=1).fillna(0.0)
+            condition = (series_exac_af
+                         .astype(str).str.split(',', expand=True)
+                         .fillna(value=np.nan)
+                         .astype(float).mean(axis=1)
+                         .fillna(0.0)
+                         )
             idx = condition.astype(float) >= float(cls.exac_common_threshold)
             series[idx] = float(1.0)
             return series
         else:
             return pd.Series()
 
-
-class ExACExtended(object):
-    chr = datasources.ExAC.chr
-    start = datasources.ExAC.start
-    ref = datasources.ExAC.ref
-    alt = datasources.ExAC.alt
-    af = datasources.ExAC.af
-
-    bin_name = ExAC.bin_name
-    exac_common_threshold = ExAC.exac_common_threshold
-
-    str_columns = ExAC.str_columns
-    int_columns = ExAC.int_columns
-
-    somatic = ExAC.somatic
-    germline = ExAC.germline
-    feature_type = ExAC.feature_type
+    @classmethod
+    def drop_existing_columns(cls, dataframe):
+        return dataframe.drop(dataframe.columns[dataframe.columns.str.contains('exac')], axis=1)
 
     @classmethod
-    def append_exac_af(cls, df, ds):
-        idx = df[df[cls.feature_type].isin([cls.somatic, cls.germline])].index
-        for col in cls.str_columns:
-            df.loc[idx, col] = df.loc[idx, col].astype(str)
-            ds.loc[:, col] = ds.loc[:, col].astype(str)
-        for col in cls.int_columns:
-            df.loc[idx, col] = df.loc[idx, col].astype(int)
-            ds.loc[:, col] = ds.loc[:, col].astype(int)
+    def fill_na(cls, dataframe, column, fill_value, fill_data_type, round_places):
+        if column not in dataframe.columns:
+            dataframe.loc[dataframe.index, column] = pd.NA
+        return dataframe.loc[dataframe.index, column].fillna(fill_value).astype(fill_data_type).round(round_places)
 
-        merged = df.merge(ds, how='left')
-        merged.loc[:, cls.af] = merged.loc[:, cls.af].fillna(0.0).astype(float).round(6)
-        return merged
+    @classmethod
+    def format_columns(cls, dataframe, column, data_type):
+        return dataframe.loc[dataframe.index, column].astype(data_type)
 
+    @classmethod
+    def subset_for_variants(cls, dataframe):
+        idx = dataframe[cls.feature_type].isin([cls.somatic, cls.germline])
+        return dataframe[idx].copy(), dataframe[~idx].copy()
+
+
+class ExACExtended(ExAC):
     @classmethod
     def annotate(cls, df, dbs):
-        df.drop(df.columns[df.columns.str.contains('exac')], axis=1, inplace=True)
+        df_dropped = cls.drop_existing_columns(df)
         ds = datasources.ExACExtended.import_ds(dbs)
-        df = cls.append_exac_af(df, ds)
-        df[cls.bin_name] = ExAC.annotate_common_af(df[cls.af])
-        return Features.preallocate_missing_columns(df)
+        df_annotated = cls.append_exac_af(df_dropped, ds)
+        df_annotated[cls.bin_name] = cls.annotate_common_af(df_annotated[cls.af])
+        return Features.preallocate_missing_columns(df_annotated)
 
 
 class GSEACancerModules(object):
