@@ -982,13 +982,13 @@ class ExAC:
         return dataframe[idx].copy(), dataframe[~idx].copy()
 
 
-class ExACExtended(ExAC):
+class ExACExtended:
     @classmethod
     def annotate(cls, df, dbs):
-        df_dropped = cls.drop_existing_columns(df)
+        df_dropped = ExAC.drop_existing_columns(df)
         ds = datasources.ExACExtended.import_ds(dbs)
-        df_annotated = cls.append_exac_af(df_dropped, ds)
-        df_annotated[cls.bin_name] = cls.annotate_common_af(df_annotated[cls.af])
+        df_annotated = ExAC.append_exac_af(df_dropped, ds)
+        df_annotated[ExAC.bin_name] = ExAC.annotate_common_af(df_annotated[ExAC.af])
         return Features.preallocate_missing_columns(df_annotated)
 
 
