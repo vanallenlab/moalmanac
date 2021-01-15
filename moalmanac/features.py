@@ -556,7 +556,7 @@ class FusionReader(object):
             idx_min_spanningfrags = cls.filter_by_spanningfrags(df[Features.spanningfrags],
                                                                 FUSION_CONFIG['spanningfrags_min'])
             idx_unique = Features.drop_duplicate_genes(df.loc[idx_min_spanningfrags, :], Features.feature)
-            fusions_unique= df.loc[idx_unique, :]
+            fusions_unique = df.loc[idx_unique, :]
 
             fusions_left = fusions_unique.copy(deep=True)
             fusions_right = fusions_unique.copy(deep=True)
@@ -568,7 +568,6 @@ class FusionReader(object):
         else:
             fusions_accept = Features.create_empty_dataframe()
             fusions_reject = Features.create_empty_dataframe()
-
         return fusions_accept, fusions_reject
 
     @staticmethod
@@ -587,7 +586,7 @@ class GermlineReader(object):
     def import_feature(cls, handle, colnames, feature_type):
         column_map = MutationReader.create_colmap(colnames)
         df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
-        df = Features.preallocate_missing_columns(df)
+        df = Features.prgeallocate_missing_columns(df)
 
         if not df.empty:
             df[Features.feature_type] = Features.annotate_feature_type(feature_type, df.index)

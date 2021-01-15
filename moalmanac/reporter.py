@@ -21,6 +21,18 @@ class Reporter(object):
     ploidy = COLNAMES[report_section]['ploidy']
     ms_status = COLNAMES[report_section]['ms_status']
 
+    @classmethod
+    def drop_double_fusion(cls, dataframe):
+        feature_type = COLNAMES[cls.report_section]['feature_type']
+        alt = COLNAMES[cls.report_section]['alteration']
+        rearrangement = CONFIG['feature_types']['fusion']
+
+        idx_rearrangement = dataframe[dataframe[feature_type].eq(rearrangement)].index
+        idx_rearrangement_keep = dataframe.loc[idx_rearrangement, :].drop_duplicates([alt], keep='first').index
+        idx_rearrangement_drop = idx_rearrangement.difference(idx_rearrangement_keep)
+        idx_keep = dataframe.index.difference(idx_rearrangement_drop)
+        return dataframe.loc[idx_keep, :]
+
     @staticmethod
     def generate_date():
         return datetime.date.today().strftime("%b %d %Y")
@@ -60,6 +72,7 @@ class Reporter(object):
         app = flask.Flask(__name__)
         freezer = flask_frozen.Freezer(app)
 
+        actionable = cls.drop_double_fusion(actionable)
         matches = cls.load_almanac_additional_matches()
 
         lookup = {}

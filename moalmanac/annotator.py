@@ -520,7 +520,7 @@ class Almanac(object):
             split_alt = alt.split('--')
             gene1 = split_alt[0]
             gene2 = split_alt[1]
-            gene1 = feature
+            # gene1 = feature
         else:
             gene1 = feature
             gene2 = ''
@@ -545,17 +545,33 @@ class Almanac(object):
 
                 query_first_gene = (cls.Query[cls.gene1] == first_gene)
                 query_second_gene = (cls.Query[cls.gene2] == second_gene)
+                query_first_gene_reverse = (cls.Query[cls.gene1] == second_gene)
+                query_second_gene_reverse = (cls.Query[cls.gene2] == first_gene)
+
                 query_to_alt = query_first_gene & query_second_gene & query_alt_type
+                query_to_alt_reverse = query_first_gene_reverse & query_second_gene_reverse & query_alt_type
+
                 query_to_alt_type = query_first_gene & query_alt_type
+                query_to_alt_type_reverse = query_first_gene_reverse & query_alt_type
 
                 if table.contains(query_to_alt & query):
                     results_same_ontology = table.search(query_same_ontology & query_to_alt & query)
                     results_diff_ontology = table.search(query_diff_ontology & query_to_alt & query)
                     match_bin = 4
 
+                elif table.contains(query_to_alt_reverse & query):
+                    results_same_ontology = table.search(query_same_ontology & query_to_alt_reverse & query)
+                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt_reverse & query)
+                    match_bin = 4
+
                 elif table.contains(query_to_alt_type & query):
                     results_same_ontology = table.search(query_same_ontology & query_to_alt_type & query)
                     results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type & query)
+                    match_bin = 3
+
+                elif table.contains(query_to_alt_type_reverse & query):
+                    results_same_ontology = table.search(query_same_ontology & query_to_alt_type_reverse & query)
+                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type_reverse & query)
                     match_bin = 3
 
                 elif table.contains(query_first_gene & query):
@@ -576,7 +592,7 @@ class Almanac(object):
                 tmp_dict = {'bin': match_bin,
                             'results_same_ontology': results_same_ontology,
                             'results_diff_ontology': results_diff_ontology,
-                            'alt': '{}--{}'.format(first_gene, second_gene),
+                            'alt': '{}--{}'.format(gene1, gene2),
                             'feature_col': feature_col}
                 fusion_matches.append(tmp_dict)
 
