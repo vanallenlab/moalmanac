@@ -99,9 +99,6 @@ def main(patient, inputs):
     germline_variants, germline_reject = features.Features.import_features(
         inputs[germline_handle], features.GermlineReader, COLNAMES[germline_input], feature_type_germline)
 
-    #germline_variants = features.GermlineReader.import_feature(
-    #    inputs[germline_handle], COLNAMES[germline_input], feature_type_germline)
-
     if not somatic_variants.empty:
         annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code])
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
