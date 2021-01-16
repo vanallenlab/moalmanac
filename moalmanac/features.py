@@ -586,7 +586,7 @@ class GermlineReader(object):
     def import_feature(cls, handle, colnames, feature_type):
         column_map = MutationReader.create_colmap(colnames)
         df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
-        df = Features.prgeallocate_missing_columns(df)
+        df = Features.preallocate_missing_columns(df)
 
         if not df.empty:
             df[Features.feature_type] = Features.annotate_feature_type(feature_type, df.index)
