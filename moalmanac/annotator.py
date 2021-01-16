@@ -115,8 +115,8 @@ class Annotator(object):
 
     @staticmethod
     def preallocate_empty_columns(df, columns):
-        for col in columns:
-            df.loc[:, col] = None
+        for column in columns:
+            df[column] = None
         return df
 
 
@@ -984,8 +984,8 @@ class ExAC:
 
     @classmethod
     def fill_na(cls, dataframe, column, fill_value, fill_data_type, round_places):
-        if column not in dataframe.columns:
-            dataframe.loc[dataframe.index, column] = pd.NA
+        print(dataframe.shape)
+        dataframe = Annotator.preallocate_empty_columns(dataframe, [column])
         return dataframe.loc[dataframe.index, column].fillna(fill_value).astype(fill_data_type).round(round_places)
 
     @classmethod
