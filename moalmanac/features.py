@@ -476,6 +476,7 @@ class CosmicSignatures(object):
         dataframe = Features.create_empty_dataframe()
         dataframe[Features.feature] = series_weights.index
         dataframe[Features.alt] = series_weights.values
+        dataframe[Features.alt_type] = 'version 2'
         dataframe.loc[:, Features.feature_type] = cls.feature_type
         dataframe.loc[:, cls.patient_id] = patient[cls.patient_id]
         return dataframe

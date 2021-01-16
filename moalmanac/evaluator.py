@@ -216,7 +216,7 @@ class Actionable(object):
 
     @classmethod
     def display_signature(cls, df, idx, feature, alt):
-        signature = df.loc[idx, feature]
+        signature = df.loc[idx, feature].str.replace('COSMIC Signature', 'COSMIC Signature (version 2)')
         contribution = df.loc[idx, alt].astype(float).multiply(100).round(0).astype(int).astype(str)
         # Signature: Cosmic Signature 7 (65%)
         return signature + ' (' + contribution + '%)'
