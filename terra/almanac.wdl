@@ -20,7 +20,7 @@ workflow MolecularOncologyAlmanac {
     Int? SSD = 25
     Int? preemptible = 3
 
-    String? docker_tag = "0.4.23"
+    String? docker_tag = "0.4.0_v.2021-02-04"
 
     meta {
         author: "Brendan Reardon"
@@ -114,7 +114,10 @@ task almanacTask {
         touch ${patientId}.validation_overlap.png
         touch ${patientId}.matchmaker.txt
 
-        tar -zcf ${patientId}.almanac.tar.gz ${patientId}* /docs/*
+        mkdir docs
+        cp -r /docs/* docs/
+
+        tar -zcf ${patientId}.almanac.tar.gz ${patientId}* docs
     }
 
     output  {

@@ -10,13 +10,11 @@ COPY example_output/ /example_output/
 
 RUN mkdir /moalmanac/
 RUN mkdir /moalmanac/datasources/
-RUN mkdir /moalmanac/docs/
-
-COPY docs/* /moalmanac/docs/
+RUN mkdir /docs/
 
 COPY moalmanac/test/ moalmanac/test/
 COPY moalmanac/datasources/acmg/ /moalmanac/datasources/acmg/
-COPY moalmanac/datasources/almanac/ /moalmanac/datasources/almanac/
+COPY moalmanac/datasources/moalmanac/ /moalmanac/datasources/moalmanac/
 COPY moalmanac/datasources/cancergenecensus/ /moalmanac/datasources/cancergenecensus/
 COPY moalmanac/datasources/cancerhotspots/ /moalmanac/datasources/cancerhotspots/
 COPY moalmanac/datasources/clinvar/ /moalmanac/datasources/clinvar/
@@ -41,6 +39,7 @@ COPY moalmanac/templates/ /moalmanac/templates/
 COPY moalmanac/wrapper_deconstructsigs.sh moalmanac/run_deconstructsigs.R /moalmanac/
 COPY moalmanac/*.py moalmanac/*.ini /moalmanac/
 
+COPY docs/* /docs/
 COPY README.md /
 COPY LICENSE /
 COPY Dockerfile /
