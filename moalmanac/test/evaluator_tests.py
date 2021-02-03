@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from evaluator import Evaluator, Actionable, Integrative, Microsatellite
+from evaluator import Evaluator, Actionable, Integrative, Microsatellite, Strategies
 
 
 class UnitTestEvaluator(unittest.TestCase):
@@ -273,3 +273,38 @@ class UnitTestMicrosatellite(unittest.TestCase):
         alt_type = Evaluator.alt_type
         dataframe = pd.DataFrame({msi_bin: [np.nan, 0, 1, 1], alt_type: ['Missense', 'Nonstop', 'Missense', 'Nonstop']})
         self.assertEqual([3], Microsatellite.return_msi_variants(dataframe).index.tolist())
+
+
+class UnitTestStrategies(unittest.TestCase):
+    def test_get_union_strategies(self):
+        list_1 = ['a', 'b']
+        list_2 = ['b', 'c']
+        union = Strategies.get_union_strategies(list_1, list_2)
+        self.assertEqual(['a', 'b', 'c'], union)
+
+    def test_list_to_string(self):
+        list_1 = ['a', 'b', 'c']
+        expected_result = 'a, b, c'
+        returned_result = Strategies.list_to_string(list_1, ', ')
+        self.assertEqual(expected_result, returned_result)
+
+    def test_report_therapy_strategies(self):
+        columns = [Strategies.sensitive_therapy_name, Strategies.sensitive_therapy_strategy,
+                   Strategies.resistance_therapy_name, Strategies.resistance_therapy_strategy]
+
+        df = pd.DataFrame(pd.NA, columns=columns, index=[0, 1, 2])
+        df.loc[0, :] = ['AZD3759', 'EGFR inhibition', 'Afatinib', 'EGFR inhibition']
+        df.loc[1, :] = [pd.NA, pd.NA, 'Afatinib', 'EGFR inhibition']
+        df.loc[2, :] = ['Cetuximab', 'EGFR inhibition', pd.NA, pd.NA]
+
+        expected_result_sensitive = 'AZD3759, Cetuximab'
+        expected_result_resistance = 'Afatinib'
+
+        returned_result = Strategies.report_therapy_strategies(df)
+        self.assertEqual(returned_result.columns.tolist(), ['EGFR inhibition'])
+        self.assertEqual(returned_result.loc[Strategies.sensitivity, 'EGFR inhibition'], expected_result_sensitive)
+        self.assertEqual(returned_result.loc[Strategies.resistance, 'EGFR inhibition'], expected_result_resistance)
+
+    def test_series_to_list(self):
+        series = pd.Series(['a', 'b', pd.NA, 'c'])
+        self.assertEqual(Strategies.series_to_list(series), ['a', 'b', 'c'])

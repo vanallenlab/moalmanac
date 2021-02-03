@@ -142,6 +142,7 @@ class Almanac(object):
     oncotree_code = datasources.Almanac.code
     context = datasources.Almanac.context
     therapy = datasources.Almanac.therapy
+    therapy_strategy = datasources.Almanac.therapy_strategy
     therapy_type = datasources.Almanac.therapy_type
     sensitivity = datasources.Almanac.sensitivity
     resistance = datasources.Almanac.resistance
@@ -173,6 +174,7 @@ class Almanac(object):
     sensitive_implication = COLNAMES[datasources_section]['sensitive_implication']
     sensitive_implication_map = COLNAMES[datasources_section]['sensitive_implication_map']
     sensitive_therapy = COLNAMES[datasources_section]['sensitive_therapy']
+    sensitive_therapy_strategy = COLNAMES[datasources_section]['sensitive_therapy_strategy']
     sensitive_therapy_type = COLNAMES[datasources_section]['sensitive_therapy_type']
     sensitive_description = COLNAMES[datasources_section]['sensitive_description']
     sensitive_source_type = COLNAMES[datasources_section]['sensitive_source_type']
@@ -193,6 +195,7 @@ class Almanac(object):
     resistance_implication = COLNAMES[datasources_section]['resistance_implication']
     resistance_implication_map = COLNAMES[datasources_section]['resistance_implication_map']
     resistance_therapy = COLNAMES[datasources_section]['resistance_therapy']
+    resistance_therapy_strategy = COLNAMES[datasources_section]['resistance_therapy_strategy']
     resistance_therapy_type = COLNAMES[datasources_section]['resistance_therapy_type']
     resistance_description = COLNAMES[datasources_section]['resistance_description']
     resistance_source_type = COLNAMES[datasources_section]['resistance_source_type']
@@ -239,6 +242,7 @@ class Almanac(object):
         oncotree_code: sensitive_oncotree_code,
         context: sensitive_context,
         therapy: sensitive_therapy,
+        therapy_strategy: sensitive_therapy_strategy,
         therapy_type: sensitive_therapy_type,
         implication: sensitive_implication,
         implication_map: sensitive_implication_map,
@@ -257,6 +261,7 @@ class Almanac(object):
         oncotree_code: resistance_oncotree_code,
         context: resistance_context,
         therapy: resistance_therapy,
+        therapy_strategy: resistance_therapy_strategy,
         therapy_type: resistance_therapy_type,
         implication: resistance_implication,
         implication_map: resistance_implication_map,

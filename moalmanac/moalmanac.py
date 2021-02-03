@@ -141,6 +141,8 @@ def main(patient, inputs):
                                                evaluated_ms_variants, evaluated_ms_status,
                                                evaluated_burden, evaluated_signatures, evaluated_wgd)
 
+    strategies = evaluator.Strategies.report_therapy_strategies(actionable)
+
     dbs_preclinical = datasources.Preclinical.import_dbs()
     efficacy_dictionary = investigator.SensitivityDictionary.create(dbs_preclinical, actionable, patient[patient_id])
     efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, actionable, patient[patient_id])
@@ -170,6 +172,7 @@ def main(patient, inputs):
     writer.MutationalBurden.write(evaluated_burden, value_patient_id)
     writer.SomaticScored.write(evaluated_somatic, value_patient_id)
     writer.SomaticFiltered.write(somatic_filtered, value_patient_id)
+    writer.Strategies.write(strategies, value_patient_id)
     writer.PreclinicalEfficacy.write(efficacy_summary, value_patient_id)
     writer.PreclinicalMatchmaking.write(matchmaker_results, value_patient_id)
 

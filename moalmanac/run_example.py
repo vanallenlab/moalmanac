@@ -17,6 +17,7 @@ empty_dict = {
     'snv_handle': '',
     'indel_handle': '',
     'bases_covered_handle': '',
+    'called_cn_handle': '',
     'cnv_handle': '',
     'fusion_handle': '',
     'germline_handle': '',
@@ -57,5 +58,5 @@ cmd = ''.join(['mv build/index.html ', outdir, '/', patient_dict['patient_id'], 
 execute_cmd(cmd)
 cmd = 'rm almanac.additional.matches.json'
 execute_cmd(cmd)
-cmd = 'git checkout -- datasources/moalmanac/*.json'
+cmd = 'git checkout -- datasources/moalmanac/moalmanac.json'
 execute_cmd(cmd)

@@ -55,6 +55,13 @@ class Evaluator(object):
     resistance_implication_map = COLNAMES[datasources_section]['resistance_implication_map']
     prognostic_implication_map = COLNAMES[datasources_section]['prognostic_implication_map']
 
+    sensitivity = COLNAMES[datasources_section]['sensitivity']
+    sensitive_therapy_name = COLNAMES[datasources_section]['sensitive_therapy']
+    sensitive_therapy_strategy = COLNAMES[datasources_section]['sensitive_therapy_strategy']
+    resistance = COLNAMES[datasources_section]['resistance']
+    resistance_therapy_name = COLNAMES[datasources_section]['resistance_therapy']
+    resistance_therapy_strategy = COLNAMES[datasources_section]['resistance_therapy_strategy']
+
     features_section = 'features'
     feature_type = COLNAMES[features_section]['feature_type']
     feature = COLNAMES[features_section]['feature']
@@ -173,7 +180,7 @@ class Evaluator(object):
         return df[df[cls.almanac_bin].fillna(0.0).astype(float) != 0.0]
 
 
-class Actionable(object):
+class Actionable:
     sort_columns = [Evaluator.almanac_bin,
                     Evaluator.sensitive_implication_map,
                     Evaluator.resistance_implication_map,
@@ -437,3 +444,44 @@ class Microsatellite(object):
         msi_somatic = cls.return_msi_variants(somatic)
         msi_germline = cls.return_msi_variants(germline)
         return pd.concat([msi_somatic, msi_germline], axis=0, ignore_index=True)
+
+
+class Strategies:
+    sensitivity = Evaluator.sensitivity
+    sensitive_therapy_name = Evaluator.sensitive_therapy_name
+    sensitive_therapy_strategy = Evaluator.sensitive_therapy_strategy
+
+    resistance = Evaluator.resistance
+    resistance_therapy_name = Evaluator.resistance_therapy_name
+    resistance_therapy_strategy = Evaluator.resistance_therapy_strategy
+
+    @classmethod
+    def get_union_strategies(cls, sensitive, resistance):
+        return sorted(list(set(sensitive + resistance)))
+
+    @staticmethod
+    def list_to_string(list_of_elements, delimiter):
+        return f'{delimiter}'.join(list_of_elements)
+
+    @classmethod
+    def report_therapy_strategies(cls, dataframe):
+        sensitive_strategies = cls.series_to_list(dataframe.loc[:, cls.sensitive_therapy_strategy].dropna())
+        resistance_strategies = cls.series_to_list(dataframe.loc[:, cls.resistance_therapy_strategy].dropna())
+        union_strategies = cls.get_union_strategies(sensitive_strategies, resistance_strategies)
+
+        df = pd.DataFrame('', index=[cls.sensitivity, cls.resistance], columns=union_strategies)
+        for label, group in dataframe.groupby(cls.sensitive_therapy_strategy):
+            therapies = group[cls.sensitive_therapy_name].dropna().drop_duplicates().sort_values()
+            therapies_list = cls.list_to_string(therapies.tolist(), ', ')
+            df.loc[cls.sensitivity, label] = therapies_list
+
+        for label, group in dataframe.groupby(cls.resistance_therapy_strategy):
+            therapies = group[cls.resistance_therapy_name].dropna().drop_duplicates().sort_values()
+            therapies_list = cls.list_to_string(therapies.tolist(), ', ')
+            df.loc[cls.resistance, label] = therapies_list
+
+        return df
+
+    @staticmethod
+    def series_to_list(series):
+        return series.dropna().tolist()

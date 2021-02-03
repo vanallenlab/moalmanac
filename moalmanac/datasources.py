@@ -27,6 +27,7 @@ class Datasources(object):
     context = COLNAMES[datasources_section]['context']
     mutational_burden = COLNAMES[datasources_section]['mutational_burden']
     therapy = COLNAMES[datasources_section]['therapy']
+    therapy_strategy = COLNAMES[datasources_section]['therapy_strategy']
     therapy_type = COLNAMES[datasources_section]['therapy_type']
 
     sensitivity = COLNAMES[datasources_section]['sensitivity']
@@ -113,6 +114,7 @@ class Almanac(object):
     code = Datasources.code
     context = Datasources.context
     therapy = Datasources.therapy
+    therapy_strategy = Datasources.therapy_strategy
     therapy_type = Datasources.therapy_type
     sensitivity = Datasources.sensitivity
     resistance = Datasources.resistance

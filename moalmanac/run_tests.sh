@@ -2,4 +2,4 @@
 
 python -m unittest discover --pattern "*_tests.py" -v
 
-rm "*.png"
+rm "example"*".png"

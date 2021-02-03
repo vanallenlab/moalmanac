@@ -28,8 +28,8 @@ class Writer(object):
     prognostic_map = COLNAMES[section]['prognostic_implication_map']
     sensitive_therapy = COLNAMES[section]['sensitive_therapy']
     resistance_therapy = COLNAMES[section]['resistance_therapy']
-    sensitive_therapy_class = COLNAMES[section]['sensitive_therapy_class']
-    resistance_therapy_class = COLNAMES[section]['resistance_therapy_class']
+    sensitive_therapy_strategy = COLNAMES[section]['sensitive_therapy_strategy']
+    resistance_therapy_strategy = COLNAMES[section]['resistance_therapy_strategy']
     sensitive_therapy_type = COLNAMES[section]['sensitive_therapy_type']
     resistance_therapy_type = COLNAMES[section]['resistance_therapy_type']
     favorable_prognosis = COLNAMES[section]['favorable_prognosis']
@@ -128,15 +128,16 @@ class Actionable(object):
                       Writer.sensitive_implication, Writer.resistance_implication, Writer.prognostic_implication,
                       Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
                       Writer.tumor_f, Writer.coverage, Writer.exac_af, Writer.exac_common, Writer.clinvar,
-                      Writer.sensitive_bin, Writer.sensitive_therapy, Writer.sensitive_therapy_type,
+                      Writer.sensitive_bin,
+                      Writer.sensitive_therapy, Writer.sensitive_therapy_strategy, Writer.sensitive_therapy_type,
                       Writer.sensitive_description, Writer.sensitive_citation, Writer.sensitive_url,
-                      Writer.resistance_bin, Writer.resistance_therapy, Writer.resistance_therapy_type,
+                      Writer.resistance_bin,
+                      Writer.resistance_therapy, Writer.resistance_therapy_strategy, Writer.resistance_therapy_type,
                       Writer.resistance_description, Writer.resistance_citation, Writer.resistance_url,
                       Writer.prognostic_bin, Writer.favorable_prognosis,
                       Writer.prognostic_description, Writer.prognostic_citation, Writer.prognostic_url,
                       Writer.number_germline_mutations,
                       Writer.validation_coverage, Writer.validation_tumor_f, Writer.validation_detection_power,
-                      #  Writer.connections, Writer.rationale,  # Not used yet
                       Writer.feature_display, Writer.preclinical_efficacy,
                       Writer.patient_id, Writer.tumor, Writer.normal]
 
@@ -376,6 +377,15 @@ class SomaticScored(object):
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         output_name = Writer.create_output_name(patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+
+
+class Strategies:
+    output_suffix = 'therapeutic_strategies.txt'
+
+    @classmethod
+    def write(cls, df, patient_id):
+        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        Writer.export_dataframe(df, output_name)
 
 
 class Json(object):
