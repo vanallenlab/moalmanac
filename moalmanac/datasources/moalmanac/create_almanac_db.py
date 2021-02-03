@@ -40,7 +40,7 @@ class Reader(object):
 
     assertion_columns = {
         'disease': str, 'context': str, 'oncotree_term': str, 'oncotree_code': str,
-        'therapy_name': str, 'therapy_type': str,
+        'therapy_name': str, 'therapy_strategy': str, 'therapy_type': str,
         'therapy_sensitivity': object, 'therapy_resistance': object, 'favorable_prognosis': object,
         'predictive_implication': str, 'description': str, 'last_updated': str, 'preferred_assertion': object
     }
@@ -116,11 +116,11 @@ class Reader(object):
 
 
 class DBCreator(object):
-    basename = 'almanac'
+    basename = 'moalmanac'
 
     @classmethod
-    def initialize(cls, version):
-        handle = '{}.{}.json'.format(cls.basename, version)
+    def initialize(cls):
+        handle = f'{cls.basename}.json'
         print('Documents will be added to {}'.format(handle))
         return tinydb.TinyDB(handle)
 
@@ -151,6 +151,12 @@ class DBCreator(object):
 
         table = db.table('genes')
         table.insert(genes_dictionary)
+
+    @classmethod
+    def create_release_table(cls, db, version):
+        release_dictionary = {'release': version}
+        table = db.table('Release')
+        table.insert(release_dictionary)
 
 
 class Formatter(object):
@@ -258,7 +264,7 @@ class Formatter(object):
 
 
 def main(directory, version):
-    database = DBCreator.initialize(version)
+    database = DBCreator.initialize()
 
     for feature_type in Reader.feature_type_dictionary.keys():
         table = DBCreator.create_table(database, Reader.feature_type_dictionary[feature_type]['label'])
@@ -269,6 +275,7 @@ def main(directory, version):
         DBCreator.insert_documents(table, documents)
 
     DBCreator.create_gene_table(database)
+    DBCreator.create_release_table(database, version)
 
     print(database.tables)
     print('creation, complete!')
