@@ -457,7 +457,19 @@ class Strategies:
 
     @classmethod
     def get_union_strategies(cls, sensitive, resistance):
-        return sorted(list(set(sensitive + resistance)))
+        strategies = sorted(list(set(sensitive + resistance)))
+        strategies.remove('')
+        return strategies
+
+    @classmethod
+    def iterate_over_strategies(cls, source_df, strategy_column, therapy_column, target_df, target_row):
+        for label, group in source_df.groupby(strategy_column):
+            if label == '':
+                continue
+            therapies = group[therapy_column].dropna().drop_duplicates().sort_values()
+            therapies_list = cls.list_to_string(therapies.tolist(), ', ')
+            target_df.loc[target_row, label] = therapies_list
+        return target_df
 
     @staticmethod
     def list_to_string(list_of_elements, delimiter):
@@ -470,16 +482,12 @@ class Strategies:
         union_strategies = cls.get_union_strategies(sensitive_strategies, resistance_strategies)
 
         df = pd.DataFrame('', index=[cls.sensitivity, cls.resistance], columns=union_strategies)
-        for label, group in dataframe.groupby(cls.sensitive_therapy_strategy):
-            therapies = group[cls.sensitive_therapy_name].dropna().drop_duplicates().sort_values()
-            therapies_list = cls.list_to_string(therapies.tolist(), ', ')
-            df.loc[cls.sensitivity, label] = therapies_list
-
-        for label, group in dataframe.groupby(cls.resistance_therapy_strategy):
-            therapies = group[cls.resistance_therapy_name].dropna().drop_duplicates().sort_values()
-            therapies_list = cls.list_to_string(therapies.tolist(), ', ')
-            df.loc[cls.resistance, label] = therapies_list
-
+        df = cls.iterate_over_strategies(dataframe,
+                                         cls.sensitive_therapy_strategy, cls.sensitive_therapy_name,
+                                         df, cls.sensitivity)
+        df = cls.iterate_over_strategies(dataframe,
+                                         cls.resistance_therapy_strategy, cls.resistance_therapy_name,
+                                         df, cls.resistance)
         return df
 
     @staticmethod

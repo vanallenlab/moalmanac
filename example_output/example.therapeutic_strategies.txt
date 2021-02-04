@@ -1,3 +1,3 @@
-	B-RAF inhibition	B-RAF inhibition + MEK inhibition	EGFR inhibition	PARP inhibition	PD-1/PD-L1 inhibition	PDGF-R inhibition	PRMT5 inhibition	Thymidylate synthase inhibition
-		Dabrafenib + Trametinib		Talazoparib	Pembrolizumab	Imatinib	EPZ015666	
-	Vemurafenib		Panitumumab					5-Fluorouracil
+Assertion / Strategy		B-RAF inhibition	B-RAF inhibition + MEK inhibition	EGFR inhibition	PARP inhibition	PD-1/PD-L1 inhibition	PDGF-R inhibition	PRMT5 inhibition	Thymidylate synthase inhibition
+therapy_sensitivity			Dabrafenib + Trametinib		Talazoparib	Pembrolizumab	Imatinib	EPZ015666	
+therapy_resistance		Vemurafenib		Panitumumab					5-Fluorouracil

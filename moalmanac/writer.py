@@ -385,7 +385,7 @@ class Strategies:
     @classmethod
     def write(cls, df, patient_id):
         output_name = Writer.create_output_name(patient_id, cls.output_suffix)
-        Writer.export_dataframe(df, output_name)
+        Writer.export_dataframe_indexed(df, output_name, 'Assertion / Strategy')
 
 
 class Json(object):
