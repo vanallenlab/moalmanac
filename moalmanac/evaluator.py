@@ -458,7 +458,8 @@ class Strategies:
     @classmethod
     def get_union_strategies(cls, sensitive, resistance):
         strategies = sorted(list(set(sensitive + resistance)))
-        strategies.remove('')
+        if '' in strategies:
+            strategies.remove('')
         return strategies
 
     @classmethod
