@@ -180,7 +180,8 @@ class GermlineACMG(object):
 class GermlineCancer(object):
     sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                     Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
-                    Writer.exac_af]
+                    Writer.exac_common, Writer.exac_af]
+    sort_ascending = [False, False, False, False, False, False, False, True, True]
     output_columns = [Writer.score_bin, Writer.sensitive_bin, Writer.resistance_bin, Writer.prognostic_bin,
                       Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
                       Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
@@ -208,7 +209,7 @@ class GermlineCancer(object):
     @classmethod
     def write(cls, df, patient_id):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
+        df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
         idx = cls.get_cancer_idx(df)
         output_name = Writer.create_output_name(patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
@@ -260,7 +261,8 @@ class Integrated(object):
 class MSI(object):
     sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                     Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
-                    Writer.exac_af]
+                    Writer.exac_common, Writer.exac_af]
+    sort_ascending = [False, False, False, False, False, False, False, True, True]
     output_columns = [Writer.score_bin, Writer.sensitive_bin, Writer.resistance_bin, Writer.prognostic_bin,
                       Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
                       Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
@@ -354,8 +356,8 @@ class SomaticScored(object):
     sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                     Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
                     Writer.validation_detection_power, Writer.validation_coverage, Writer.number_germline_mutations,
-                    Writer.exac_af]
-
+                    Writer.exac_common, Writer.exac_af]
+    sort_ascending = [False, False, False, False, False, False, False, False, False, False, True, True]
     output_columns = [Writer.score_bin, Writer.sensitive_bin, Writer.resistance_bin, Writer.prognostic_bin,
                       Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
                       Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
@@ -374,7 +376,7 @@ class SomaticScored(object):
     @classmethod
     def write(cls, df, patient_id):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
+        df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
         output_name = Writer.create_output_name(patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
