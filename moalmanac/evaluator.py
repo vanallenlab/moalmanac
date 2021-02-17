@@ -15,8 +15,8 @@ class Evaluator(object):
 
     almanac_bin_map = {
         1: 'Biologically Relevant',
-        2: 'Investigate Actionability - Low',
-        3: 'Investigate Actionability - High',
+        2: 'Investigate Actionability',  # - Low',
+        3: 'Investigate Actionability',  # - High',
         4: 'Putatively Actionable'
     }
 

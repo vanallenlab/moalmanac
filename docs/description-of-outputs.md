@@ -169,24 +169,22 @@ Each molecular feature will also receive a label in the `score_bin` column based
   * Somatic and germline variants - Gene, variant classification, and protein change match a catalogued variant 
   * Copy number alterations - Gene and copy number direction match a catalogued event
   * Fusions - Both genes involved in a fusion event match a catalogued event
-* `Investigate Actionability - High`
-  * Somatic and germline variants - Gene and variant classification match a catalogued event but not a specific protein change
-* `Investigate Actionability - Low`
-  * Somatic and germline variants - Gene and feature type match a catalogued variant but not variant classification
+* `Investigate Actionability`
+  * Somatic and germline variants - Gene and feature type match a catalogued variant but not variant classification or a specific protein change
   * Copy number alterations - Gene and feature type match a catalogued copy number alteration but not direction
   * Fusions - One gene fusion partner is catalogued as a fusion in Molecular Oncology Almanac but not both
 * `Biologically Relevance`
   * The gene(s) associated with the molecular feature is present in Molecular Oncology Almanac but under a different feature type
   
 The following second-order molecular features are evaluated in `score_bin` as follows:
-* High mutational burden is labeled as `Investigate Actionability - High` 
-* MSI-High is labeled as `Investigate Actionability - High`
-* Whole-genome doubling is labeled as `Investigate Actionability - High`
-* Mutational signatures catalogued by Molecular Oncology Almanac are labeled as `Investigate Actionability - High` and otherwise labeled as `Biologically Relevant`
+* High mutational burden is labeled as `Investigate Actionability` 
+* MSI-High is labeled as `Investigate Actionability`
+* Whole-genome doubling is labeled as `Investigate Actionability`
+* Mutational signatures catalogued by Molecular Oncology Almanac are labeled as `Investigate Actionability` and otherwise labeled as `Biologically Relevant`
 * Variants associated with microsatellite instability are listed as "Supporting variants" as `Biologically Relevant`
 
 ### Evidence of clinical assertions
-If a molecular feature matched as `Putatively Actionable`, `Investigate Actionability - High`, or `Investigate Actionability - Low` in Molecular Oncology Almanac, the molecular feature will be associated with clinical evidence. A molecular feature will be matched independently on catalogued events associated with therapeutic sensitivity, therapeutic resistance, and disease prognosis.
+If a molecular feature matched as `Putatively Actionable`, or `Investigate Actionability` in Molecular Oncology Almanac, the molecular feature will be associated with clinical evidence. A molecular feature will be matched independently on catalogued events associated with therapeutic sensitivity, therapeutic resistance, and disease prognosis.
 
 #### Associated evidence, Predictive Implication
 All catalogued events in Molecular Oncology Almanac are cited and have associated evidence. Evidence tiers are as follows:

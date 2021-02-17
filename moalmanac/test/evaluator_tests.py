@@ -39,8 +39,8 @@ class UnitTestEvaluator(unittest.TestCase):
         for column in [score_bin, sensitive_bin, resistance_bin, prognostic_bin]:
             self.assertEqual([np.nan,
                               'Biologically Relevant',
-                              'Investigate Actionability - Low',
-                              'Investigate Actionability - High',
+                              'Investigate Actionability',
+                              'Investigate Actionability',
                               'Putatively Actionable'],
                              annotated.loc[:, column].tolist())
 
@@ -96,8 +96,8 @@ class UnitTestEvaluator(unittest.TestCase):
     def test_map_almanac_bins(self):
         series = pd.Series([0, 1, 2, 3, 4])
         annotated = Evaluator.map_almanac_bins(series)
-        expected = [np.nan, 'Biologically Relevant', 'Investigate Actionability - Low',
-                    'Investigate Actionability - High', 'Putatively Actionable']
+        expected = [np.nan, 'Biologically Relevant', 'Investigate Actionability',
+                    'Investigate Actionability', 'Putatively Actionable']
         self.assertEqual(expected, annotated.tolist())
 
     def test_remap_almanac_bins(self):

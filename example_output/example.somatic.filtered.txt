@@ -1,128 +1,128 @@
 feature_type	feature	alteration_type	alteration	chromosome	start_position	end_position	reference_allele	observed_allele1	observed_allele2	tumor_f	total_coverage	spanningfrags	left_gene	left_chr	left_position	right_gene	right_chr	right_position	rationale	patient_id	tumor_sample_barcode	normal_sample_barcode
-Copy Number	snosnR66			11	112085669	113237024														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snosnR60_Z15			7	129736849	133827917														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ6			21	45789228	46117856														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ5			2	152698602	160628566														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ40			3	71804330	89528654														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ278			15	25650611	30033642														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ247			2	39931336	44123849														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ185			7	115897538	116409847														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ178			17	49157067	56276563														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoZ13_snr52			9	119106992	123292420														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoU83B			14	51190392	51352615														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoU2_19			7	48034081	72414063														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoU13			22	42387674	43231501														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoU109			18	163455	3277937														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoR442			10	55566890	71025576														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoR26			20	5261132	20037442														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoMe28S-Am2634			17	19251195	19582221														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snoMBII-202			17	18389451	19250646														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	snR65			18	5428466	6859898														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-8072			12	123471979	123950830														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-7515			2	3750153	7036075														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-7162			15	59515392	63102233														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-6080			17	62386050	66352947														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-5588			3	184700435	185367324														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-5572			15	80873747	81241267														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-5571			22	23011278	23248831														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-548ba			3	4558267	9483425														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-5195			14	107048973	107283226														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-490			7	134916792	138434064														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-466			3	15915356	33617767														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-4539			14	104219535	106780817														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-4538			14	104219535	106780817														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-4537			14	104219535	106780817														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-4528			18	43510798	54346671														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-4259			1	159277724	160061730														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3673			8	125332434	130789835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3669			8	125332434	130789835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-335			7	129736849	133827917														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3195			20	60572727	60747859														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3181			16	50353179	52498100														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3180-4			16	15122825	15690796														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3180-3			16	15813572	17353357														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3171			14	24911975	31085742														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-3149			8	62460769	80567299														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-150			19	50000584	50017392														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-125a			19	51646061	52725496														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-1253			17	2604119	2867362														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	hsa-mir-1199			19	13910737	14218223														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZZZ3			1	77806255	78178968														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZZEF1			17	3572775	4428490														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZYX			7	143079542	143095165														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZYG11B			1	52850936	54432055														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZYG11A			1	52850936	54432055														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZXDC			3	125701290	126191150														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZWINT			10	55566890	71025576														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZWILCH			15	66797731	66853441														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZW10			11	113264497	113815479														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZUFSP			6	116879376	118635417														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM8-AS1			10	75511003	82191857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM8			10	75511003	82191857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM7			17	13400137	15952304														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM6			5	60240837	66441207														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM5			1	45672024	46032694														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM5			1	40137712	45553911														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM4			19	13910737	14218223														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM3			20	44477316	44669255														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM2			2	187506317	189452678														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSWIM1			20	44477316	44669255														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN9			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN5D			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN5C			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN5B			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN5A			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN4			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN32			16	3100147	4312704														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN31			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN30			18	32822850	33243768														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN29			15	43627370	43875799														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN25			7	99110216	99313531														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN23			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN22			19	58757795	58921460														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN21			7	99514404	99803009														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN20			1	33836188	35827392														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN2			15	83544156	86087188														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN18			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN16-AS1			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN16			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN12P1			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN12			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN10			16	3100147	4312704														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZSCAN1			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZRSR1			5	109155590	112929082														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZRANB3			2	130898871	145162593														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZRANB2-AS2			1	68151811	75805317														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZRANB2-AS1			1	68151811	75805317														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZRANB2			1	68151811	75805317														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZRANB1			10	126454179	127431847														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZPLD1			3	101571614	102176699														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZPLD1			3	102183097	107497368														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZPBP2			17	37814777	38325701														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZPBP			7	48034081	72414063														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZP4			1	237632487	243480197														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZP3			7	75401323	77762379														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZP2			16	21190879	21426406														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZP1			11	60048191	60971094														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRF4			19	4932968	5616348														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRF3-IT1			22	26892857	29664340														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRF3-AS1			22	26892857	29664340														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRF3			22	26892857	29664340														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRF2P2			7	28758498	32529979														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRF2			7	28758498	32529979														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRF1			16	72184730	77775849														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRD1-AS1			6	29638176	30037085														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNRD1			6	29638176	30037085														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNHIT6			1	86172040	89528919														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNHIT6			1	85787253	86171848														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNHIT3			17	34495060	34848745														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNHIT3			17	34849852	34862447														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNHIT1			7	100856226	102575134														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNFX1			20	44983606	48164558														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNF99			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNF98			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNF93			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	ZNF92			7	48034081	72414063														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	snosnR66			11	112085669	113237024														example	example_tumor_profile	example_normal_profile
+Copy Number	snosnR60_Z15			7	129736849	133827917														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ6			21	45789228	46117856														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ5			2	152698602	160628566														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ40			3	71804330	89528654														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ278			15	25650611	30033642														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ247			2	39931336	44123849														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ185			7	115897538	116409847														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ178			17	49157067	56276563														example	example_tumor_profile	example_normal_profile
+Copy Number	snoZ13_snr52			9	119106992	123292420														example	example_tumor_profile	example_normal_profile
+Copy Number	snoU83B			14	51190392	51352615														example	example_tumor_profile	example_normal_profile
+Copy Number	snoU2_19			7	48034081	72414063														example	example_tumor_profile	example_normal_profile
+Copy Number	snoU13			22	42387674	43231501														example	example_tumor_profile	example_normal_profile
+Copy Number	snoU109			18	163455	3277937														example	example_tumor_profile	example_normal_profile
+Copy Number	snoR442			10	55566890	71025576														example	example_tumor_profile	example_normal_profile
+Copy Number	snoR26			20	5261132	20037442														example	example_tumor_profile	example_normal_profile
+Copy Number	snoMe28S-Am2634			17	19251195	19582221														example	example_tumor_profile	example_normal_profile
+Copy Number	snoMBII-202			17	18389451	19250646														example	example_tumor_profile	example_normal_profile
+Copy Number	snR65			18	5428466	6859898														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-8072			12	123471979	123950830														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-7515			2	3750153	7036075														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-7162			15	59515392	63102233														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-6080			17	62386050	66352947														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-5588			3	184700435	185367324														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-5572			15	80873747	81241267														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-5571			22	23011278	23248831														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-548ba			3	4558267	9483425														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-5195			14	107048973	107283226														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-490			7	134916792	138434064														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-466			3	15915356	33617767														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-4539			14	104219535	106780817														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-4538			14	104219535	106780817														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-4537			14	104219535	106780817														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-4528			18	43510798	54346671														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-4259			1	159277724	160061730														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3673			8	125332434	130789835														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3669			8	125332434	130789835														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-335			7	129736849	133827917														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3195			20	60572727	60747859														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3181			16	50353179	52498100														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3180-4			16	15122825	15690796														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3180-3			16	15813572	17353357														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3171			14	24911975	31085742														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-3149			8	62460769	80567299														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-150			19	50000584	50017392														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-125a			19	51646061	52725496														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-1253			17	2604119	2867362														example	example_tumor_profile	example_normal_profile
+Copy Number	hsa-mir-1199			19	13910737	14218223														example	example_tumor_profile	example_normal_profile
+Copy Number	ZZZ3			1	77806255	78178968														example	example_tumor_profile	example_normal_profile
+Copy Number	ZZEF1			17	3572775	4428490														example	example_tumor_profile	example_normal_profile
+Copy Number	ZYX			7	143079542	143095165														example	example_tumor_profile	example_normal_profile
+Copy Number	ZYG11B			1	52850936	54432055														example	example_tumor_profile	example_normal_profile
+Copy Number	ZYG11A			1	52850936	54432055														example	example_tumor_profile	example_normal_profile
+Copy Number	ZXDC			3	125701290	126191150														example	example_tumor_profile	example_normal_profile
+Copy Number	ZWINT			10	55566890	71025576														example	example_tumor_profile	example_normal_profile
+Copy Number	ZWILCH			15	66797731	66853441														example	example_tumor_profile	example_normal_profile
+Copy Number	ZW10			11	113264497	113815479														example	example_tumor_profile	example_normal_profile
+Copy Number	ZUFSP			6	116879376	118635417														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM8-AS1			10	75511003	82191857														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM8			10	75511003	82191857														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM7			17	13400137	15952304														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM6			5	60240837	66441207														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM5			1	45672024	46032694														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM5			1	40137712	45553911														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM4			19	13910737	14218223														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM3			20	44477316	44669255														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM2			2	187506317	189452678														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSWIM1			20	44477316	44669255														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN9			6	27858572	29591803														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN5D			19	56569776	58724509														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN5C			19	56569776	58724509														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN5B			19	56569776	58724509														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN5A			19	56569776	58724509														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN4			19	56569776	58724509														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN32			16	3100147	4312704														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN31			6	27858572	29591803														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN30			18	32822850	33243768														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN29			15	43627370	43875799														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN25			7	99110216	99313531														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN23			6	27858572	29591803														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN22			19	58757795	58921460														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN21			7	99514404	99803009														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN20			1	33836188	35827392														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN2			15	83544156	86087188														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN18			19	56569776	58724509														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN16-AS1			6	27858572	29591803														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN16			6	27858572	29591803														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN12P1			6	27858572	29591803														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN12			6	27858572	29591803														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN10			16	3100147	4312704														example	example_tumor_profile	example_normal_profile
+Copy Number	ZSCAN1			19	56569776	58724509														example	example_tumor_profile	example_normal_profile
+Copy Number	ZRSR1			5	109155590	112929082														example	example_tumor_profile	example_normal_profile
+Copy Number	ZRANB3			2	130898871	145162593														example	example_tumor_profile	example_normal_profile
+Copy Number	ZRANB2-AS2			1	68151811	75805317														example	example_tumor_profile	example_normal_profile
+Copy Number	ZRANB2-AS1			1	68151811	75805317														example	example_tumor_profile	example_normal_profile
+Copy Number	ZRANB2			1	68151811	75805317														example	example_tumor_profile	example_normal_profile
+Copy Number	ZRANB1			10	126454179	127431847														example	example_tumor_profile	example_normal_profile
+Copy Number	ZPLD1			3	101571614	102176699														example	example_tumor_profile	example_normal_profile
+Copy Number	ZPLD1			3	102183097	107497368														example	example_tumor_profile	example_normal_profile
+Copy Number	ZPBP2			17	37814777	38325701														example	example_tumor_profile	example_normal_profile
+Copy Number	ZPBP			7	48034081	72414063														example	example_tumor_profile	example_normal_profile
+Copy Number	ZP4			1	237632487	243480197														example	example_tumor_profile	example_normal_profile
+Copy Number	ZP3			7	75401323	77762379														example	example_tumor_profile	example_normal_profile
+Copy Number	ZP2			16	21190879	21426406														example	example_tumor_profile	example_normal_profile
+Copy Number	ZP1			11	60048191	60971094														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRF4			19	4932968	5616348														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRF3-IT1			22	26892857	29664340														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRF3-AS1			22	26892857	29664340														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRF3			22	26892857	29664340														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRF2P2			7	28758498	32529979														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRF2			7	28758498	32529979														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRF1			16	72184730	77775849														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRD1-AS1			6	29638176	30037085														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNRD1			6	29638176	30037085														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNHIT6			1	86172040	89528919														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNHIT6			1	85787253	86171848														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNHIT3			17	34495060	34848745														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNHIT3			17	34849852	34862447														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNHIT1			7	100856226	102575134														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNFX1			20	44983606	48164558														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNF99			19	18555680	30199332														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNF98			19	18555680	30199332														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNF93			19	18555680	30199332														example	example_tumor_profile	example_normal_profile
+Copy Number	ZNF92			7	48034081	72414063														example	example_tumor_profile	example_normal_profile
 Rearrangement	ZNF91--SKI	Fusion	ZNF91--SKI	19	23578127							0	ZNF91	19	23578127	SKI	1	2234417		example		
 Copy Number	ZNF91			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF90			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -197,7 +197,7 @@ Copy Number	ZNF773			19	56569776	58724509														example	MEL-IPI_Pat02-Tum
 Copy Number	ZNF772			19	56569776	58724509														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF771			16	30199899	30531290														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF770			15	34140622	38228666														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ZNF77	Silent	p.S459S	19	2933748	2933748	G	G	A	0.0625	48.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ZNF77	Silent	p.S459S	19	2933748	2933748	G	G	A	0.0625	48									example	example_patient_tumor	example_patient_normal
 Copy Number	ZNF77			19	2427324	3193428														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF768			16	30532988	30581759														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF767			7	144075961	150762055														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -318,7 +318,7 @@ Copy Number	ZNF618			9	116812447	117241053														example	MEL-IPI_Pat02-Tu
 Copy Number	ZNF616			19	51646061	52725496														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF615			19	51646061	52725496														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF614			19	51646061	52725496														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ZNF613	Silent	p.F493F	19	52448615	52448615	C	C	T	0.5	34.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ZNF613	Silent	p.F493F	19	52448615	52448615	C	C	T	0.5	34									example	example_patient_tumor	example_patient_normal
 Copy Number	ZNF613			19	51646061	52725496														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF611			19	52729063	53950536														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF610			19	52729063	53950536														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -484,7 +484,7 @@ Copy Number	ZNF394			7	98951746	99104083														example	MEL-IPI_Pat02-Tumo
 Copy Number	ZNF391			6	26422427	27799307														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF385D-AS2			3	15915356	33617767														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF385D-AS1			3	15915356	33617767														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ZNF385D	Silent	p.F68F	3	21606138	21606138	G	G	A	0.514	107.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ZNF385D	Silent	p.F68F	3	21606138	21606138	G	G	A	0.514	107									example	example_patient_tumor	example_patient_normal
 Copy Number	ZNF385D			3	15915356	33617767														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF385C			17	40120760	40180246														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF385B			2	178681650	182388261														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -622,7 +622,7 @@ Copy Number	ZNF192P1			6	27858572	29591803														example	MEL-IPI_Pat02-Tu
 Copy Number	ZNF19			16	71487980	71610320														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF189			9	102768931	107651478														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF184			6	26422427	27799307														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ZNF182	Silent	p.F636F	X	47835578	47835578	G	G	A	0.3333	105.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ZNF182	Silent	p.F636F	X	47835578	47835578	G	G	A	0.3333	105									example	example_patient_tumor	example_patient_normal
 Copy Number	ZNF181			19	34949831	35451898														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF180			19	44341331	45318019														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZNF18			17	10216671	12920440														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -685,7 +685,7 @@ Copy Number	ZMIZ1			10	75511003	82191857														example	MEL-IPI_Pat02-Tumo
 Copy Number	ZMAT5			22	29688160	30700621														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZMAT4			8	38271543	41399608														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZMAT3			3	178743018	178785542														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ZMAT2	Silent	p.E178E	5	140085275	140085275	G	G	A	0.0404	99.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ZMAT2	Silent	p.E178E	5	140085275	140085275	G	G	A	0.0404	99									example	example_patient_tumor	example_patient_normal
 Copy Number	ZMAT2			5	139741448	140183259														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZKSCAN8			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ZKSCAN7			3	42787521	44636683														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -1123,7 +1123,7 @@ Copy Number	WNT10B			12	49333564	49375425														example	MEL-IPI_Pat02-Tum
 Copy Number	WNT10A			2	219691818	219896382														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WNT1			12	49333564	49375425														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WNK4			17	40925548	40975897														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	WNK3	Silent	p.L1512L	X	54263463	54263463	G	G	T	0.5	84.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	WNK3	Silent	p.L1512L	X	54263463	54263463	G	G	T	0.5	84									example	example_patient_tumor	example_patient_normal
 Copy Number	WNK2			9	95030584	99086453														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WNK1			12	661331	1755420														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WLS			1	68151811	75805317														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -1249,7 +1249,7 @@ Copy Number	WDR24			16	726898	735992														example	MEL-IPI_Pat02-Tumor-SM
 Copy Number	WDR20			14	102552463	102699047														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WDR19			4	16165160	57182857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WDR18			19	72110	1091908														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	WDR17	Silent	p.S146S	4	177041076	177041076	C	C	T	0.2917	144.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	WDR17	Silent	p.S146S	4	177041076	177041076	C	C	T	0.2917	144									example	example_patient_tumor	example_patient_normal
 Copy Number	WDR17			4	175649851	184598709														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WDR16			17	8796974	10215393														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	WDR12			2	203329704	206480539														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -1325,7 +1325,7 @@ Copy Number	VSX2			14	74196690	74711993														example	MEL-IPI_Pat02-Tumor
 Copy Number	VSX2			14	74726487	74999253														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	VSX1			20	23966001	25059590														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	VSTM5			11	93490631	94926688														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	VSTM4	Silent	p.P253P	10	50256539	50256539	G	G	T	0.2466	73.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	VSTM4	Silent	p.P253P	10	50256539	50256539	G	G	T	0.2466	73									example	example_patient_tumor	example_patient_normal
 Copy Number	VSTM4			10	48371557	53459311														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	VSTM2L			20	35832365	37210017														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	VSTM2B			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -1655,7 +1655,7 @@ Copy Number	UNC50			2	98709753	99291640														example	MEL-IPI_Pat02-Tumor
 Copy Number	UNC45B			17	31353002	34493945														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	UNC45A			15	91474788	91561117														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	UNC13D			17	73775046	73839349														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	UNC13C	Silent	p.E1605E	15	54685347	54685347	G	G	A	0.3729	59.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	UNC13C	Silent	p.E1605E	15	54685347	54685347	G	G	A	0.3729	59									example	example_patient_tumor	example_patient_normal
 Copy Number	UNC13C			15	54025348	58476336														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	UNC13B			9	34656907	35717785														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	UNC13A			19	17628200	17942211														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -1989,7 +1989,7 @@ Copy Number	TTR			18	29121279	29709152														example	MEL-IPI_Pat02-Tumor-
 Copy Number	TTPAL			20	40112161	43400056														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TTPA			8	62460769	80567299														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TTN-AS1			2	178681650	182388261														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TTN	Silent	p.D1150D	2	179645921	179645921	A	A	G	0.2857	126.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TTN	Silent	p.D1150D	2	179645921	179645921	A	A	G	0.2857	126									example	example_patient_tumor	example_patient_normal
 Copy Number	TTN			2	178681650	182388261														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TTLL9			20	30534381	30753249														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TTLL8			22	47507501	50644951														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -2166,7 +2166,7 @@ Copy Number	TRPM6			9	75780127	80944004														example	MEL-IPI_Pat02-Tumor
 Copy Number	TRPM5			11	1780871	2979776														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRPM4			19	49646263	49661518														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRPM4			19	49671356	49940060														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TRPM3	Silent	p.I881I	9	73218375	73218375	G	G	A	0.0265	151.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TRPM3	Silent	p.I881I	9	73218375	73218375	G	G	A	0.0265	151									example	example_patient_tumor	example_patient_normal
 Copy Number	TRPM3			9	39088646	75778450														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRPM2			21	45774621	45786819														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRPM2			21	45789228	46117856														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -2276,7 +2276,7 @@ Copy Number	TRIM4			7	99514404	99803009														example	MEL-IPI_Pat02-Tumor
 Copy Number	TRIM4			7	99355853	99507285														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM39-RPP21			6	30229258	30303754														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM39-RPP21			6	30308140	30546164														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TRIM39	Silent	p.L223L	6	30303639	30303639	C	C	T	0.1531	98.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TRIM39	Silent	p.L223L	6	30303639	30303639	C	C	T	0.1531	98									example	example_patient_tumor	example_patient_normal
 Copy Number	TRIM39			6	30308140	30546164														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM38			6	25967163	26022220														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM37			17	57168703	57247243														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -2300,7 +2300,7 @@ Copy Number	TRIM24			7	134916792	138434064														example	MEL-IPI_Pat02-Tu
 Copy Number	TRIM23			5	60240837	66441207														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM22			11	3041564	7674451														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM21			11	3041564	7674451														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TRIM2	Silent	p.I302I	4	154216665	154216665	C	C	T	0.3778	45.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TRIM2	Silent	p.I302I	4	154216665	154216665	C	C	T	0.3778	45									example	example_patient_tumor	example_patient_normal
 Copy Number	TRIM2			4	153893695	154502714														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM17			1	228596454	228646213														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TRIM16L			17	18389451	19250646														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -2777,7 +2777,7 @@ Copy Number	TMX2			11	48328706	59623533														example	MEL-IPI_Pat02-Tumor
 Copy Number	TMX1			14	51707164	52433407														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMUB2			17	42266958	42399898														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMUB1			7	150773921	150779652														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TMTC4	Silent	p.P513P	13	101278137	101278137	G	G	T	0.25	56.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TMTC4	Silent	p.P513P	13	101278137	101278137	G	G	T	0.25	56									example	example_patient_tumor	example_patient_normal
 Copy Number	TMTC4			13	79176688	113669162														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMTC3			12	88442201	88900916														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMTC2			12	71095105	85267109														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -2803,7 +2803,7 @@ Copy Number	TMPRSS11E			4	69342158	73188816														example	MEL-IPI_Pat02-T
 Copy Number	TMPRSS11D			4	57204959	69340481														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMPRSS11BNL			4	57204959	69340481														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMPRSS11B			4	57204959	69340481														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TMPRSS11A	Silent	p.F126F	4	68795710	68795710	G	G	A	0.2796	93.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TMPRSS11A	Silent	p.F126F	4	68795710	68795710	G	G	A	0.2796	93									example	example_patient_tumor	example_patient_normal
 Copy Number	TMPRSS11A			4	57204959	69340481														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMPPE			3	15915356	33617767														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMPO-AS1			12	96683067	101687025														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -2826,7 +2826,7 @@ Copy Number	TMEM95			17	7165364	7464324														example	MEL-IPI_Pat02-Tumor
 Copy Number	TMEM92			17	48195693	48437654														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMEM91			19	41822746	42083911														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMEM9			1	198231769	204006716														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TMEM8C	Silent	p.F169F	9	136380622	136380622	G	G	A	0.3415	41.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TMEM8C	Silent	p.F169F	9	136380622	136380622	G	G	A	0.3415	41									example	example_patient_tumor	example_patient_normal
 Copy Number	TMEM8C			9	136277614	137309175														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMEM8A			16	240136	418416														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TMEM8A			16	418637	450344														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -3238,7 +3238,7 @@ Copy Number	THUMPD1			16	20381013	20944831														example	MEL-IPI_Pat02-Tu
 Copy Number	THTPA			14	23866824	24036525														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	THSD7B			2	130898871	145162593														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	THSD7A			7	2411486	20431123														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	THSD4	Silent	p.T438T	15	71953030	71953030	G	G	A	0.1875	144.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	THSD4	Silent	p.T438T	15	71953030	71953030	G	G	A	0.1875	144									example	example_patient_tumor	example_patient_normal
 Copy Number	THSD4			15	69718523	74704355														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	THSD1			13	52313313	53001203														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	THRSP			11	66188827	77820629														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -3666,7 +3666,7 @@ Copy Number	TAF4			20	60572727	60747859														example	MEL-IPI_Pat02-Tumor
 Copy Number	TAF4			20	60504902	60551393														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAF3			10	7816856	13699524														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAF2			8	118147639	121824085														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TAF1L	Silent	p.T1677T	9	32630547	32630547	C	C	T	0.4454	119.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TAF1L	Silent	p.T1677T	9	32630547	32630547	C	C	T	0.4454	119									example	example_patient_tumor	example_patient_normal
 Copy Number	TAF1L			9	27180368	32984857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAF1D			11	93464739	93488554														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAF1C			16	81293412	84520667														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -3693,7 +3693,7 @@ Copy Number	TAC4			17	47869397	48174930														example	MEL-IPI_Pat02-Tumor
 Copy Number	TAC3			12	57135360	57466697														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAC1			7	95442651	98946584														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAB2			6	149208167	150063708														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	TAB1	Silent	p.C24C	22	39811049	39811049	C	C	T	0.411	73.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	TAB1	Silent	p.C24C	22	39811049	39811049	C	C	T	0.411	73									example	example_patient_tumor	example_patient_normal
 Copy Number	TAB1			22	39811149	39910330														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAAR9			6	132860475	133097570														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	TAAR8			6	132860475	133097570														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -3854,7 +3854,7 @@ Copy Number	SULT1B1			4	69342158	73188816														example	MEL-IPI_Pat02-Tum
 Copy Number	SULT1A4			16	28837713	29815388														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SULT1A3			16	30199899	30531290														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SULT1A2			16	28498864	28723110														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SULT1A1	Silent	p.P30P	16	28620087	28620087	G	G	A	0.4744	78.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SULT1A1	Silent	p.P30P	16	28620087	28620087	G	G	A	0.4744	78									example	example_patient_tumor	example_patient_normal
 Copy Number	SULT1A1			16	28498864	28723110														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SULF2			20	44983606	48164558														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SULF1			8	62460769	80567299														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -3999,7 +3999,7 @@ Copy Number	STAT2			12	56547878	57009391														example	MEL-IPI_Pat02-Tumo
 Copy Number	STAT1			2	191874731	191899325														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	STAT1			2	191759976	191873835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	STARD9			15	42720334	43478433														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	STARD8	Silent	p.R1008R	X	67944216	67944216	G	G	A	0.2857	21.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	STARD8	Silent	p.R1008R	X	67944216	67944216	G	G	A	0.2857	21									example	example_patient_tumor	example_patient_normal
 Copy Number	STARD7			2	96688473	96859090														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	STARD6			18	43510798	54346671														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	STARD5			15	81561991	82431185														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -4075,7 +4075,7 @@ Copy Number	SSU72			1	1333724	5965543														example	MEL-IPI_Pat02-Tumor-S
 Copy Number	SSTR5-AS1			16	1129965	1392817														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SSTR5			16	1129965	1392817														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SSTR4			20	21367646	23731505														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SSTR3	Silent	p.G407G	22	37602622	37602622	C	C	T	0.2609	115.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SSTR3	Silent	p.G407G	22	37602622	37602622	C	C	T	0.2609	115									example	example_patient_tumor	example_patient_normal
 Copy Number	SSTR3			22	33229830	37893187														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SSTR2			17	68129487	72200331														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SSTR1			14	36207858	51134687														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -5579,7 +5579,7 @@ Copy Number	SIRPB1			20	826337	2446467														example	MEL-IPI_Pat02-Tumor-
 Copy Number	SIRPA			20	826337	2446467														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SIPA1L3			19	36363517	39127562														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SIPA1L2			1	228873480	233372726														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SIPA1L1	Silent	p.K840K	14	72138100	72138100	G	G	A	0.3438	32.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SIPA1L1	Silent	p.K840K	14	72138100	72138100	G	G	A	0.3438	32									example	example_patient_tumor	example_patient_normal
 Copy Number	SIPA1L1			14	70459192	74189552														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SIPA1			11	65392751	65427688														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SIN3B			19	16652856	17184147														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -5723,7 +5723,7 @@ Copy Number	SGMS2			4	96199515	108969907														example	MEL-IPI_Pat02-Tumo
 Copy Number	SGMS1			10	48371557	53459311														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SGK494			17	26084381	27010442														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SGK3			8	62460769	80567299														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SGK223	Silent	p.D1014D	8	8185250	8185250	G	G	A	0.3594	64.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SGK223	Silent	p.D1014D	8	8185250	8185250	G	G	A	0.3594	64									example	example_patient_tumor	example_patient_normal
 Copy Number	SGK223			8	6914221	11839895														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SGK2			20	40112161	43400056														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SGK1			6	134491575	134638598														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -5863,28 +5863,28 @@ Copy Number	SERBP1			1	67517764	67895985														example	MEL-IPI_Pat02-Tumo
 Copy Number	SERAC1			6	158579397	158910766														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SERAC1			6	158342695	158571623														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEPW1			19	47998855	48603119														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT9			17	74899460	76219740														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT8			5	131995165	132150965														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	9-Sep			17	74899460	76219740														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	8-Sep			5	131995165	132150965														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEPT7P9			10	35772408	45878131														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEPT7P2			7	45726274	47332505														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT7			7	33055484	44096504														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT5			22	19195821	20082320														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT4			17	56597848	56661963														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT3			22	42321560	42385690														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT3			22	42387674	43231501														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT2			2	239147894	242312707														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT14			7	48034081	72414063														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT12			16	4751137	4937230														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT11			4	77055517	87115556														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT10			2	109288903	112615980														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEPT1			16	30199899	30531290														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	7-Sep			7	33055484	44096504														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	5-Sep			22	19195821	20082320														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	4-Sep			17	56597848	56661963														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	3-Sep			22	42321560	42385690														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	3-Sep			22	42387674	43231501														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	2-Sep			2	239147894	242312707														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	14-Sep			7	48034081	72414063														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	12-Sep			16	4751137	4937230														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	11-Sep			4	77055517	87115556														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	10-Sep			2	109288903	112615980														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	1-Sep			16	30199899	30531290														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Rearrangement	SEPSECS--ANAPC4	Fusion	SEPSECS--ANAPC4	4	25160575							0	SEPSECS	4	25160575	ANAPC4	4	25404593		example		
 Copy Number	SEPSECS			4	16165160	57182857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEPP1			5	40681964	43548017														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEPN1			1	22084278	26316094														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEPHS2			16	30199899	30531290														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEPHS1			10	7816856	13699524														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	SEP15			1	86172040	89528919														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	15-Sep			1	86172040	89528919														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SENP8			15	69718523	74704355														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SENP7			3	100058051	101395760														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SENP6			6	74497177	82912364														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -5916,7 +5916,7 @@ Copy Number	SEMA4A			1	156040080	156130822														example	MEL-IPI_Pat02-Tu
 Copy Number	SEMA3G			3	52438604	52563352														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEMA3F			3	49877295	50290618														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEMA3E			7	81346683	83764269														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SEMA3D	Silent	p.V417V	7	84651870	84651870	G	G	A	0.1641	262.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SEMA3D	Silent	p.V417V	7	84651870	84651870	G	G	A	0.1641	262									example	example_patient_tumor	example_patient_normal
 Copy Number	SEMA3D			7	84642164	87056238														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEMA3D			7	83823904	84636259														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEMA3C			7	80374625	81339561														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -5957,7 +5957,7 @@ Copy Number	SEC31B			10	102283688	102296420														example	MEL-IPI_Pat02-T
 Copy Number	SEC31B			10	102267810	102276711														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEC31B			10	102222995	102267326														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEC31A			4	77055517	87115556														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SEC24C	Silent	p.I453I	10	75525340	75525340	C	C	T	0.6444	45.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SEC24C	Silent	p.I453I	10	75525340	75525340	C	C	T	0.6444	45									example	example_patient_tumor	example_patient_normal
 Copy Number	SEC24C			10	75277507	75506764														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEC24C			10	75511003	82191857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SEC24B			4	110442784	110605804														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -6070,9 +6070,9 @@ Copy Number	SCN2B			11	116628668	118039468														example	MEL-IPI_Pat02-Tu
 Copy Number	SCN2A			2	160958347	170338845														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SCN1B			19	35512511	35550902														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SCN1A			2	160958347	170338845														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SCN11A	Silent	p.I169I	3	38968404	38968404	A	A	T	0.2294	109.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SCN11A	Silent	p.I169I	3	38968404	38968404	A	A	T	0.2294	109									example	example_patient_tumor	example_patient_normal
 Copy Number	SCN11A			3	38404510	39144374														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	SCN10A	Silent	p.I736I	3	38781078	38781078	G	G	A	0.52	75.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	SCN10A	Silent	p.I736I	3	38781078	38781078	G	G	A	0.52	75									example	example_patient_tumor	example_patient_normal
 Copy Number	SCN10A			3	38404510	39144374														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SCML4			6	106987406	110421884														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	SCMH1			1	40137712	45553911														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -17973,7 +17973,7 @@ Copy Number	RGS6			14	70459192	74189552														example	MEL-IPI_Pat02-Tumor
 Copy Number	RGS5			1	161719937	164776916														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	RGS4			1	161719937	164776916														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	RGS3			9	116299200	116795008														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	RGS22	Silent	p.I1076I	8	100994297	100994297	A	A	G	0.1698	53.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	RGS22	Silent	p.I1076I	8	100994297	100994297	A	A	G	0.1698	53									example	example_patient_tumor	example_patient_normal
 Copy Number	RGS22			8	95844404	101199480														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	RGS21			1	192153686	192321345														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	RGS21			1	192335256	192628655														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -18565,7 +18565,7 @@ Copy Number	PTPRN2			7	154738135	158473510														example	MEL-IPI_Pat02-Tu
 Copy Number	PTPRN			2	220146495	220246308														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PTPRM			18	7016672	8343520														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PTPRM			18	8371006	9888140														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PTPRK	Silent	p.H562H	6	128403673	128403673	G	G	A	0.2044	181.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PTPRK	Silent	p.H562H	6	128403673	128403673	G	G	A	0.2044	181									example	example_patient_tumor	example_patient_normal
 Copy Number	PTPRK			6	128326391	129573442														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PTPRK			6	128222079	128320051														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PTPRJ			11	48131630	48286332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -18949,7 +18949,7 @@ Copy Number	PRKCE			2	44190847	47279021														example	MEL-IPI_Pat02-Tumor
 Copy Number	PRKCDBP			11	3041564	7674451														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRKCD			3	53219718	53265568														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRKCD			3	53212555	53218992														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PRKCB	Silent	p.C217C	16	24104233	24104233	C	C	T	0.2333	90.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PRKCB	Silent	p.C217C	16	24104233	24104233	C	C	T	0.2333	90									example	example_patient_tumor	example_patient_normal
 Copy Number	PRKCB			16	21721426	27692853														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRKCA			17	62386050	66352947														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRKAR2B			7	102939157	107207633														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -19056,11 +19056,11 @@ Copy Number	PRAMEF15			1	13448610	13698153														example	MEL-IPI_Pat02-Tu
 Copy Number	PRAMEF14			1	13448610	13698153														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRAMEF13			1	13448610	13698153														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRAMEF12			1	12779695	12856147														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PRAMEF10	Silent	p.P254P	1	12954521	12954521	C	C	T	0.0292	137.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PRAMEF10	Silent	p.P254P	1	12954521	12954521	C	C	T	0.0292	137									example	example_patient_tumor	example_patient_normal
 Copy Number	PRAMEF10			1	12908144	13425550														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRAMEF1			1	12779695	12856147														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRAME			22	22899254	22990213														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PRAM1	Silent	p.L103L	19	8564383	8564383	G	G	A	0.0893	112.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PRAM1	Silent	p.L103L	19	8564383	8564383	G	G	A	0.0893	112									example	example_patient_tumor	example_patient_normal
 Copy Number	PRAM1			19	7521291	10107194														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRADC1			2	71297718	74605374														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PRAC2			17	46700499	46973133														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -19241,7 +19241,7 @@ Copy Number	POU5F2			5	90678911	94994619														example	MEL-IPI_Pat02-Tumo
 Copy Number	POU5F1B			8	125332434	130789835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	POU5F1			6	30866816	31594977														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	POU4F3			5	142264966	148411252														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	POU4F2	Silent	p.L360L	4	147561810	147561810	C	C	T	0.33	100.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	POU4F2	Silent	p.L360L	4	147561810	147561810	C	C	T	0.33	100									example	example_patient_tumor	example_patient_normal
 Copy Number	POU4F2			4	143352414	153574081														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	POU4F1			13	79176688	113669162														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	POU3F3			2	103128734	109287305														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -19412,7 +19412,7 @@ Copy Number	PMS2CL			7	2411486	20431123														example	MEL-IPI_Pat02-Tumor
 Copy Number	PMS2			7	2411486	20431123														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PMS1			2	190608202	190922366														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PMPCB			7	102939157	107207633														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PMPCA	Intron		9	139312448	139312449	-	-	G	0.252	123.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PMPCA	Intron		9	139312448	139312449	-	-	G	0.252	123									example	example_patient_tumor	example_patient_normal
 Copy Number	PMPCA			9	139229127	139400335														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PMP22			17	13400137	15952304														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PMP2			8	81471992	82359623														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -19443,7 +19443,7 @@ Copy Number	PLXNA2			1	208207939	209786222														example	MEL-IPI_Pat02-Tu
 Copy Number	PLXNA2			1	207934793	208206856														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLXNA1			3	126571575	126710411														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLXNA1			3	126722315	126751681														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PLXDC2	Silent	p.A499A	10	20568655	20568655	G	G	A	0.6739	92.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PLXDC2	Silent	p.A499A	10	20568655	20568655	G	G	A	0.6739	92									example	example_patient_tumor	example_patient_normal
 Copy Number	PLXDC2			10	17747742	21435409														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLXDC1			17	36285618	37814107														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLVAP			19	17213367	17599928														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -19461,7 +19461,7 @@ Copy Number	PLOD3			7	100780725	100855938														example	MEL-IPI_Pat02-Tum
 Copy Number	PLOD2			3	145788956	145809690														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLOD2			3	140251330	145788661														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLOD2			3	145822131	148863335														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PLOD1	Silent	p.Y313Y	1	12018668	12018668	C	C	T	0.3265	49.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PLOD1	Silent	p.Y313Y	1	12018668	12018668	C	C	T	0.3265	49									example	example_patient_tumor	example_patient_normal
 Copy Number	PLOD1			1	11716159	12318162														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLN			6	118832580	122792884														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PLLP			16	57290943	57466474														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -19599,7 +19599,7 @@ Copy Number	PLA2G10			16	5123031	15098192														example	MEL-IPI_Pat02-Tum
 Copy Number	PLA1A			3	118866436	119445197														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PKP4			2	152698602	160628566														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PKP3			11	294480	624734														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PKP2	Silent	p.I199I	12	33031217	33031217	G	G	A	0.1905	63.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PKP2	Silent	p.I199I	12	33031217	33031217	G	G	A	0.1905	63									example	example_patient_tumor	example_patient_normal
 Copy Number	PKP2			12	32778004	46322644														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PKP1			1	198231769	204006716														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PKNOX2			11	124967638	126174178														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -19872,7 +19872,7 @@ Copy Number	PFDN5			12	53689727	53693739														example	MEL-IPI_Pat02-Tumo
 Copy Number	PFDN4			20	50342473	56993421														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PFDN2			1	161087818	161128284														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PFDN1			5	139494737	139725671														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PFAS	Silent	p.A376A	17	8161177	8161177	C	C	T	0.413	92.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PFAS	Silent	p.A376A	17	8161177	8161177	C	C	T	0.413	92									example	example_patient_tumor	example_patient_normal
 Copy Number	PFAS			17	8131639	8167921														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PFAS			17	8168445	8169673														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PFAS			17	8170218	8172584														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20144,7 +20144,7 @@ Copy Number	PCDHA9			5	140189171	140627512														example	MEL-IPI_Pat02-Tu
 Copy Number	PCDHA8			5	140189171	140627512														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PCDHA7			5	140189171	140627512														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PCDHA6			5	140189171	140627512														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	PCDHA5	Silent	p.S33S	5	140201459	140201459	G	G	A	0.2881	59.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	PCDHA5	Silent	p.S33S	5	140201459	140201459	G	G	A	0.2881	59									example	example_patient_tumor	example_patient_normal
 Copy Number	PCDHA5			5	140189171	140627512														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PCDHA4			5	140189171	140627512														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	PCDHA3			5	139741448	140183259														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20462,7 +20462,7 @@ Copy Number	ORMDL1			2	190608202	190922366														example	MEL-IPI_Pat02-Tu
 Copy Number	ORM2			9	116812447	117241053														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ORM1			9	116812447	117241053														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ORC6			16	31499813	46843699														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ORC5	Silent	p.Y199Y	7	103828786	103828786	A	A	G	0.0192	208.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ORC5	Silent	p.Y199Y	7	103828786	103828786	A	A	G	0.0192	208									example	example_patient_tumor	example_patient_normal
 Copy Number	ORC5			7	102939157	107207633														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ORC4			2	148654079	149840280														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ORC3			6	82924548	89816977														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20531,7 +20531,7 @@ Copy Number	OR6S1			14	20979283	21238755														example	MEL-IPI_Pat02-Tumo
 Copy Number	OR6Q1			11	48328706	59623533														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6P1			1	158151513	158549691														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6N2			1	158687955	158913770														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	OR6N1	Silent	p.F17F	1	158736422	158736422	G	G	A	0.1803	61.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	OR6N1	Silent	p.F17F	1	158736422	158736422	G	G	A	0.1803	61									example	example_patient_tumor	example_patient_normal
 Copy Number	OR6N1			1	158687955	158913770														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6M1			11	122944484	124489833														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6K6			1	158687955	158913770														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20540,7 +20540,7 @@ Copy Number	OR6K2			1	158632737	158670444														example	MEL-IPI_Pat02-Tum
 Copy Number	OR6J1			14	22975687	23303532														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6F1			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6C76			12	55795253	56113395														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	OR6C75	Silent	p.L185L	12	55759449	55759449	C	C	T	0.227	141.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	OR6C75	Silent	p.L185L	12	55759449	55759449	C	C	T	0.227	141									example	example_patient_tumor	example_patient_normal
 Copy Number	OR6C75			12	54767921	55759835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6C74			12	54767921	55759835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR6C70			12	55795253	56113395														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20673,7 +20673,7 @@ Copy Number	OR4Q2			14	19553939	20529144														example	MEL-IPI_Pat02-Tumo
 Copy Number	OR4P4			11	48328706	59623533														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR4N5			14	20586599	20779913														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR4N4			15	20658757	22842185														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	OR4N2	Silent	p.L69L	14	20295814	20295814	G	G	A	0.5297	202.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	OR4N2	Silent	p.L69L	14	20295814	20295814	G	G	A	0.5297	202									example	example_patient_tumor	example_patient_normal
 Copy Number	OR4N2			14	19553939	20529144														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR4M2			15	20658757	22842185														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR4M1			14	19553939	20529144														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20763,7 +20763,7 @@ Copy Number	OR2H2			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor
 Copy Number	OR2H1			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2G6			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2G3			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	OR2G2	Silent	p.I95I	1	247751946	247751946	C	C	T	0.1104	163.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	OR2G2	Silent	p.I95I	1	247751946	247751946	C	C	T	0.1104	163									example	example_patient_tumor	example_patient_normal
 Copy Number	OR2G2			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2F2			7	143419966	143827140														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2F1			7	143419966	143827140														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20791,7 +20791,7 @@ Copy Number	OR2A25			7	143419966	143827140														example	MEL-IPI_Pat02-Tu
 Copy Number	OR2A20P			7	143885478	144074285														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2A2			7	143419966	143827140														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2A14			7	143419966	143827140														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	OR2A12	Silent	p.S242S	7	143792926	143792926	C	C	T	0.1233	219.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	OR2A12	Silent	p.S242S	7	143792926	143792926	C	C	T	0.1233	219									example	example_patient_tumor	example_patient_normal
 Copy Number	OR2A12			7	143419966	143827140														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2A1-AS1			7	143885478	144074285														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR2A1			7	143885478	144074285														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -20874,7 +20874,7 @@ Copy Number	OR10G7			11	122944484	124489833														example	MEL-IPI_Pat02-T
 Copy Number	OR10G6			11	122944484	124489833														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR10G4			11	122944484	124489833														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR10G3			14	21936913	22103000														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	OR10G2	Silent	p.L50L	14	22102851	22102851	G	G	A	0.4933	75.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	OR10G2	Silent	p.L50L	14	22102851	22102851	G	G	A	0.4933	75									example	example_patient_tumor	example_patient_normal
 Copy Number	OR10G2			14	21936913	22103000														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR10D3			11	122944484	124489833														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	OR10C1			6	27858572	29591803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -21270,7 +21270,7 @@ Copy Number	NPIPA3			16	5123031	15098192														example	MEL-IPI_Pat02-Tumo
 Copy Number	NPIPA2			16	5123031	15098192														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NPIPA1			16	5123031	15098192														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NPHS2			1	179308682	180794482														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	NPHS1	Silent	p.I742I	19	36334482	36334482	G	G	A	0.3448	29.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	NPHS1	Silent	p.I742I	19	36334482	36334482	G	G	A	0.3448	29									example	example_patient_tumor	example_patient_normal
 Copy Number	NPHS1			19	36357440	36362940														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NPHS1			19	36227728	36342288														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NPHP4			1	5987847	5993389														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -21545,7 +21545,7 @@ Copy Number	NEUROD6			7	28758498	32529979														example	MEL-IPI_Pat02-Tum
 Copy Number	NEUROD4			12	54767921	55759835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NEUROD2			17	36285618	37814107														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NEUROD1			2	182388979	182543589														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	NEURL4	Silent	p.N277N	17	7230291	7230291	G	G	A	0.031	129.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	NEURL4	Silent	p.N277N	17	7230291	7230291	G	G	A	0.031	129									example	example_patient_tumor	example_patient_normal
 Copy Number	NEURL4			17	7165364	7464324														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NEURL3			2	96963276	97493639														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	NEURL2			20	44477316	44669255														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -21865,7 +21865,7 @@ Copy Number	MZT1			13	53009019	76179950														example	MEL-IPI_Pat02-Tumor
 Copy Number	MZF1			19	59029042	59082758														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MZB1			5	137504379	139251428														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MYZAP			15	54025348	58476336														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	MYT1L	Silent	p.L811L	2	1893100	1893100	C	C	A	0.2532	79.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	MYT1L	Silent	p.L811L	2	1893100	1893100	C	C	A	0.2532	79									example	example_patient_tumor	example_patient_normal
 Copy Number	MYT1L			2	1168869	3745046														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MYT1			20	62845002	62871803														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MYT1			20	62572211	62830271														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -21968,7 +21968,7 @@ Copy Number	MYH13			17	10216671	12920440														example	MEL-IPI_Pat02-Tumo
 Copy Number	MYH13			17	8796974	10215393														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MYH11			16	15813572	17353357														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MYH11			16	15785182	15813167														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	MYH10	Silent	p.A1279A	17	8402609	8402609	C	C	T	0.5463	108.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	MYH10	Silent	p.A1279A	17	8402609	8402609	C	C	T	0.5463	108									example	example_patient_tumor	example_patient_normal
 Copy Number	MYH10			17	8350222	8707471														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MYH1			17	10216671	12920440														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MYF6			12	71095105	85267109														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -22040,8 +22040,8 @@ Copy Number	MUC20			3	194126847	196650424														example	MEL-IPI_Pat02-Tum
 Copy Number	MUC2			11	1097365	1651786														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MUC19			12	32778004	46322644														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MUC17			7	100674504	100696430														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	MUC16	Silent	p.V4153V	19	9074987	9074987	C	C	T	0.2754	69.0									example	example_patient_tumor	example_patient_normal
-Somatic Variant	MUC16	Silent	p.S5554S	19	9070784	9070784	G	G	A	0.3026	76.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	MUC16	Silent	p.V4153V	19	9074987	9074987	C	C	T	0.2754	69									example	example_patient_tumor	example_patient_normal
+Somatic Variant	MUC16	Silent	p.S5554S	19	9070784	9070784	G	G	A	0.3026	76									example	example_patient_tumor	example_patient_normal
 Copy Number	MUC16			19	7521291	10107194														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MUC15			11	22747981	33689700														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MUC13			3	124627197	125651554														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -24106,20 +24106,20 @@ Copy Number	MARK1			1	220089292	220971358														example	MEL-IPI_Pat02-Tum
 Copy Number	MARCO			2	114340673	130834774														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MARCKSL1			1	32740037	33363922														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MARCKS			6	112506551	116600995														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH9			12	58152085	58200324														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH8			10	45891386	46969453														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH7			2	152698602	160628566														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH6			5	825368	14504704														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH5			10	93572966	94250354														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH4			2	217059711	217364756														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH3			5	122950092	126253865														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH2			19	7521291	10107194														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH11			5	15500822	16781938														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH10			17	59534994	62223831														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARCH1			4	159133930	170028358														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARC2			1	220089292	220971358														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARC1			1	220089292	220971358														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Copy Number	MARC1			1	220978457	222696231														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	9-Mar			12	58152085	58200324														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	8-Mar			10	45891386	46969453														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	7-Mar			2	152698602	160628566														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	6-Mar			5	825368	14504704														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	5-Mar			10	93572966	94250354														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	4-Mar			2	217059711	217364756														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	3-Mar			5	122950092	126253865														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	2-Mar			19	7521291	10107194														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	11-Mar			5	15500822	16781938														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	10-Mar			17	59534994	62223831														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	1-Mar			4	159133930	170028358														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	2-Mar			1	220089292	220971358														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	1-Mar			1	220089292	220971358														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
+Copy Number	1-Mar			1	220978457	222696231														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MAPT-AS1			17	43323699	45299825														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MAPT			17	43323699	45299825														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MAPRE3			2	26695519	27351997														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -24206,7 +24206,7 @@ Copy Number	MANSC1			12	12240322	12588721														example	MEL-IPI_Pat02-Tum
 Copy Number	MANF			3	51350007	51864817														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MANEAL			1	36788328	39384886														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MANEA-AS1			6	90448176	97729240														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	MANEA	Silent	p.I81I	6	96034558	96034558	C	C	T	0.4535	172.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	MANEA	Silent	p.I81I	6	96034558	96034558	C	C	T	0.4535	172									example	example_patient_tumor	example_patient_normal
 Copy Number	MANEA			6	90448176	97729240														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MANBAL			20	35832365	37210017														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	MANBA			4	96199515	108969907														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -24519,7 +24519,7 @@ Copy Number	LRP4			11	46722651	46921056														example	MEL-IPI_Pat02-Tumor
 Copy Number	LRP3			19	30303685	34706207														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRP2BP			4	185623597	186327012														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRP2			2	160958347	170338845														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	LRP1B	Silent	p.N2900N	2	141259406	141259406	A	A	G	0.7732	97.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	LRP1B	Silent	p.N2900N	2	141259406	141259406	A	A	G	0.7732	97									example	example_patient_tumor	example_patient_normal
 Copy Number	LRP1B			2	130898871	145162593														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRP12			8	104331016	117784083														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRP11			6	150164262	150387300														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -24538,7 +24538,7 @@ Copy Number	LRIG3			12	59279686	60098801														example	MEL-IPI_Pat02-Tumo
 Copy Number	LRIG2			1	113264972	116663695														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRIG1			3	54157621	69117161														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRIF1			1	111440516	111703920														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	LRGUK	Silent	p.R518R	7	133883978	133883978	A	A	C	0.2671	146.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	LRGUK	Silent	p.R518R	7	133883978	133883978	A	A	C	0.2671	146									example	example_patient_tumor	example_patient_normal
 Copy Number	LRGUK			7	133933830	133986864														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRGUK			7	129736849	133827917														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	LRGUK			7	133848294	133932398														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -25468,7 +25468,7 @@ Copy Number	KXD1			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor
 Copy Number	KTN1-AS1			14	54866696	64194664														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KTN1			14	54866696	64194664														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KTI12			1	51735799	52811895														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	KSR2	Silent	p.F655F	12	117962911	117962911	G	G	A	0.2278	79.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	KSR2	Silent	p.F655F	12	117962911	117962911	G	G	A	0.2278	79									example	example_patient_tumor	example_patient_normal
 Copy Number	KSR2			12	113599189	119978522														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KSR1			17	25877734	25976010														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KRTDAP			19	35631046	36000865														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -25826,7 +25826,7 @@ Copy Number	KIF3B			20	30919124	31020790														example	MEL-IPI_Pat02-Tumo
 Copy Number	KIF3A			5	131995165	132150965														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Rearrangement	KIF2C--RAP1GDS1	Fusion	KIF2C--RAP1GDS1	1	45219505							0	KIF2C	1	45219505	RAP1GDS1	4	99363141		example		
 Copy Number	KIF2C			1	40137712	45553911														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	KIF2B	Silent	p.K20K	17	51900454	51900454	G	G	A	0.2195	41.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	KIF2B	Silent	p.K20K	17	51900454	51900454	G	G	A	0.2195	41									example	example_patient_tumor	example_patient_normal
 Copy Number	KIF2B			17	49157067	56276563														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KIF2A			5	60240837	66441207														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KIF27			9	84228438	88628814														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -26096,7 +26096,7 @@ Copy Number	KCNIP1			5	158634809	173040260														example	MEL-IPI_Pat02-Tu
 Copy Number	KCNH8			3	15915356	33617767														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KCNH7			2	160958347	170338845														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KCNH6			17	59534994	62223831														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	KCNH5	Silent	p.L97L	14	63473099	63473099	G	G	A	0.4719	89.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	KCNH5	Silent	p.L97L	14	63473099	63473099	G	G	A	0.4719	89									example	example_patient_tumor	example_patient_normal
 Copy Number	KCNH5			14	54866696	64194664														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KCNH4			17	40263912	40653324														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	KCNH3			12	49952514	49960000														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -26323,7 +26323,7 @@ Copy Number	ITGB8			7	2411486	20431123														example	MEL-IPI_Pat02-Tumor-
 Copy Number	ITGB8			7	20438619	20691248														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ITGB7			12	53590606	53607029														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ITGB7			12	53578824	53589985														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ITGB6	Silent	p.Y774Y	2	160958292	160958292	A	A	G	0.2432	74.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ITGB6	Silent	p.Y774Y	2	160958292	160958292	A	A	G	0.2432	74									example	example_patient_tumor	example_patient_normal
 Copy Number	ITGB6			2	160958347	170338845														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ITGB5-AS1			3	124413352	124592380														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ITGB5			3	124413352	124592380														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -26427,7 +26427,7 @@ Copy Number	IRAK1BP1			6	74497177	82912364														example	MEL-IPI_Pat02-Tu
 Copy Number	IQUB			7	121716663	127731935														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	IQSEC3			12	176602	312048														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	IQSEC1			3	12447582	13438990														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	IQGAP3	Silent	p.E19E	1	156539236	156539236	C	C	T	0.6027	73.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	IQGAP3	Silent	p.E19E	1	156539236	156539236	C	C	T	0.6027	73									example	example_patient_tumor	example_patient_normal
 Copy Number	IQGAP3			1	156354394	156552962														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	IQGAP2			5	72857115	75961002														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	IQGAP2			5	75964671	75991493														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -27075,7 +27075,7 @@ Copy Number	HTR3E			3	183770937	183862497														example	MEL-IPI_Pat02-Tum
 Copy Number	HTR3D			3	183580591	183756765														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HTR3C			3	183770937	183862497														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HTR3B			11	113264497	113815479														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	HTR2C	Silent	p.L92L	X	113965941	113965941	T	T	C	0.3421	76.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	HTR2C	Silent	p.L92L	X	113965941	113965941	T	T	C	0.3421	76									example	example_patient_tumor	example_patient_normal
 Copy Number	HTR2B			2	231974125	232035428														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HTR2A-AS1			13	47275344	52025312														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HTR2A			13	47275344	52025312														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -27283,7 +27283,7 @@ Copy Number	HNRNPUL2-BSCL2			11	62455982	62462185														example	MEL-IPI_P
 Copy Number	HNRNPUL2			11	62472986	62559988														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HNRNPUL1			19	41289747	41812472														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HNRNPU-AS1			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	HNRNPU	Silent	p.E109E	1	245027283	245027283	C	C	T	0.2849	186.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	HNRNPU	Silent	p.E109E	1	245027283	245027283	C	C	T	0.2849	186									example	example_patient_tumor	example_patient_normal
 Copy Number	HNRNPU			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HNRNPR			1	22084278	26316094														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HNRNPM			19	7521291	10107194														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -27643,7 +27643,7 @@ Copy Number	HCP5			6	30866816	31594977														example	MEL-IPI_Pat02-Tumor-
 Copy Number	HCN4			15	69718523	74704355														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HCN3			1	155209555	155271188														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HCN2			19	72110	1091908														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	HCN1	Silent	p.L400L	5	45396624	45396624	C	C	T	0.5357	56.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	HCN1	Silent	p.L400L	5	45396624	45396624	C	C	T	0.5357	56									example	example_patient_tumor	example_patient_normal
 Copy Number	HCN1			5	43644429	45645712														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HCLS1			3	121350831	121383880														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HCK			20	30534381	30753249														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -27703,7 +27703,7 @@ Copy Number	HARBI1			11	46625461	46670735														example	MEL-IPI_Pat02-Tum
 Copy Number	HAR1B			20	61572974	61845297														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HAR1A			20	61572974	61845297														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HAPLN4			19	18555680	30199332														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	HAPLN3	Silent	p.S111S	15	89424748	89424748	G	G	A	0.2222	81.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	HAPLN3	Silent	p.S111S	15	89424748	89424748	G	G	A	0.2222	81									example	example_patient_tumor	example_patient_normal
 Copy Number	HAPLN3			15	88669606	89761926														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HAPLN2			1	156568288	156647058														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	HAPLN1			5	80607100	86708613														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -28255,7 +28255,7 @@ Copy Number	GNAI2			3	49877295	50290618														example	MEL-IPI_Pat02-Tumor
 Copy Number	GNAI2			3	50293754	50311488														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	GNAI1			7	77814989	79818549														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	GNAI1			7	79828700	80276178														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	GNA15	Silent	p.E168E	19	3151723	3151723	G	G	A	0.0424	118.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	GNA15	Silent	p.E168E	19	3151723	3151723	G	G	A	0.0424	118									example	example_patient_tumor	example_patient_normal
 Copy Number	GNA15			19	2427324	3193428														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	GNA14			9	75780127	80944004														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	GNA13			17	62386050	66352947														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -29399,7 +29399,7 @@ Copy Number	FAM21C			10	45891386	46969453														example	MEL-IPI_Pat02-Tum
 Copy Number	FAM21B			10	47903206	47948853														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	FAM21A			10	48371557	53459311														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	FAM219B			15	74738570	75310876														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	FAM219A	Silent	p.R61R	9	34402783	34402783	C	C	T	0.1714	35.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	FAM219A	Silent	p.R61R	9	34402783	34402783	C	C	T	0.1714	35									example	example_patient_tumor	example_patient_normal
 Copy Number	FAM219A			9	33926664	34625813														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	FAM218A			4	159133930	170028358														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	FAM217B			20	58322892	58514988														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -29754,7 +29754,7 @@ Copy Number	ESD			13	47275344	52025312														example	MEL-IPI_Pat02-Tumor-
 Copy Number	ESCO2			8	27633086	27646497														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ESCO2			8	27649571	28218643														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ESCO1			18	12686451	19429351														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ERVW-1	Silent	p.L293L	7	92098817	92098817	T	T	C	0.2727	77.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ERVW-1	Silent	p.L293L	7	92098817	92098817	T	T	C	0.2727	77									example	example_patient_tumor	example_patient_normal
 Copy Number	ERVW-1			7	91682274	93116295														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ERVV-2			19	52729063	53950536														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ERVV-1			19	52729063	53950536														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -30379,7 +30379,7 @@ Copy Number	DSG4			18	27878926	29118943														example	MEL-IPI_Pat02-Tumor
 Copy Number	DSG3			18	27878926	29118943														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DSG2			18	27878926	29118943														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DSG2			18	29121279	29709152														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DSG1	Silent	p.L465L	18	28918407	28918407	C	C	T	0.5377	106.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DSG1	Silent	p.L465L	18	28918407	28918407	C	C	T	0.5377	106									example	example_patient_tumor	example_patient_normal
 Copy Number	DSG1			18	27878926	29118943														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DSEL			18	65181877	67863886														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DSE			6	112506551	116600995														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -30435,7 +30435,7 @@ Copy Number	DPY19L1			7	33055484	44096504														example	MEL-IPI_Pat02-Tum
 Copy Number	DPT			1	168278117	169437492														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DPRX			19	53952892	54265684														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DPPA5			6	56463507	74477956														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DPPA4	Silent	p.V173V	3	109049531	109049531	C	C	T	0.4949	99.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DPPA4	Silent	p.V173V	3	109049531	109049531	C	C	T	0.4949	99									example	example_patient_tumor	example_patient_normal
 Copy Number	DPPA4			3	108160109	111997706														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DPPA3P2			14	36207858	51134687														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DPPA3			12	7171698	8074229														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -30617,7 +30617,7 @@ Copy Number	DNAH14			1	225142802	228444627														example	MEL-IPI_Pat02-Tu
 Copy Number	DNAH12			3	54157621	69117161														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DNAH11			7	20698301	22233651														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DNAH10OS			12	124209340	124497479														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DNAH10	Silent	p.A834A	12	124289456	124289456	C	C	T	0.2719	114.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DNAH10	Silent	p.A834A	12	124289456	124289456	C	C	T	0.2719	114									example	example_patient_tumor	example_patient_normal
 Copy Number	DNAH10			12	124209340	124497479														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DNAH1			3	52269124	52437912														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DNAAF3			19	55672145	55751279														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -30725,7 +30725,7 @@ Copy Number	DIP2C			10	465141	1060254														example	MEL-IPI_Pat02-Tumor-S
 Copy Number	DIP2B			12	51092987	51566207														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIP2B			12	51072661	51092252														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIP2A-IT1			21	47337545	48084241														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DIP2A	Silent	p.S349S	21	47931472	47931472	C	C	G	0.3571	42.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DIP2A	Silent	p.S349S	21	47931472	47931472	C	C	G	0.3571	42									example	example_patient_tumor	example_patient_normal
 Copy Number	DIP2A			21	47337545	48084241														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIO3OS			14	101459646	102391611														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIO3			14	101459646	102391611														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -30740,7 +30740,7 @@ Copy Number	DICER1			14	94752597	95583034														example	MEL-IPI_Pat02-Tum
 Copy Number	DICER1			14	95584093	95596531														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIAPH3-AS2			13	53009019	76179950														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIAPH3-AS1			13	53009019	76179950														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DIAPH3	Silent	p.K713K	13	60498940	60498940	C	C	T	0.7879	33.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DIAPH3	Silent	p.K713K	13	60498940	60498940	C	C	T	0.7879	33									example	example_patient_tumor	example_patient_normal
 Copy Number	DIAPH3			13	53009019	76179950														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIAPH1			5	140951609	141041824														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DIAPH1			5	140874434	140914002														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -30849,7 +30849,7 @@ Copy Number	DENND5A			11	9111378	9549162														example	MEL-IPI_Pat02-Tumo
 Copy Number	DENND4C			9	19116649	19619692														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DENND4B			1	153921122	153925847														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DENND4A			15	65956732	66587481														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DENND3	Silent	p.S121S	8	142151403	142151403	C	C	T	0.2245	147.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DENND3	Silent	p.S121S	8	142151403	142151403	C	C	T	0.2245	147									example	example_patient_tumor	example_patient_normal
 Copy Number	DENND3			8	142151425	142441146														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DENND2C			1	113264972	116663695														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DENND2A			7	140035306	142021363														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -30991,7 +30991,7 @@ Copy Number	DCTN5			16	21721426	27692853														example	MEL-IPI_Pat02-Tumo
 Copy Number	DCTN4			5	149918920	150712885														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCTN3			9	33926664	34625813														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCTN2			12	57918201	58128464														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DCTN1	Silent	p.H668H	2	74595109	74595109	G	G	A	0.7222	54.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DCTN1	Silent	p.H668H	2	74595109	74595109	G	G	A	0.7222	54									example	example_patient_tumor	example_patient_normal
 Copy Number	DCTN1			2	71297718	74605374														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCTD			4	175649851	184598709														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCT			13	79176688	113669162														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -31019,7 +31019,7 @@ Copy Number	DCDC2B			1	32222418	32690078														example	MEL-IPI_Pat02-Tumo
 Copy Number	DCDC2			6	17837321	24358124														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCDC1			11	22747981	33689700														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCD			12	54767921	55759835														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	DCC	Silent	p.I794I	18	50912435	50912435	C	C	T	0.1938	129.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	DCC	Silent	p.I794I	18	50912435	50912435	C	C	T	0.1938	129									example	example_patient_tumor	example_patient_normal
 Copy Number	DCC			18	43510798	54346671														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCBLD2			3	98530163	98531326														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	DCBLD2			3	98536737	100029388														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -31297,7 +31297,7 @@ Copy Number	CTRB2			16	72184730	77775849														example	MEL-IPI_Pat02-Tumo
 Copy Number	CTRB1			16	72184730	77775849														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CTPS1			1	40137712	45553911														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CTNS			17	3445994	3568094														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CTNND2	Silent	p.L897L	5	11082905	11082905	G	G	A	0.3908	87.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CTNND2	Silent	p.L897L	5	11082905	11082905	G	G	A	0.3908	87									example	example_patient_tumor	example_patient_normal
 Copy Number	CTNND2			5	825368	14504704														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CTNND1			11	48328706	59623533														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CTNNBL1			20	35832365	37210017														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -32922,7 +32922,7 @@ Copy Number	CREB5			7	28758498	32529979														example	MEL-IPI_Pat02-Tumor
 Copy Number	CREB3L4			1	153933232	153955774														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CREB3L3			19	3982052	4930888														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CREB3L2			7	134916792	138434064														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CREB3L1	Silent	p.R464R	11	46341948	46341948	G	G	A	0.7568	37.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CREB3L1	Silent	p.R464R	11	46341948	46341948	G	G	A	0.7568	37									example	example_patient_tumor	example_patient_normal
 Copy Number	CREB3L1			11	45992920	46569932														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CREB1			2	206605389	208866365														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CRCT1			1	151847406	153637814														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -32993,7 +32993,7 @@ Copy Number	CPLX3			15	74738570	75310876														example	MEL-IPI_Pat02-Tumo
 Copy Number	CPLX2			5	173473889	176761406														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CPLX1			4	87340	2065856														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CPHL1P			3	148868469	149686339														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CPED1	Silent	p.V958V	7	120935499	120935499	G	G	A	0.1818	33.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CPED1	Silent	p.V958V	7	120935499	120935499	G	G	A	0.1818	33									example	example_patient_tumor	example_patient_normal
 Copy Number	CPED1			7	120607704	120770350														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CPED1			7	120773949	121695143														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CPEB4			5	173317863	173383142														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -33307,7 +33307,7 @@ Copy Number	CLVS1			8	61734486	62371103														example	MEL-IPI_Pat02-Tumor
 Copy Number	CLVS1			8	62412103	62416070														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CLUL1			18	163455	3277937														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CLUHP3			16	31499813	46843699														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CLUH	Silent	p.L1127L	17	2595719	2595719	G	G	A	0.2667	45.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CLUH	Silent	p.L1127L	17	2595719	2595719	G	G	A	0.2667	45									example	example_patient_tumor	example_patient_normal
 Copy Number	CLUH			17	2604119	2867362														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CLUH			17	2570494	2603768														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CLUAP1			16	3100147	4312704														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -33548,7 +33548,7 @@ Copy Number	CHRM2			7	134916792	138434064														example	MEL-IPI_Pat02-Tum
 Copy Number	CHRM1			11	62678574	63257837														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CHRFAM7A			15	30034987	31269158														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CHRDL2			11	66188827	77820629														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CHRD	Silent	p.R790R	3	184105184	184105184	G	G	A	0.4353	85.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CHRD	Silent	p.R790R	3	184105184	184105184	G	G	A	0.4353	85									example	example_patient_tumor	example_patient_normal
 Copy Number	CHRD			3	184082839	184289172														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CHRAC1			8	139890561	141595412														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CHPT1			12	101699845	102164937														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -34063,7 +34063,7 @@ Copy Number	CCRL2			3	45637781	46501311														example	MEL-IPI_Pat02-Tumor
 Copy Number	CCR9			3	45637781	46501311														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCR8			3	39308152	39433514														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCR7			17	38564376	38798813														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CCR6	Silent	p.L274L	6	167550538	167550538	C	C	T	0.3019	159.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CCR6	Silent	p.L274L	6	167550538	167550538	C	C	T	0.3019	159									example	example_patient_tumor	example_patient_normal
 Copy Number	CCR6			6	165703558	170089101														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCR5			3	45637781	46501311														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCR4			3	15915356	33617767														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -34285,7 +34285,7 @@ Copy Number	CCDC13			3	42750633	42784551														example	MEL-IPI_Pat02-Tumo
 Copy Number	CCDC13			3	42787521	44636683														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCDC129			7	28758498	32529979														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCDC127			5	143373	256537														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CCDC126	Silent	p.T133T	7	23682710	23682710	G	G	A	0.1111	54.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CCDC126	Silent	p.T133T	7	23682710	23682710	G	G	A	0.1111	54									example	example_patient_tumor	example_patient_normal
 Copy Number	CCDC126			7	23157585	25268060														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCDC125			5	67522839	68830668														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CCDC124			19	17973034	18426877														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -34502,7 +34502,7 @@ Copy Number	CALR			19	12779241	13054445														example	MEL-IPI_Pat02-Tumor
 Copy Number	CALN1			7	48034081	72414063														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CALML6			1	1333724	5965543														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CALML4			15	68040597	68504203														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	CALM3	Silent	p.F69F	19	47111767	47111767	C	C	T	0.3188	69.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	CALM3	Silent	p.F69F	19	47111767	47111767	C	C	T	0.3188	69									example	example_patient_tumor	example_patient_normal
 Copy Number	CALM2			2	47378656	48589848														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CALM1			14	90770728	91252674														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	CALHM3			10	105205308	105350131														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -34703,7 +34703,7 @@ Copy Number	C7orf26			7	2411486	20431123														example	MEL-IPI_Pat02-Tumo
 Copy Number	C7orf25			7	33055484	44096504														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C7orf13			7	154738135	158473510														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C7orf10			7	33055484	44096504														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	C7	Silent	p.F7F	5	40928696	40928696	C	C	T	0.4286	14.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	C7	Silent	p.F7F	5	40928696	40928696	C	C	T	0.4286	14									example	example_patient_tumor	example_patient_normal
 Copy Number	C7			5	40681964	43548017														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C6orf99			6	159205761	159463278														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C6orf89			6	34823482	37259135														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -34820,7 +34820,7 @@ Copy Number	C3orf30			3	118866436	119445197														example	MEL-IPI_Pat02-T
 Copy Number	C3orf27			3	126916257	128514265														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C3orf22			3	126270967	126452067														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C3orf22			3	126217017	126268923														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	C3orf20	Silent	p.L225L	3	14731553	14731553	G	G	A	0.1881	101.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	C3orf20	Silent	p.L225L	3	14731553	14731553	G	G	A	0.1881	101									example	example_patient_tumor	example_patient_normal
 Copy Number	C3orf20			3	13655664	15642972														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C3orf18			3	50418559	50681965														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C3orf17			3	112282382	113393727														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -34900,7 +34900,7 @@ Copy Number	C20orf96			20	68410	746420														example	MEL-IPI_Pat02-Tumor-
 Copy Number	C20orf85			20	50342473	56993421														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C20orf78			20	5261132	20037442														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C20orf62			20	40112161	43400056														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	C20orf27	Silent	p.G158G	20	3734756	3734756	G	G	A	0.2045	44.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	C20orf27	Silent	p.G158G	20	3734756	3734756	G	G	A	0.2045	44									example	example_patient_tumor	example_patient_normal
 Copy Number	C20orf27			20	3735168	3903943														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C20orf26			20	5261132	20037442														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C20orf26			20	20051650	20056261														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -34996,7 +34996,7 @@ Copy Number	C1orf106			1	198231769	204006716														example	MEL-IPI_Pat02-
 Copy Number	C1orf105			1	171227360	173493235														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C1orf101			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C1orf100			1	243493996	249212564														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	C1S	Silent	p.A307A	12	7173871	7173871	G	G	A	0.6019	108.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	C1S	Silent	p.A307A	12	7173871	7173871	G	G	A	0.6019	108									example	example_patient_tumor	example_patient_normal
 Copy Number	C1S			12	7090346	7170373														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C1S			12	7171698	8074229														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	C1RL-AS1			12	7171698	8074229														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -35321,7 +35321,7 @@ Copy Number	BTNL8			5	180030392	180431762														example	MEL-IPI_Pat02-Tum
 Copy Number	BTNL3			5	180030392	180431762														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BTNL3			5	180432872	180795228														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BTNL2			6	32261814	32920815														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	BTN3A3	Silent	p.G435G	6	26452189	26452189	C	C	T	0.156	109.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	BTN3A3	Silent	p.G435G	6	26452189	26452189	C	C	T	0.156	109									example	example_patient_tumor	example_patient_normal
 Copy Number	BTN3A3			6	26422427	27799307														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BTN3A2			6	26368497	26413922														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BTN3A1			6	26368497	26413922														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -35607,7 +35607,7 @@ Copy Number	BCAR3			1	94016682	94048512														example	MEL-IPI_Pat02-Tumor
 Copy Number	BCAR1			16	72184730	77775849														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BCAP29			7	107211713	107315556														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BCAN			1	156568288	156647058														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	BCAM	Silent	p.K228K	19	45316777	45316777	G	G	A	0.3922	51.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	BCAM	Silent	p.K228K	19	45316777	45316777	G	G	A	0.3922	51									example	example_patient_tumor	example_patient_normal
 Copy Number	BCAM			19	44341331	45318019														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BCAM			19	45321896	45404111														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	BBX			3	102183097	107497368														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -36315,7 +36315,7 @@ Copy Number	APCDD1L-AS1			20	57036612	57485886														example	MEL-IPI_Pat0
 Copy Number	APCDD1L			20	57036612	57485886														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	APCDD1			18	10468651	12351211														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	APC2			19	1391051	1507406														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	APC	Silent	p.F1741F	5	112176514	112176514	C	C	T	0.381	63.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	APC	Silent	p.F1741F	5	112176514	112176514	C	C	T	0.381	63									example	example_patient_tumor	example_patient_normal
 Copy Number	APC			5	109155590	112929082														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	APBB3			5	139741448	140183259														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	APBB2			4	16165160	57182857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -36789,7 +36789,7 @@ Copy Number	ANKRD16			10	5808117	6139153														example	MEL-IPI_Pat02-Tumo
 Copy Number	ANKRD13D			11	66188827	77820629														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANKRD13C			1	68151811	75805317														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANKRD13B			17	27052583	28296385														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ANKRD13A	Silent	p.R422R	12	110468481	110468481	G	G	A	0.2212	113.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ANKRD13A	Silent	p.R422R	12	110468481	110468481	G	G	A	0.2212	113									example	example_patient_tumor	example_patient_normal
 Copy Number	ANKRD13A			12	110389123	110480266														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANKRD12			18	8371006	9888140														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANKRD11			16	88052275	89623503														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -36829,7 +36829,7 @@ Copy Number	ANGPT1			8	104331016	117784083														example	MEL-IPI_Pat02-Tu
 Copy Number	ANGEL2			1	212912030	213189015														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANGEL1			14	75936180	77275988														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANG			14	20979283	21238755														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ANAPC7	Silent	p.R94R	12	110834179	110834179	C	C	A	0.0481	104.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ANAPC7	Silent	p.R94R	12	110834179	110834179	C	C	A	0.0481	104									example	example_patient_tumor	example_patient_normal
 Copy Number	ANAPC7			12	110656033	111070366														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANAPC5			12	121416899	123276670														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ANAPC4			4	16165160	57182857														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -37844,7 +37844,7 @@ Copy Number	ADIRF			10	82330074	90122484														example	MEL-IPI_Pat02-Tumo
 Copy Number	ADIPOR2			12	1863682	1895240														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ADIPOR1			1	198231769	204006716														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ADIPOQ-AS1			3	185882809	190159273														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ADIPOQ	Silent	p.I80I	3	186571998	186571998	C	C	T	0.036	111.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ADIPOQ	Silent	p.I80I	3	186571998	186571998	C	C	T	0.036	111									example	example_patient_tumor	example_patient_normal
 Copy Number	ADIPOQ			3	185882809	190159273														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ADIG			20	35832365	37210017														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ADI1			2	1168869	3745046														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -37993,7 +37993,7 @@ Copy Number	ACTN1			14	69263013	70125432														example	MEL-IPI_Pat02-Tumo
 Copy Number	ACTL9			19	7521291	10107194														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACTL8			1	17575726	18702891														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACTL7B			9	110084401	111705151														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ACTL7A	Silent	p.L76L	9	111624830	111624830	G	G	A	0.6071	28.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ACTL7A	Silent	p.L76L	9	111624830	111624830	G	G	A	0.6071	28									example	example_patient_tumor	example_patient_normal
 Copy Number	ACTL7A			9	110084401	111705151														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACTL6B			7	100087291	100464229														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACTL6A			3	179119109	182538166														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -38100,7 +38100,7 @@ Copy Number	ACACB			12	109509517	109634960														example	MEL-IPI_Pat02-Tu
 Copy Number	ACACB			12	109637359	109673176														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACACB			12	109675187	109694043														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACACB			12	109696915	110017753														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ACACA	Silent	p.F330F	17	35627660	35627660	G	G	A	0.232	125.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ACACA	Silent	p.F330F	17	35627660	35627660	G	G	A	0.232	125									example	example_patient_tumor	example_patient_normal
 Copy Number	ACACA			17	35545422	35937713														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACACA			17	35444376	35538299														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ACAA2			18	43510798	54346671														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
@@ -40870,7 +40870,7 @@ Copy Number	ABCG8			2	39931336	44123849														example	MEL-IPI_Pat02-Tumor
 Copy Number	ABCG5			2	39931336	44123849														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ABCG4			11	118986968	119170493														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ABCG2			4	88977421	89352457														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
-Somatic Variant	ABCG1	Silent	p.I227I	21	43702476	43702476	C	C	T	0.3833	60.0									example	example_patient_tumor	example_patient_normal
+Somatic Variant	ABCG1	Silent	p.I227I	21	43702476	43702476	C	C	T	0.3833	60									example	example_patient_tumor	example_patient_normal
 Copy Number	ABCG1			21	43230687	43735636														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ABCF3			3	183900658	184039893														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
 Copy Number	ABCF2			7	150813940	151880243														example	MEL-IPI_Pat02-Tumor-SM-4DJZX	
