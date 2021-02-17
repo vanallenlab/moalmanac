@@ -2,5 +2,6 @@ gene	call
 TP53	Deletion
 CDKN2A	Deletion
 BRAF	Amplification
-FOO Wild-type
-Bar
+CDK4	Amplification
+BLM	Wild type
+FGFR2	Deletion
