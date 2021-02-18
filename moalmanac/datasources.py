@@ -264,7 +264,7 @@ class ExAC(object):
         return Reader.safe_read(dbs['exac_handle'], '\t', cls.column_map)
 
 
-class ExACExtended(object):
+class ExACExtended:
     chr = Datasources.chr
     start = Datasources.start
     ref = Datasources.ref
@@ -293,6 +293,8 @@ class ExACExtended(object):
         'REF': ref,
         'ALT': alt,
         'AF': af,
+        'AC': ac,
+        'AN': an,
         'AC_AFR': ac_afr,
         'AC_AMR': ac_amr,
         'AC_EAS': ac_eas,

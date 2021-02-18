@@ -955,9 +955,10 @@ class ExAC:
     feature_type = Features.feature_type
 
     @classmethod
-    def append_exac_af(cls, df, ds):
+    def append_exac_af(cls, df, ds, ds_columns):
         variants, not_variants = cls.subset_for_variants(df)
-        ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
+        #ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
+        ds = ds.loc[:, ds_columns]
 
         for column, data_type in [(cls.str_columns, str), (cls.int_columns, int)]:
             variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
@@ -972,7 +973,7 @@ class ExAC:
     def annotate(cls, df, dbs):
         df_dropped = cls.drop_existing_columns(df)
         ds = datasources.ExAC.import_ds(dbs)
-        df_annotated = cls.append_exac_af(df_dropped, ds)
+        df_annotated = cls.append_exac_af(df_dropped, ds, [cls.chr, cls.start, cls.ref, cls.alt, cls.af])
         df_annotated[cls.bin_name] = cls.annotate_common_af(df_annotated[cls.af])
         return Features.preallocate_missing_columns(df_annotated)
 
@@ -1013,11 +1014,38 @@ class ExAC:
 
 
 class ExACExtended:
+    chr = datasources.ExACExtended.chr
+    start = datasources.ExACExtended.start
+    ref = datasources.ExACExtended.ref
+    alt = datasources.ExACExtended.alt
+    af = datasources.ExACExtended.af
+    ac = datasources.ExACExtended.ac
+    an = datasources.ExACExtended.an
+    ac_afr = datasources.ExACExtended.ac_afr
+    ac_amr = datasources.ExACExtended.ac_amr
+    ac_eas = datasources.ExACExtended.ac_eas
+    ac_fin = datasources.ExACExtended.ac_fin
+    ac_nfe = datasources.ExACExtended.ac_nfe
+    ac_sas = datasources.ExACExtended.ac_sas
+    ac_oth = datasources.ExACExtended.ac_oth
+    an_afr = datasources.ExACExtended.an_afr
+    an_amr = datasources.ExACExtended.an_amr
+    an_eas = datasources.ExACExtended.an_eas
+    an_fin = datasources.ExACExtended.an_fin
+    an_nfe = datasources.ExACExtended.an_nfe
+    an_sas = datasources.ExACExtended.an_sas
+    an_oth = datasources.ExACExtended.an_oth
+
+    ds_columns = [chr, start, ref, alt,
+                  af, ac, an,
+                  ac_afr, ac_amr, ac_eas, ac_fin, ac_nfe, ac_sas, ac_oth,
+                  an_afr, an_amr, an_eas, an_fin, an_nfe, an_sas, an_oth]
+
     @classmethod
     def annotate(cls, df, dbs):
         df_dropped = ExAC.drop_existing_columns(df)
         ds = datasources.ExACExtended.import_ds(dbs)
-        df_annotated = ExAC.append_exac_af(df_dropped, ds)
+        df_annotated = ExAC.append_exac_af(df_dropped, ds, cls.ds_columns)
         df_annotated[ExAC.bin_name] = ExAC.annotate_common_af(df_annotated[ExAC.af])
         return Features.preallocate_missing_columns(df_annotated)
 
