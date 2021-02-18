@@ -78,6 +78,19 @@ class Annotator(object):
         df = MSI.annotate(df)
         return df
 
+    @classmethod
+    def annotate_somatic_no_exac(cls, df, dbs, ontology):
+        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df = Almanac.annotate(df, dbs, ontology)
+        df = CancerHotspots.annotate(df, dbs)
+        df = CancerHotspots3D.annotate(df, dbs)
+        df = CancerGeneCensus.annotate(df, dbs)
+        df = Cosmic.annotate(df, dbs)
+        df = GSEACancerPathways.annotate(df, dbs)
+        df = GSEACancerModules.annotate(df, dbs)
+        df = MSI.annotate(df)
+        return df
+
     @staticmethod
     def compare_ids_true_index(id1, id2):
         return id1[id1.isin(id2)].index
