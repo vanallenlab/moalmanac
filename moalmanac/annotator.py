@@ -501,10 +501,7 @@ class Almanac(object):
             if table.contains(query_to_alt_type & query):
                 results_same_ontology = table.search(query_same_ontology & query_to_alt_type & query)
                 results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type & query)
-                if abs(float(alt)) >= 1.0:
-                    feature_match_to_assertion_bin = 4
-                else:
-                    feature_match_to_assertion_bin = 3
+                feature_match_to_assertion_bin = 4
 
             elif table.contains(query_feature & query):
                 results_same_ontology = table.search(query_same_ontology & query_feature & query)
@@ -538,7 +535,6 @@ class Almanac(object):
             split_alt = alt.split('--')
             gene1 = split_alt[0]
             gene2 = split_alt[1]
-            # gene1 = feature
         else:
             gene1 = feature
             gene2 = ''
