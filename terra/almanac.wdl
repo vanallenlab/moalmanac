@@ -20,7 +20,7 @@ workflow MolecularOncologyAlmanac {
     Int? SSD = 25
     Int? preemptible = 3
 
-    String? docker_tag = "0.4.0_v.2021-02-04"
+    String? docker_tag = "0.4.1_v.2021-02-04"
 
     meta {
         author: "Brendan Reardon"
@@ -28,7 +28,7 @@ workflow MolecularOncologyAlmanac {
         laboratory: "Van Allen Lab"
         institution: "Dana-Farber Cancer Institute, Broad Institute of MIT & Harvard"
         github: "https://github.com/vanallenlab/moalmanac"
-        license: "Apache-2.0 License"
+        license: "GPL-2.0"
     }
 
     call almanacTask {
