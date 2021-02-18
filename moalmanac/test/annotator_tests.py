@@ -200,7 +200,7 @@ class UnitTestExAC(unittest.TestCase):
                              ref: ["C", "A", "T"],
                              alt: ["G", "G", "G"],
                              af: [1, 0.5, 0.001]})
-        result = ExAC.append_exac_af(df, exac)
+        result = ExAC.append_exac_af(df, exac, [chr, start, ref, alt, af])
         self.assertEqual([1, 0, 0, 0], result[af].tolist())
 
     def test_annotate_common_af(self):
@@ -308,7 +308,7 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
     def test_annotate(self):
         column = 'preclinical_efficacy_observed'
         result = PreclinicalEfficacy.annotate(UnitTestPreclinicalEfficacy.df1, UnitTestPreclinicalEfficacy.df2)
-        self.assertEqual(result[column].isnull().sum(), 14)
+        self.assertEqual(result[column].isnull().sum(), 17)
         self.assertEqual(result[column].dropna().astype(int).tolist(), [1, 0])
 
     def test_series_for_significance(self):
