@@ -78,6 +78,19 @@ class Annotator(object):
         df = MSI.annotate(df)
         return df
 
+    @classmethod
+    def annotate_somatic_no_exac(cls, df, dbs, ontology):
+        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df = Almanac.annotate(df, dbs, ontology)
+        df = CancerHotspots.annotate(df, dbs)
+        df = CancerHotspots3D.annotate(df, dbs)
+        df = CancerGeneCensus.annotate(df, dbs)
+        df = Cosmic.annotate(df, dbs)
+        df = GSEACancerPathways.annotate(df, dbs)
+        df = GSEACancerModules.annotate(df, dbs)
+        df = MSI.annotate(df)
+        return df
+
     @staticmethod
     def compare_ids_true_index(id1, id2):
         return id1[id1.isin(id2)].index
@@ -115,8 +128,8 @@ class Annotator(object):
 
     @staticmethod
     def preallocate_empty_columns(df, columns):
-        for col in columns:
-            df.loc[:, col] = None
+        for column in columns:
+            df[column] = None
         return df
 
 
@@ -142,6 +155,7 @@ class Almanac(object):
     oncotree_code = datasources.Almanac.code
     context = datasources.Almanac.context
     therapy = datasources.Almanac.therapy
+    therapy_strategy = datasources.Almanac.therapy_strategy
     therapy_type = datasources.Almanac.therapy_type
     sensitivity = datasources.Almanac.sensitivity
     resistance = datasources.Almanac.resistance
@@ -173,6 +187,7 @@ class Almanac(object):
     sensitive_implication = COLNAMES[datasources_section]['sensitive_implication']
     sensitive_implication_map = COLNAMES[datasources_section]['sensitive_implication_map']
     sensitive_therapy = COLNAMES[datasources_section]['sensitive_therapy']
+    sensitive_therapy_strategy = COLNAMES[datasources_section]['sensitive_therapy_strategy']
     sensitive_therapy_type = COLNAMES[datasources_section]['sensitive_therapy_type']
     sensitive_description = COLNAMES[datasources_section]['sensitive_description']
     sensitive_source_type = COLNAMES[datasources_section]['sensitive_source_type']
@@ -193,6 +208,7 @@ class Almanac(object):
     resistance_implication = COLNAMES[datasources_section]['resistance_implication']
     resistance_implication_map = COLNAMES[datasources_section]['resistance_implication_map']
     resistance_therapy = COLNAMES[datasources_section]['resistance_therapy']
+    resistance_therapy_strategy = COLNAMES[datasources_section]['resistance_therapy_strategy']
     resistance_therapy_type = COLNAMES[datasources_section]['resistance_therapy_type']
     resistance_description = COLNAMES[datasources_section]['resistance_description']
     resistance_source_type = COLNAMES[datasources_section]['resistance_source_type']
@@ -239,6 +255,7 @@ class Almanac(object):
         oncotree_code: sensitive_oncotree_code,
         context: sensitive_context,
         therapy: sensitive_therapy,
+        therapy_strategy: sensitive_therapy_strategy,
         therapy_type: sensitive_therapy_type,
         implication: sensitive_implication,
         implication_map: sensitive_implication_map,
@@ -257,6 +274,7 @@ class Almanac(object):
         oncotree_code: resistance_oncotree_code,
         context: resistance_context,
         therapy: resistance_therapy,
+        therapy_strategy: resistance_therapy_strategy,
         therapy_type: resistance_therapy_type,
         implication: resistance_implication,
         implication_map: resistance_implication_map,
@@ -483,10 +501,7 @@ class Almanac(object):
             if table.contains(query_to_alt_type & query):
                 results_same_ontology = table.search(query_same_ontology & query_to_alt_type & query)
                 results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type & query)
-                if abs(float(alt)) >= 1.0:
-                    feature_match_to_assertion_bin = 4
-                else:
-                    feature_match_to_assertion_bin = 3
+                feature_match_to_assertion_bin = 4
 
             elif table.contains(query_feature & query):
                 results_same_ontology = table.search(query_same_ontology & query_feature & query)
@@ -520,7 +535,6 @@ class Almanac(object):
             split_alt = alt.split('--')
             gene1 = split_alt[0]
             gene2 = split_alt[1]
-            gene1 = feature
         else:
             gene1 = feature
             gene2 = ''
@@ -545,17 +559,33 @@ class Almanac(object):
 
                 query_first_gene = (cls.Query[cls.gene1] == first_gene)
                 query_second_gene = (cls.Query[cls.gene2] == second_gene)
+                query_first_gene_reverse = (cls.Query[cls.gene1] == second_gene)
+                query_second_gene_reverse = (cls.Query[cls.gene2] == first_gene)
+
                 query_to_alt = query_first_gene & query_second_gene & query_alt_type
+                query_to_alt_reverse = query_first_gene_reverse & query_second_gene_reverse & query_alt_type
+
                 query_to_alt_type = query_first_gene & query_alt_type
+                query_to_alt_type_reverse = query_first_gene_reverse & query_alt_type
 
                 if table.contains(query_to_alt & query):
                     results_same_ontology = table.search(query_same_ontology & query_to_alt & query)
                     results_diff_ontology = table.search(query_diff_ontology & query_to_alt & query)
                     match_bin = 4
 
+                elif table.contains(query_to_alt_reverse & query):
+                    results_same_ontology = table.search(query_same_ontology & query_to_alt_reverse & query)
+                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt_reverse & query)
+                    match_bin = 4
+
                 elif table.contains(query_to_alt_type & query):
                     results_same_ontology = table.search(query_same_ontology & query_to_alt_type & query)
                     results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type & query)
+                    match_bin = 3
+
+                elif table.contains(query_to_alt_type_reverse & query):
+                    results_same_ontology = table.search(query_same_ontology & query_to_alt_type_reverse & query)
+                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type_reverse & query)
                     match_bin = 3
 
                 elif table.contains(query_first_gene & query):
@@ -576,7 +606,7 @@ class Almanac(object):
                 tmp_dict = {'bin': match_bin,
                             'results_same_ontology': results_same_ontology,
                             'results_diff_ontology': results_diff_ontology,
-                            'alt': '{}--{}'.format(first_gene, second_gene),
+                            'alt': '{}--{}'.format(gene1, gene2),
                             'feature_col': feature_col}
                 fusion_matches.append(tmp_dict)
 
@@ -907,7 +937,7 @@ class Cosmic(object):
         return Annotator.annotate(df, dbs, datasources.Cosmic, cls.bin_name, cls.comparison_columns)
 
 
-class ExAC(object):
+class ExAC:
     chr = datasources.ExAC.chr
     start = datasources.ExAC.start
     ref = datasources.ExAC.ref
@@ -920,74 +950,104 @@ class ExAC(object):
     str_columns = [chr, ref, alt]
     int_columns = [start]
 
-    @classmethod
-    def append_exac_af(cls, df, ds):
-        ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
-        for col in cls.str_columns:
-            df.loc[:, col] = df.loc[:, col].astype(str)
-            ds.loc[:, col] = ds.loc[:, col].astype(str)
-        for col in cls.int_columns:
-            df.loc[:, col] = df.loc[:, col].astype(int)
-            ds.loc[:, col] = ds.loc[:, col].astype(int)
+    somatic = CONFIG['feature_types']['mut']
+    germline = CONFIG['feature_types']['germline']
+    feature_type = Features.feature_type
 
-        merged = df.merge(ds, how='left')
-        merged.loc[:, cls.af] = merged.loc[:, cls.af].fillna(0.0).astype(float).round(6)
-        return merged
+    @classmethod
+    def append_exac_af(cls, df, ds, ds_columns):
+        variants, not_variants = cls.subset_for_variants(df)
+        #ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
+        ds = ds.loc[:, ds_columns]
+
+        for column, data_type in [(cls.str_columns, str), (cls.int_columns, int)]:
+            variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
+            ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
+
+        merged = variants.merge(ds, how='left')
+        merged.loc[merged.index, cls.af] = cls.fill_na(merged, cls.af, 0.0, float, 6)
+        not_variants.loc[not_variants.index, cls.af] = cls.fill_na(not_variants, cls.af, 0.0, float, 6)
+        return pd.concat([merged, not_variants]).sort_index()
 
     @classmethod
     def annotate(cls, df, dbs):
-        df.drop(df.columns[df.columns.str.contains('exac')], axis=1, inplace=True)
+        df_dropped = cls.drop_existing_columns(df)
         ds = datasources.ExAC.import_ds(dbs)
-        df = cls.append_exac_af(df, ds)
-        df[cls.bin_name] = cls.annotate_common_af(df[cls.af])
-        return Features.preallocate_missing_columns(df)
+        df_annotated = cls.append_exac_af(df_dropped, ds, [cls.chr, cls.start, cls.ref, cls.alt, cls.af])
+        df_annotated[cls.bin_name] = cls.annotate_common_af(df_annotated[cls.af])
+        return Features.preallocate_missing_columns(df_annotated)
 
     @classmethod
     def annotate_common_af(cls, series_exac_af):
         if not series_exac_af.empty:
             series = pd.Series(float(0.0), index=series_exac_af.index.tolist())
-            condition = series_exac_af.astype(str).str.split(',', expand=True).fillna(value=np.nan).astype(float).mean(
-                axis=1).fillna(0.0)
+            condition = (series_exac_af
+                         .astype(str).str.split(',', expand=True)
+                         .fillna(value=np.nan)
+                         .astype(float).mean(axis=1)
+                         .fillna(0.0)
+                         )
             idx = condition.astype(float) >= float(cls.exac_common_threshold)
             series[idx] = float(1.0)
             return series
         else:
             return pd.Series()
 
-
-class ExACExtended(object):
-    chr = datasources.ExAC.chr
-    start = datasources.ExAC.start
-    ref = datasources.ExAC.ref
-    alt = datasources.ExAC.alt
-    af = datasources.ExAC.af
-
-    bin_name = ExAC.bin_name
-    exac_common_threshold = ExAC.exac_common_threshold
-
-    str_columns = ExAC.str_columns
-    int_columns = ExAC.int_columns
+    @classmethod
+    def drop_existing_columns(cls, dataframe):
+        return dataframe.drop(dataframe.columns[dataframe.columns.str.contains('exac')], axis=1)
 
     @classmethod
-    def append_exac_af(cls, df, ds):
-        for col in cls.str_columns:
-            df.loc[:, col] = df.loc[:, col].astype(str)
-            ds.loc[:, col] = ds.loc[:, col].astype(str)
-        for col in cls.int_columns:
-            df.loc[:, col] = df.loc[:, col].astype(int)
-            ds.loc[:, col] = ds.loc[:, col].astype(int)
+    def fill_na(cls, dataframe, column, fill_value, fill_data_type, round_places):
+        if column not in dataframe.columns:
+            dataframe = Annotator.preallocate_empty_columns(dataframe, [column])
+        return dataframe.loc[dataframe.index, column].fillna(fill_value).astype(fill_data_type).round(round_places)
 
-        merged = df.merge(ds, how='left')
-        merged.loc[:, cls.af] = merged.loc[:, cls.af].fillna(0.0).astype(float).round(6)
-        return merged
+    @classmethod
+    def format_columns(cls, dataframe, column, data_type):
+        return dataframe.loc[dataframe.index, column].astype(data_type)
+
+    @classmethod
+    def subset_for_variants(cls, dataframe):
+        idx = dataframe[cls.feature_type].isin([cls.somatic, cls.germline])
+        return dataframe[idx].copy(), dataframe[~idx].copy()
+
+
+class ExACExtended:
+    chr = datasources.ExACExtended.chr
+    start = datasources.ExACExtended.start
+    ref = datasources.ExACExtended.ref
+    alt = datasources.ExACExtended.alt
+    af = datasources.ExACExtended.af
+    ac = datasources.ExACExtended.ac
+    an = datasources.ExACExtended.an
+    ac_afr = datasources.ExACExtended.ac_afr
+    ac_amr = datasources.ExACExtended.ac_amr
+    ac_eas = datasources.ExACExtended.ac_eas
+    ac_fin = datasources.ExACExtended.ac_fin
+    ac_nfe = datasources.ExACExtended.ac_nfe
+    ac_sas = datasources.ExACExtended.ac_sas
+    ac_oth = datasources.ExACExtended.ac_oth
+    an_afr = datasources.ExACExtended.an_afr
+    an_amr = datasources.ExACExtended.an_amr
+    an_eas = datasources.ExACExtended.an_eas
+    an_fin = datasources.ExACExtended.an_fin
+    an_nfe = datasources.ExACExtended.an_nfe
+    an_sas = datasources.ExACExtended.an_sas
+    an_oth = datasources.ExACExtended.an_oth
+
+    ds_columns = [chr, start, ref, alt,
+                  af, ac, an,
+                  ac_afr, ac_amr, ac_eas, ac_fin, ac_nfe, ac_sas, ac_oth,
+                  an_afr, an_amr, an_eas, an_fin, an_nfe, an_sas, an_oth]
 
     @classmethod
     def annotate(cls, df, dbs):
-        df.drop(df.columns[df.columns.str.contains('exac')], axis=1, inplace=True)
+        df_dropped = ExAC.drop_existing_columns(df)
         ds = datasources.ExACExtended.import_ds(dbs)
-        df = cls.append_exac_af(df, ds)
-        df[cls.bin_name] = ExAC.annotate_common_af(df[cls.af])
-        return Features.preallocate_missing_columns(df)
+        df_annotated = ExAC.append_exac_af(df_dropped, ds, cls.ds_columns)
+        df_annotated[ExAC.bin_name] = ExAC.annotate_common_af(df_annotated[ExAC.af])
+        return Features.preallocate_missing_columns(df_annotated)
 
 
 class GSEACancerModules(object):

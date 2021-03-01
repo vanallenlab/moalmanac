@@ -246,7 +246,48 @@ class BurdenReader(object):
         return df.to_frame().T
 
 
-class CNVReader(object):
+class CopyNumber:
+    @staticmethod
+    def format_cn_gene(series):
+        new_series = series.str.split(' ', expand=True).loc[:, 0]
+        return new_series
+
+
+class CalledCNAReader(CopyNumber):
+    amplification = SEG_CONFIG['amp']
+    deletion = SEG_CONFIG['del']
+
+    @staticmethod
+    def create_column_map(config):
+        return {
+            config['gene']: Features.feature,
+            config['call']: Features.alt_type
+        }
+
+    @classmethod
+    def filter_calls(cls, series):
+        return series.fillna('').isin([cls.amplification, cls.deletion])
+
+    @classmethod
+    def import_feature(cls, handle, column_names, feature_type):
+        column_map = cls.create_column_map(column_names)
+        df = Reader.safe_read(handle, '\t', column_map)
+        df = Features.preallocate_missing_columns(df)
+
+        if not df.empty:
+            df[Features.feature_type] = Features.annotate_feature_type(feature_type, df.index)
+            df[Features.feature] = cls.format_cn_gene(df[Features.feature])
+
+            idx = cls.filter_calls(df[Features.alt_type])
+            seg_accept = df[idx]
+            seg_reject = df[~idx]
+        else:
+            seg_accept = Features.create_empty_dataframe()
+            seg_reject = Features.create_empty_dataframe()
+        return seg_accept, seg_reject
+
+
+class CNVReader(CopyNumber):
     amp_percentile = SEG_CONFIG['amp_percentile']
     del_percentile = SEG_CONFIG['del_percentile']
     amplification = SEG_CONFIG['amp']
@@ -260,7 +301,7 @@ class CNVReader(object):
         return series
 
     @staticmethod
-    def create_colmap(config):
+    def create_column_map(config):
         return {
             config['gene']: Features.feature,
             config['contig']: Features.chr,
@@ -272,7 +313,12 @@ class CNVReader(object):
 
     @classmethod
     def drop_duplicate_genes(cls, df):
-        return df.sort_values(Features.segment_mean, ascending=False).drop_duplicates([Features.feature], keep='first').index
+        return (
+            df
+            .sort_values(Features.segment_mean, ascending=False)
+            .drop_duplicates([Features.feature], keep='first')
+            .index
+        )
 
     @classmethod
     def filter_by_threshold(cls, df, percentile_amp, percentile_del):
@@ -294,22 +340,18 @@ class CNVReader(object):
         return df_accept, df_reject
 
     @staticmethod
-    def format_cnv_gene(series_gene):
-        return series_gene.str.split(' ', expand=True).loc[:, 0]
-
-    @staticmethod
     def get_unique_segments(df):
         return df.drop_duplicates([Features.chr, Features.start])[Features.segment_mean]
 
     @classmethod
-    def import_feature(cls, handle, colnames, feature_type):
-        column_map = cls.create_colmap(colnames)
+    def import_feature(cls, handle, column_names, feature_type):
+        column_map = cls.create_column_map(column_names)
         df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
         df = Features.preallocate_missing_columns(df)
 
         if not df.empty:
             df[Features.feature_type] = Features.annotate_feature_type(feature_type, df.index)
-            df[Features.feature] = cls.format_cnv_gene(df[Features.feature])
+            df[Features.feature] = cls.format_cn_gene(df[Features.feature])
 
             seg_accept, seg_reject = cls.filter_by_threshold(df, cls.amp_percentile, cls.del_percentile)
         else:
@@ -434,6 +476,7 @@ class CosmicSignatures(object):
         dataframe = Features.create_empty_dataframe()
         dataframe[Features.feature] = series_weights.index
         dataframe[Features.alt] = series_weights.values
+        dataframe[Features.alt_type] = 'version 2'
         dataframe.loc[:, Features.feature_type] = cls.feature_type
         dataframe.loc[:, cls.patient_id] = patient[cls.patient_id]
         return dataframe
@@ -514,7 +557,7 @@ class FusionReader(object):
             idx_min_spanningfrags = cls.filter_by_spanningfrags(df[Features.spanningfrags],
                                                                 FUSION_CONFIG['spanningfrags_min'])
             idx_unique = Features.drop_duplicate_genes(df.loc[idx_min_spanningfrags, :], Features.feature)
-            fusions_unique= df.loc[idx_unique, :]
+            fusions_unique = df.loc[idx_unique, :]
 
             fusions_left = fusions_unique.copy(deep=True)
             fusions_right = fusions_unique.copy(deep=True)
@@ -526,7 +569,6 @@ class FusionReader(object):
         else:
             fusions_accept = Features.create_empty_dataframe()
             fusions_reject = Features.create_empty_dataframe()
-
         return fusions_accept, fusions_reject
 
     @staticmethod

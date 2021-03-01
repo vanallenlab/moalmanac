@@ -1,0 +1,7 @@
+gene	call
+TP53	Deletion
+CDKN2A	Deletion
+BRAF	Amplification
+CDK4	Amplification
+BLM	Wild type
+FGFR2	Deletion

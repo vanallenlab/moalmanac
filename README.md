@@ -59,6 +59,7 @@ Optional arguments:
     --snv_handle            <string>    handle for MAF file of somatic single nucleotide variants
     --indel_handle          <string>    handle for MAF file of somatic insertions and deletions
     --bases_covered_handle  <string>    handle for text file which contains the number of calcable somatic bases
+    --called_cn_handle      <string>    handle for text file which contained genes and copy number calls, will be used over `--cnv_handle`
     --cnv_handle            <string>    handle for annotated seg file for somatic copy number
     --fusion_handle         <string>    handle for STAR fusion output, .final.abridged
     --germline_handle       <string>    handle for MAF file of germline single nucleotide variants and insertions and deletions

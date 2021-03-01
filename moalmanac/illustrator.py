@@ -5,6 +5,7 @@ import io
 import base64
 import numpy as np
 import pandas as pd
+import math
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 plt.rcParams["font.family"] = "sans-serif"
@@ -208,6 +209,19 @@ class PreclinicalEfficacy(Illustrator):
         return base64_image
 
     @classmethod
+    def create_y_range(cls, values):
+        minimum = min(values)
+        maximum = max(values)
+
+        yaxis_minimum_log10 = math.floor(math.log10(minimum)) - 0
+        yaxis_maximum_log10 = math.ceil(math.log10(maximum)) + 1
+
+        yticks = []
+        for item in range(yaxis_minimum_log10, yaxis_maximum_log10):
+            yticks.append(10**item)
+        return yticks
+
+    @classmethod
     def draw(cls, dictionary, drug, features, patient_id, feature_str):
         figure = cls.plot_boxplots(dictionary, drug, features)
         Illustrator.save_fig(figure, patient_id, '.'.join([feature_str, drug.split(' ')[0], 'png']))
@@ -271,9 +285,7 @@ class PreclinicalEfficacy(Illustrator):
 
         plt.xlim([0.5, feature_length + 0.5])
         plt.yscale('log')
-        ax.set_yticks([0.00001, 0.0001, 0.001, 0.01, 0.1, 1,
-                       10, 100, 1000, 10000, 100000])
-
+        ax.set_yticks(cls.create_y_range(wt_values[0] + mut_values[0]))
         ax.set_xticks(np.arange(1, len(features) + 1))
         ax.set_xticklabels([s.replace(' ', '\n') for s in features])
 
