@@ -18,7 +18,7 @@ ACH-000016	SLR21_KIDNEY				0	0	1	1	0	0	2	Kidney	kidney	kidney				51.0	False	Fals
 ACH-000017	SKBR3_BREAST	SIDM00897			0	0	1	1	0	0	2	Breast	breast	breast	Breast Carcinoma	Breast Adenocarcinoma	0.0	79.0	False	False
 ACH-000018	T24_URINARY_TRACT	SIDM01184			0	0	1	1	1	1	4	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	0.0	56.0	False	True
 ACH-000019	MCF7_BREAST	SIDM00148			0	1	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Invasive Ductal Carcinoma not Otherwise Specified	8.0	148.0	False	False
-ACH-000020	MHHCALL2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00331			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	12.0	20.0	False	False
+ACH-000020	MHHCALL2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00331			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	11.0	20.0	False	False
 ACH-000021	NCIH1693_LUNG	SIDM00742			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	0.0	110.0	False	True
 ACH-000022	PATU8988S_PANCREAS	SIDM00452			0	0	1	1	0	0	2	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Adenocarcinoma	0.0	34.0	False	False
 ACH-000023	PATU8988T_PANCREAS	SIDM00453			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Adenocarcinoma	1.0	67.0	True	True
@@ -48,7 +48,7 @@ ACH-000046	ACHN_KIDNEY	SIDM00123			0	0	1	1	0	1	3	Kidney	kidney	kidney	Kidney Car
 ACH-000047	GCIY_STOMACH	SIDM00274			0	0	1	1	1	1	4	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Adenocarcinoma	4.0	109.0	True	True
 ACH-000048	TOV112D_OVARY	SIDM01170			0	0	1	1	0	1	3	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Endometrioid Adenocarcinoma	9.0	43.0	False	False
 ACH-000049	HEKTE_KIDNEY	SIDM01723			0	0	1	1	0	0	2	Kidney	kidney	kidney	Non-Cancerous	Non-Cancerous	0.0	31.0	False	False
-ACH-000050	NCIH929_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01148			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	38.0	96.0	False	False
+ACH-000050	NCIH929_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01148			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	37.0	96.0	False	False
 ACH-000051	TE617T_SOFT_TISSUE	SIDM01760			0	0	1	1	0	0	2	Soft_Tissue	soft_tissue	soft_tissue	Rhabdomyosarcoma	Rhabdomyosarcoma	0.0	46.0	False	False
 ACH-000052	A673_BONE	SIDM00848			0	0	1	1	1	1	4	Bone	Ewings_Sarcoma	Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	4.0	50.0	True	True
 ACH-000053	KARPAS299_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01010			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	T-cell_lymphoma_other	T-Cell Non-Hodgkin's Lymphoma	Anaplastic Large Cell Lymphoma	19.0	64.0	False	False
@@ -57,7 +57,7 @@ ACH-000055	D283MED_CENTRAL_NERVOUS_SYSTEM	SIDM00888			0	0	1	1	1	1	4	Central_Nerv
 ACH-000056	DOHH2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00981			0	0	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	40.0	58.0	False	False
 ACH-000057	OPM1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00456			0	0	1	0	0	0	1	Na		multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	0.0	112.0	False	False
 ACH-000058	ML1_THYROID	SIDM00442			0	0	1	1	0	1	3	Thyroid	thyroid	thyroid	Thyroid Gland Carcinoma	Follicular Thyroid Carcinoma	4.0	46.0	False	False
-ACH-000059	SUPB15_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01176			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	49.0	51.0	False	False
+ACH-000059	SUPB15_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01176			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	48.0	51.0	False	False
 ACH-000060	PANC1005_PANCREAS	SIDM01135			0	0	1	1	0	1	3	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Ductal Adenocarcinoma	0.0	53.0	False	False
 ACH-000061	HH_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00671			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Cell Non-Hodgkin's Lymphoma	Cutaneous T-Cell Lymphoma	18.0	70.0	False	False
 ACH-000062	RERFLCMS_LUNG	SIDM00355			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	3.0	83.0	True	True
@@ -68,7 +68,7 @@ ACH-000066	HCC4006_LUNG	SIDM01596			0	0	1	1	0	0	2	Lung	lung_NSC	lung_NSC	Non-Sma
 ACH-000067	HS683_CENTRAL_NERVOUS_SYSTEM	SIDM00666			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioma	Oligodendroglioma	1.0	54.0	True	True
 ACH-000068	REC1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01773			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Mantle Cell Lymphoma	0.0	65.0	False	False
 ACH-000069	HS611T_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01567			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_Hodgkin	lymphoma_Hodgkin	Hodgkin's Lymphoma	Hodgkin's Lymphoma	0.0	48.0	False	False
-ACH-000070	697_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01076			0	0	1	0	0	1	2	Haematopoietic_And_Lymphoid_Tissue	leukemia_other	leukemia_other	B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	87.0	65.0	False	False
+ACH-000070	697_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01076			0	0	1	0	0	1	2	Haematopoietic_And_Lymphoid_Tissue	leukemia_other	leukemia_other	B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	86.0	65.0	False	False
 ACH-000071	HS706T_BONE	SIDM01704			0	0	1	1	0	0	2	Bone	giant_cell_tumour	giant_cell_tumour	Other Solid Carcinomas	Giant Cell Bone Sarcoma	0.0	30.0	False	False
 ACH-000072	MEG01_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00526			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	CML	CML	Chronic Myelogenous Leukemia	Chronic Myelogenous Leukemia	27.0	106.0	False	False
 ACH-000073	GRANTA519_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01058			0	0	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Mantle Cell Lymphoma	4.0	55.0	False	False
@@ -102,7 +102,7 @@ ACH-000100	RH41_SOFT_TISSUE	SIDM00426			0	0	1	1	1	1	4	Soft_Tissue	soft_tissue	so
 ACH-000101	KE37_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01003			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	leukemia_other	leukemia_other	T-Lymphoblastic Leukemia	Adult Precursor T Lymphoblastic Leukemia	60.0	58.0	False	False
 ACH-000102	GMS10_CENTRAL_NERVOUS_SYSTEM	SIDM01074			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	6.0	47.0	True	True
 ACH-000103	CAOV4_OVARY	SIDM00918			0	0	1	1	1	1	4	Ovary	ovary	ovary	Ovarian Carcinoma	High Grade Ovarian Serous Adenocarcinoma	3.0	72.0	True	True
-ACH-000104	LOUCY_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00342			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Adult Precursor T Lymphoblastic Leukemia	43.0	40.0	False	False
+ACH-000104	LOUCY_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00342			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Adult Precursor T Lymphoblastic Leukemia	42.0	40.0	False	False
 ACH-000105	ALLSIL_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00994			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Childhood T Acute Lymphoblastic Leukemia	63.0	44.0	False	False
 ACH-000106	JVM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01013			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Mantle Cell Lymphoma	19.0	48.0	False	False
 ACH-000107	CAPAN2_PANCREAS	SIDM00943			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Ductal Adenocarcinoma	2.0	62.0	True	True
@@ -118,7 +118,7 @@ ACH-000116	OAW28_OVARY	SIDM00481			0	0	1	1	1	1	4	Ovary	ovary	ovary	Ovarian Carci
 ACH-000117	EFM192A_BREAST	SIDM01002			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Carcinoma	11.0	70.0	True	True
 ACH-000118	HUPT3_PANCREAS	SIDM00533			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Adenocarcinoma	0.0	93.0	False	True
 ACH-000119	HS863T_FIBROBLAST	SIDM01726			1	0	1	1	0	0	2	Bone	Ewings_Sarcoma	fibroblast_like	Ewing's Sarcoma	Ewing's Sarcoma	0.0	45.0	False	False
-ACH-000120	CHP212_AUTONOMIC_GANGLIA	SIDM00910			0	0	1	1	0	1	3	Autonomic_Ganglia	neuroblastoma	neuroblastoma	Neuroblastoma	Neuroblastoma	23.0	56.0	False	False
+ACH-000120	CHP212_AUTONOMIC_GANGLIA	SIDM00910			0	0	1	1	0	1	3	Autonomic_Ganglia	neuroblastoma	neuroblastoma	Neuroblastoma	Neuroblastoma	22.0	56.0	False	False
 ACH-000121	NCIH2405_LUNG	SIDM00724			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	3.0	48.0	True	True
 ACH-000122	SUPT11_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE				0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	T-cell_lymphoma_other				26.0	False	False
 ACH-000123	COV434_OVARY	SIDM01476			0	0	1	1	0	0	2	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Granulosa Cell Tumor	0.0	31.0	False	False
@@ -143,7 +143,7 @@ ACH-000141	SNU308_BILIARY_TRACT	SIDM00161			0	0	1	1	0	0	2	Biliary_Tract	bile_duc
 ACH-000142	CAL29_URINARY_TRACT	SIDM00936			0	0	1	1	1	1	4	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	4.0	79.0	True	True
 ACH-000143	HCC2429_LUNG	SIDM01601			0	0	1	0	0	0	1	Na			Non-Small Cell Lung Carcinoma	Non-Small Cell Lung Carcinoma	0.0	52.0	False	False
 ACH-000144	RERFGC1B_STOMACH	SIDM00358			0	0	1	1	1	1	4	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Adenocarcinoma	7.0	123.0	True	True
-ACH-000145	SKLMS1_SOFT_TISSUE	SIDM01109			0	0	1	1	1	1	4	Soft_Tissue	soft_tissue	soft_tissue	Other Solid Carcinomas	Vulvar Leiomyosarcoma	6.0	64.0	True	True
+ACH-000145	SKLMS1_SOFT_TISSUE	SIDM01109			0	0	1	1	1	1	4	Soft_Tissue	soft_tissue	soft_tissue	Other Solid Carcinomas	Vulvar Leiomyosarcoma	5.0	64.0	True	True
 ACH-000146	THP1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01172			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Childhood Acute Differentiated Monocytic Leukemia	9.0	96.0	False	False
 ACH-000147	T47D_BREAST	SIDM00097			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Invasive Ductal Carcinoma not Otherwise Specified	3.0	52.0	True	True
 ACH-000148	HS578T_BREAST	SIDM00135			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Invasive Ductal Carcinoma not Otherwise Specified	7.0	48.0	True	True
@@ -155,7 +155,7 @@ ACH-000153	NCIH2052_PLEURA	SIDM00713			0	0	1	1	1	1	4	Pleura	mesothelioma	mesothe
 ACH-000154	HS888T_FIBROBLAST	SIDM01746			1	0	1	1	0	0	2	Bone	osteosarcoma	fibroblast_like	Osteosarcoma	Osteosarcoma	0.0	19.0	False	False
 ACH-000155	SW1990_PANCREAS	SIDM01165			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Adenocarcinoma	0.0	61.0	False	True
 ACH-000156	MHHCALL4_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00376			0	0	1	1	1	0	3	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	0.0	59.0	False	False
-ACH-000157	A4FUK_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00502			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	43.0	168.0	False	False
+ACH-000157	A4FUK_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00502			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	42.0	168.0	False	False
 ACH-000158	OCILY3_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01778			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	0.0	81.0	False	False
 ACH-000159	OSRC2_KIDNEY	SIDM00239			0	0	1	1	1	1	4	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	6.0	85.0	True	True
 ACH-000160	BT12_SOFT_TISSUE	SIDM01514			0	0	1	0	0	0	1	Na			Other Solid Carcinomas	Atypical Teratoid/Rhabdoid Tumor	0.0	75.0	False	False
@@ -166,7 +166,7 @@ ACH-000164	PANC1_PANCREAS	SIDM00610			0	0	1	1	0	0	2	Pancreas	pancreas	pancreas	P
 ACH-000165	HS751T_FIBROBLAST	SIDM01700			1	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_Hodgkin	fibroblast_like	Hodgkin's Lymphoma	Hodgkin's Lymphoma	0.0	46.0	False	False
 ACH-000166	KASUMI6_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01695			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	0.0	81.0	False	False
 ACH-000167	KE97_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01589	KE97_STOMACH		0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Mucinous Gastric Adenocarcinoma	0.0	72.0	False	False
-ACH-000168	NOMO1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00580			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Differentiated Monocytic Leukemia	12.0	95.0	False	False
+ACH-000168	NOMO1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00580			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Differentiated Monocytic Leukemia	11.0	95.0	False	False
 ACH-000169	RD_SOFT_TISSUE	SIDM00847			0	0	1	1	1	1	4	Soft_Tissue	soft_tissue	soft_tissue	Rhabdomyosarcoma	Embryonal Rhabdomyosarcoma	0.0	96.0	False	True
 ACH-000170	PRECLH_PROSTATE				0	0	1	1	0	0	2	Prostate	prostate	prostate				53.0	False	False
 ACH-000171	VMRCRCZ_KIDNEY	SIDM00317			0	0	1	1	1	1	4	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	4.0	70.0	True	True
@@ -196,9 +196,9 @@ ACH-000194	HS934T_FIBROBLAST	SIDM01741			1	0	1	1	0	0	2	Skin	melanoma	fibroblast_
 ACH-000195	SET2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00397			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	leukemia_other	leukemia_other	Acute Myeloid Leukemia	Adult Acute Megakaryoblastic Leukemia	0.0	118.0	False	False
 ACH-000196	HCC1599_BREAST	SIDM00877			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Ductal Breast Carcinoma	12.0	113.0	True	True
 ACH-000197	TALL1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00370			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Adult Precursor T Lymphoblastic Leukemia	1.0	99.0	False	False
-ACH-000198	EOL1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00277			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Chronic Eosinophilic Leukemia	106.0	136.0	False	False
+ACH-000198	EOL1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00277			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Chronic Eosinophilic Leukemia	105.0	136.0	False	False
 ACH-000199	HS255T_FIBROBLAST	SIDM01613			1	0	1	0	0	0	1	Large_Intestine	colorectal	fibroblast_like	Colorectal Carcinoma	Colorectal Carcinoma	0.0	16.0	False	False
-ACH-000200	NMCG1_CENTRAL_NERVOUS_SYSTEM	SIDM00575			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioma	Astrocytoma	3.0	102.0	True	True
+ACH-000200	NMCG1_CENTRAL_NERVOUS_SYSTEM	SIDM00575			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioma	Astrocytoma	2.0	102.0	True	True
 ACH-000201	A204_SOFT_TISSUE	SIDM00798			0	0	1	1	1	1	4	Soft_Tissue	soft_tissue	soft_tissue	Rhabdomyosarcoma	Embryonal Rhabdomyosarcoma	16.0	78.0	True	True
 ACH-000202	COLO320_LARGE_INTESTINE	SIDM00071			0	1	1	1	0	0	2	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Adenocarcinoma	0.0	79.0	False	False
 ACH-000203	NH6_AUTONOMIC_GANGLIA	SIDM01391			0	0	1	1	0	0	2	Autonomic_Ganglia	neuroblastoma	neuroblastoma	Neuroblastoma	Adrenal Neuroblastoma	0.0	79.0	False	False
@@ -217,14 +217,14 @@ ACH-000215	LN382_CENTRAL_NERVOUS_SYSTEM	SIDM01365			0	0	1	1	0	0	2	Central_Nervou
 ACH-000216	JHESOAD1_OESOPHAGUS	SIDM01731			0	0	1	1	0	0	2	Oesophagus		esophagus	Esophageal Carcinoma	Barrett s Adenocarcinoma	0.0	34.0	False	False
 ACH-000217	JHH6_LIVER	SIDM00615			0	0	1	1	1	1	4	Liver	liver	liver	Hepatocellular Carcinoma	Hepatocellular Carcinoma	3.0	115.0	True	True
 ACH-000218	PL21_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00450			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Acute Myeloid Leukemia	10.0	95.0	False	False
-ACH-000219	A375_SKIN	SIDM00795			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Amelanotic Melanoma	14.0	225.0	True	True
+ACH-000219	A375_SKIN	SIDM00795			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Amelanotic Melanoma	13.0	225.0	True	True
 ACH-000220	MINO_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01667			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Mantle Cell Lymphoma	0.0	84.0	False	False
 ACH-000221	SNU398_LIVER	SIDM01181			0	1	1	1	1	1	4	Liver	liver	liver	Hepatocellular Carcinoma	Hepatocellular Carcinoma	15.0	89.0	False	False
 ACH-000222	ASPC1_PANCREAS	SIDM00899			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Ductal Adenocarcinoma	0.0	78.0	False	True
 ACH-000223	HCC1937_BREAST	SIDM00874			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Ductal Breast Carcinoma	0.0	77.0	False	True
 ACH-000224	HS819T_FIBROBLAST	SIDM01699			1	0	1	1	0	0	2	Bone	chondrosarcoma	fibroblast_like	Chondrosarcoma	Chondrosarcoma	0.0	46.0	False	False
 ACH-000225	ECC12_STOMACH	SIDM00279			0	0	1	1	1	1	4	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Small Cell Carcinoma	0.0	124.0	False	True
-ACH-000226	SUPM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00421			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	T-cell_lymphoma_other	T-Cell Non-Hodgkin's Lymphoma	Anaplastic Large Cell Lymphoma	57.0	78.0	False	False
+ACH-000226	SUPM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00421			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	T-cell_lymphoma_other	T-Cell Non-Hodgkin's Lymphoma	Anaplastic Large Cell Lymphoma	56.0	78.0	False	False
 ACH-000227	KPNYN_AUTONOMIC_GANGLIA	SIDM00556			0	1	1	1	1	1	4	Autonomic_Ganglia	neuroblastoma	neuroblastoma	Neuroblastoma	Neuroblastoma	2.0	94.0	False	False
 ACH-000228	BICR31_UPPER_AERODIGESTIVE_TRACT	SIDM00078			0	0	1	1	1	1	4	Upper_Aerodigestive_Tract	upper_aerodigestive	upper_aerodigestive	Oral Cavity Carcinoma	Tongue Squamous Cell Carcinoma	0.0	59.0	False	True
 ACH-000229	HS822T_FIBROBLAST	SIDM01697			1	0	1	1	0	0	2	Bone	Ewings_Sarcoma	fibroblast_like	Ewing's Sarcoma	Ewing's Sarcoma	0.0	35.0	False	False
@@ -243,7 +243,7 @@ ACH-000241	JK1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01727			0	0	1	1	0	0	2	Haem
 ACH-000242	RT4_URINARY_TRACT	SIDM01085			0	0	1	1	1	1	4	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	4.0	77.0	True	True
 ACH-000243	DANG_PANCREAS	SIDM00950			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Adenocarcinoma	1.0	86.0	True	True
 ACH-000244	DKMG_CENTRAL_NERVOUS_SYSTEM	SIDM00947			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	10.0	65.0	True	True
-ACH-000245	BL41_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00985			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_Burkitt	lymphoma_Burkitt	Burkitt's Lymphoma	Burkitt's Lymphoma	64.0	95.0	False	False
+ACH-000245	BL41_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00985			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_Burkitt	lymphoma_Burkitt	Burkitt's Lymphoma	Burkitt's Lymphoma	63.0	95.0	False	False
 ACH-000246	SLR23_KIDNEY	SIDM01340			0	0	1	1	0	0	2	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	0.0	54.0	False	False
 ACH-000247	OCUM1_STOMACH	SIDM00568			0	0	1	1	0	1	3	Stomach	stomach	stomach	Gastric Carcinoma	Signet Ring Cell Gastric Adenocarcinoma	14.0	153.0	False	False
 ACH-000248	AU565_BREAST	SIDM00898			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Adenocarcinoma	17.0	210.0	True	True
@@ -256,12 +256,12 @@ ACH-000254	SCC15_UPPER_AERODIGESTIVE_TRACT	SIDM01083			0	0	1	1	1	1	4	Upper_Aerod
 ACH-000255	LMSU_STOMACH	SIDM01368			0	0	1	1	0	0	2	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Carcinoma	0.0	92.0	False	False
 ACH-000256	COV318_OVARY	SIDM01480			0	0	1	1	0	0	2	Ovary	ovary	ovary	Ovarian Carcinoma	High Grade Ovarian Serous Adenocarcinoma	0.0	63.0	False	False
 ACH-000257	CORL279_LUNG	SIDM00511			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	8.0	100.0	True	True
-ACH-000258	DU4475_BREAST	SIDM01001			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Carcinoma	38.0	109.0	True	True
+ACH-000258	DU4475_BREAST	SIDM01001			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Carcinoma	36.0	109.0	True	True
 ACH-000259	KELLY_AUTONOMIC_GANGLIA	SIDM01009			0	0	1	1	1	1	4	Autonomic_Ganglia	neuroblastoma	neuroblastoma	Neuroblastoma	Neuroblastoma	10.0	61.0	True	True
 ACH-000260	SKNAS_AUTONOMIC_GANGLIA	SIDM01101			0	0	1	1	0	1	3	Autonomic_Ganglia	neuroblastoma	neuroblastoma	Neuroblastoma	Neuroblastoma	1.0	80.0	False	False
 ACH-000261	RERFLCAI_LUNG	SIDM00307			0	0	1	1	0	0	2	Lung	lung_NSC	lung_NSC	Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	0.0	53.0	False	False
 ACH-000262	UOK101_KIDNEY	SIDM01400			0	0	1	1	0	0	2	Kidney	kidney	kidney	Kidney Carcinoma	Clear Cell Renal Cell Carcinoma	0.0	40.0	False	False
-ACH-000263	KASUMI1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01005			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Childhood Acute Myeloid Leukemia with Maturation	50.0	111.0	False	False
+ACH-000263	KASUMI1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01005			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Childhood Acute Myeloid Leukemia with Maturation	49.0	111.0	False	False
 ACH-000264	CALU6_LUNG	SIDM00921			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Non-Small Cell Lung Carcinoma	4.0	90.0	True	True
 ACH-000265	KP4_PANCREAS	SIDM00301			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Carcinoma	8.0	89.0	True	True
 ACH-000266	SNU213_PANCREAS	SIDM01372			0	0	1	1	0	0	2	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Ductal Adenocarcinoma	0.0	86.0	False	False
@@ -269,7 +269,7 @@ ACH-000267	HDLM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01064			0	0	1	1	1	1	4	Ha
 ACH-000268	SNU245_BILIARY_TRACT	SIDM00162			0	0	1	1	0	0	2	Biliary_Tract	bile_duct	bile_duct	Biliary Tract Carcinoma	Cholangiocarcinoma	0.0	94.0	False	False
 ACH-000269	AM38_CENTRAL_NERVOUS_SYSTEM	SIDM00492			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	5.0	148.0	True	True
 ACH-000270	HPAC_PANCREAS	SIDM00670			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Adenocarcinoma	4.0	87.0	True	True
-ACH-000271	SUDHL10_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00389			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	59.0	72.0	False	False
+ACH-000271	SUDHL10_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00389			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	58.0	72.0	False	False
 ACH-000272	SLR24_KIDNEY	SIDM01339			0	0	1	1	0	0	2	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	0.0	29.0	False	False
 ACH-000273	SF539_CENTRAL_NERVOUS_SYSTEM	SIDM00083			0	0	1	1	0	1	3	Central_Nervous_System	glioma	glioma	Glioblastoma	Gliosarcoma	3.0	44.0	False	False
 ACH-000274	HS852T_SKIN	SIDM01559			0	0	1	1	0	0	2	Skin	melanoma	melanoma	Melanoma	Melanoma	0.0	88.0	False	False
@@ -288,18 +288,18 @@ ACH-000286	SNU1033_LARGE_INTESTINE	SIDM00192			0	0	1	1	0	0	2	Large_Intestine	col
 ACH-000287	NUDUL1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00443			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	32.0	99.0	False	False
 ACH-000288	BT549_BREAST	SIDM00122			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Invasive Ductal Carcinoma not Otherwise Specified	2.0	67.0	True	True
 ACH-000289	SNU466_CENTRAL_NERVOUS_SYSTEM	SIDM01447			0	0	1	1	0	0	2	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	0.0	71.0	False	False
-ACH-000290	NCIH209_LUNG	SIDM00706			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	16.0	86.0	True	True
+ACH-000290	NCIH209_LUNG	SIDM00706			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	15.0	86.0	True	True
 ACH-000291	OV90_OVARY	SIDM01141			0	0	1	1	1	1	4	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Adenocarcinoma	5.0	80.0	True	True
 ACH-000292	NCIH841_LUNG	SIDM01134			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	1.0	105.0	True	True
 ACH-000293	KLE_ENDOMETRIUM	SIDM00686			0	0	1	1	1	1	4	Endometrium	endometrium	endometrium	Endometrial Carcinoma	Endometrial Adenocarcinoma	0.0	63.0	False	True
-ACH-000294	NB4_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00428			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Acute Promyelocytic Leukemia	39.0	78.0	False	False
+ACH-000294	NB4_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00428			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Acute Promyelocytic Leukemia	38.0	78.0	False	False
 ACH-000295	EM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01047			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	CML	CML	Chronic Myelogenous Leukemia	Chronic Myelogenous Leukemia	32.0	70.0	False	False
 ACH-000296	OUMS23_LARGE_INTESTINE	SIDM00036			0	0	1	1	0	0	2	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Carcinoma	0.0	135.0	False	False
 ACH-000297	NCIH889_LUNG	SIDM01739			0	0	1	1	0	0	2	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	97.0	False	False
 ACH-000298	NCIH2029_LUNG	SIDM00735			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	106.0	False	True
 ACH-000299	HNT34_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01621			0	0	1	0	0	0	1	Na		AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	0.0	58.0	False	False
 ACH-000300	SLR25_KIDNEY				0	0	1	1	0	0	2	Kidney	kidney	kidney				60.0	False	False
-ACH-000301	LAMA84_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00346			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	CML	CML	Chronic Myelogenous Leukemia	Chronic Myelogenous Leukemia	38.0	78.0	False	False
+ACH-000301	LAMA84_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00346			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	CML	CML	Chronic Myelogenous Leukemia	Chronic Myelogenous Leukemia	37.0	78.0	False	False
 ACH-000302	SNU1077_ENDOMETRIUM	SIDM00166			0	0	1	1	0	0	2	Endometrium	endometrium	endometrium	Other Solid Carcinomas	Uterine Corpus Carcinosarcoma	0.0	75.0	False	False
 ACH-000303	SNU5_STOMACH	SIDM01144			0	0	1	1	1	1	4	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Carcinoma	12.0	114.0	True	True
 ACH-000304	WM115_SKIN	SIDM01000			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Melanoma	3.0	157.0	True	True
@@ -334,9 +334,9 @@ ACH-000332	YAPC_PANCREAS	SIDM00411			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pa
 ACH-000333	JHOM2B_OVARY	SIDM01730			0	0	1	1	0	0	2	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Mucinous Adenocarcinoma	0.0	74.0	False	False
 ACH-000334	DB_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00886			0	0	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	18.0	111.0	False	False
 ACH-000335	MSTO211H_PLEURA	SIDM00640			0	0	1	1	1	1	4	Pleura	mesothelioma	mesothelioma	Mesothelioma	Pleural Biphasic Mesothelioma	5.0	77.0	True	True
-ACH-000336	OCIAML3_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00462			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	35.0	61.0	False	False
+ACH-000336	OCIAML3_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00462			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	33.0	61.0	False	False
 ACH-000337	NCIH3122_LUNG	SIDM00137			0	0	1	0	1	1	3	Na		lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	7.0	96.0	False	False
-ACH-000338	SR786_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00096			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	T-cell_lymphoma_other	Other Blood Carcinomas	Adult Immunoblastic Lymphoma	86.0	77.0	False	False
+ACH-000338	SR786_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00096			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	T-cell_lymphoma_other	Other Blood Carcinomas	Adult Immunoblastic Lymphoma	84.0	77.0	False	False
 ACH-000339	HCC461_LUNG	SIDM01595			0	0	1	0	0	0	1	Na			Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	0.0	88.0	False	False
 ACH-000340	HS870T_FIBROBLAST	SIDM01749			1	0	1	1	0	0	2	Bone	osteosarcoma	fibroblast_like	Osteosarcoma	Osteosarcoma	0.0	47.0	False	False
 ACH-000341	SKNFI_AUTONOMIC_GANGLIA	SIDM01099			0	0	1	1	1	1	4	Autonomic_Ganglia	neuroblastoma	neuroblastoma	Neuroblastoma	Neuroblastoma	1.0	79.0	True	True
@@ -360,7 +360,7 @@ ACH-000358	NCIH69_LUNG	SIDM01121			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small
 ACH-000359	MG63_BONE	SIDM00525			0	0	1	1	1	1	4	Bone	osteosarcoma	osteosarcoma	Osteosarcoma	Osteosarcoma	2.0	87.0	True	True
 ACH-000360	NCIH508_LARGE_INTESTINE	SIDM00777			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Cecum Adenocarcinoma	1.0	129.0	True	True
 ACH-000361	SKHEP1_LIVER	SIDM01110			0	0	1	1	1	1	4	Liver	liver	liver	Hepatocellular Carcinoma	Hepatocellular Carcinoma	2.0	27.0	True	True
-ACH-000362	MOLM13_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00437			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	123.0	88.0	False	False
+ACH-000362	MOLM13_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00437			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	121.0	88.0	False	False
 ACH-000363	SKMM2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00391			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	13.0	83.0	False	False
 ACH-000364	U2OS_BONE	SIDM01191			0	0	1	1	1	1	4	Bone	osteosarcoma	osteosarcoma	Osteosarcoma	Osteosarcoma	2.0	103.0	True	True
 ACH-000365	SUDHL4_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00405			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	17.0	81.0	False	False
@@ -371,14 +371,14 @@ ACH-000369	MOLM16_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00435			0	0	1	1	1	1	4	H
 ACH-000370	SNU626_CENTRAL_NERVOUS_SYSTEM	SIDM01444			0	0	1	1	0	0	2	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	0.0	78.0	False	False
 ACH-000371	RL_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01089			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	10.0	112.0	False	False
 ACH-000372	P12ICHIKAWA_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00463			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Childhood T Acute Lymphoblastic Leukemia	25.0	126.0	False	False
-ACH-000373	SKM1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00380			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	15.0	113.0	False	False
+ACH-000373	SKM1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00380			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	14.0	113.0	False	False
 ACH-000374	HCC1143_BREAST	SIDM00866			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Ductal Breast Carcinoma	0.0	84.0	False	True
 ACH-000375	G402_SOFT_TISSUE	SIDM00855			0	0	1	1	0	1	3	Soft_Tissue	soft_tissue	soft_tissue	Other Solid Carcinomas	Epithelioid Cell Type Gastrointestinal Stromal Tumor	19.0	96.0	False	False
 ACH-000376	SF295_CENTRAL_NERVOUS_SYSTEM	SIDM00084			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	5.0	83.0	True	True
 ACH-000377	SNU478_BILIARY_TRACT	SIDM00160			0	0	1	1	0	0	2	Biliary_Tract	bile_duct	bile_duct	Biliary Tract Carcinoma	Ampulla of Vater Adenocarcinoma	0.0	77.0	False	False
 ACH-000378	NCIH647_LUNG	SIDM01125			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Other Solid Carcinomas	Adenosquamous Lung Carcinoma	5.0	104.0	True	True
 ACH-000379	NCIH1781_LUNG	SIDM00754			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Bronchiolo-Alveolar Lung Carcinoma	6.0	102.0	True	True
-ACH-000380	KMS12BM_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01020			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	20.0	120.0	False	False
+ACH-000380	KMS12BM_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01020			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	19.0	120.0	False	False
 ACH-000381	T84_LARGE_INTESTINE	SIDM00782			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Adenocarcinoma	0.0	119.0	False	True
 ACH-000382	CORL24_LUNG	SIDM01490			0	0	1	1	0	0	2	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	99.0	False	False
 ACH-000383	OE33_OESOPHAGUS	SIDM00477			0	0	1	1	1	1	4	Oesophagus	esophagus	esophagus	Esophageal Carcinoma	Barrett s Adenocarcinoma	1.0	82.0	True	True
@@ -448,13 +448,13 @@ ACH-000446	KPNSI9S_AUTONOMIC_GANGLIA	SIDM00016			0	0	1	1	0	0	2	Autonomic_Ganglia
 ACH-000447	NCIH2228_LUNG	SIDM00729			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	2.0	110.0	True	True
 ACH-000448	NCIH1666_LUNG	SIDM00743			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Bronchiolo-Alveolar Lung Carcinoma	3.0	129.0	True	True
 ACH-000449	MESSA_SOFT_TISSUE	SIDM00625			0	0	1	1	1	1	4	Soft_Tissue	soft_tissue	soft_tissue	Other Solid Carcinomas	Uterine Corpus Sarcoma	1.0	113.0	True	True
-ACH-000450	MELHO_SKIN	SIDM00337			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Melanoma	6.0	127.0	True	True
+ACH-000450	MELHO_SKIN	SIDM00337			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Melanoma	5.0	127.0	True	True
 ACH-000451	NCIH2085_LUNG	SIDM00709			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Non-Small Cell Lung Carcinoma	0.0	112.0	False	True
 ACH-000452	TE8_OESOPHAGUS	SIDM00326			0	0	1	1	1	1	4	Oesophagus	esophagus	esophagus	Esophageal Squamous Cell Carcinoma	Esophageal Squamous Cell Carcinoma	5.0	113.0	True	True
 ACH-000453	MOLP2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01690			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	0.0	120.0	False	False
 ACH-000454	HCC95_LUNG	SIDM01593			0	0	1	1	0	0	2	Lung	lung_NSC	lung_NSC	Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	0.0	104.0	False	False
 ACH-000455	LN428_CENTRAL_NERVOUS_SYSTEM	SIDM01642			0	0	1	0	0	0	1	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	0.0	95.0	False	False
-ACH-000456	BCPAP_THYROID	SIDM00992			0	1	1	1	1	1	4	Thyroid	thyroid	thyroid	Thyroid Gland Carcinoma	Papillary Thyroid Carcinoma	4.0	108.0	False	False
+ACH-000456	BCPAP_THYROID	SIDM00992			0	1	1	1	1	1	4	Thyroid	thyroid	thyroid	Thyroid Gland Carcinoma	Papillary Thyroid Carcinoma	3.0	108.0	False	False
 ACH-000457	CAL54_KIDNEY	SIDM00932			0	0	1	1	1	1	4	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	10.0	84.0	True	True
 ACH-000458	CJM_SKIN	SIDM01512			0	0	1	1	0	0	2	Skin	melanoma	melanoma	Melanoma	Melanoma	0.0	99.0	False	False
 ACH-000459	TUHR10TKB_KIDNEY	SIDM01454			0	0	1	1	0	0	2	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	0.0	94.0	False	False
@@ -483,7 +483,7 @@ ACH-000482	RERFLCKJ_LUNG	SIDM00356			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Sm
 ACH-000483	SNU182_LIVER	SIDM01151			0	0	1	1	1	1	4	Liver	liver	liver	Hepatocellular Carcinoma	Hepatocellular Carcinoma	2.0	96.0	True	True
 ACH-000484	VMRCRCW_KIDNEY	SIDM00318			0	0	1	1	1	1	4	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	2.0	69.0	True	True
 ACH-000485	GSU_STOMACH	SIDM01551			0	0	1	1	0	0	2	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Carcinoma	0.0	115.0	False	False
-ACH-000486	KU1919_URINARY_TRACT	SIDM01033			0	0	1	1	1	1	4	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	9.0	121.0	True	True
+ACH-000486	KU1919_URINARY_TRACT	SIDM01033			0	0	1	1	1	1	4	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	8.0	121.0	True	True
 ACH-000487	F36P_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01498			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	AML	AML	Acute Myeloid Leukemia	Myelodysplastic syndrome	0.0	99.0	False	False
 ACH-000488	TE11_OESOPHAGUS	SIDM00348			0	0	1	1	1	1	4	Oesophagus	esophagus	esophagus	Esophageal Squamous Cell Carcinoma	Esophageal Squamous Cell Carcinoma	3.0	163.0	True	True
 ACH-000489	SW1116_LARGE_INTESTINE	SIDM00835			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Adenocarcinoma	1.0	99.0	True	True
@@ -592,7 +592,7 @@ ACH-000592	TM31_CENTRAL_NERVOUS_SYSTEM	SIDM01460			0	0	1	1	0	0	2	Central_Nervous
 ACH-000593	BC3C_URINARY_TRACT	SIDM01523			0	0	1	1	0	0	2	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	0.0	60.0	False	False
 ACH-000594	DMS153_LUNG	SIDM01504			0	0	1	1	0	0	2	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	119.0	False	False
 ACH-000595	LN229_CENTRAL_NERVOUS_SYSTEM	SIDM00684			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	0.0	140.0	False	True
-ACH-000596	LCLC97TM1_LUNG	SIDM00344			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Large Cell Lung Carcinoma	6.0	129.0	True	True
+ACH-000596	LCLC97TM1_LUNG	SIDM00344			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Large Cell Lung Carcinoma	5.0	129.0	True	True
 ACH-000597	TTC709_SOFT_TISSUE	SIDM01455			0	0	1	0	0	0	1	Na			Other Solid Carcinomas	Rhabdoid Tumor	0.0	111.0	False	False
 ACH-000598	KMS21BM_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01658			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Unknown		0.0	174.0	False	False
 ACH-000599	PATU8902_PANCREAS	SIDM00455			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Adenocarcinoma	0.0	108.0	False	True
@@ -607,7 +607,7 @@ ACH-000607	KYM1_SOFT_TISSUE	SIDM00552			0	1	1	1	1	1	4	Soft_Tissue	soft_tissue	so
 ACH-000608	COV644_OVARY	SIDM01474			0	0	1	1	0	0	2	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Carcinoma	0.0	91.0	False	False
 ACH-000609	SF126_CENTRAL_NERVOUS_SYSTEM	SIDM00382			0	0	1	1	1	1	4	Central_Nervous_System	glioma	glioma	Glioblastoma	Glioblastoma	0.0	84.0	False	True
 ACH-000610	NCIH2227_LUNG	SIDM00730			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	5.0	147.0	True	True
-ACH-000611	SUDHL6_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00407			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	72.0	144.0	False	False
+ACH-000611	SUDHL6_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00407			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	71.0	144.0	False	False
 ACH-000612	HUT102_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01734			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	T-cell_lymphoma_other	T-Cell Non-Hodgkin's Lymphoma	Cutaneous T-Cell Lymphoma	0.0	68.0	False	False
 ACH-000613	HOS_BONE	SIDM00806			0	0	1	1	1	1	4	Bone	osteosarcoma	osteosarcoma	Osteosarcoma	Osteosarcoma	0.0	64.0	False	True
 ACH-000614	RVH421_SKIN	SIDM00401			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Melanoma	4.0	144.0	True	True
@@ -646,7 +646,7 @@ ACH-000646	OVMANA_OVARY	SIDM01378			0	0	1	1	0	0	2	Ovary	ovary	ovary	Ovarian Carc
 ACH-000647	TE1_OESOPHAGUS	SIDM00369			0	0	1	1	1	1	4	Oesophagus	esophagus	esophagus	Esophageal Squamous Cell Carcinoma	Esophageal Squamous Cell Carcinoma	1.0	161.0	True	True
 ACH-000648	NCIH28_PLEURA	SIDM00720			0	0	1	1	1	1	4	Pleura	mesothelioma	mesothelioma	Mesothelioma	Pleural Sarcomatoid Mesothelioma	1.0	95.0	True	True
 ACH-000649	786O_KIDNEY	SIDM00125			0	1	1	0	1	1	3	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	15.0	115.0	False	False
-ACH-000650	IGR37_SKIN	SIDM01066			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Melanoma	15.0	152.0	True	True
+ACH-000650	IGR37_SKIN	SIDM01066			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Melanoma	14.0	152.0	True	True
 ACH-000651	SW620_LARGE_INTESTINE	SIDM00841			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Adenocarcinoma	0.0	202.0	False	True
 ACH-000652	SUIT2_PANCREAS	SIDM00371			0	0	1	1	1	1	4	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Ductal Adenocarcinoma	2.0	146.0	True	True
 ACH-000653	JJN3_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01036			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	8.0	99.0	False	False
@@ -656,7 +656,7 @@ ACH-000656	SUDHL8_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00423			0	1	1	1	0	1	3	H
 ACH-000657	A2780_OVARY	SIDM00210			0	0	1	1	1	1	4	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Endometrioid Adenocarcinoma	20.0	223.0	True	True
 ACH-000658	KMS18_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01576			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	0.0	83.0	False	False
 ACH-000659	SCLC21H_LUNG	SIDM00029			0	0	1	1	0	0	2	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	179.0	False	False
-ACH-000660	SUDHL5_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00406			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	119.0	103.0	False	False
+ACH-000660	SUDHL5_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00406			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_DLBCL	lymphoma_DLBCL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	116.0	103.0	False	False
 ACH-000661	WM1799_SKIN	SIDM01398			0	0	1	1	0	0	2	Skin	melanoma	melanoma	Melanoma	Melanoma	0.0	150.0	False	False
 ACH-000662	CORL23_LUNG	SIDM00512			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Large Cell Lung Carcinoma	0.0	164.0	False	True
 ACH-000663	OVTOKO_OVARY	SIDM00425			0	0	1	1	1	1	4	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Clear Cell Adenocarcinoma	4.0	126.0	True	True
@@ -759,10 +759,10 @@ ACH-000759	MDAMB175VII_BREAST	SIDM00633			0	0	1	1	1	1	4	Breast	breast	breast	Bre
 ACH-000760	LNZ308_CENTRAL_NERVOUS_SYSTEM	SIDM00682			0	0	1	1	0	0	2	Central_Nervous_System	glioma	glioma	Glioma	Astrocytoma	0.0	73.0	False	False
 ACH-000761	NUGC2_STOMACH	SIDM01779			0	0	1	1	0	0	2	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Adenocarcinoma	0.0	106.0	False	False
 ACH-000762	YD38_UPPER_AERODIGESTIVE_TRACT	SIDM01412			0	0	1	1	0	0	2	Upper_Aerodigestive_Tract	upper_aerodigestive	upper_aerodigestive	Head and Neck Carcinoma	Gingival Squamous Cell Carcinoma	0.0	160.0	False	False
-ACH-000763	MM1S_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01265			0	0	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	25.0	160.0	False	False
+ACH-000763	MM1S_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01265			0	0	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	24.0	160.0	False	False
 ACH-000764	SH10TC_STOMACH	SIDM01343			0	0	1	1	0	0	2	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Carcinoma	0.0	179.0	False	False
 ACH-000765	WM983B_SKIN	SIDM01397			0	0	1	1	0	0	2	Skin	melanoma	melanoma	Melanoma	Melanoma	0.0	128.0	False	False
-ACH-000766	NCIH1648_LUNG	SIDM00746			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	11.0	174.0	True	True
+ACH-000766	NCIH1648_LUNG	SIDM00746			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	10.0	174.0	True	True
 ACH-000767	NCIH526_LUNG	SIDM01128			0	0	1	1	1	1	4	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	17.0	170.0	True	True
 ACH-000768	MDAMB231_BREAST	SIDM00146			0	0	1	1	0	1	3	Breast	breast	breast	Breast Carcinoma	Breast Adenocarcinoma	3.0	135.0	False	False
 ACH-000769	LK2_LUNG	SIDM00548			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	4.0	147.0	True	True
@@ -791,7 +791,7 @@ ACH-000791	RERFLCAD1_LUNG	SIDM01331			0	0	1	1	0	0	2	Lung	lung_NSC	lung_NSC	Non-S
 ACH-000792	BFTC909_KIDNEY	SIDM00988			0	0	1	1	1	1	4	Kidney	kidney	kidney	Kidney Carcinoma	Renal Cell Carcinoma	3.0	112.0	True	True
 ACH-000793	KATOIII_STOMACH	SIDM00687			0	0	1	1	1	1	4	Stomach	stomach	stomach	Gastric Carcinoma	Signet Ring Cell Gastric Adenocarcinoma	12.0	216.0	True	True
 ACH-000794	BICR22_UPPER_AERODIGESTIVE_TRACT	SIDM00485			0	0	1	1	0	1	3	Upper_Aerodigestive_Tract	upper_aerodigestive	upper_aerodigestive	Oral Cavity Carcinoma	Tongue Squamous Cell Carcinoma	9.0	113.0	False	False
-ACH-000795	MOLT13_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00433			0	1	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Childhood T Acute Lymphoblastic Leukemia	28.0	389.0	False	False
+ACH-000795	MOLT13_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00433			0	1	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Childhood T Acute Lymphoblastic Leukemia	27.0	389.0	False	False
 ACH-000796	MCAS_OVARY	SIDM00008			0	0	1	1	0	0	2	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Cystadenocarcinoma	0.0	168.0	False	False
 ACH-000797	HLFA_FIBROBLAST	SIDM01710			1	0	1	1	0	0	2	Lung	liver	fibroblast_like	Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	0.0	97.0	False	False
 ACH-000798	CL40_LARGE_INTESTINE	SIDM00960			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Adenocarcinoma	0.0	114.0	False	True
@@ -834,7 +834,7 @@ ACH-000834	UMUC1_URINARY_TRACT	SIDM01409			0	0	1	1	0	0	2	Urinary_Tract	urinary_t
 ACH-000835	GCT_SOFT_TISSUE	SIDM00853			0	0	1	1	1	1	4	Soft_Tissue	soft_tissue	soft_tissue	Other Solid Carcinomas	Malignant Fibrous Histiocytoma	10.0	329.0	True	True
 ACH-000836	YD15_SALIVARY_GLAND	SIDM01411			0	0	1	1	0	0	2	Salivary_Gland	other	upper_aerodigestive	Head and Neck Carcinoma	Tongue Squamous Cell Carcinoma	0.0	65.0	False	False
 ACH-000837	NCIH322_LUNG	SIDM00117			0	0	1	1	0	1	3	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Bronchiolo-Alveolar Lung Carcinoma	7.0	195.0	False	False
-ACH-000838	AMO1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00993			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	43.0	127.0	False	False
+ACH-000838	AMO1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00993			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	multiple_myeloma	multiple_myeloma	Plasma Cell Myeloma	Plasma Cell Myeloma	42.0	127.0	False	False
 ACH-000839	SCABER_URINARY_TRACT	SIDM00032			0	0	1	1	0	0	2	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	0.0	179.0	False	False
 ACH-000840	HCC366_LUNG	SIDM01070			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Other Solid Carcinomas	Adenosquamous Lung Carcinoma	0.0	178.0	False	True
 ACH-000841	NCIH2087_LUNG	SIDM00708			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	2.0	184.0	True	True
@@ -898,7 +898,7 @@ ACH-000898	SNU719_STOMACH	SIDM01450			0	0	1	1	0	0	2	Stomach	stomach	stomach	Gast
 ACH-000899	WM88_SKIN	SIDM01768			0	0	1	1	0	0	2	Skin	melanoma	melanoma	Melanoma	Melanoma	0.0	404.0	False	False
 ACH-000900	NCIH23_LUNG	SIDM00138			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	7.0	364.0	True	True
 ACH-000901	HCC1359_LUNG	SIDM01606			0	0	1	1	0	0	2	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Giant Cell Lung Carcinoma	0.0	154.0	False	False
-ACH-000902	CAL148_BREAST	SIDM00938			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Carcinoma	14.0	215.0	True	True
+ACH-000902	CAL148_BREAST	SIDM00938			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Carcinoma	13.0	215.0	True	True
 ACH-000903	FTC133_THYROID	SIDM00213			0	0	1	1	1	1	4	Thyroid	thyroid	thyroid	Thyroid Gland Carcinoma	Follicular Thyroid Carcinoma	4.0	303.0	True	True
 ACH-000904	NCIH2106_LUNG	SIDM01668			0	0	1	1	0	0	2	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Non-Small Cell Lung Carcinoma	0.0	356.0	False	False
 ACH-000905	5637_URINARY_TRACT	SIDM00807			0	0	1	0	0	1	2	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	1.0	194.0	False	False
@@ -911,12 +911,12 @@ ACH-000911	NUGC3_STOMACH	SIDM00572			0	0	1	1	1	1	4	Stomach	stomach	stomach	Gastr
 ACH-000912	NCIH2286_LUNG	SIDM00017			0	0	1	1	0	0	2	Lung	lung_small_cell	lung_small_cell	Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	0.0	398.0	False	False
 ACH-000913	ESS1_ENDOMETRIUM	SIDM01043			0	1	1	1	0	1	3	Endometrium	endometrium	endometrium	Other Solid Carcinomas	Endometrial Stromal Sarcoma	7.0	285.0	False	False
 ACH-000914	HT_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00661			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	3.0	517.0	False	False
-ACH-000915	IPC298_SKIN	SIDM01059			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Cutaneous Melanoma	4.0	518.0	True	True
+ACH-000915	IPC298_SKIN	SIDM01059			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Cutaneous Melanoma	3.0	518.0	True	True
 ACH-000916	NCIH1573_LUNG	SIDM00749			0	0	1	1	1	1	4	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	1.0	473.0	True	True
 ACH-000917	TE4_OESOPHAGUS	SIDM00250			0	0	1	1	1	1	4	Oesophagus	esophagus	esophagus	Esophageal Squamous Cell Carcinoma	Esophageal Squamous Cell Carcinoma	10.0	284.0	True	True
 ACH-000918	MOLT16_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00431			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Childhood T Acute Lymphoblastic Leukemia	33.0	501.0	False	False
 ACH-000919	IM95_STOMACH	SIDM00602			0	0	1	1	1	1	4	Stomach	stomach	stomach	Gastric Carcinoma	Gastric Adenocarcinoma	5.0	534.0	True	True
-ACH-000920	CMLT1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00958			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	CML	CML	Chronic Myelogenous Leukemia	Chronic Myelogenous Leukemia	35.0	882.0	False	False
+ACH-000920	CMLT1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00958			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	CML	CML	Chronic Myelogenous Leukemia	Chronic Myelogenous Leukemia	34.0	882.0	False	False
 ACH-000921	NCIH1339_LUNG	SIDM01387			0	0	1	1	0	0	2	Lung	lung_small_cell	lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	453.0	False	False
 ACH-000922	RCHACV_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00449			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	leukemia_other	leukemia_other	B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	14.0	545.0	False	False
 ACH-000923	BCP1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01530			0	0	1	1	0	0	2	Haematopoietic_And_Lymphoid_Tissue	lymphoma_other	B-cell_lymphoma_other	B-Cell Non-Hodgkin's Lymphoma	Primary Effusion Lymphoma	0.0	227.0	False	False
@@ -934,7 +934,7 @@ ACH-000934	MDAMB361_BREAST	SIDM00528			0	1	1	1	1	1	4	Breast	breast	breast	Breast
 ACH-000935	MDST8_LARGE_INTESTINE	SIDM00527			0	0	1	1	0	1	3	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Carcinoma	10.0	360.0	False	False
 ACH-000936	EFO27_OVARY	SIDM01051			0	0	1	1	0	1	3	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Mucinous Adenocarcinoma	4.0	502.0	False	False
 ACH-000937	PF382_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00451			0	1	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	T-cell_ALL	T-cell_ALL	T-Lymphoblastic Leukemia	Childhood T Acute Lymphoblastic Leukemia	16.0	1392.0	False	False
-ACH-000938	NALM6_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00429			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Adult Precursor B Lymphoblastic Leukemia	69.0	701.0	False	False
+ACH-000938	NALM6_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00429			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Adult Precursor B Lymphoblastic Leukemia	68.0	701.0	False	False
 ACH-000939	SKUT1_SOFT_TISSUE	SIDM01113			0	1	1	1	1	1	4	Soft_Tissue	soft_tissue	soft_tissue	Other Solid Carcinomas	Uterine Corpus Leiomyosarcoma	6.0	580.0	False	False
 ACH-000940	AN3CA_ENDOMETRIUM	SIDM00901			0	0	1	1	1	1	4	Endometrium	endometrium	endometrium	Endometrial Carcinoma	Endometrial Adenocarcinoma	14.0	810.0	True	True
 ACH-000941	HEC1B_ENDOMETRIUM	SIDM01241			0	0	1	1	0	0	2	Endometrium	endometrium	endometrium	Endometrial Carcinoma	Endometrial Adenocarcinoma	0.0	738.0	False	False
@@ -967,13 +967,13 @@ ACH-000967	SNUC2A_LARGE_INTESTINE	SIDM00780			0	0	1	1	0	0	2	Large_Intestine	colo
 ACH-000968	COLO792_SKIN	SIDM00140			0	0	1	1	1	1	4	Skin	melanoma	melanoma	Melanoma	Melanoma	3.0	816.0	True	True
 ACH-000969	KM12_LARGE_INTESTINE	SIDM00150			0	1	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Carcinoma	19.0	1290.0	False	False
 ACH-000970	SNUC5_LARGE_INTESTINE	SIDM00498			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Cecum Adenocarcinoma	0.0	904.0	False	True
-ACH-000971	HCT116_LARGE_INTESTINE	SIDM00783			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Carcinoma	11.0	1030.0	True	True
+ACH-000971	HCT116_LARGE_INTESTINE	SIDM00783			0	0	1	1	1	1	4	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Carcinoma	10.0	1030.0	True	True
 ACH-000972	HEC151_ENDOMETRIUM	SIDM01609			0	0	1	1	0	0	2	Endometrium	endometrium	endometrium	Endometrial Carcinoma	Endometrial Adenocarcinoma	0.0	966.0	False	False
 ACH-000973	639V_URINARY_TRACT	SIDM00999			0	0	1	0	1	1	3	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	4.0	838.0	False	False
 ACH-000974	SNGM_ENDOMETRIUM	SIDM00373			0	1	1	1	0	1	3	Endometrium	endometrium	endometrium	Endometrial Carcinoma	Endometrial Adenocarcinoma	11.0	1179.0	False	False
 ACH-000975	HCC2450_LUNG	SIDM01600			0	0	1	0	0	0	1	Na			Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	0.0	760.0	False	False
 ACH-000976	HUCCT1_BILIARY_TRACT	SIDM00587			0	0	1	1	1	1	4	Biliary_Tract	bile_duct	bile_duct	Biliary Tract Carcinoma	Intrahepatic Cholangiocarcinoma	1.0	222.0	True	True
-ACH-000977	LNCAPCLONEFGC_PROSTATE	SIDM00683			0	1	1	1	1	1	4	Prostate	prostate	prostate	Prostate Carcinoma	Prostate Carcinoma	21.0	1391.0	False	False
+ACH-000977	LNCAPCLONEFGC_PROSTATE	SIDM00683			0	1	1	1	1	1	4	Prostate	prostate	prostate	Prostate Carcinoma	Prostate Carcinoma	20.0	1391.0	False	False
 ACH-000978	EN_ENDOMETRIUM	SIDM01045			0	1	1	1	1	1	4	Endometrium	endometrium	endometrium	Endometrial Carcinoma	Endometrial Carcinoma	1.0	1643.0	False	False
 ACH-000979	DU145_PROSTATE	SIDM00120			0	0	1	1	1	1	4	Prostate	prostate	prostate	Prostate Carcinoma	Prostate Carcinoma	6.0	1118.0	True	True
 ACH-000980	NCIH1155_LUNG	SIDM00651			0	0	1	1	0	1	3	Lung	lung_NSC	lung_NSC	Non-Small Cell Lung Carcinoma	Large Cell Lung Carcinoma	4.0	994.0	False	False
@@ -1045,7 +1045,7 @@ ACH-001060	DL40_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01506			0	0	1	0	0	0	1				
 ACH-001061	DLD1_LARGE_INTESTINE	SIDM00787			0	0	0	1	0	0	1	Large_Intestine	colorectal	colorectal	Colorectal Carcinoma	Colon Adenocarcinoma	0.0		False	False
 ACH-001063	DOV13_OVARY	SIDM00969			0	1	1	1	1	1	4	Ovary	ovary	ovary	Ovarian Carcinoma	Ovarian Adenocarcinoma	4.0	410.0	False	False
 ACH-001064	EB2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00863			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	lymphoma_Burkitt	lymphoma_Burkitt	Burkitt's Lymphoma	Epstein-Barr Virus-Related Burkitt s Lymphoma	27.0	336.0	False	False
-ACH-001065	EVSAT_BREAST	SIDM01042			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Carcinoma	21.0	164.0	True	True
+ACH-001065	EVSAT_BREAST	SIDM01042			0	0	1	1	1	1	4	Breast	breast	breast	Breast Carcinoma	Breast Carcinoma	20.0	164.0	True	True
 ACH-001066	EWS834_BONE	SIDM01713			0	0	1	0	0	0	1				Ewing's Sarcoma	Ewing's Sarcoma	0.0	59.0	False	False
 ACH-001067	F5_CENTRAL_NERVOUS_SYSTEM	SIDM01497			0	0	0	1	0	0	1	Central_Nervous_System	meningioma	meningioma	Other Solid Carcinomas	Meningioma	0.0		False	False
 ACH-001068	FEPD_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01496			0	0	1	0	0	0	1				T-Cell Non-Hodgkin's Lymphoma	Anaplastic Large Cell Lymphoma	0.0	131.0	False	False
@@ -1072,7 +1072,7 @@ ACH-001099	KD_SOFT_TISSUE	SIDM01663			0	0	1	0	0	0	1	Na			Other Solid Carcinomas	
 ACH-001100	KHYG_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01661			0	0	1	0	0	0	1				Other Blood Carcinomas	Natural Killer Cell Lymphoblastic Leukemia Lymphoma	0.0	123.0	False	False
 ACH-001101	KLM1_PANCREAS				0	0	0	1	0	0	1	Pancreas	pancreas	pancreas					False	False
 ACH-001103	KMS12PE_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01035			0	0	0	0	0	0	0				Plasma Cell Myeloma	Plasma Cell Myeloma	0.0		False	False
-ACH-001106	KOPN8_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01034			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	33.0	112.0	False	False
+ACH-001106	KOPN8_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01034			0	0	1	1	1	1	4	Haematopoietic_And_Lymphoid_Tissue	B-cell_ALL	B-cell_ALL	B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	32.0	112.0	False	False
 ACH-001107	KP1N_PANCREAS	SIDM00583			0	0	1	0	1	1	3	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Ductal Adenocarcinoma	2.0	78.0	False	False
 ACH-001108	KP1NL_PANCREAS	SIDM01755			0	0	1	0	0	0	1	Pancreas	pancreas	pancreas	Pancreatic Carcinoma	Pancreatic Ductal Adenocarcinoma	0.0	10.0	False	False
 ACH-001109	KPMRTRY_SOFT_TISSUE	SIDM01655			0	0	1	0	0	0	1	Na			Other Solid Carcinomas	Rhabdoid Tumour of the Kidney	0.0	50.0	False	False
@@ -1115,7 +1115,7 @@ ACH-001171	PL45_PANCREAS	SIDM01115			0	0	0	1	0	0	1	Pancreas	pancreas	pancreas	Pa
 ACH-001172	R256_CENTRAL_NERVOUS_SYSTEM				0	0	0	0	0	0	0								False	False
 ACH-001173	R262_CENTRAL_NERVOUS_SYSTEM	SIDM01317			0	0	1	0	0	0	1				Other Solid Carcinomas	Medulloblastoma 	0.0	99.0	False	False
 ACH-001175	RCC4_KIDNEY				0	0	0	1	0	0	1	Kidney	kidney	kidney					False	False
-ACH-001182	RPMI6666_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00813			0	0	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	lymphoma_Hodgkin	lymphoma_Hodgkin	Non-Cancerous	Non-Cancerous	28.0	45.0	False	False
+ACH-001182	RPMI6666_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00813			0	0	1	1	0	1	3	Haematopoietic_And_Lymphoid_Tissue	lymphoma_Hodgkin	lymphoma_Hodgkin	Non-Cancerous	Non-Cancerous	27.0	45.0	False	False
 ACH-001183	RT11284_URINARY_TRACT	SIDM01202			0	0	1	1	0	0	2	Urinary_Tract	urinary_tract	urinary_tract	Bladder Carcinoma	Bladder Carcinoma	0.0	6.0	False	False
 ACH-001184	SCMCRM2_SOFT_TISSUE	SIDM01346			0	0	1	0	0	0	1				Rhabdomyosarcoma	Embryonal Rhabdomyosarcoma	0.0	173.0	False	False
 ACH-001187	SF8657_SKIN				0	0	1	0	0	0	1	Skin	melanoma	melanoma				7.0	False	False
@@ -1396,7 +1396,7 @@ ACH-001699	UPCISCC131_UPPER_AERODIGESTIVE_TRACT				0	0	0	0	0	0	0								False	Fa
 ACH-001702	VAESBJ_SOFT_TISSUE	SIDM01179			0	0	1	0	1	1	3	Na			Other Solid Carcinomas	Epithelioid Sarcoma	5.0	49.0	False	False
 ACH-001703	VAL_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00416			0	0	1	0	1	1	3	Na			B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	16.0	79.0	False	False
 ACH-001704	VMRCMELG_SKIN	SIDM00319			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Melanoma	1.0	95.0	False	False
-ACH-001709	WSUNHL_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00412			0	0	1	0	1	1	3	Na			B-Cell Non-Hodgkin's Lymphoma	Follicular Lymphoma	38.0	278.0	False	False
+ACH-001709	WSUNHL_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00412			0	0	1	0	1	1	3	Na			B-Cell Non-Hodgkin's Lymphoma	Follicular Lymphoma	37.0	278.0	False	False
 ACH-001711	PFSK1_CENTRAL_NERVOUS_SYSTEM	SIDM01132			0	0	1	0	1	1	3	Na		medulloblastoma	Other Solid Carcinomas	Primitive Neuroectodermal Tumor	5.0	38.0	False	False
 ACH-001712	HS860T_BONE				0	0	0	0	0	0	0								False	False
 ACH-001715	CAL72_BONE	SIDM00930			0	0	1	0	1	1	3	Na		osteosarcoma	Osteosarcoma	Osteosarcoma	0.0	110.0	False	False
@@ -1499,10 +1499,10 @@ ACH-002058	ATN1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00233			0	0	1	0	1	1	3	Na	
 ACH-002059	P30OHK_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00364			0	0	1	0	1	1	3	Na			B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	37.0	527.0	False	False
 ACH-002062	SLVL_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00374			0	0	1	0	1	1	3	Na			B-Cell Non-Hodgkin's Lymphoma	Splenic Marginal Zone B-Cell Lymphoma with Villous Lymphocytes	16.0	146.0	False	False
 ACH-002066	HSSCH2_CENTRAL_NERVOUS_SYSTEM				0	0	0	0	0	0	0								False	False
-ACH-002067	NOS1_BONE	SIDM00242			0	0	1	0	1	1	3	Na		osteosarcoma	Osteosarcoma	Osteosarcoma	22.0	98.0	False	False
+ACH-002067	NOS1_BONE	SIDM00242			0	0	1	0	1	1	3	Na		osteosarcoma	Osteosarcoma	Osteosarcoma	21.0	98.0	False	False
 ACH-002069	HSOS1_BONE				0	0	0	0	0	0	0								False	False
 ACH-002077	LU165_LUNG	SIDM00292			0	0	1	0	1	1	3	Na		lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	157.0	False	False
-ACH-002083	NB69_AUTONOMIC_GANGLIA	SIDM00244			0	0	1	0	1	1	3	Na		neuroblastoma	Neuroblastoma	Neuroblastoma	33.0	48.0	False	False
+ACH-002083	NB69_AUTONOMIC_GANGLIA	SIDM00244			0	0	1	0	1	1	3	Na		neuroblastoma	Neuroblastoma	Neuroblastoma	32.0	48.0	False	False
 ACH-002085	HSSYII_LUNG				0	0	0	0	0	0	0								False	False
 ACH-002089	201T_LUNG	SIDM00055			0	0	1	0	1	1	3	Na		lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	4.0	128.0	False	False
 ACH-002090	BB65RCC_KIDNEY	SIDM00191			0	0	1	0	1	1	3	Na		kidney	Kidney Carcinoma	Renal Cell Carcinoma	0.0	56.0	False	False
@@ -1512,7 +1512,7 @@ ACH-002093	CHSA0108_BONE	SIDM00050			0	0	1	0	1	1	3	Na		chondrosarcoma	Chondrosar
 ACH-002094	CHSA8926_BONE	SIDM00176			0	0	1	0	1	1	3	Na		chondrosarcoma	Chondrosarcoma	Chondrosarcoma	5.0	58.0	False	False
 ACH-002095	CORL303_LUNG	SIDM00510			0	0	1	0	1	1	3	Na		lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	1.0	71.0	False	False
 ACH-002096	CP50MELB_SKIN	SIDM00175			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Melanoma	10.0	95.0	False	False
-ACH-002097	CP66MEL_SKIN	SIDM00190			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Melanoma	7.0	469.0	False	False
+ACH-002097	CP66MEL_SKIN	SIDM00190			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Melanoma	6.0	469.0	False	False
 ACH-002098	CP67MEL_SKIN	SIDM00189			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Melanoma	0.0	292.0	False	False
 ACH-002099	CS1_BONE	SIDM00199			0	0	1	0	1	1	3	Na		chondrosarcoma	Chondrosarcoma	Chondrosarcoma	2.0	58.0	False	False
 ACH-002100	DJM1_SKIN	SIDM00281			0	0	1	0	1	1	3	Na			Other Solid Carcinomas	Skin Squamous Cell Carcinoma	0.0	167.0	False	False
@@ -1523,7 +1523,7 @@ ACH-002104	ES3_BONE	SIDM00265			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma
 ACH-002105	ES4_BONE	SIDM00264			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	6.0	46.0	False	False
 ACH-002106	ES5_BONE	SIDM00263			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	15.0	51.0	False	False
 ACH-002107	ES6_BONE	SIDM00262			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	3.0	58.0	False	False
-ACH-002108	ES7_BONE	SIDM00269			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	38.0	50.0	False	False
+ACH-002108	ES7_BONE	SIDM00269			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	37.0	50.0	False	False
 ACH-002109	ES8_BONE	SIDM00261			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	18.0	50.0	False	False
 ACH-002110	EW1_BONE	SIDM00205			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	17.0	62.0	False	False
 ACH-002111	EW11_BONE	SIDM00203			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	10.0	85.0	False	False
@@ -1536,7 +1536,7 @@ ACH-002117	EW24_BONE	SIDM00195			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcom
 ACH-002118	EW3_BONE	SIDM00202			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	20.0	54.0	False	False
 ACH-002119	EW7_BONE	SIDM00201			0	0	1	0	1	1	3	Na		Ewings_sarcoma	Ewing's Sarcoma	Ewing's Sarcoma	17.0	96.0	False	False
 ACH-002120	GAK_SKIN	SIDM00543			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Vulvar Melanoma	0.0	104.0	False	False
-ACH-002121	GMEL_SKIN	SIDM00129			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Cutaneous Melanoma	23.0	255.0	False	False
+ACH-002121	GMEL_SKIN	SIDM00129			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Cutaneous Melanoma	22.0	255.0	False	False
 ACH-002122	GT3TKB_STOMACH	SIDM01231			0	0	1	0	0	0	1	Na		lung_NSC	Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	0.0	86.0	False	False
 ACH-002123	H2369_PLEURA	SIDM00104			0	0	1	0	1	1	3	Na		mesothelioma	Mesothelioma	Malignant Pleural Mesothelioma	9.0	51.0	False	False
 ACH-002124	H2373_PLEURA	SIDM00103	NCIH2373_PLEURA		0	0	1	0	1	1	3				Mesothelioma	Pleural Sarcomatoid Mesothelioma	0.0	46.0	False	False
@@ -1573,7 +1573,7 @@ ACH-002155	LB996RCC_KIDNEY	SIDM00180			0	0	1	0	1	1	3	Na		kidney	Kidney Carcinoma
 ACH-002156	LC1SQ_LUNG	SIDM00300			0	0	1	0	1	1	3	Na		lung_NSC	Squamous Cell Lung Carcinoma	Squamous Cell Lung Carcinoma	0.0	153.0	False	False
 ACH-002157	LC2AD_LUNG	SIDM00297			0	0	1	0	1	1	3	Na		lung_NSC	Non-Small Cell Lung Carcinoma	Lung Adenocarcinoma	8.0	124.0	False	False
 ACH-002158	LU99A_LUNG	SIDM01219			0	0	0	0	0	1	1				Non-Small Cell Lung Carcinoma	Giant Cell Lung Carcinoma	4.0		False	False
-ACH-002159	M14_SKIN	SIDM00003			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Amelanotic Melanoma	19.0	519.0	False	False
+ACH-002159	M14_SKIN	SIDM00003			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Amelanotic Melanoma	18.0	519.0	False	False
 ACH-002160	MCIXC_BONE	SIDM01246	MCIXC_AUTONOMIC_GANGLIA		0	0	1	0	1	1	3				Ewing's Sarcoma	Askin's Tumor	20.0	64.0	False	False
 ACH-002161	MKN28_STOMACH	SIDM00260			0	0	1	0	1	1	3	Na		stomach	Gastric Carcinoma	Gastric Tubular Adenocarcinoma	3.0	131.0	False	False
 ACH-002162	MMACSF_SKIN	SIDM01242			0	0	1	0	1	1	3	Na		melanoma	Melanoma	Melanoma	7.0	81.0	False	False
@@ -1593,7 +1593,7 @@ ACH-002175	NCIH740_LUNG	SIDM01118			0	0	1	0	1	0	2	Na		lung_small_cell	Small Cell
 ACH-002176	NCIH748_LUNG	SIDM01117			0	0	1	0	1	1	3	Na		lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	197.0	False	False
 ACH-002177	NCIH835_LUNG	SIDM01133			0	0	1	0	1	1	3	Na		lung_NSC	Other Solid Carcinomas	Lung Carcinoid Tumor	1.0	206.0	False	False
 ACH-002178	NY_BONE	SIDM00569			0	0	1	0	1	1	3	Na		osteosarcoma	Osteosarcoma	Osteosarcoma	2.0	118.0	False	False
-ACH-002179	OCUBM_BREAST	SIDM00241			0	0	1	0	1	1	3	Na		breast	Breast Carcinoma	Breast Carcinoma	47.0	252.0	False	False
+ACH-002179	OCUBM_BREAST	SIDM00241			0	0	1	0	1	1	3	Na		breast	Breast Carcinoma	Breast Carcinoma	46.0	252.0	False	False
 ACH-002180	OMC1_CERVIX	SIDM00240			0	0	1	0	1	1	3	Na		cervix	Cervical Carcinoma	Cervical Squamous Cell Carcinoma	0.0	219.0	False	False
 ACH-002181	OVCA420_OVARY	SIDM00967			0	0	1	0	1	1	3	Na		ovary	Ovarian Carcinoma	Ovarian Serous Adenocarcinoma	10.0	92.0	False	False
 ACH-002182	OVCA433_OVARY	SIDM00966			0	0	1	0	1	1	3	Na		ovary	Ovarian Carcinoma	Ovarian Serous Adenocarcinoma	1.0	73.0	False	False
@@ -1652,16 +1652,16 @@ ACH-002235	DSH1_URINARY_TRACT	SIDM00970			0	0	1	0	1	1	3	Na		urinary_tract	Bladde
 ACH-002236	EB3_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00793			0	0	1	0	1	1	3	Na		lymphoma_Burkitt	Burkitt's Lymphoma	Epstein-Barr Virus-Related Burkitt s Lymphoma	5.0	192.0	False	False
 ACH-002237	ETK1_BILIARY_TRACT	SIDM00276			0	0	1	0	1	1	3	Na		bile_duct	Biliary Tract Carcinoma	Intrahepatic Cholangiocarcinoma	8.0	135.0	False	False
 ACH-002238	GRST_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01259			0	0	1	0	1	1	3	Na			B-Lymphoblastic Leukemia	Childhood Precursor B Lymphoblastic Leukemia	5.0	1031.0	False	False
-ACH-002239	H3118_UPPER_AERODIGESTIVE_TRACT	SIDM00517			0	0	1	0	1	1	3	Na		upper_aerodigestive	Head and Neck Carcinoma	Parotid Gland Mucoepidermoid Carcinoma	12.0	45.0	False	False
+ACH-002239	H3118_UPPER_AERODIGESTIVE_TRACT	SIDM00517			0	0	1	0	1	1	3	Na		upper_aerodigestive	Head and Neck Carcinoma	Parotid Gland Mucoepidermoid Carcinoma	11.0	45.0	False	False
 ACH-002240	H9_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01251			0	0	1	0	1	1	3	Na			T-Cell Non-Hodgkin's Lymphoma	Mycosis Fungoides and Sezary Syndrome	20.0	123.0	False	False
-ACH-002241	HAL01_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00289			0	0	1	0	0	1	2	Na			B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	51.0	95.0	False	False
+ACH-002241	HAL01_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00289			0	0	1	0	0	1	2	Na			B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	50.0	95.0	False	False
 ACH-002242	HC1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01073			0	0	1	0	0	1	2	Na			Other Blood Carcinomas	Hairy Cell Leukemia	15.0	65.0	False	False
 ACH-002243	HCE4_OESOPHAGUS	SIDM00052			0	0	1	0	1	1	3	Na		esophagus	Esophageal Squamous Cell Carcinoma	Esophageal Squamous Cell Carcinoma	3.0	132.0	False	False
 ACH-002244	HO1N1_UPPER_AERODIGESTIVE_TRACT	SIDM00592			0	0	1	0	1	1	3	Na		upper_aerodigestive	Oral Cavity Carcinoma	Oral Cavity Squamous Cell Carcinoma	0.0	95.0	False	False
 ACH-002245	HS445_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00668			0	0	1	0	0	1	2	Na		other	Non-Cancerous	Non-Cancerous	3.0	52.0	False	False
 ACH-002246	HS633T_SOFT_TISSUE	SIDM00667			0	0	1	0	1	1	3	Na		soft_tissue	Other Solid Carcinomas	Fibrosarcoma	17.0	57.0	False	False
 ACH-002247	IM9_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00632			0	0	1	0	1	1	3	Na		other	Non-Cancerous	Non-Cancerous	24.0	67.0	False	False
-ACH-002248	IMR5_AUTONOMIC_GANGLIA	SIDM01206			0	0	1	0	1	1	3	Na		neuroblastoma	Neuroblastoma	Neuroblastoma	27.0	75.0	False	False
+ACH-002248	IMR5_AUTONOMIC_GANGLIA	SIDM01206			0	0	1	0	1	1	3	Na		neuroblastoma	Neuroblastoma	Neuroblastoma	26.0	75.0	False	False
 ACH-002249	JHU011_UPPER_AERODIGESTIVE_TRACT	SIDM00128			0	0	1	0	1	1	3	Na		upper_aerodigestive	Head and Neck Carcinoma	Laryngeal Squamous Cell Carcinoma	5.0	62.0	False	False
 ACH-002250	JHU022_UPPER_AERODIGESTIVE_TRACT	SIDM00127			0	0	1	0	1	1	3	Na		upper_aerodigestive	Oral Cavity Carcinoma	Oral Cavity Squamous Cell Carcinoma	8.0	60.0	False	False
 ACH-002251	JHU029_UPPER_AERODIGESTIVE_TRACT	SIDM00690			0	0	1	0	1	1	3	Na		upper_aerodigestive	Head and Neck Carcinoma	Laryngeal Squamous Cell Carcinoma	6.0	125.0	False	False
@@ -1671,7 +1671,7 @@ ACH-002254	KARPAS1106P_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01011			0	0	1	0	1	
 ACH-002255	KARPAS231_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01017			0	0	1	0	1	1	3	Na		B-cell_ALL	B-Cell Non-Hodgkin's Lymphoma	Diffuse Large B-Cell Lymphoma	43.0	52.0	False	False
 ACH-002256	KARPAS45_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01007			0	0	1	0	1	1	3	Na			T-Lymphoblastic Leukemia	Childhood T Acute Lymphoblastic Leukemia	28.0	2385.0	False	False
 ACH-002257	KINGS1_CENTRAL_NERVOUS_SYSTEM	SIDM00612			0	0	1	0	1	1	3	Na		glioma	Glioma	Anaplastic Astrocytoma	2.0	92.0	False	False
-ACH-002258	KMOE2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01019			0	0	1	0	1	1	3	Na		AML	Acute Myeloid Leukemia	Erythroleukemia	14.0	228.0	False	False
+ACH-002258	KMOE2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01019			0	0	1	0	1	1	3	Na		AML	Acute Myeloid Leukemia	Erythroleukemia	13.0	228.0	False	False
 ACH-002259	KNS81FD_CENTRAL_NERVOUS_SYSTEM	SIDM01210			0	0	1	0	1	1	3	Na		glioma	Glioblastoma	Glioblastoma	0.0	93.0	False	False
 ACH-002260	KOSC2_UPPER_AERODIGESTIVE_TRACT	SIDM00603			0	0	1	0	1	1	3	Na		upper_aerodigestive	Head and Neck Carcinoma	Head and Neck Squamous Cell Carcinoma	3.0	108.0	False	False
 ACH-002261	KPNYS_AUTONOMIC_GANGLIA	SIDM00157			0	0	1	0	1	1	3	Na		neuroblastoma	Neuroblastoma	Neuroblastoma	12.0	106.0	False	False
@@ -1686,7 +1686,7 @@ ACH-002269	LNZTA3WT4_CENTRAL_NERVOUS_SYSTEM	SIDM01220			0	0	1	0	1	1	3	Na		glioma
 ACH-002270	MCCAR_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00636			0	0	1	0	1	1	3	Na		other	Non-Cancerous	Non-Cancerous	19.0	51.0	False	False
 ACH-002271	MFHINO_SOFT_TISSUE	SIDM00299			0	0	1	0	1	1	3	Na			Other Solid Carcinomas	Malignant Fibrous Histiocytoma	6.0	98.0	False	False
 ACH-002272	MHHPREB1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00388			0	0	1	0	0	1	2	Na		B-cell_ALL	B-Cell Non-Hodgkin's Lymphoma	B-Cell Non-Hodgkin's Lymphoma	16.0	579.0	False	False
-ACH-002273	ML2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00441			0	0	1	0	1	1	3	Na		AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	41.0	63.0	False	False
+ACH-002273	ML2_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00441			0	0	1	0	1	1	3	Na		AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	40.0	63.0	False	False
 ACH-002274	MLMA_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00561			0	0	1	0	1	1	3	Na			Other Blood Carcinomas	Hairy Cell Leukemia	20.0	82.0	False	False
 ACH-002275	MN60_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00438			0	0	1	0	1	1	3	Na		B-cell_ALL	B-Lymphoblastic Leukemia	B Acute Lymphoblastic Leukemia	1.0	342.0	False	False
 ACH-002276	MYM12_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01217			0	0	1	0	1	1	3	Na			Other Blood Carcinomas	Acute Biphenotypic Leukemia	43.0	104.0	False	False
@@ -1701,10 +1701,10 @@ ACH-002284	NB6_AUTONOMIC_GANGLIA	SIDM00253			0	0	1	0	1	1	3	Na		neuroblastoma	Neu
 ACH-002285	NB7_AUTONOMIC_GANGLIA	SIDM00156			0	0	1	0	1	1	3	Na		neuroblastoma	Neuroblastoma	Neuroblastoma	12.0	104.0	False	False
 ACH-002286	NCIH128_LUNG	SIDM00650			0	0	1	0	1	1	3	Na		lung_small_cell	Small Cell Lung Carcinoma	Small Cell Lung Carcinoma	0.0	139.0	False	False
 ACH-002287	NCIH630_LARGE_INTESTINE				0	0	1	0	0	0	1	Na		colorectal				736.0	False	False
-ACH-002288	NEC8_TESTIS	SIDM00243			0	0	1	0	1	1	3	Na			Other Solid Carcinomas	Testicular Embryonal Carcinoma	32.0	112.0	False	False
+ACH-002288	NEC8_TESTIS	SIDM00243			0	0	1	0	1	1	3	Na			Other Solid Carcinomas	Testicular Embryonal Carcinoma	30.0	112.0	False	False
 ACH-002289	NK92MI_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM01201			0	0	1	0	0	1	2	Na			Other Blood Carcinomas	Natural Killer Cell Lymphoblastic Leukemia Lymphoma	6.0	75.0	False	False
 ACH-002290	NKM1_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00576			0	0	1	0	1	1	3	Na		AML	Acute Myeloid Leukemia	Adult Acute Myeloid Leukemia	56.0	109.0	False	False
-ACH-002291	NTERA2CLD1_TESTIS	SIDM01203			0	0	1	0	0	1	2	Na			Other Solid Carcinomas	Embryonal Carcinoma	30.0	81.0	False	False
+ACH-002291	NTERA2CLD1_TESTIS	SIDM01203			0	0	1	0	0	1	2	Na			Other Solid Carcinomas	Embryonal Carcinoma	29.0	81.0	False	False
 ACH-002292	OACP4C_OESOPHAGUS	SIDM00445			0	0	1	0	1	1	3	Na		esophagus	Esophageal Carcinoma	Esophageal Adenocarcinoma	9.0	47.0	False	False
 ACH-002293	P32ISH_HAEMATOPOIETIC_AND_LYMPHOID_TISSUE	SIDM00362			0	0	1	0	1	1	3	Na		lymphoma_Burkitt	Burkitt's Lymphoma	Burkitt's Lymphoma	40.0	74.0	False	False
 ACH-002294	PCI15A_UPPER_AERODIGESTIVE_TRACT	SIDM00270			0	0	1	0	1	1	3	Na		upper_aerodigestive	Head and Neck Carcinoma	Pyriform Fossa Squamous Cell Carcinoma	5.0	70.0	False	False

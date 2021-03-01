@@ -37,7 +37,8 @@ class Matchmaker:
         case_variants = cls.subset_dataframe_eq(somatic, cls.feature_type, cls.variant)
         case_cns = cls.subset_dataframe_eq(somatic, cls.feature_type, cls.cn)
         case_fusions = cls.subset_dataframe_eq(somatic, cls.feature_type, cls.rearrangement)
-        case_fusions = cls.format_fusions(case_fusions)
+        if case_fusions.shape[0] > 0:
+            case_fusions = cls.format_fusions(case_fusions)
 
         comparison_variants = dbs[Preclinical.variants]
         comparison_cnas = dbs[Preclinical.cnas]
@@ -83,7 +84,7 @@ class Matchmaker:
 
     @classmethod
     def format_fusions(cls, dataframe):
-        df = dataframe[cls.alt].str.split('--', expand=True).rename(columns={0: 'feature', 1: 'partner'})
+        df = dataframe[cls.alt].fillna('').str.split('--', expand=True).rename(columns={0: 'feature', 1: 'partner'})
         df[cls.model_id] = cls.case_profile
         return df
 

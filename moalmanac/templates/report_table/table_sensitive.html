@@ -5,7 +5,7 @@
 
     <div class="panel-body">
         <table class="table table-hover table-striped table-condensed">
-            {% include 'report_table/columns_actionable.html' %}
+            {% include 'report_table/columns_therapies.html' %}
             <tbody>
                 {% for index in df[df['sensitive_predictive_implication'] != ''].sort_values(['sensitive_predictive_implication_map', 'sensitive_score_bin_map'], ascending=[False, False]).index.tolist() %}
 

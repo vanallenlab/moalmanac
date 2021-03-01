@@ -101,6 +101,24 @@ Required fields can be changed from their default expectations by editing the ap
 ### Required fields
 This input is looking for an integer value. 
 
+## Called copy number alterations
+`--called_cn_handle` anticipated a tab delimited file which contains one column for gene name and a second for the copy number call. For the latter, only the values `Amplification` and `Deletion` will be used by the Molecular Oncology Almanac.
+
+### Example
+|gene|call|
+|-|-|
+|TP53|Deletion|
+|CDKN2A|Deletion|
+|BRAF|Baseline|
+|EGFR|Amplification|
+
+The rows associated with _TP53_, _CDKN2A_, and _EGFR_ will be interpreted and scored by Molecular Oncology Almanac while _BRAF_ will be filtered.
+
+### Required files
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+- `gene`, gene symbol associated with the copy number alteration
+- `call`, copy number event of the gene. `Amplification` and `Deletion` are accepted and all other values will be filtered.
+
 ## Copy number alterations
 `--cnv_handle` anticipates a tab delimited file which contains total copy number from a source such as GATK CNV or ReCapSeg, support for allele specific copy number is in progress. This file should have genes associated with segments. Amplifications are called from the top 2.5% of all unique segments and deletions called from the bottom 2.5% of all unique segments. 
 
@@ -124,7 +142,7 @@ Required fields can be changed from their default expectations by editing the ap
 `--fusion_handle` anticipates a tab delimited file which contains fusions, specifically in the format of STAR Fusion. 
 
 ### Example
-|#fusion_name|SpanningFrags|LeftBreakpoint|RightBreakpoint|
+|#FusionName|SpanningFragCount|LeftBreakpoint|RightBreakpoint|
 |-|-|-|-|
 |EML4--ALK|0|6:47471176|11:66563752|
 |COL1A2--APBA3|6|9:35657873|21:46320255|
@@ -132,8 +150,8 @@ Required fields can be changed from their default expectations by editing the ap
 
 ### Required fields
 Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
-- `#fusion_name`, gene symbols associated with the fusion separated by `--`. Genes are labeled from 5' to 3'. 
-- `SpanningFrags`, counts of RNA-seq fragments supporting the fusion
+- `#FusionName`, gene symbols associated with the fusion separated by `--`. Genes are labeled from 5' to 3'. 
+- `SpanningFragCount`, counts of RNA-seq fragments supporting the fusion
 - `LeftBreakpoint`, genomic position of the fusion's left breakpoint
 - `RightBreakpoint`, genomic position of the fusion's right breakpoint
 
