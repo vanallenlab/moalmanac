@@ -3,7 +3,7 @@
         "gdsc": [
             "5-Fluorouracil"
         ],
-        "type": "Targeted therapy"
+        "type": "Chemotherapy"
     },
     "AMG 510": {
         "gdsc": [
@@ -59,11 +59,11 @@
     },
     "Azacitidine": {
         "gdsc": [],
-        "type": "Targeted therapy"
+        "type": "Chemotherapy"
     },
     "Azacitidine + Panobinostat": {
         "gdsc": [],
-        "type": "Targeted therapy"
+        "type": "Combination therapy"
     },
     "BAY 1895344": {
         "gdsc": [],
@@ -384,6 +384,10 @@
         ],
         "type": "Targeted therapy"
     },
+    "Margetuximab-cmkb + Chemotherapy": {
+        "gdsc": [],
+        "type": "Combination therapy"
+    },
     "Mito-CP": {
         "gdsc": [],
         "type": "Targeted therapy"
@@ -442,7 +446,7 @@
     },
     "Omacetaxine": {
         "gdsc": [],
-        "type": "Targeted therapy"
+        "type": "Chemotherapy"
     },
     "Omipalisib": {
         "gdsc": [
