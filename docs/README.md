@@ -12,4 +12,4 @@ This repository is specifically for the clinical interpretation method and there
 This method is also available on [Docker](https://hub.docker.com/repository/docker/vanallenlab/moalmanac) and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/). 
 
 If you use this method, please cite our publication:
-> Reardon, B. *et al.* (2020). Clinical interpretation of integrative molecular profiles to guide precision cancer medicine. *bioRxiv* 2020.09.22.308833
+> [Reardon, B., Moore, N.D., Moore, N.S., *et al*. Integrating molecular profiles into clinical frameworks through the Molecular Oncology Almanac to prospectively guide precision oncology. *Nat Cancer* (2021). https://doi.org/10.1038/s43018-021-00243-3](https://www.nature.com/articles/s43018-021-00243-3)
