@@ -237,4 +237,4 @@ Microsatellite status is reported in the clinical actionability report.
 `--description` is a string input that is generally a free text field for users to enter any additional comments. 
 
 If you use this method, please cite our publication:
-> Reardon, B. *et al.* (2020). Clinical interpretation of integrative molecular profiles to guide precision cancer medicine. *bioRxiv* 2020.09.22.308833 doi: 10.1101/2020.09.22.308833
+> [Reardon, B., Moore, N.D., Moore, N.S., *et al*. Integrating molecular profiles into clinical frameworks through the Molecular Oncology Almanac to prospectively guide precision oncology. *Nat Cancer* (2021). https://doi.org/10.1038/s43018-021-00243-3](https://www.nature.com/articles/s43018-021-00243-3)
