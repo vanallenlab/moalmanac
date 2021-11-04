@@ -13,6 +13,8 @@ Molecular Oncology Almanac is a clinical interpretation algorithm for cancer gen
 - Identify genomic features that may be related to one another.
 - Create portable web-based actionability reports, summarizing clinically relevant findings. 
 
+You can view additional documentation, including descriptions of inputs and outputs, within the [docs](docs/) folder of this repository.
+
 ## Getting Molecular Oncology Almanac
 The codebase is available for download through this Github repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). The method can also be run on Terra, without having to use Terra, by using [our portal](https://portal.moalmanac.org/). Accessing Molecular Oncology Almanac through Github will require building some of the [datasources](https://github.com/vanallenlab/moalmanac/tree/main/moalmanac/datasources) but they also contained in the Docker container.
 
@@ -43,13 +45,11 @@ Rscript -e 'install.packages("RCurl", repos = "http://cran.rstudio.com/")' \
 ```
 
 ## Usage
-Molecular Oncology Almanac will run based on any combination of input data but does require a few inputs: patient_id, [config.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/config.ini), and [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini).
+Molecular Oncology Almanac will run based on any combination of input data but does require a patient_id to label outputs. Additional settings can be set by modifying the [config.ini](moalmanac/config.ini) file and column names may be modified by editing the [colnames.ini](moalmanac/colnames.ini) file.
 
 Required arguments:
 ```
     --patient_id            <string>    patient identifier
-    --config_ini            <string>    configuration file, default=config.ini
-    --colnames_ini          <string>    configuration file for input column names and strings, default=colnames.ini
 ```
 
 Optional arguments:
