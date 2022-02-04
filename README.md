@@ -9,14 +9,14 @@ Molecular Oncology Almanac is a clinical interpretation algorithm for cancer gen
 - Identify overlap between somatic variants observed from both DNA and RNA, or any other source of validation sequencing.
 - Identify somatic and germline variants that may be related to microsatellite stability.
 - Calculate coding mutational burden and compare your patient to TCGA.
-- Calculate contribution of known COSMIC mutational signatures with [deconstructsigs](https://github.com/raerose01/deconstructSigs).
+- Calculate contribution of known [COSMIC mutational signatures](https://cancer.sanger.ac.uk/signatures/signatures_v2/) with [deconstructsigs](https://github.com/raerose01/deconstructSigs).
 - Identify genomic features that may be related to one another.
 - Create portable web-based actionability reports, summarizing clinically relevant findings. 
 
-You can view additional documentation, including descriptions of inputs and outputs, within the [docs](docs/) folder of this repository.
+You can view additional documentation, including [descriptions of inputs](docs/description-of-inputs.md) and [outputs](docs/description-of-outputs.md), within the [docs](docs/) folder of this repository.
 
 ## Getting Molecular Oncology Almanac
-The codebase is available for download through this Github repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). The method can also be run on Terra, without having to use Terra, by using [our portal](https://portal.moalmanac.org/). Accessing Molecular Oncology Almanac through Github will require building some of the [datasources](https://github.com/vanallenlab/moalmanac/tree/main/moalmanac/datasources) but they also contained in the Docker container.
+The codebase is available for download through this Github repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). The method can also be run on Terra, without having to use Terra, by using [our portal](https://portal.moalmanac.org/). **Accessing Molecular Oncology Almanac through Github will require building some of the [datasources](moalmanac/datasources/) but they also contained in the Docker container**.
 
 ### Installation
 Molecular Oncology Almanac is a Python application using Python 3.6 but also utilizes R to run [deconstructSigs](https://github.com/raerose01/deconstructSigs) as a subprocess. This application, datasources, and all dependencies are packaged on Docker and can be downloaded with the command
