@@ -3,11 +3,11 @@ MOAlmanac leverages several datasources to annotate and evaluate molecular featu
 
 | Name                                                    | Immediately ready for use from Github | Included in Docker |
 |---------------------------------------------------------|---------------------------------------|--------------------|
+| [Cancer cell line data](preclinical/)                   | :x:                                   | :white_check_mark: |
 | [COSMIC](cosmic/)                                       | :x:                                   | :white_check_mark: |
 | [ExAC](exac/)                                           | :x:                                   | :white_check_mark: |
-| [Cancer cell line data](preclinical/)                   | :x:                                   | :white_check_mark: |
 | [American College of Medical Genetics v2 (ACMG)](acmg/) | :white_check_mark:                    | :white_check_mark: |
-| [Cancer Gene Census (CGC)](cgc/)                        | :white_check_mark:                    | :white_check_mark: |
+| [Cancer Gene Census (CGC)](cancergenecensus/)                        | :white_check_mark:                    | :white_check_mark: |
 | [Cancer Hotspots](cancerhotspots/)                      | :white_check_mark:                    | :white_check_mark: |
 | [ClinVar](clinvar/)                                     | :white_check_mark:                    | :white_check_mark: |
 | [Genes associated with hereditary cancers](hereditary/) | :white_check_mark:                    | :white_check_mark: |
