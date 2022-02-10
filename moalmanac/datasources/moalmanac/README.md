@@ -7,7 +7,7 @@ The Molecular Oncology Almanac attempts to capture the current body of knowledge
 Several other services exist within the Molecular Oncology Almanac ecosystem. See [this repository's docs folder](/docs/) for more information.
 
 ## Usage: Formatting the database for use
-This method uses a document-based format of the database, which is built using the [database repository](https://github.com/vanallenlab/moalmanac-db) and `create_almanac_db.py`. 
+This method uses a document-based format of the database, which is built using the [database repository](https://github.com/vanallenlab/moalmanac-db) and `create_almanac_db.py`. If MOAlmanac is updated, **please also regenerate [preclinical datasources](../preclinical/)**.
 
 Arguments:
 ```

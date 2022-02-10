@@ -10,6 +10,8 @@ All releases of ExAC [are available for download on their webpage](ftp://ftp.bro
 The following steps should be performed to prepare ExAC for use with MOAlmanac,
 1. Download [ExAC](https://gnomad.broadinstitute.org/downloads#exac-variants) from gnomAD's webpage, titled "All chromosomes VCF" under the "Exomes" section. Download this and the TBI (the VCF index)
 2. Download [GATK](https://gatk.broadinstitute.org/hc/en-us)
+  - Their website only has downloads for GATK4 currently. GATK3.8 can be downloaded [from their archives](https://console.cloud.google.com/storage/browser/gatk-software/package-archive/gatk?pli=1)
+  - `gs://gatk-software/package-archive/gatk/GenomeAnalysisTK-3.8-0-ge9d806836.tar.bz2`
 3. Download [hg19 reference genome files](https://console.cloud.google.com/storage/browser/gcp-public-data--broad-references/hg19/v0;tab=objects?prefix=&forceOnObjectsSortingFiltering=false) from [gcp-public-data--broad-references](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811). In particular, 
   - `gs://gcp-public-data--broad-references/hg19/v0/Homo_sapiens_assembly19.fasta`
   - `gs://gcp-public-data--broad-references/hg19/v0/Homo_sapiens_assembly19.fasta.fai`
@@ -25,6 +27,8 @@ After converting ExAC to a tab delimited file, sites with multiple alternate all
 ```
 python expand_exac.py --exac exac.lite-pass.1.4-r1.txt
 ```
+
+This script will produce an output named `exac.expanded.r1.txt` that is about 923 MB in size.
 
 If you do not have access to Google Cloud or Docker and are having trouble building this datasource, please reach out. We are happy to try our best to help figure something out.
 
