@@ -16,11 +16,11 @@ workflow MolecularOncologyAlmanac {
     String? whole_genome_doubling
     String? disable_matchmaking
 
-    Int? RAM = 6
-    Int? SSD = 25
+    Int? RAM = 8
+    Int? SSD = 50
     Int? preemptible = 3
 
-    String? docker_tag = "0.4.1_v.2021-02-04"
+    String? docker_tag = "0.4.2_v.2021-02-04"
 
     meta {
         author: "Brendan Reardon"
@@ -117,7 +117,7 @@ task almanacTask {
         mkdir docs
         cp -r /docs/* docs/
 
-        tar -zcf ${patientId}.almanac.tar.gz ${patientId}* docs
+        tar -zcf ${patientId}.almanac.tar.gz ${patientId}* docs almanac.additional.matches.json
     }
 
     output  {
