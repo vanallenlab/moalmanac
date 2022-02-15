@@ -960,7 +960,7 @@ class ExAC:
         #ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
         ds = ds.loc[:, ds_columns]
 
-        for column, data_type in [(cls.str_columns, str), (cls.int_columns, int)]:
+        for column, data_type in [(cls.str_columns, str), (cls.int_columns, float), (cls.int_columns, int)]:
             variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
             ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
 
