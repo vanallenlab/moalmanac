@@ -33,6 +33,9 @@ class Writer(object):
     sensitive_therapy_type = COLNAMES[section]['sensitive_therapy_type']
     resistance_therapy_type = COLNAMES[section]['resistance_therapy_type']
     favorable_prognosis = COLNAMES[section]['favorable_prognosis']
+    sensitive_oncotree_code = COLNAMES[section]['sensitive_oncotree_code']
+    resistance_oncotree_code = COLNAMES[section]['resistance_oncotree_code']
+    prognostic_oncotree_code = COLNAMES[section]['prognostic_oncotree_code']
     sensitive_description = COLNAMES[section]['sensitive_description']
     resistance_description = COLNAMES[section]['resistance_description']
     prognostic_description = COLNAMES[section]['prognostic_description']
@@ -130,11 +133,14 @@ class Actionable(object):
                       Writer.tumor_f, Writer.coverage, Writer.exac_af, Writer.exac_common, Writer.clinvar,
                       Writer.sensitive_bin,
                       Writer.sensitive_therapy, Writer.sensitive_therapy_strategy, Writer.sensitive_therapy_type,
+                      Writer.sensitive_oncotree_code,
                       Writer.sensitive_description, Writer.sensitive_citation, Writer.sensitive_url,
                       Writer.resistance_bin,
                       Writer.resistance_therapy, Writer.resistance_therapy_strategy, Writer.resistance_therapy_type,
+                      Writer.resistance_oncotree_code,
                       Writer.resistance_description, Writer.resistance_citation, Writer.resistance_url,
                       Writer.prognostic_bin, Writer.favorable_prognosis,
+                      Writer.prognostic_oncotree_code,
                       Writer.prognostic_description, Writer.prognostic_citation, Writer.prognostic_url,
                       Writer.number_germline_mutations,
                       Writer.validation_coverage, Writer.validation_tumor_f, Writer.validation_detection_power,
