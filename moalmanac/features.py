@@ -96,15 +96,6 @@ class Features(object):
         return df.sort_values(sort_column, ascending=False).drop_duplicates([Features.feature], keep='first').index
 
     @classmethod
-    def import_features(cls, handle, importer, column_config, feature_type):
-        if os.path.exists(handle):
-            df_accept, df_reject = importer.import_feature(handle, column_config, feature_type)
-        else:
-            df_accept = cls.create_empty_dataframe()
-            df_reject = cls.create_empty_dataframe()
-        return df_accept, df_reject
-
-    @classmethod
     def preallocate_missing_columns(cls, df):
         missing_cols = [col for col in cls.all_columns if col not in df.columns]
         return pd.concat([df, pd.DataFrame(None, columns=missing_cols, index=df.index)], axis=1)
