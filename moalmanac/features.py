@@ -96,6 +96,14 @@ class Features(object):
         return df.sort_values(sort_column, ascending=False).drop_duplicates([Features.feature], keep='first').index
 
     @classmethod
+    def import_if_path_exists(cls, handle, delimiter, column_map, **kwargs):
+        if os.path.exists(handle):
+            df = Reader.safe_read(handle, delimiter, column_map, **kwargs)
+            return cls.preallocate_missing_columns(df)
+        else:
+            return cls.create_empty_dataframe()
+
+    @classmethod
     def preallocate_missing_columns(cls, df):
         missing_cols = [col for col in cls.all_columns if col not in df.columns]
         return pd.concat([df, pd.DataFrame(None, columns=missing_cols, index=df.index)], axis=1)
@@ -117,7 +125,7 @@ class Features(object):
         return df[~cls.return_idx_variants_coding(df[cls.alt_type])]
 
 
-class Aneuploidy(object):
+class Aneuploidy:
     aneuploidy = 'aneuploidy'
 
     feature_type_section = 'feature_types'
@@ -136,7 +144,7 @@ class Aneuploidy(object):
         return df
 
 
-class BurdenReader(object):
+class BurdenReader:
     feature_type_section = 'feature_types'
     feature_type = CONFIG[feature_type_section]['burden']
     feature_type_mutations = CONFIG[feature_type_section]['mut']
@@ -256,8 +264,7 @@ class CopyNumber:
             column_map = CopyNumberTotal.create_column_map()
             handle = not_called_handle
 
-        df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
-        df = Features.preallocate_missing_columns(df)
+        df = Features.import_if_path_exists(handle, '\t', column_map, comment_character="#")
         if not df.empty:
             df[Features.feature_type] = Features.annotate_feature_type(cls.feature_type, df.index)
             df[Features.feature] = cls.format_cn_gene(df[Features.feature])
@@ -351,7 +358,7 @@ class CopyNumberTotal(CopyNumber):
         return cls.filter_by_threshold(dataframe, amp_percentile, del_percentile)
 
 
-class CoverageMetrics(object):
+class CoverageMetrics:
     @staticmethod
     def get_dnp_boolean(series):
         return series.astype(str).str.contains('\|')
@@ -418,7 +425,7 @@ class CoverageMetrics(object):
         return formatted_series
 
 
-class CosmicSignatures(object):
+class CosmicSignatures:
     feature_type_section = 'feature_types'
     feature_type = CONFIG[feature_type_section]['signature']
 
@@ -528,8 +535,7 @@ class Fusion:
     @classmethod
     def import_feature(cls, handle):
         column_map = cls.create_colmap()
-        df = Reader.safe_read(handle, '\t', column_map, index_col=False)
-        df = Features.preallocate_missing_columns(df)
+        df = Features.import_if_path_exists(handle, '\t', column_map, index_col=False)
         if not df.empty:
             split_genes = cls.split_genes(df[Features.feature])
             df[Features.left_gene] = split_genes[Features.left_gene]
@@ -577,7 +583,7 @@ class Fusion:
             columns={0: Features.chr, 1: Features.start}).loc[:, [Features.chr, Features.start]]
 
 
-class MicrosatelliteReader(object):
+class MicrosatelliteReader:
     microsatellite = 'microsatellite'
     feature_type_section = 'feature_types'
     feature_type = CONFIG[feature_type_section][microsatellite]
@@ -649,11 +655,14 @@ class MAF:
 
     @classmethod
     def import_maf(cls, handle):
-        maf_format = cls.check_format(handle)
-        column_map = cls.create_column_map(maf_format)
-        df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
-        df = Features.preallocate_missing_columns(df)
-        return df
+        if os.path.exists(handle):
+            maf_format = cls.check_format(handle)
+            column_map = cls.create_column_map(maf_format)
+            df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
+            df = Features.preallocate_missing_columns(df)
+            return df
+        else:
+            return Features.create_empty_dataframe()
 
 
 class MAFGermline(MAF):
