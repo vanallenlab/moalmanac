@@ -198,7 +198,7 @@ class Actionable:
 
     @classmethod
     def display_burden(cls, df, idx, alt):
-        return df.loc[idx, alt].astype(str) + ' mutations per Mb'
+        return df.loc[idx, alt].astype(str)
 
     @classmethod
     def display_copynumber(cls, df, idx, feature, alt_type):
