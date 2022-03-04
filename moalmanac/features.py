@@ -243,6 +243,7 @@ class BurdenReader(object):
         burden_boolean = cls.evaluate_high_burden(df)
         df[cls.high_burden_boolean] = burden_boolean
         df[Features.feature] = cls.evaluate_high_burden_boolean(burden_boolean)
+        df[Features.alt] = f'{round(mutational_burden, 2)} mutations per Mb'
         return df.to_frame().T
 
 
