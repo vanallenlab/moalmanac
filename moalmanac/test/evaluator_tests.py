@@ -171,7 +171,7 @@ class UnitTestActionable(unittest.TestCase):
 
     def test_display_burden(self):
         alt = Evaluator.alt
-        df = pd.DataFrame({alt: [10, 20, 30]})
+        df = pd.DataFrame({alt: ["10 mutations per Mb", "20", "30 mutations per Mb"]})
         idx = [0, 2]
         series = Actionable.display_burden(df, idx, alt)
         self.assertEqual(['10 mutations per Mb', '30 mutations per Mb'], series.tolist())
