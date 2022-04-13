@@ -163,7 +163,7 @@ class UnitTestMAF(unittest.TestCase):
         df = pd.DataFrame(columns=['Protein_Change', ''])
         self.assertEqual("tcga_maf_input", features.MAF.check_format(df))
         df = pd.DataFrame(columns=['HGVSp_Short', ''])
-        self.assertEqual("nci_maf_input", features.MAF.check_format(df))
+        self.assertEqual("gdc_maf_input", features.MAF.check_format(df))
         df = pd.DataFrame(columns=[])
         with self.assertRaises(SystemExit) as system_exit:
             features.MAF.check_format(df)
@@ -172,15 +172,15 @@ class UnitTestMAF(unittest.TestCase):
 
     def test_create_column_map(self):
         tcga_column_map = features.MAF.create_column_map('tcga_maf_input')
-        nci_column_map = features.MAF.create_column_map('nci_maf_input')
+        gdc_column_map = features.MAF.create_column_map('gdc_maf_input')
         tcga_expected_key = "protein_change" in list(tcga_column_map.keys())
-        nci_expected_key = "hgvsp_short" in list(nci_column_map.keys())
+        gdc_expected_key = "hgvsp_short" in list(gdc_column_map.keys())
         tcga_unexpected_key = "hgvsp_short" in list(tcga_column_map.keys())
-        nci_unexpected_key = "protein_change" in list(nci_column_map.keys())
+        gdc_unexpected_key = "protein_change" in list(gdc_column_map.keys())
         self.assertEqual(True, tcga_expected_key)
-        self.assertEqual(True, nci_expected_key)
+        self.assertEqual(True, gdc_expected_key)
         self.assertEqual(False, tcga_unexpected_key)
-        self.assertEqual(False, nci_unexpected_key)
+        self.assertEqual(False, gdc_unexpected_key)
 
     def test_format_maf(self):
         initial = pd.DataFrame({features.MAF.alt_type: ['Missense_Mutation', 'Nonsense_Mutation', 'A']})
