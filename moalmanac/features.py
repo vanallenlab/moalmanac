@@ -15,7 +15,7 @@ from config import CONFIG
 SIGNATURES_CONFIG = CONFIG['signatures']
 
 
-class Features(object):
+class Features:
     features_section = 'features'
     feature_type = COLNAMES[features_section]['feature_type']
     feature = COLNAMES[features_section]['feature']
@@ -42,23 +42,6 @@ class Features(object):
     right_start = COLNAMES[features_section]['right_start']
     tumor = COLNAMES[features_section]['tumor']
     normal = COLNAMES[features_section]['normal']
-
-    annotation_map = {
-        'Missense_Mutation': 'Missense',
-        'Nonsense_Mutation': 'Nonsense',
-        'Nonstop_Mutation': 'Nonstop',
-        'Splice_Site': 'Splice Site',
-        'Frame_Shift_Ins': 'Frameshift',
-        'Frame_Shift_Del': 'Frameshift',
-        'In_Frame_Ins': 'Insertion',
-        'In_Frame_Del': 'Deletion'
-    }
-
-    coding_classifications_raw = []
-    coding_classifications_mapped = []
-    for key, value in annotation_map.items():
-        coding_classifications_raw.append(key)
-        coding_classifications_mapped.append(value)
 
     high_burden = 'High Mutational Burden'
     not_high_burden = 'Not high mutational burden'
@@ -107,22 +90,6 @@ class Features(object):
     def preallocate_missing_columns(cls, df):
         missing_cols = [col for col in cls.all_columns if col not in df.columns]
         return pd.concat([df, pd.DataFrame(None, columns=missing_cols, index=df.index)], axis=1)
-
-    @classmethod
-    def rename_coding_classifications(cls, series):
-        return series.replace(cls.annotation_map)
-
-    @classmethod
-    def return_idx_variants_coding(cls, series_alt_type):
-        return series_alt_type.isin(cls.coding_classifications_mapped)
-
-    @classmethod
-    def return_variants_coding(cls, df):
-        return df[cls.return_idx_variants_coding(df[cls.alt_type])]
-
-    @classmethod
-    def return_variants_non_coding(cls, df):
-        return df[~cls.return_idx_variants_coding(df[cls.alt_type])]
 
 
 class Aneuploidy:
@@ -530,7 +497,8 @@ class Fusion:
 
     @staticmethod
     def filter_by_spanning_fragment_count(series, minimum=spanningfrags_min):
-        return series[series.astype(float) >= float(minimum)].index
+        minimum = int(minimum)
+        return series[series.astype(int).ge(minimum)].index
 
     @classmethod
     def import_feature(cls, handle):
@@ -574,13 +542,20 @@ class Fusion:
 
     @staticmethod
     def split_genes(series_gene):
-        return series_gene.str.split('--', expand=True).rename(
-            columns={0: Features.left_gene, 1: Features.right_gene})
+        return (
+            series_gene
+            .str.split('--', expand=True)
+            .rename(columns={0: Features.left_gene, 1: Features.right_gene})
+        )
 
     @staticmethod
     def split_breakpoint(series_breakpoint):
-        return series_breakpoint.str.split(':', expand=True).rename(
-            columns={0: Features.chr, 1: Features.start}).loc[:, [Features.chr, Features.start]]
+        return (
+            series_breakpoint
+            .str.split(':', expand=True)
+            .rename(columns={0: Features.chr, 1: Features.start})
+            .loc[:, [Features.chr, Features.start]]
+        )
 
 
 class MicrosatelliteReader:
@@ -613,10 +588,26 @@ class MicrosatelliteReader:
         return df
 
 
-class MAF:
+class MAF(Features):
+    annotation_map = {
+        'Missense_Mutation': 'Missense',
+        'Nonsense_Mutation': 'Nonsense',
+        'Nonstop_Mutation': 'Nonstop',
+        'Splice_Site': 'Splice Site',
+        'Frame_Shift_Ins': 'Frameshift',
+        'Frame_Shift_Del': 'Frameshift',
+        'In_Frame_Ins': 'Insertion',
+        'In_Frame_Del': 'Deletion'
+    }
+
+    coding_classifications_raw = []
+    coding_classifications_mapped = []
+    for key, value in annotation_map.items():
+        coding_classifications_raw.append(key)
+        coding_classifications_mapped.append(value)
+
     @staticmethod
-    def check_format(handle):
-        df = Reader.read(handle, delimiter='\t', nrows=2)
+    def check_format(df):
         if "Protein_Change" in df.columns:
             return "tcga_maf_input"
         elif "HGVSp_Short" in df.columns:
@@ -624,45 +615,62 @@ class MAF:
         else:
             sys.exit("Neither 'Protein_Change' nor 'HGVSp_Short' are present columns, cannot map to MAF format")
 
-    @staticmethod
-    def create_column_map(maf_format):
+    @classmethod
+    def create_column_map(cls, maf_format):
         column_names = COLNAMES[maf_format]
         return {
-            column_names['gene']: Features.feature,
-            column_names['chr']: Features.chr,
-            column_names['start']: Features.start,
-            column_names['end']: Features.end,
-            column_names['ref']: Features.ref,
-            column_names['allele1']: Features.allele1,
-            column_names['allele2']: Features.allele2,
-            column_names['alt_type']: Features.alt_type,
-            column_names['alt']: Features.alt,
-            column_names['ref_count']: Features.ref_count,
-            column_names['alt_count']: Features.alt_count,
-            column_names['tumor']: Features.tumor,
-            column_names['normal']: Features.normal
+            column_names['gene']: cls.feature,
+            column_names['chr']: cls.chr,
+            column_names['start']: cls.start,
+            column_names['end']: cls.end,
+            column_names['ref']: cls.ref,
+            column_names['allele1']: cls.allele1,
+            column_names['allele2']: cls.allele2,
+            column_names['alt_type']: cls.alt_type,
+            column_names['alt']: cls.alt,
+            column_names['ref_count']: cls.ref_count,
+            column_names['alt_count']: cls.alt_count,
+            column_names['tumor']: cls.tumor,
+            column_names['normal']: cls.normal
         }
 
-    @staticmethod
-    def format_maf(df, feature_type):
-        df[Features.feature_type] = Features.annotate_feature_type(feature_type, df.index)
-        df[Features.alt_count] = CoverageMetrics.format_coverage_col(df[Features.alt_count])
-        df[Features.ref_count] = CoverageMetrics.format_coverage_col(df[Features.ref_count])
-        df[Features.coverage] = CoverageMetrics.append_coverage(df[Features.alt_count], df[Features.ref_count])
-        df[Features.tumor_f] = CoverageMetrics.append_tumor_f(df[Features.alt_count], df[Features.coverage])
-        df[Features.alt_type] = Features.rename_coding_classifications(df[Features.alt_type])
+    @classmethod
+    def format_maf(cls, df, feature_type):
+        df = Features.preallocate_missing_columns(df)
+        df[Features.feature_type] = cls.annotate_feature_type(feature_type, df.index)
+        df[Features.alt_count] = CoverageMetrics.format_coverage_col(df[cls.alt_count])
+        df[Features.ref_count] = CoverageMetrics.format_coverage_col(df[cls.ref_count])
+        df[Features.coverage] = CoverageMetrics.append_coverage(df[cls.alt_count], df[cls.ref_count])
+        df[Features.tumor_f] = CoverageMetrics.append_tumor_f(df[cls.alt_count], df[cls.coverage])
+        df[Features.alt_type] = cls.rename_coding_classifications(df[cls.alt_type])
         return df
 
     @classmethod
     def import_maf(cls, handle):
         if os.path.exists(handle):
-            maf_format = cls.check_format(handle)
+            df_mini = Reader.read(handle, delimiter='\t', nrows=2, comment_character='#')
+            maf_format = cls.check_format(df_mini)
             column_map = cls.create_column_map(maf_format)
             df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
-            df = Features.preallocate_missing_columns(df)
             return df
         else:
-            return Features.create_empty_dataframe()
+            return cls.create_empty_dataframe()
+
+    @classmethod
+    def rename_coding_classifications(cls, series):
+        return series.astype(str).replace(cls.annotation_map)
+
+    @classmethod
+    def return_idx_variants_coding(cls, series_alt_type):
+        return series_alt_type.isin(cls.coding_classifications_mapped)
+
+    @classmethod
+    def return_variants_coding(cls, df):
+        return df[cls.return_idx_variants_coding(df[cls.alt_type])]
+
+    @classmethod
+    def return_variants_non_coding(cls, df):
+        return df[~cls.return_idx_variants_coding(df[cls.alt_type])]
 
 
 class MAFGermline(MAF):
@@ -673,10 +681,10 @@ class MAFGermline(MAF):
         df = cls.import_maf(handle)
         if not df.empty:
             df = cls.format_maf(df, cls.feature_type)
-            coding_variants = Features.return_variants_coding(df)
+            coding_variants = cls.return_variants_coding(df)
         else:
-            coding_variants = Features.create_empty_dataframe()
-        non_coding_variants = Features.create_empty_dataframe()
+            coding_variants = cls.create_empty_dataframe()
+        non_coding_variants = cls.create_empty_dataframe()
         return coding_variants, non_coding_variants
 
 
@@ -688,11 +696,11 @@ class MAFSomatic(MAF):
         df = cls.import_maf(handle)
         if not df.empty:
             df = cls.format_maf(df, cls.feature_type)
-            coding_variants = Features.return_variants_coding(df)
-            non_coding_variants = Features.return_variants_non_coding(df)
+            coding_variants = cls.return_variants_coding(df)
+            non_coding_variants = cls.return_variants_non_coding(df)
         else:
-            coding_variants = Features.create_empty_dataframe()
-            non_coding_variants = Features.create_empty_dataframe()
+            coding_variants = cls.create_empty_dataframe()
+            non_coding_variants = cls.create_empty_dataframe()
         return coding_variants, non_coding_variants
 
 
