@@ -6,7 +6,7 @@ import tinydb
 import copy
 
 import datasources
-from features import Features
+import features
 
 from config import COLNAMES
 from config import CONFIG
@@ -479,7 +479,7 @@ class Almanac(object):
         feature = series.loc[cls.feature]
         feature_type = series.loc[cls.feature_type]
         alt_type = series.loc[cls.alt_type]
-        alt = series.loc[Features.segment_mean]
+        alt = series.loc[features.Features.segment_mean]
 
         query_same_ontology = (cls.Query[cls.oncotree_code] == ontology)
         query_diff_ontology = (cls.Query[cls.oncotree_code] != ontology)
@@ -922,7 +922,7 @@ class ClinVar(object):
         df.drop(df.columns[df.columns.str.contains('clinvar')], axis=1, inplace=True)
         ds = datasources.ClinVar.import_ds(dbs)
         df = cls.append_clinvar(df, ds)
-        return Features.preallocate_missing_columns(df)
+        return features.Features.preallocate_missing_columns(df)
 
 
 class Cosmic(object):
@@ -952,7 +952,7 @@ class ExAC:
 
     somatic = CONFIG['feature_types']['mut']
     germline = CONFIG['feature_types']['germline']
-    feature_type = Features.feature_type
+    feature_type = features.Features.feature_type
 
     @classmethod
     def append_exac_af(cls, df, ds, ds_columns):
@@ -975,7 +975,7 @@ class ExAC:
         ds = datasources.ExAC.import_ds(dbs)
         df_annotated = cls.append_exac_af(df_dropped, ds, [cls.chr, cls.start, cls.ref, cls.alt, cls.af])
         df_annotated[cls.bin_name] = cls.annotate_common_af(df_annotated[cls.af])
-        return Features.preallocate_missing_columns(df_annotated)
+        return features.Features.preallocate_missing_columns(df_annotated)
 
     @classmethod
     def annotate_common_af(cls, series_exac_af):
@@ -1047,7 +1047,7 @@ class ExACExtended:
         ds = datasources.ExACExtended.import_ds(dbs)
         df_annotated = ExAC.append_exac_af(df_dropped, ds, cls.ds_columns)
         df_annotated[ExAC.bin_name] = ExAC.annotate_common_af(df_annotated[ExAC.af])
-        return Features.preallocate_missing_columns(df_annotated)
+        return features.Features.preallocate_missing_columns(df_annotated)
 
 
 class GSEACancerModules(object):
@@ -1172,7 +1172,7 @@ class OverlapSomaticGermline(object):
 
     @classmethod
     def count_germline_hits(cls, df):
-        variants = df[df[cls.alt_type].isin(Features.coding_classifications_mapped)]
+        variants = df[df[cls.alt_type].isin(features.MAF.coding_classifications_mapped)]
         value_counts = variants[cls.gene].value_counts()
         return cls.value_counts_to_df(value_counts)
 
