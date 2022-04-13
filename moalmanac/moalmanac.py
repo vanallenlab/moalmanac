@@ -75,38 +75,23 @@ def main(patient, inputs):
     patient[ontology] = mapped_ontology[ontology]
     patient[code] = mapped_ontology[code]
 
-    if inputs[called_cn_handle] != '':
-        used_cn_handle = inputs[called_cn_handle]
-        used_cn_reader = features.CalledCNAReader()
-        used_cn_column_names = COLNAMES[called_cn_input]
-    else:
-        used_cn_handle = inputs[cnv_handle]
-        used_cn_reader = features.CNVReader()
-        used_cn_column_names = COLNAMES[seg_input]
-
-    df_snv, df_snv_reject = features.Features.import_features(
-        inputs[snv_handle], features.MutationReader(), COLNAMES[snv_input], feature_type_mut)
-    df_indel, df_indel_reject = features.Features.import_features(
-        inputs[indel_handle], features.MutationReader(), COLNAMES[indel_input], feature_type_mut)
-    df_cnv, df_cnv_reject = features.Features.import_features(
-        used_cn_handle, used_cn_reader, used_cn_column_names, feature_type_cna)
-    df_fusion, df_fusion_reject = features.Features.import_features(
-        inputs[fusion_handle], features.FusionReader(), COLNAMES[fusion_input], feature_type_fusion)
+    df_snv, df_snv_reject = features.MAFSomatic.import_feature(inputs[snv_handle])
+    df_indel, df_indel_reject = features.MAFSomatic.import_feature(inputs[indel_handle])
+    df_cnv, df_cnv_reject = features.CopyNumber.import_feature(inputs[called_cn_handle], inputs[cnv_handle])
+    df_fusion, df_fusion_reject = features.Fusion.import_feature(inputs[fusion_handle])
 
     somatic_variants = pd.concat([df_snv, df_indel, df_cnv, df_fusion], ignore_index=True)
     somatic_filtered = pd.concat([df_snv_reject, df_indel_reject, df_cnv_reject, df_fusion_reject], ignore_index=True)
 
-    germline_variants, germline_reject = features.Features.import_features(
-        inputs[germline_handle], features.GermlineReader, COLNAMES[germline_input], feature_type_germline)
+    germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
 
     if not somatic_variants.empty:
         annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code])
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
 
-        snv_validation_accept, snv_validation_reject = features.Features.import_features(
-            inputs[validation_handle], features.ValidationMutationReader(), COLNAMES[snv_input], feature_type_mut)
-        if not snv_validation_accept.empty:
-            evaluated_somatic = annotator.OverlapValidation.append_validation(evaluated_somatic, snv_validation_accept)
+        validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
+        if not validation_accept.empty:
+            evaluated_somatic = annotator.OverlapValidation.append_validation(evaluated_somatic, validation_accept)
             illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, patient[patient_id])
     else:
         evaluated_somatic = features.Features.create_empty_dataframe()
