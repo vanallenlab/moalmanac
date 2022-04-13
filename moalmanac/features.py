@@ -497,7 +497,7 @@ class Fusion:
 
     @staticmethod
     def filter_by_spanning_fragment_count(series, minimum=spanningfrags_min):
-        minimum = int(minimum)
+        minimum = int(float(minimum))
         return series[series.astype(int).ge(minimum)].index
 
     @classmethod
@@ -648,7 +648,7 @@ class MAF(Features):
     @classmethod
     def import_maf(cls, handle):
         if os.path.exists(handle):
-            df_mini = Reader.read(handle, delimiter='\t', nrows=2, comment_character='#')
+            df_mini = Reader.read(handle, delimiter='\t', nrows=2, comment='#')
             maf_format = cls.check_format(df_mini)
             column_map = cls.create_column_map(maf_format)
             df = Reader.safe_read(handle, '\t', column_map, comment_character='#')
