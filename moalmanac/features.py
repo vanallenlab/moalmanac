@@ -611,7 +611,7 @@ class MAF(Features):
         if "Protein_Change" in df.columns:
             return "tcga_maf_input"
         elif "HGVSp_Short" in df.columns:
-            return "nci_maf_input"
+            return "gdc_maf_input"
         else:
             sys.exit("Neither 'Protein_Change' nor 'HGVSp_Short' are present columns, cannot map to MAF format")
 
