@@ -38,7 +38,7 @@ Molecular Oncology Almanac will run successfully given any combination of the fo
 `--stage` also expects a string and is intended for use to input disease stage. This is not functionally used within the method and only is outputted for display in the produced actionability report.
 
 ## Somatic single nucleotide variants 
-`--snv_handle` anticipates a tab delimited file which contains somatic single nucleotide variants (snvs). This file should follow the guideline's set by the TCGA's [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). Insertions and deletions can also be included in this output, the two MAFs are simply concatenated together. 
+`--snv_handle` anticipates a tab delimited file which contains somatic single nucleotide variants (snvs). This file should follow the guideline's set by either TCGA or GDC [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). Insertions and deletions can also be included in this input, the two MAFs are simply concatenated together. 
 
 ### Example
 |Hugo Symbol|NCBI_Build|Chromosome|Start_position|End_position|Reference_Allele|Tumor_Seq_Allele1|Tumor_Seq_Allele2|Variant_Classification|Tumor_Sample_Barcode|Matched_Norm_Sample_Barcode|Annotation_Transcript|Protein_Change|t_ref_count|t_alt_count|  
@@ -48,7 +48,7 @@ Molecular Oncology Almanac will run successfully given any combination of the fo
 |STAG2|37|X|123191810|123191810|A|T|A|Missense_Mutation|ProfileA-Tumor|ProfileA-Normal|ENST00000371160.1|p.F467I|60|20|
 
 ### Required fields
-Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `Hugo_Symbol`, gene symbol associated with the variant
 - `NCBI_Build`, reference genome used
 - `Chromosome`, chromosome of the variant
@@ -60,12 +60,15 @@ Required fields can be changed from their default expectations by editing the ap
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
 - `Matched_Norm_Sample_Barcode`, string associated with the corresponding normal profile
 - `Annotation_Transcript`, transcript associated with variant
-- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes. 
 - `t_ref_count`, number of reference alleles observed at genomic position
 - `t_alt_count`, number of alternate alleles observed at genomic position
 
+At least one of the following also must be included: 
+- `HGVSp_Short`, protein change associated with the variant using the one-letter amino acid codes
+- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes 
+
 ## Somatic insertion and deletion variants 
-`--indel_handle` anticipates a tab delimited file which contains somatic insertions and deletions (indels). This file should follow the guideline's set by the TCGA's [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). Single nucleotide variants can also be included in this output, the two MAFs are simply concatenated together. 
+`--indel_handle` anticipates a tab delimited file which contains somatic insertions and deletions (indels). This file should follow the guideline's set by either TCGA or GDC [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). Single nucleotide variants can also be included in this input, the two MAFs are simply concatenated together. 
 
 ### Example
 |Hugo Symbol|NCBI_Build|Chromosome|Start_position|End_position|Reference_Allele|Tumor_Seq_Allele1|Tumor_Seq_Allele2|Variant_Classification|Tumor_Sample_Barcode|Matched_Norm_Sample_Barcode|Annotation_Transcript|Protein_Change|t_ref_count|t_alt_count|  
@@ -75,7 +78,7 @@ Required fields can be changed from their default expectations by editing the ap
 |MEST|37|7|130138285|130138285|C|C|-|Frame_Shift_Del|ProfileA-Tumor|ProfileA-Normal|ENST00000223215.4|p.L168fs|60|20|
 
 ### Required fields
-Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `Hugo_Symbol`, gene symbol associated with the variant
 - `NCBI_Build`, reference genome used
 - `Chromosome`, chromosome of the variant
@@ -87,9 +90,12 @@ Required fields can be changed from their default expectations by editing the ap
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
 - `Matched_Norm_Sample_Barcode`, string associated with the corresponding normal profile
 - `Annotation_Transcript`, transcript associated with variant
-- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes. 
 - `t_ref_count`, number of reference alleles observed at genomic position
 - `t_alt_count`, number of alternate alleles observed at genomic position
+
+At least one of the following also must be included: 
+- `HGVSp_Short`, protein change associated with the variant using the one-letter amino acid codes
+- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes 
 
 ## Bases covered
 `--bases_covered_handle` anticipates a tab delimited file which contains a single integer representing the number of bases tested for somatic variants. This is used as the denominator to calculate tumor mutational burden (number of coding somatic variants / somatic bases tested). 
@@ -115,7 +121,7 @@ This input is looking for an integer value.
 The rows associated with _TP53_, _CDKN2A_, and _EGFR_ will be interpreted and scored by Molecular Oncology Almanac while _BRAF_ will be filtered.
 
 ### Required files
-Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `gene`, gene symbol associated with the copy number alteration
 - `call`, copy number event of the gene. `Amplification` and `Deletion` are accepted and all other values will be filtered.
 
@@ -130,7 +136,7 @@ Required fields can be changed from their default expectations by editing the ap
 |BOC|3|112282632|113393977|ProfileA-Tumor|0.957205107|
 
 ### Required fields
-Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `gene`, gene symbol associated with the copy number alteration
 - `segment_contig`, chromosome of the copy number alteration
 - `segment_start`, genomic location of the segment's start position
@@ -149,14 +155,14 @@ Required fields can be changed from their default expectations by editing the ap
 |POLR2A--AP2M1|12|17:7406801|3:183898675|
 
 ### Required fields
-Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `#FusionName`, gene symbols associated with the fusion separated by `--`. Genes are labeled from 5' to 3'. 
 - `SpanningFragCount`, counts of RNA-seq fragments supporting the fusion
 - `LeftBreakpoint`, genomic position of the fusion's left breakpoint
 - `RightBreakpoint`, genomic position of the fusion's right breakpoint
 
 ## Germline variants
-`--germline_handle` anticipates a tab delimited file which contains germline variants (both snvs and indels) associated with a case profile. This file should follow the guideline's set by the TCGA's [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). 
+`--germline_handle` anticipates a tab delimited file which contains germline variants (both snvs and indels) associated with a case profile. This file should follow the guideline's set by either TCGA or GDC [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). Column names are **not** case-sensitive.
 
 ### Example
 |Hugo Symbol|NCBI_Build|Chromosome|Start_position|End_position|Reference_Allele|Tumor_Seq_Allele1|Tumor_Seq_Allele2|Variant_Classification|Tumor_Sample_Barcode|Matched_Norm_Sample_Barcode|Annotation_Transcript|Protein_Change|t_ref_count|t_alt_count|  
@@ -166,7 +172,7 @@ Required fields can be changed from their default expectations by editing the ap
 |STAG2|37|X|123191810|123191810|A|T|A|Missense_Mutation|ProfileA-Tumor|ProfileA-Normal|ENST00000371160.1|p.F467I|80|26|
 
 ### Required fields
-Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `Hugo_Symbol`, gene symbol associated with the variant
 - `NCBI_Build`, reference genome used
 - `Chromosome`, chromosome of the variant
@@ -178,13 +184,15 @@ Required fields can be changed from their default expectations by editing the ap
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
 - `Matched_Norm_Sample_Barcode`, string associated with the corresponding normal profile
 - `Annotation_Transcript`, transcript associated with variant
-- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes. 
 - `t_ref_count`, number of reference alleles observed at genomic position
 - `t_alt_count`, number of alternate alleles observed at genomic position
 
+At least one of the following also must be included: 
+- `HGVSp_Short`, protein change associated with the variant using the one-letter amino acid codes
+- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes 
 
 ## Somatic variants from validation sequencing
-`--validation_handle` anticipates a tab delimited file which contains somatic variants (snvs and/or indels) from any form of validation or orthogonal sequencing on the tumor; such as re-sequencing the same tissue or somatic variants called from RNA. This file should follow the guideline's set by the TCGA's [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). 
+`--validation_handle` anticipates a tab delimited file which contains somatic variants (snvs and/or indels) from any form of validation or orthogonal sequencing on the tumor; such as re-sequencing the same tissue or somatic variants called from RNA. This file should follow the guideline's set by either TCGA or GDC [Mutation Annotation Format (MAF)](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/). 
 
 Variants from this file are only used for confirmation and are not used for discovery. Specifically, MOAlmanac will look for reported somatic variants in the validation sequencing and identify if any supporting reads are present and if there is sufficient power for detection. This is consistent with best practices recommended by [Yizhak et al. 2019](https://science.sciencemag.org/content/364/6444/eaaw0726.long).
 
@@ -196,7 +204,7 @@ Variants from this file are only used for confirmation and are not used for disc
 |STAG2|37|X|123191810|123191810|A|T|A|Missense_Mutation|ProfileA-Tumor|ProfileA-Normal|ENST00000371160.1|p.F467I|80|26|
 
 ### Required fields
-Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are case sensitive. 
+Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `Hugo_Symbol`, gene symbol associated with the variant
 - `NCBI_Build`, reference genome used
 - `Chromosome`, chromosome of the variant
@@ -208,9 +216,12 @@ Required fields can be changed from their default expectations by editing the ap
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
 - `Matched_Norm_Sample_Barcode`, string associated with the corresponding normal profile
 - `Annotation_Transcript`, transcript associated with variant
-- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes. 
 - `t_ref_count`, number of reference alleles observed at genomic position
 - `t_alt_count`, number of alternate alleles observed at genomic position
+
+At least one of the following also must be included: 
+- `HGVSp_Short`, protein change associated with the variant using the one-letter amino acid codes
+- `Protein_Change`, protein change associated with the variant using the one-letter amino-acid codes
 
 ## Microsatellite status
 `--ms_status` is a categorical input for microsatellite status, anticipating one of four options: 
