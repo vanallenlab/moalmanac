@@ -3,9 +3,9 @@ import pandas as pd
 import re
 
 import datasources
+import features
 from config import CONFIG
 from config import COLNAMES
-from features import Features
 
 
 class Evaluator(object):
@@ -314,7 +314,7 @@ class Actionable:
     @classmethod
     def summarize_ms_variants(cls, df):
         df = cls.format_mutations(df)
-        msi_summary = Features.create_empty_dataframe()
+        msi_summary = features.Features.create_empty_dataframe()
         if not df.empty:
             feature = Evaluator.supporting_variants
             feature_displays = cls.format_feature_display(df, Evaluator.feature_display,
