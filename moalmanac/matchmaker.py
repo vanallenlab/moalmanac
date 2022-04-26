@@ -72,7 +72,8 @@ class Matchmaker:
 
         calculated = SNFTypesCGCwithEvidence.calculate(annotated, samples_to_use)
         case = cls.subset_dataframe_eq(calculated, 'case', cls.case_profile)
-        case.sort_values(by=SNFTypesCGCwithEvidence.label, ascending=True, inplace=True)
+        case = case.reset_index(drop=True)
+        case = case.sort_values(by=SNFTypesCGCwithEvidence.label, ascending=True)
         case['case'].replace(cls.case_profile, case_sample_id, inplace=True)
         return case
 
@@ -81,6 +82,10 @@ class Matchmaker:
         df1 = cls.preallocate_missing_columns(df1, columns)
         df2 = cls.preallocate_missing_columns(df2, columns)
         return pd.concat([df1.loc[:, columns], df2.loc[:, columns]], ignore_index=True)
+
+    @classmethod
+    def create_empty_output(cls):
+        return pd.DataFrame(columns={'case', 'comparison'})
 
     @classmethod
     def format_fusions(cls, dataframe):

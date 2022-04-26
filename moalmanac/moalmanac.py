@@ -86,7 +86,7 @@ def main(patient, inputs):
     germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
 
     if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code])
+        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code], patient[patient_id])
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
 
         validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
@@ -97,7 +97,7 @@ def main(patient, inputs):
         evaluated_somatic = features.Features.create_empty_dataframe()
 
     if not germline_variants.empty:
-        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code])
+        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code], patient[patient_id])
         evaluated_germline = evaluator.Evaluator.evaluate_germline(annotated_germline)
     else:
         evaluated_germline = features.Features.create_empty_dataframe()
@@ -111,10 +111,10 @@ def main(patient, inputs):
     patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
     patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code])
-    annotated_signatures = annotator.Annotator.annotate_almanac(somatic_signatures, dbs, patient[code])
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code])
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code])
+    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code], patient[patient_id])
+    annotated_signatures = annotator.Annotator.annotate_almanac(somatic_signatures, dbs, patient[code], patient[patient_id])
+    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code], patient[patient_id])
+    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code], patient[patient_id])
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
     evaluated_signatures = evaluator.Evaluator.evaluate_almanac(annotated_signatures)
@@ -133,33 +133,32 @@ def main(patient, inputs):
     efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, actionable, patient[patient_id])
     actionable = annotator.PreclinicalEfficacy.annotate(actionable, efficacy_summary)
 
-    matchmaker_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, patient[patient_id])
+    if inputs[disable_matchmaking]:
+        matchmaker_results = matchmaker.Matchmaker.create_empty_output()
+    else:
+        matchmaker_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, patient[patient_id])
 
     report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
-    version_dictionary = reporter.Reporter.generate_version_dictionary()
+    reporter.Reporter.generate_report(actionable,
+                                      report_dictionary,
+                                      efficacy_dictionary,
+                                      efficacy_summary,
+                                      matchmaker_results,
+                                      dbs_preclinical['dictionary']
+                                      )
 
-    if inputs[disable_matchmaking]:
-        matchmaker_on_boolean = False
-    else:
-        matchmaker_on_boolean = True
-
-    reporter.Reporter.generate_report(actionable, report_dictionary, version_dictionary,
-                                      efficacy_dictionary, efficacy_summary,
-                                      matchmaker_on_boolean, matchmaker_results, dbs_preclinical['dictionary'])
-
-    value_patient_id = patient[patient_id]
-    writer.Actionable.write(actionable, value_patient_id)
-    writer.GermlineACMG.write(evaluated_germline, value_patient_id)
-    writer.GermlineCancer.write(evaluated_germline, value_patient_id)
-    writer.GermlineHereditary.write(evaluated_germline, value_patient_id)
-    writer.Integrated.write(integrated, value_patient_id)
-    writer.MSI.write(evaluated_ms_variants, value_patient_id)
-    writer.MutationalBurden.write(evaluated_burden, value_patient_id)
-    writer.SomaticScored.write(evaluated_somatic, value_patient_id)
-    writer.SomaticFiltered.write(somatic_filtered, value_patient_id)
-    writer.Strategies.write(strategies, value_patient_id)
-    writer.PreclinicalEfficacy.write(efficacy_summary, value_patient_id)
-    writer.PreclinicalMatchmaking.write(matchmaker_results, value_patient_id)
+    writer.Actionable.write(actionable, patient[patient_id])
+    writer.GermlineACMG.write(evaluated_germline, patient[patient_id])
+    writer.GermlineCancer.write(evaluated_germline, patient[patient_id])
+    writer.GermlineHereditary.write(evaluated_germline, patient[patient_id])
+    writer.Integrated.write(integrated, patient[patient_id])
+    writer.MSI.write(evaluated_ms_variants, patient[patient_id])
+    writer.MutationalBurden.write(evaluated_burden, patient[patient_id])
+    writer.SomaticScored.write(evaluated_somatic, patient[patient_id])
+    writer.SomaticFiltered.write(somatic_filtered, patient[patient_id])
+    writer.Strategies.write(strategies, patient[patient_id])
+    writer.PreclinicalEfficacy.write(efficacy_summary, patient[patient_id])
+    writer.PreclinicalMatchmaking.write(matchmaker_results, patient[patient_id])
 
 
 if __name__ == "__main__":
