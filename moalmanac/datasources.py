@@ -148,6 +148,10 @@ class Almanac(object):
         df = Reader.read_tinydb(dbs['almanac_handle'])
         return df
 
+    @staticmethod
+    def close_ds(ds):
+        ds.close()
+
 
 class CancerGeneCensus(object):
     gene = Datasources.feature

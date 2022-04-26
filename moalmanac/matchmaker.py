@@ -72,7 +72,8 @@ class Matchmaker:
 
         calculated = SNFTypesCGCwithEvidence.calculate(annotated, samples_to_use)
         case = cls.subset_dataframe_eq(calculated, 'case', cls.case_profile)
-        case.sort_values(by=SNFTypesCGCwithEvidence.label, ascending=True, inplace=True)
+        case = case.reset_index(drop=True)
+        case = case.sort_values(by=SNFTypesCGCwithEvidence.label, ascending=True)
         case['case'].replace(cls.case_profile, case_sample_id, inplace=True)
         return case
 
