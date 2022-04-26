@@ -33,7 +33,8 @@ class Reader(object):
 
     @staticmethod
     def read_pickle(handle):
-        return pickle.load(open(handle, "rb"))
+        with open(handle, 'rb') as pickle_handle:
+            return pickle.load(pickle_handle)
 
     @staticmethod
     def read_tinydb(handle):

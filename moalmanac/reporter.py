@@ -1,6 +1,7 @@
 import flask
 import flask_frozen
 import datetime
+import os
 import tinydb
 
 from config import COLNAMES
@@ -66,23 +67,29 @@ class Reporter(object):
         }
 
     @classmethod
-    def generate_report(cls, actionable, report_dictionary, version_dictionary,
-                        preclinical_dictionary, preclinical_dataframe,
-                        matchmaking_on, matchmaker, preclinical_reference_dict):
+    def generate_report(cls, actionable, report_dictionary,
+                        preclinical_dictionary,
+                        preclinical_dataframe,
+                        matchmaker,
+                        preclinical_reference_dict):
+        version_dictionary = cls.generate_version_dictionary()
+
         app = flask.Flask(__name__)
         freezer = flask_frozen.Freezer(app)
+        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}"
+        app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
 
         actionable = cls.drop_double_fusion(actionable)
         matches = cls.load_almanac_additional_matches()
 
         lookup = {}
-        if matchmaking_on:
+        if not matchmaker.empty:
             matchmaker = matchmaker[~matchmaker['comparison'].eq('case-profile')]
             for index in matchmaker.index.tolist()[:10]:
                 cell_line = matchmaker.loc[index, 'comparison']
                 lookup[index] = preclinical_reference_dict[cell_line]
 
-        @app.route('/')
+        @app.route(f"/{report_dictionary['patient_id']}.report.html")
         def index():
             return flask.render_template('index.html',
                                          df=actionable.fillna(''),
@@ -91,7 +98,6 @@ class Reporter(object):
                                          matches=matches,
                                          preclinical_dict=preclinical_dictionary,
                                          preclinical_df=preclinical_dataframe,
-                                         matchmaking_on=matchmaking_on,
                                          matchmaker=matchmaker,
                                          lookup=lookup
                                          )

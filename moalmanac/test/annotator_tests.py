@@ -586,6 +586,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         db[alteration_type] = 'Fusion'
         db_genes = ['ABL1', 'BCR', 'NTRK1', 'CDKN2A']
         result = PreclinicalMatchmaking.annotate_fusions_matching(df, db, db_genes, consider_partner=True).fillna(0)
+        datasource_Almanac.close_ds(almanac)
 
         expected_0 = {match_1: 1, match_2: 1, match_3: 1, match_4: 1, match: 4}
         expected_1 = {match_1: 1, match_2: 1, match_3: 1, match_4: 0, match: 3}
