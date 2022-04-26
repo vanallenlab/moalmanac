@@ -1,6 +1,7 @@
 import flask
 import flask_frozen
 import datetime
+import os
 import tinydb
 
 from config import COLNAMES
@@ -71,6 +72,8 @@ class Reporter(object):
                         matchmaking_on, matchmaker, preclinical_reference_dict):
         app = flask.Flask(__name__)
         freezer = flask_frozen.Freezer(app)
+        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}"
+        app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
 
         actionable = cls.drop_double_fusion(actionable)
         matches = cls.load_almanac_additional_matches()
@@ -82,7 +85,7 @@ class Reporter(object):
                 cell_line = matchmaker.loc[index, 'comparison']
                 lookup[index] = preclinical_reference_dict[cell_line]
 
-        @app.route('/')
+        @app.route(f"/{report_dictionary['patient_id']}.report.html")
         def index():
             return flask.render_template('index.html',
                                          df=actionable.fillna(''),
