@@ -67,9 +67,13 @@ class Reporter(object):
         }
 
     @classmethod
-    def generate_report(cls, actionable, report_dictionary, version_dictionary,
-                        preclinical_dictionary, preclinical_dataframe,
-                        matchmaking_on, matchmaker, preclinical_reference_dict):
+    def generate_report(cls, actionable, report_dictionary,
+                        preclinical_dictionary,
+                        preclinical_dataframe,
+                        matchmaker,
+                        preclinical_reference_dict):
+        version_dictionary = cls.generate_version_dictionary()
+
         app = flask.Flask(__name__)
         freezer = flask_frozen.Freezer(app)
         app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}"
@@ -79,7 +83,7 @@ class Reporter(object):
         matches = cls.load_almanac_additional_matches()
 
         lookup = {}
-        if matchmaking_on:
+        if not matchmaker.empty:
             matchmaker = matchmaker[~matchmaker['comparison'].eq('case-profile')]
             for index in matchmaker.index.tolist()[:10]:
                 cell_line = matchmaker.loc[index, 'comparison']
@@ -94,7 +98,6 @@ class Reporter(object):
                                          matches=matches,
                                          preclinical_dict=preclinical_dictionary,
                                          preclinical_df=preclinical_dataframe,
-                                         matchmaking_on=matchmaking_on,
                                          matchmaker=matchmaker,
                                          lookup=lookup
                                          )

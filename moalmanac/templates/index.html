@@ -15,7 +15,7 @@
             {% include 'header.html' %}
             {% include 'patient_info.html' %}
             {% include 'report_table/table.html' %}
-            {% if matchmaking_on %}
+            {% if not matchmaker.empty %}
                 {% include 'report_table/table_matchmaking.html' %}
             {% endif %}
             {% include 'footer.html' %}

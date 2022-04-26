@@ -83,6 +83,10 @@ class Matchmaker:
         return pd.concat([df1.loc[:, columns], df2.loc[:, columns]], ignore_index=True)
 
     @classmethod
+    def create_empty_output(cls):
+        return pd.DataFrame(columns={'case', 'comparison'})
+
+    @classmethod
     def format_fusions(cls, dataframe):
         df = dataframe[cls.alt].fillna('').str.split('--', expand=True).rename(columns={0: 'feature', 1: 'partner'})
         df[cls.model_id] = cls.case_profile

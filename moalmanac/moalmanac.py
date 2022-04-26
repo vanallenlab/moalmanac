@@ -133,19 +133,19 @@ def main(patient, inputs):
     efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, actionable, patient[patient_id])
     actionable = annotator.PreclinicalEfficacy.annotate(actionable, efficacy_summary)
 
-    matchmaker_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, patient[patient_id])
+    if inputs[disable_matchmaking]:
+        matchmaker_results = matchmaker.Matchmaker.create_empty_output()
+    else:
+        matchmaker_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, patient[patient_id])
 
     report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
-    version_dictionary = reporter.Reporter.generate_version_dictionary()
-
-    if inputs[disable_matchmaking]:
-        matchmaker_on_boolean = False
-    else:
-        matchmaker_on_boolean = True
-
-    reporter.Reporter.generate_report(actionable, report_dictionary, version_dictionary,
-                                      efficacy_dictionary, efficacy_summary,
-                                      matchmaker_on_boolean, matchmaker_results, dbs_preclinical['dictionary'])
+    reporter.Reporter.generate_report(actionable,
+                                      report_dictionary,
+                                      efficacy_dictionary,
+                                      efficacy_summary,
+                                      matchmaker_results,
+                                      dbs_preclinical['dictionary']
+                                      )
 
     value_patient_id = patient[patient_id]
     writer.Actionable.write(actionable, value_patient_id)
