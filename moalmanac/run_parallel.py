@@ -41,6 +41,25 @@ def format_burden(dictionary, variants):
     return df.to_frame().T
 
 
+def format_copy_number(df):
+    feature_type = CONFIG['feature_types']['cna']
+    column_map = features.CalledCNAReader.create_column_map(COLNAMES['called_cn_input'])
+    column_map['profile_name'] = 'profile_name'
+    df = df.loc[:, column_map.keys()].rename(columns=column_map)
+    df = features.Features.preallocate_missing_columns(df)
+    if not df.empty:
+        df[features.Features.feature_type] = features.Features.annotate_feature_type(feature_type, df.index)
+        df[features.Features.feature] = features.CalledCNAReader.format_cn_gene(df[features.Features.feature])
+
+        idx = features.CalledCNAReader.filter_calls(df[features.Features.alt_type])
+        seg_accept = df[idx]
+        seg_reject = df[~idx]
+    else:
+        seg_accept = features.Features.create_empty_dataframe()
+        seg_reject = features.Features.create_empty_dataframe()
+    return seg_accept, seg_reject
+
+
 def format_variants(df):
     feature_type = CONFIG['feature_types']['mut']
     column_map = features.MutationReader.create_colmap(COLNAMES['snv_input'])
@@ -127,13 +146,18 @@ def process_profile(dbs, profile_dictionary, input_dictionary):
     subprocess.call(command, shell=True)
 
 
-def wrapper(profiles, aggregate_variants=None, aggregate_copy_numbers=None, aggregate_fusions=None):
+def wrapper(profiles, aggregate_variants=None, aggregate_copy_number_alterations=None, aggregate_fusions=None):
     dbs = datasources.Datasources.generate_db_dict(CONFIG)
 
-    aggregate_variants = features.Features.create_empty_dataframe() if aggregate_variants is None else aggregate_variants
+    empty_dataframe = features.Features.create_empty_dataframe()
+    aggregate_variants = empty_dataframe if aggregate_variants is None else aggregate_variants
     formatted_variants_accepted, formatted_variants_rejected = format_variants(aggregate_variants)
-    somatic_accepted = pd.concat([formatted_variants_accepted, features.Features.create_empty_dataframe()])
-    somatic_rejected = pd.concat([formatted_variants_rejected, features.Features.create_empty_dataframe()])
+
+    aggregate_copy_number_alterations = empty_dataframe if aggregate_copy_number_alterations is None else aggregate_copy_number_alterations
+    formatted_cn_accepted, formatted_cn_rejected = format_copy_number(aggregate_copy_number_alterations)
+
+    somatic_accepted = pd.concat([formatted_variants_accepted, formatted_cn_accepted])
+    somatic_rejected = pd.concat([formatted_variants_rejected, formatted_cn_rejected])
 
     processes = []
     for label, group in profiles.groupby('profile_name'):
@@ -172,5 +196,10 @@ if __name__ == "__main__":
 
     input_profiles = pd.read_csv(args.profiles, sep='\t')
     input_somatic = pd.read_csv(args.somatic_variants, sep='\t')
+    input_copy_number = pd.read_csv(args.called_copy_numbers, sep='\t')
 
-    wrapper(input_profiles, aggregate_variants=input_somatic)
+    wrapper(
+        input_profiles,
+        aggregate_variants=input_somatic,
+        aggregate_copy_number_alterations=input_copy_number
+    )
