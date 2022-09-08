@@ -122,7 +122,7 @@ class SensitivityDictionary(Investigator):
             return stats.mannwhitneyu(series1, series2, alternative='two-sided')
 
     @classmethod
-    def create(cls, dbs, df_actionable, patient_id):
+    def create(cls, dbs, df_actionable, patient_id, output_folder):
         summary = dbs[cls.summary]
         variants = dbs[cls.variants]
         cnas = dbs[cls.cnas]
@@ -153,7 +153,7 @@ class SensitivityDictionary(Investigator):
                         drug_dict = cls.create_drug_dict(gdsc, therapy, wt_samples, mut_samples)
                         feature_dict_copy.update({'comparison': drug_dict})
                         therapy_dict.update({feature: feature_dict_copy})
-                    figure = PreclinicalEfficacy.draw(therapy_dict, therapy, features, patient_id, feature_display)
+                    figure = PreclinicalEfficacy.draw(therapy_dict, therapy, features, patient_id, feature_display, output_folder)
                     therapy_dict.update({'figure': figure})
                     index_dict.update({therapy: therapy_dict})
                 dictionary.update({index: index_dict})

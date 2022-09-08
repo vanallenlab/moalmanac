@@ -1,6 +1,8 @@
 import time
 import argparse
+import os
 import pandas as pd
+import subprocess
 
 import annotator
 import datasources
@@ -68,8 +70,25 @@ feature_types = {
 }
 
 
-def main(patient, inputs):
+def execute_cmd(command):
+    subprocess.call(command, shell=True)
+
+
+def format_output_directory(directory):
+    if not directory:
+        return os.getcwd()
+    # If the directory string is not root and ends with a forward slash, remove it
+    elif directory != "/" and directory[-1] == "/":
+        return f"{directory[:-1]}"
+    else:
+        return directory
+
+
+def main(patient, inputs, output_folder):
     dbs = datasources.Datasources.generate_db_dict(CONFIG)
+    output_folder = format_output_directory(output_folder)
+    if output_folder != "":
+        execute_cmd(f"mkdir -p {output_folder}")
 
     mapped_ontology = ontologymapper.OntologyMapper.map(dbs, patient[tumor_type])
     patient[ontology] = mapped_ontology[ontology]
@@ -86,18 +105,18 @@ def main(patient, inputs):
     germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
 
     if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code], patient[patient_id])
+        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code], patient[patient_id], output_folder)
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
 
         validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
         if not validation_accept.empty:
             evaluated_somatic = annotator.OverlapValidation.append_validation(evaluated_somatic, validation_accept)
-            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, patient[patient_id])
+            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, patient[patient_id], output_folder)
     else:
         evaluated_somatic = features.Features.create_empty_dataframe()
 
     if not germline_variants.empty:
-        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code], patient[patient_id])
+        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code], patient[patient_id], output_folder)
         evaluated_germline = evaluator.Evaluator.evaluate_germline(annotated_germline)
     else:
         evaluated_germline = features.Features.create_empty_dataframe()
@@ -106,15 +125,15 @@ def main(patient, inputs):
     integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, feature_types)
 
     somatic_burden = features.BurdenReader.import_feature(inputs[bases_covered_handle], patient, somatic_variants, dbs)
-    somatic_signatures = features.CosmicSignatures.import_feature(inputs[snv_handle], patient)
+    somatic_signatures = features.CosmicSignatures.import_feature(inputs[snv_handle], patient, output_folder)
     patient_wgd = features.Aneuploidy.summarize(patient[wgd])
     patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
     patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code], patient[patient_id])
-    annotated_signatures = annotator.Annotator.annotate_almanac(somatic_signatures, dbs, patient[code], patient[patient_id])
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code], patient[patient_id])
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code], patient[patient_id])
+    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code], patient[patient_id], output_folder)
+    annotated_signatures = annotator.Annotator.annotate_almanac(somatic_signatures, dbs, patient[code], patient[patient_id], output_folder)
+    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code], patient[patient_id], output_folder)
+    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code], patient[patient_id], output_folder)
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
     evaluated_signatures = evaluator.Evaluator.evaluate_almanac(annotated_signatures)
@@ -129,7 +148,7 @@ def main(patient, inputs):
     strategies = evaluator.Strategies.report_therapy_strategies(actionable)
 
     dbs_preclinical = datasources.Preclinical.import_dbs()
-    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs_preclinical, actionable, patient[patient_id])
+    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs_preclinical, actionable, patient[patient_id], output_folder)
     efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, actionable, patient[patient_id])
     actionable = annotator.PreclinicalEfficacy.annotate(actionable, efficacy_summary)
 
@@ -144,21 +163,22 @@ def main(patient, inputs):
                                       efficacy_dictionary,
                                       efficacy_summary,
                                       matchmaker_results,
-                                      dbs_preclinical['dictionary']
+                                      dbs_preclinical['dictionary'],
+                                      output_folder
                                       )
 
-    writer.Actionable.write(actionable, patient[patient_id])
-    writer.GermlineACMG.write(evaluated_germline, patient[patient_id])
-    writer.GermlineCancer.write(evaluated_germline, patient[patient_id])
-    writer.GermlineHereditary.write(evaluated_germline, patient[patient_id])
-    writer.Integrated.write(integrated, patient[patient_id])
-    writer.MSI.write(evaluated_ms_variants, patient[patient_id])
-    writer.MutationalBurden.write(evaluated_burden, patient[patient_id])
-    writer.SomaticScored.write(evaluated_somatic, patient[patient_id])
-    writer.SomaticFiltered.write(somatic_filtered, patient[patient_id])
-    writer.Strategies.write(strategies, patient[patient_id])
-    writer.PreclinicalEfficacy.write(efficacy_summary, patient[patient_id])
-    writer.PreclinicalMatchmaking.write(matchmaker_results, patient[patient_id])
+    writer.Actionable.write(actionable, patient[patient_id], output_folder)
+    writer.GermlineACMG.write(evaluated_germline, patient[patient_id], output_folder)
+    writer.GermlineCancer.write(evaluated_germline, patient[patient_id], output_folder)
+    writer.GermlineHereditary.write(evaluated_germline, patient[patient_id], output_folder)
+    writer.Integrated.write(integrated, patient[patient_id], output_folder)
+    writer.MSI.write(evaluated_ms_variants, patient[patient_id], output_folder)
+    writer.MutationalBurden.write(evaluated_burden, patient[patient_id], output_folder)
+    writer.SomaticScored.write(evaluated_somatic, patient[patient_id], output_folder)
+    writer.SomaticFiltered.write(somatic_filtered, patient[patient_id], output_folder)
+    writer.Strategies.write(strategies, patient[patient_id], output_folder)
+    writer.PreclinicalEfficacy.write(efficacy_summary, patient[patient_id], output_folder)
+    writer.PreclinicalMatchmaking.write(matchmaker_results, patient[patient_id], output_folder)
 
 
 if __name__ == "__main__":
@@ -218,6 +238,9 @@ if __name__ == "__main__":
     arg_parser.add_argument('--disable_matchmaking',
                             action='store_true',
                             help='Disable matchmaking in report')
+    arg_parser.add_argument('--output_directory',
+                            default=None,
+                            help='Output directory for generated files')
     args = arg_parser.parse_args()
 
     patient_dict = {
@@ -243,7 +266,9 @@ if __name__ == "__main__":
         disable_matchmaking: args.disable_matchmaking
     }
 
-    main(patient_dict, inputs_dict)
+    output_directory = args.output_directory if args.output_directory else os.getcwd()
+
+    main(patient_dict, inputs_dict, output_directory)
 
     end_time = time.time()
     time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)

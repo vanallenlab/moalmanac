@@ -101,8 +101,8 @@ class Writer(object):
     normal = COLNAMES[section]['normal']
 
     @staticmethod
-    def create_output_name(patient_id, output_suffix):
-        return '.'.join([patient_id, output_suffix])
+    def create_output_name(folder, patient_id, output_suffix):
+        return f'{folder}/{patient_id}.{output_suffix}'
 
     @staticmethod
     def export_series(series, output_name):
@@ -150,10 +150,10 @@ class Actionable(object):
     output_suffix = 'actionable.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
         return df_sorted
 
@@ -175,11 +175,11 @@ class GermlineACMG(object):
     bin = Writer.acmg_bin
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
@@ -213,11 +213,11 @@ class GermlineCancer(object):
         return idx_almanac.union(idx_hotspot).union(idx_cgc)
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
         idx = cls.get_cancer_idx(df)
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
@@ -238,11 +238,11 @@ class GermlineHereditary(object):
     bin = Writer.hereditary_bin
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
@@ -258,9 +258,9 @@ class Integrated(object):
     output_suffix = 'integrated.summary.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df_sorted = df.sort_index()
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe_indexed(df_sorted.loc[:, cls.output_columns].fillna(''), output_name, Writer.feature)
 
 
@@ -287,10 +287,10 @@ class MSI(object):
     bin = Writer.msi_bin
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
@@ -314,9 +314,9 @@ class MutationalBurden(object):
     output_suffix = 'mutational_burden.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df.loc[:, cls.output_columns].fillna(''), output_name)
 
 
@@ -324,8 +324,8 @@ class PreclinicalEfficacy(object):
     output_suffix = 'preclinical.efficacy.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+    def write(cls, df, patient_id, folder):
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df.fillna(''), output_name)
 
 
@@ -333,8 +333,8 @@ class PreclinicalMatchmaking(object):
     output_suffix = 'matchmaker.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+    def write(cls, df, patient_id, folder):
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df.fillna(''), output_name)
 
 
@@ -351,10 +351,10 @@ class SomaticFiltered(object):
     output_suffix = 'somatic.filtered.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
@@ -380,10 +380,10 @@ class SomaticScored(object):
     output_suffix = 'somatic.scored.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
+    def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
@@ -391,8 +391,8 @@ class Strategies:
     output_suffix = 'therapeutic_strategies.txt'
 
     @classmethod
-    def write(cls, df, patient_id):
-        output_name = Writer.create_output_name(patient_id, cls.output_suffix)
+    def write(cls, df, patient_id, folder):
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe_indexed(df, output_name, 'Assertion / Strategy')
 
 

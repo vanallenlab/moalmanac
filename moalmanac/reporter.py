@@ -71,16 +71,17 @@ class Reporter(object):
                         preclinical_dictionary,
                         preclinical_dataframe,
                         matchmaker,
-                        preclinical_reference_dict):
+                        preclinical_reference_dict,
+                        output_directory):
         version_dictionary = cls.generate_version_dictionary()
 
         app = flask.Flask(__name__)
         freezer = flask_frozen.Freezer(app)
-        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}"
+        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == "" else output_directory
         app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
 
         actionable = cls.drop_double_fusion(actionable)
-        matches = cls.load_almanac_additional_matches()
+        matches = cls.load_almanac_additional_matches(output_directory, report_dictionary['patient_id'])
 
         lookup = {}
         if not matchmaker.empty:
@@ -114,8 +115,11 @@ class Reporter(object):
                 )
 
     @staticmethod
-    def load_almanac_additional_matches():
-        handle = CONFIG['databases']['additional_matches']
+    def load_almanac_additional_matches(output_folder, patient_id):
+        if output_folder == "":
+            handle = f"{patient_id}.{CONFIG['databases']['additional_matches']}"
+        else:
+            handle = f"{output_folder}/{patient_id}.{CONFIG['databases']['additional_matches']}"
         db = tinydb.TinyDB(handle)
         matches = {}
         for table in db.tables():

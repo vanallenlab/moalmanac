@@ -410,21 +410,23 @@ class CosmicSignatures:
     input_pos = COLNAMES[input_section]['start']
 
     @classmethod
-    def calculate_contributions(cls, patient_id, snv_handle):
+    def calculate_contributions(cls, patient_id, snv_handle, folder):
         if os.path.exists(snv_handle):
-            cls.run_deconstructsigs(patient_id, snv_handle)
+            if folder != "":
+                folder = f"{folder}/"
+            cls.run_deconstructsigs(patient_id, snv_handle, folder)
 
     @classmethod
-    def import_feature(cls, snv_handle, patient):
+    def import_feature(cls, snv_handle, patient, folder):
         patient_id = patient[cls.patient_id]
 
-        cls.calculate_contributions(patient_id, snv_handle)
-        context_handle = cls.create_handle(patient_id, 'sigs.context.txt')
-        weights_handle = cls.create_handle(patient_id, 'sigs.cosmic.txt')
+        cls.calculate_contributions(patient_id, snv_handle, folder)
+        context_handle = cls.create_handle(folder, patient_id, 'sigs.context.txt')
+        weights_handle = cls.create_handle(folder, patient_id, 'sigs.cosmic.txt')
 
         if os.path.exists(context_handle):
             contexts = Reader.read(context_handle, '\t')
-            cls.illustrate_contexts(patient_id, contexts.loc[0, :])
+            cls.illustrate_contexts(folder, patient_id, contexts.loc[0, :])
 
         if os.path.exists(weights_handle):
             weights = Reader.read(weights_handle, '\t')
@@ -447,8 +449,8 @@ class CosmicSignatures:
         return dataframe
 
     @staticmethod
-    def create_handle(patient_id, suffix):
-        return '.'.join([patient_id, suffix])
+    def create_handle(folder, patient_id, suffix):
+        return f"{folder}{patient_id}.{suffix}"
 
     @staticmethod
     def format_weights(weights):
@@ -457,14 +459,15 @@ class CosmicSignatures:
         return nonzero.astype(float).round(3)
 
     @staticmethod
-    def illustrate_contexts(patient_id, contexts):
-        Signatures.generate_context_plot(patient_id, contexts)
-        Signatures.generate_context_plot_normalized(patient_id, contexts)
+    def illustrate_contexts(folder, patient_id, contexts):
+        Signatures.generate_context_plot(folder, patient_id, contexts)
+        Signatures.generate_context_plot_normalized(folder, patient_id, contexts)
 
     @classmethod
-    def run_deconstructsigs(cls, patient_id, snv_handle):
-        cmd = " ".join(["bash", "wrapper_deconstructsigs.sh", patient_id, snv_handle,
-                        cls.input_sample, cls.input_ref, cls.input_alt, cls.input_chr, cls.input_pos])
+    def run_deconstructsigs(cls, patient_id, snv_handle, folder):
+        cmd = f"bash wrapper_deconstructsigs.sh {patient_id} {snv_handle} " \
+              f"{cls.input_sample} {cls.input_ref} {cls.input_alt} {cls.input_chr} {cls.input_pos} " \
+              f"{folder}"
         cls.run_subprocess(cmd)
 
     @staticmethod
