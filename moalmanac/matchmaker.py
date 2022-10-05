@@ -299,7 +299,11 @@ class Almanac(Models):
     @classmethod
     def sort_fusions(cls, df, gene1_col, gene2_col):
         for index in df.index:
-            df.loc[index, [gene1_col, gene2_col]] = sorted(df.loc[index, [gene1_col, gene2_col]].tolist())
+            gene1 = df.loc[index, gene1_col]
+            gene2 = df.loc[index, gene2_col]
+            sorted_genes = sorted([gene1, gene2])
+            df.loc[index, gene1_col] = sorted_genes[0]
+            df.loc[index, gene2_col] = sorted_genes[1]
         return df
 
 
@@ -371,7 +375,7 @@ class AlmanacFeatures(Almanac):
     @classmethod
     def subset_fusions(cls, df):
         dataframe = df[df[cls.feature_match_4].eq(1)]
-        return cls.sort_fusions(dataframe, cls.feature, cls.partner).reset_index(drop=True)
+        return cls.sort_fusions(dataframe.reset_index(drop=True), cls.feature, cls.partner)
 
     @classmethod
     def subset_fusion_members(cls, df):

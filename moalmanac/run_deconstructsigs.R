@@ -9,24 +9,26 @@ ref = args[4]
 alt = args[5]
 chr = args[6]
 pos = args[7]
+folder = args[8]
 
 maf = read.csv(snv_handle, sep = '\t', comment.char = '#')
+names(maf) <- tolower(names(maf))
 cols = c(sample, ref, alt, chr, pos)
 maf <- maf[colnames(maf) %in% cols]
 
-maf$Tumor_Sample_Barcode <- sapply(maf$Tumor_Sample_Barcode, as.factor)
-maf$Reference_Allele <- sapply(maf$Reference_Allele, as.factor)
-maf$Tumor_Seq_Allele2 <- sapply(maf$Tumor_Seq_Allele2, as.factor)
-maf$Chromosome <- sapply(maf$Chromosome, as.factor)
+maf$tumor_sample_barcode <- sapply(maf$tumor_sample_barcode, as.factor)
+maf$reference_allele <- sapply(maf$reference_allele, as.factor)
+maf$tumor_seq_allele2 <- sapply(maf$tumor_seq_allele2, as.factor)
+maf$chromosome <- sapply(maf$chromosome, as.factor)
 
-unique.samples = unique(maf$Tumor_Sample_Barcode)
+unique.samples = unique(maf$tumor_sample_barcode)
 
 sigs.input <- mut.to.sigs.input(mut.ref = maf,
     sample.id = sample, chr = chr,
     pos = pos, ref = ref,
     alt = alt)
     
-temp.filename <- paste(patient_id, ".sigs.context.txt", sep = "")
+temp.filename <- paste(folder, patient_id, ".sigs.context.txt", sep = "")
 write.table(sigs.input, file = temp.filename, sep = '\t', row.names = FALSE)
 
 for (sample_ in unique.samples) {
@@ -34,6 +36,6 @@ for (sample_ in unique.samples) {
         signatures.ref = signatures.cosmic, sample.id = sample_, 
         context = TRUE, tri.counts.method = 'default')
     
-    temp.filename = paste(patient_id, ".sigs.cosmic.txt", sep = "")
+    temp.filename = paste(folder, patient_id, ".sigs.cosmic.txt", sep = "")
     write.table(output.sigs, file = temp.filename, sep = '\t', row.names = FALSE)
 }

@@ -70,6 +70,7 @@ Optional arguments:
     --wgd                   <boolean>   specify the occurence of whole genome duplication
     --disable_matchmaking   <boolean>   remove patient-to-cell line matchmaking from report
     --description           <string>    description of patient
+    --output-directory      <string>    specify location of produced outputs
 ```
 
 ## Example
