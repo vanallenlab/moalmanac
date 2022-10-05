@@ -59,7 +59,7 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
         patient_id = 'example'
         expected_dabrafenib = '2.322e-12'
         expected_trametinib = '2.344e-09'
-        result = SensitivityDictionary.create(dbs, actionable, patient_id)
+        result = SensitivityDictionary.create(dbs, actionable, patient_id, '.')
         self.assertEqual(result[0]['Dabrafenib']['BRAF']['comparison']['pvalue_mww'], expected_dabrafenib)
         self.assertEqual(result[0]['Trametinib']['BRAF']['comparison']['pvalue_mww'], expected_trametinib)
 

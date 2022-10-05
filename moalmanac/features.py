@@ -450,7 +450,7 @@ class CosmicSignatures:
 
     @staticmethod
     def create_handle(folder, patient_id, suffix):
-        return f"{folder}{patient_id}.{suffix}"
+        return f"{folder}/{patient_id}.{suffix}"
 
     @staticmethod
     def format_weights(weights):

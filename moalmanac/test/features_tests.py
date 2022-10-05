@@ -120,6 +120,59 @@ class UnitTestCopyNumberTotal(unittest.TestCase):
         self.assertEqual(expected, features.CopyNumberTotal.get_unique_segments(df).tolist())
 
 
+class UnitTestCosmicSignatures(unittest.TestCase):
+    def test_create_feature_dataframe(self):
+        string = {features.CosmicSignatures.patient_id: "Example"}
+        weights = {
+            'COSMIC signature 1': 0,
+            'COSMIC signature 3': 0.5,
+            'COSMIC signature 7': 1.0
+        }
+        series = pd.Series(weights)
+        result = features.CosmicSignatures.create_feature_dataframe(string, series)
+        self.assertEqual(True, isinstance(result, pd.DataFrame))
+        self.assertEqual(3, result.shape[0])
+        self.assertEqual('COSMIC signature 1', result.loc[0, features.Features.feature])
+        self.assertEqual('COSMIC signature 3', result.loc[1, features.Features.feature])
+        self.assertEqual('COSMIC signature 7', result.loc[2, features.Features.feature])
+        self.assertEqual(0, result.loc[0, features.Features.alt])
+        self.assertEqual(0.5, result.loc[1, features.Features.alt])
+        self.assertEqual(1.0, result.loc[2, features.Features.alt])
+
+    def test_create_handle(self):
+        string1 = '.'
+        string2 = 'Foo'
+        string3 = 'Bar'
+        self.assertEqual('./Foo.Bar', features.CosmicSignatures.create_handle(string1, string2, string3))
+
+    def test_format_weights(self):
+        weights = {
+            'weights.signature.1': 0,
+            'weights.signature.3': 0.5,
+            'weights.signature 7': 1.0
+        }
+        series = pd.Series(weights)
+        result = features.CosmicSignatures.format_weights(series)
+        self.assertEqual(2, result.shape[0])
+        self.assertEqual('COSMIC signature 3', result.index[0])
+        self.assertEqual('COSMIC signature 7', result.index[1])
+
+    def test_subset_significant_signatures(self):
+        weights = {
+            'COSMIC signature 1': 0,
+            'COSMIC signature 3': 0.5,
+            'COSMIC signature 7': 1.0,
+            'COSMIC signature 10': 0.2,
+            'COSMIC signature 11': 0.19,
+        }
+        series = pd.Series(weights)
+        result = features.CosmicSignatures.subset_significant_signatures(series)
+        self.assertEqual(3, result.shape[0])
+        self.assertEqual('COSMIC signature 3', result.index[0])
+        self.assertEqual('COSMIC signature 7', result.index[1])
+        self.assertEqual('COSMIC signature 10', result.index[2])
+
+
 class UnitTestFusion(unittest.TestCase):
     def test_create_column_map(self):
         column_map = features.Fusion.create_colmap()
