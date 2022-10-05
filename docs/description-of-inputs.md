@@ -21,6 +21,7 @@ Example inputs can be found in the [`example_data/`](/example_data/) folder, fou
     - [Whole genome doubling](#whole-genome-doubling)
     - [Disable matchmaking](#disable-matchmaking)
     - [Description](#description)
+    - [Output directory](#output-directory)
     
 # Required arguments
 The following arguments are required to run Molecular Oncology Almanac.
@@ -246,6 +247,10 @@ Microsatellite status is reported in the clinical actionability report.
 
 ## Description
 `--description` is a string input that is generally a free text field for users to enter any additional comments. 
+
+## Output directory
+`--output-directory` allows users to specify an output directory to write outputs to, the current working directory will be used if unspecified. 
+
 
 If you use this method, please cite our publication:
 > [Reardon, B., Moore, N.D., Moore, N.S., *et al*. Integrating molecular profiles into clinical frameworks through the Molecular Oncology Almanac to prospectively guide precision oncology. *Nat Cancer* (2021). https://doi.org/10.1038/s43018-021-00243-3](https://www.nature.com/articles/s43018-021-00243-3)

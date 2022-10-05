@@ -24,9 +24,9 @@ class Illustrator(object):
         tableau10[color] = (r / 255., g / 255., b / 255.)
 
     @staticmethod
-    def save_fig(figure, patient_id, suffix):
-        outname = '.'.join([patient_id, suffix])
-        figure.savefig(outname, bbox_inches='tight')
+    def save_fig(figure, folder, patient_id, suffix):
+        output_filename = f"{folder}/{patient_id}.{suffix}"
+        figure.savefig(output_filename, bbox_inches='tight')
 
 
 class Signatures(Illustrator):
@@ -84,21 +84,21 @@ class Signatures(Illustrator):
         return '\n'.join([base, suffix])
 
     @classmethod
-    def generate_context_plot(cls, patient_id, contexts):
+    def generate_context_plot(cls, folder, patient_id, contexts):
         title = cls.create_title('counts')
         ylabel = cls.create_ylabel('Counts')
 
         figure = cls.plot_context(contexts.astype(float), title, ylabel)
-        cls.save_fig(figure, patient_id, 'sigs.tricontext.counts.png')
+        cls.save_fig(figure, folder, patient_id, 'sigs.tricontext.counts.png')
 
     @classmethod
-    def generate_context_plot_normalized(cls, patient_id, contexts):
+    def generate_context_plot_normalized(cls, folder, patient_id, contexts):
         title = cls.create_title('normalized')
         ylabel = cls.create_ylabel('Probability')
 
         data = contexts.astype(float) / contexts.astype(float).max()
         figure = cls.plot_context(data.astype(float), title, ylabel)
-        Illustrator.save_fig(figure, patient_id, 'sigs.tricontext.normalized.png')
+        Illustrator.save_fig(figure, folder, patient_id, 'sigs.tricontext.normalized.png')
 
 
 class ValidationOverlap(Illustrator):
@@ -187,10 +187,10 @@ class ValidationOverlap(Illustrator):
         return fig
 
     @classmethod
-    def generate_dna_rna_plot(cls, df, patient_id):
+    def generate_dna_rna_plot(cls, df, patient_id, folder):
         data = cls.format_data(df)
         figure = cls.plot_overlap_af(data, title=patient_id)
-        Illustrator.save_fig(figure, patient_id, 'validation_overlap.png')
+        Illustrator.save_fig(figure, folder, patient_id, 'validation_overlap.png')
 
 
 class PreclinicalEfficacy(Illustrator):
@@ -222,9 +222,9 @@ class PreclinicalEfficacy(Illustrator):
         return yticks
 
     @classmethod
-    def draw(cls, dictionary, drug, features, patient_id, feature_str):
+    def draw(cls, dictionary, drug, features, patient_id, feature_str, folder):
         figure = cls.plot_boxplots(dictionary, drug, features)
-        Illustrator.save_fig(figure, patient_id, '.'.join([feature_str, drug.split(' ')[0], 'png']))
+        Illustrator.save_fig(figure, folder, patient_id, f"{feature_str}.{drug.split(' ')[0]}.png")
         return cls.convert_figure_base64(figure)
 
     @classmethod

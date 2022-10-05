@@ -6,9 +6,10 @@ from writer import Writer, GermlineCancer
 
 class UnitTestWriter(unittest.TestCase):
     def test_create_output_name(self):
-        string1 = 'Foo'
-        string2 = 'Bar'
-        self.assertEqual('Foo.Bar', Writer.create_output_name(string1, string2))
+        string1 = '.'
+        string2 = 'Foo'
+        string3 = 'Bar'
+        self.assertEqual('./Foo.Bar', Writer.create_output_name(string1, string2, string3))
 
     def test_sort_columns(self):
         df = pd.DataFrame({'A': [0, 1, 2], 'B': [1, 1, 2]})

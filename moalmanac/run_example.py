@@ -1,4 +1,5 @@
 import moalmanac
+import os
 import time
 import subprocess
 
@@ -37,22 +38,24 @@ example_dict = {
     'disable_matchmaking': False
 }
 
-start_time = time.time()
-moalmanac.main(patient_dict, example_dict)
-end_time = time.time()
-
-time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
-print(time_statement)
-
 
 def execute_cmd(command):
     subprocess.call(command, shell=True)
 
 
-outdir = f"output-{patient_dict['patient_id']}"
-cmd = f"mkdir -p {outdir}"
-execute_cmd(cmd)
-cmd = f"mv {patient_dict['patient_id']}* {outdir}/"
-execute_cmd(cmd)
+output_directory = ""
+if output_directory != "":
+    cmd = f"mkdir -p {output_directory}"
+    execute_cmd(cmd)
+else:
+    output_directory = os.getcwd()
+
+start_time = time.time()
+moalmanac.main(patient_dict, example_dict, output_directory)
+end_time = time.time()
+
+time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
+print(time_statement)
+
 cmd = 'git checkout -- datasources/moalmanac/moalmanac.json'
 execute_cmd(cmd)
