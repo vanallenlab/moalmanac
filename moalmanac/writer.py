@@ -2,7 +2,7 @@ from config import COLNAMES
 import json
 
 
-class Writer(object):
+class Writer:
     section = 'outputs'
     score_bin = COLNAMES[section]['score_bin']
     almanac_bin = COLNAMES[section]['almanac_bin']
@@ -125,7 +125,7 @@ class Writer(object):
         return series[series.astype(float) != 0].index
 
 
-class Actionable(object):
+class Actionable:
     sort_columns = [Writer.almanac_bin, Writer.sensitive_map,  Writer.resistance_map, Writer.prognostic_map]
     output_columns = [Writer.score_bin,
                       Writer.sensitive_implication, Writer.resistance_implication, Writer.prognostic_implication,
@@ -158,7 +158,7 @@ class Actionable(object):
         return df_sorted
 
 
-class GermlineACMG(object):
+class GermlineACMG:
     sort_columns = [Writer.clinvar_bin, Writer.feature, Writer.feature_type]
     output_columns = [Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
                       Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
@@ -183,7 +183,7 @@ class GermlineACMG(object):
         Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
-class GermlineCancer(object):
+class GermlineCancer:
     sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                     Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
                     Writer.exac_common, Writer.exac_af]
@@ -221,7 +221,7 @@ class GermlineCancer(object):
         Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
-class GermlineHereditary(object):
+class GermlineHereditary:
     sort_columns = [Writer.clinvar_bin, Writer.feature, Writer.feature_type]
     output_columns = [Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
                       Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
@@ -246,7 +246,7 @@ class GermlineHereditary(object):
         Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
-class Integrated(object):
+class Integrated:
     section = 'integrative'
     somatic = COLNAMES[section]['somatic']
     copynumber = COLNAMES[section]['copynumber']
@@ -264,7 +264,7 @@ class Integrated(object):
         Writer.export_dataframe_indexed(df_sorted.loc[:, cls.output_columns].fillna(''), output_name, Writer.feature)
 
 
-class MSI(object):
+class MSI:
     sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                     Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
                     Writer.exac_common, Writer.exac_af]
@@ -294,7 +294,7 @@ class MSI(object):
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
-class MutationalBurden(object):
+class MutationalBurden:
     section = 'burden'
     patient = COLNAMES[section]['patient']
     tumor_type = COLNAMES[section]['tumor_type']
@@ -320,7 +320,7 @@ class MutationalBurden(object):
         Writer.export_dataframe(df.loc[:, cls.output_columns].fillna(''), output_name)
 
 
-class PreclinicalEfficacy(object):
+class PreclinicalEfficacy:
     output_suffix = 'preclinical.efficacy.txt'
 
     @classmethod
@@ -329,7 +329,7 @@ class PreclinicalEfficacy(object):
         Writer.export_dataframe(df.fillna(''), output_name)
 
 
-class PreclinicalMatchmaking(object):
+class PreclinicalMatchmaking:
     output_suffix = 'matchmaker.txt'
 
     @classmethod
@@ -338,7 +338,7 @@ class PreclinicalMatchmaking(object):
         Writer.export_dataframe(df.fillna(''), output_name)
 
 
-class SomaticFiltered(object):
+class SomaticFiltered:
     sort_columns = [Writer.feature, Writer.feature_type]
     output_columns = [Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
                       Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
@@ -358,7 +358,7 @@ class SomaticFiltered(object):
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
 
 
-class SomaticScored(object):
+class SomaticScored:
     sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                     Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
                     Writer.validation_detection_power, Writer.validation_coverage, Writer.number_germline_mutations,
@@ -396,7 +396,7 @@ class Strategies:
         Writer.export_dataframe_indexed(df, output_name, 'Assertion / Strategy')
 
 
-class Json(object):
+class Json:
     @staticmethod
     def write(handle, dictionary):
         with open(handle, 'w') as json_handle:
