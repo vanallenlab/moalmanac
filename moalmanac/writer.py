@@ -154,7 +154,7 @@ class Actionable(object):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].fillna(''), output_name)
         return df_sorted
 
 
