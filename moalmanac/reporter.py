@@ -76,7 +76,7 @@ class Reporter(object):
         version_dictionary = cls.generate_version_dictionary()
 
         app = flask.Flask(__name__)
-        freezer = flask_frozen.Freezer(app)
+        freezer = flask_frozen.Freezer(app, with_no_argument_rules=False, log_url_for=False)
         app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == "" else output_directory
         app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
 
@@ -90,6 +90,9 @@ class Reporter(object):
                 cell_line = matchmaker.loc[index, 'comparison']
                 lookup[index] = preclinical_reference_dict[cell_line]
 
+        from warnings import simplefilter as filter_warnings
+        filter_warnings('ignore', flask_frozen.MissingURLGeneratorWarning)
+
         @app.route(f"/{report_dictionary['patient_id']}.report.html")
         def index():
             return flask.render_template('index.html',
@@ -102,6 +105,7 @@ class Reporter(object):
                                          matchmaker=matchmaker,
                                          lookup=lookup
                                          )
+
         freezer.freeze()
 
     @classmethod
