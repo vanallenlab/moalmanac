@@ -69,6 +69,9 @@ feature_types = {
     'aneuploidy': feature_type_aneuploidy
 }
 
+generate_illustrations = 'generate_illustrations'
+TOGGLE_FEATURES = CONFIG['function_toggle']
+
 
 def execute_cmd(command):
     subprocess.call(command, shell=True)
@@ -127,7 +130,12 @@ def main(patient, inputs, output_folder):
     integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, feature_types)
 
     somatic_burden = features.BurdenReader.import_feature(inputs[bases_covered_handle], patient, somatic_variants, dbs)
-    somatic_signatures = features.CosmicSignatures.import_feature(inputs[snv_handle], patient, output_folder)
+
+    if TOGGLE_FEATURES.getboolean('calculate_mutational_signatures'):
+        features.CosmicSignatures.calculate_contributions(inputs[snv_handle], output_folder, output_label)
+    somatic_contexts = features.CosmicSignatures.import_context(output_folder, output_label)
+    somatic_signatures = features.CosmicSignatures.import_feature(output_folder, output_label)
+
     patient_wgd = features.Aneuploidy.summarize(patient[wgd])
     patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
     patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
@@ -181,6 +189,14 @@ def main(patient, inputs, output_folder):
     writer.Strategies.write(strategies, output_label, output_folder)
     writer.PreclinicalEfficacy.write(efficacy_summary, output_label, output_folder)
     writer.PreclinicalMatchmaking.write(matchmaker_results, output_label, output_folder)
+
+    if isinstance(somatic_contexts, pd.Series) and TOGGLE_FEATURES.getboolean('plot_mutational_signatures'):
+        for drawing_function, output_name in [
+            (illustrator.Signatures.generate_context_plot, 'counts'),
+            (illustrator.Signatures.generate_context_plot_normalized, 'normalized'),
+        ]:
+            context_plot = drawing_function(somatic_contexts)
+            writer.Illustrations.write(context_plot, output_folder, output_label, f"sigs.tricontext.{output_name}.png")
 
 
 if __name__ == "__main__":

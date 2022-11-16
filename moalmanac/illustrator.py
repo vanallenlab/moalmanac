@@ -84,21 +84,19 @@ class Signatures(Illustrator):
         return '\n'.join([base, suffix])
 
     @classmethod
-    def generate_context_plot(cls, folder, patient_id, contexts):
+    def generate_context_plot(cls, contexts):
         title = cls.create_title('counts')
         ylabel = cls.create_ylabel('Counts')
-
         figure = cls.plot_context(contexts.astype(float), title, ylabel)
-        cls.save_fig(figure, folder, patient_id, 'sigs.tricontext.counts.png')
+        return figure
 
     @classmethod
-    def generate_context_plot_normalized(cls, folder, patient_id, contexts):
+    def generate_context_plot_normalized(cls, contexts):
         title = cls.create_title('normalized')
         ylabel = cls.create_ylabel('Probability')
-
         data = contexts.astype(float) / contexts.astype(float).max()
         figure = cls.plot_context(data.astype(float), title, ylabel)
-        Illustrator.save_fig(figure, folder, patient_id, 'sigs.tricontext.normalized.png')
+        return figure
 
 
 class ValidationOverlap(Illustrator):

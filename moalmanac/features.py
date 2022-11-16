@@ -410,24 +410,25 @@ class CosmicSignatures:
     input_pos = COLNAMES[input_section]['start']
 
     @classmethod
-    def calculate_contributions(cls, patient_id, snv_handle, folder):
+    def calculate_contributions(cls, snv_handle, folder, patient_id):
         if os.path.exists(snv_handle):
             if folder != "":
                 folder = f"{folder}/"
             cls.run_deconstructsigs(patient_id, snv_handle, folder)
 
     @classmethod
-    def import_feature(cls, snv_handle, patient, folder):
-        patient_id = patient[cls.patient_id]
-
-        cls.calculate_contributions(patient_id, snv_handle, folder)
+    def import_context(cls, folder, patient_id):
         context_handle = cls.create_handle(folder, patient_id, 'sigs.context.txt')
-        weights_handle = cls.create_handle(folder, patient_id, 'sigs.cosmic.txt')
-
         if os.path.exists(context_handle):
             contexts = Reader.read(context_handle, '\t')
-            cls.illustrate_contexts(folder, patient_id, contexts.loc[0, :])
+            contexts_series = contexts.loc[0, :]
+            return contexts_series
+        else:
+            return None
 
+    @classmethod
+    def import_feature(cls, folder, patient_id):
+        weights_handle = cls.create_handle(folder, patient_id, 'sigs.cosmic.txt')
         if os.path.exists(weights_handle):
             weights = Reader.read(weights_handle, '\t')
             series_weights = cls.format_weights(weights.iloc[0, :30])
@@ -435,17 +436,17 @@ class CosmicSignatures:
             series_weights = pd.Series()
 
         series_significant_weights = cls.subset_significant_signatures(series_weights)
-        df = cls.create_feature_dataframe(patient, series_significant_weights)
+        df = cls.create_feature_dataframe(patient_id, series_significant_weights)
         return df
 
     @classmethod
-    def create_feature_dataframe(cls, patient, series_weights):
+    def create_feature_dataframe(cls, patient_id, series_weights):
         dataframe = Features.create_empty_dataframe()
         dataframe[Features.feature] = series_weights.index
         dataframe[Features.alt] = series_weights.values
         dataframe[Features.alt_type] = 'version 2'
         dataframe.loc[:, Features.feature_type] = cls.feature_type
-        dataframe.loc[:, cls.patient_id] = patient[cls.patient_id]
+        dataframe.loc[:, cls.patient_id] = patient_id
         return dataframe
 
     @staticmethod
