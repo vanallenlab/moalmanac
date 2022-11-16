@@ -90,6 +90,8 @@ def main(patient, inputs, output_folder):
     if output_folder != "":
         execute_cmd(f"mkdir -p {output_folder}")
 
+    output_label = patient[patient_id]
+
     mapped_ontology = ontologymapper.OntologyMapper.map(dbs, patient[tumor_type])
     patient[ontology] = mapped_ontology[ontology]
     patient[code] = mapped_ontology[code]
@@ -105,18 +107,18 @@ def main(patient, inputs, output_folder):
     germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
 
     if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code], patient[patient_id], output_folder)
+        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code], output_label, output_folder)
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
 
         validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
         if not validation_accept.empty:
             evaluated_somatic = annotator.OverlapValidation.append_validation(evaluated_somatic, validation_accept)
-            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, patient[patient_id], output_folder)
+            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, output_label, output_folder)
     else:
         evaluated_somatic = features.Features.create_empty_dataframe()
 
     if not germline_variants.empty:
-        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code], patient[patient_id], output_folder)
+        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code], output_label, output_folder)
         evaluated_germline = evaluator.Evaluator.evaluate_germline(annotated_germline)
     else:
         evaluated_germline = features.Features.create_empty_dataframe()
@@ -130,10 +132,10 @@ def main(patient, inputs, output_folder):
     patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
     patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code], patient[patient_id], output_folder)
-    annotated_signatures = annotator.Annotator.annotate_almanac(somatic_signatures, dbs, patient[code], patient[patient_id], output_folder)
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code], patient[patient_id], output_folder)
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code], patient[patient_id], output_folder)
+    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code], output_label, output_folder)
+    annotated_signatures = annotator.Annotator.annotate_almanac(somatic_signatures, dbs, patient[code], output_label, output_folder)
+    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code], output_label, output_folder)
+    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code], output_label, output_folder)
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
     evaluated_signatures = evaluator.Evaluator.evaluate_almanac(annotated_signatures)
@@ -148,14 +150,14 @@ def main(patient, inputs, output_folder):
     strategies = evaluator.Strategies.report_therapy_strategies(actionable)
 
     dbs_preclinical = datasources.Preclinical.import_dbs()
-    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs_preclinical, actionable, patient[patient_id], output_folder)
-    efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, actionable, patient[patient_id])
+    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs_preclinical, actionable, output_label, output_folder)
+    efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, actionable, output_label)
     actionable = annotator.PreclinicalEfficacy.annotate(actionable, efficacy_summary)
 
     if inputs[disable_matchmaking]:
         matchmaker_results = matchmaker.Matchmaker.create_empty_output()
     else:
-        matchmaker_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, patient[patient_id])
+        matchmaker_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, output_label)
 
     report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
     reporter.Reporter.generate_report(actionable,
@@ -167,18 +169,18 @@ def main(patient, inputs, output_folder):
                                       output_folder
                                       )
 
-    writer.Actionable.write(actionable, patient[patient_id], output_folder)
-    writer.GermlineACMG.write(evaluated_germline, patient[patient_id], output_folder)
-    writer.GermlineCancer.write(evaluated_germline, patient[patient_id], output_folder)
-    writer.GermlineHereditary.write(evaluated_germline, patient[patient_id], output_folder)
-    writer.Integrated.write(integrated, patient[patient_id], output_folder)
-    writer.MSI.write(evaluated_ms_variants, patient[patient_id], output_folder)
-    writer.MutationalBurden.write(evaluated_burden, patient[patient_id], output_folder)
-    writer.SomaticScored.write(evaluated_somatic, patient[patient_id], output_folder)
-    writer.SomaticFiltered.write(somatic_filtered, patient[patient_id], output_folder)
-    writer.Strategies.write(strategies, patient[patient_id], output_folder)
-    writer.PreclinicalEfficacy.write(efficacy_summary, patient[patient_id], output_folder)
-    writer.PreclinicalMatchmaking.write(matchmaker_results, patient[patient_id], output_folder)
+    writer.Actionable.write(actionable, output_label, output_folder)
+    writer.GermlineACMG.write(evaluated_germline, output_label, output_folder)
+    writer.GermlineCancer.write(evaluated_germline, output_label, output_folder)
+    writer.GermlineHereditary.write(evaluated_germline, output_label, output_folder)
+    writer.Integrated.write(integrated, output_label, output_folder)
+    writer.MSI.write(evaluated_ms_variants, output_label, output_folder)
+    writer.MutationalBurden.write(evaluated_burden, output_label, output_folder)
+    writer.SomaticScored.write(evaluated_somatic, output_label, output_folder)
+    writer.SomaticFiltered.write(somatic_filtered, output_label, output_folder)
+    writer.Strategies.write(strategies, output_label, output_folder)
+    writer.PreclinicalEfficacy.write(efficacy_summary, output_label, output_folder)
+    writer.PreclinicalMatchmaking.write(matchmaker_results, output_label, output_folder)
 
 
 if __name__ == "__main__":
