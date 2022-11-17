@@ -29,6 +29,112 @@ class Illustrator(object):
         figure.savefig(output_filename, bbox_inches='tight')
 
 
+class PreclinicalEfficacy(Illustrator):
+    section = 'preclinical'
+    mut_values = COLNAMES[section]['mut_values']
+    wt_values = COLNAMES[section]['wt_values']
+    n_mut = COLNAMES[section]['n_mut_tested']
+    n_wt = COLNAMES[section]['n_wt_tested']
+    p_value = COLNAMES[section]['pvalue']
+
+    @classmethod
+    def convert_figure_base64(cls, fig):
+        image = io.BytesIO()
+        fig.savefig(image, tight=False, format='png')
+        base64_image = base64.encodebytes(image.getvalue()).decode().replace('\n', '')
+        return base64_image
+
+    @classmethod
+    def create_y_range(cls, values):
+        minimum = min(values)
+        maximum = max(values)
+
+        yaxis_minimum_log10 = math.floor(math.log10(minimum)) - 0
+        yaxis_maximum_log10 = math.ceil(math.log10(maximum)) + 1
+
+        yticks = []
+        for item in range(yaxis_minimum_log10, yaxis_maximum_log10):
+            yticks.append(10**item)
+        return yticks
+
+    @classmethod
+    def draw(cls, dictionary, drug, features):
+        figure = cls.plot_boxplots(dictionary, drug, features)
+        return figure
+
+    @classmethod
+    def plot_boxplots(cls, dictionary, drug, features):
+        def draw_boxplot(data, offset, width, axis, edge_color, alpha):
+            for i in np.arange(1, len(data) + 1):
+                x = np.random.normal(i, 0.04, size=len(data[i - 1]))
+                plt.plot(x + offset, data[i - 1], color=edge_color, marker='.', alpha=alpha, linestyle='None')
+
+            pos = np.arange(1, len(data) + 1) + offset
+            bp = axis.boxplot(data, positions=pos, widths=width, manage_ticks=False, showfliers=False)
+            for element in ['boxes', 'whiskers', 'caps']:
+                plt.setp(bp[element], color=Illustrator.tableau10['grey'], linewidth=2)
+            for element in ['medians']:
+                plt.setp(bp[element], color=Illustrator.tableau10['orange'], linewidth=2)
+            return bp
+
+        def create_legend(color1, color2, label1, label2, font_size, location, frame_on):
+            item1 = Line2D([0], [0], color='w', markerfacecolor=color1, label=label1, marker='o', markersize=10)
+            item2 = Line2D([0], [0], color='w', markerfacecolor=color2, label=label2, marker='o', markersize=10)
+            plt.legend(handles=[item1, item2], fontsize=font_size, loc=location, frameon=frame_on, ncol=2)
+
+        def create_title(string):
+            return 'Sensitivity of wild-type and mutant cell lines to\n{} (GDSC)'.format(string)
+
+        wt_values = []
+        mut_values = []
+        n_wt = []
+        n_mut = []
+        p_values = []
+
+        feature_length = len(features)
+        for feature in features:
+            feature_wt_values = dictionary[feature]['comparison'][cls.wt_values]
+            feature_mut_values = dictionary[feature]['comparison'][cls.mut_values]
+            if 0 in feature_wt_values:
+                feature_wt_values.remove(0)
+            if 0 in feature_mut_values:
+                feature_mut_values.remove(0)
+
+            wt_values.append(feature_wt_values)
+            mut_values.append(feature_mut_values)
+            n_wt.append(dictionary[feature]['comparison'][cls.n_wt])
+            n_mut.append(dictionary[feature]['comparison'][cls.n_mut])
+            p_values.append(dictionary[feature]['comparison'][cls.p_value])
+
+        fig = plt.figure(figsize=(10, 7.5))
+        ax = fig.add_subplot()
+        ax.spines["top"].set_visible(False)
+        ax.spines["bottom"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        plt.tick_params(axis="both", which="both", bottom=False, top=False,
+                        labelbottom=True, left=False, right=False, labelleft=True)
+
+        bp_mut = draw_boxplot(mut_values, -0.15, 0.25, ax, Illustrator.tableau10['blue'], 0.50)
+        bp_wt = draw_boxplot(wt_values, +0.15, 0.25, ax, Illustrator.tableau10['grey'], 0.40)
+
+        plt.xlim([0.5, feature_length + 0.5])
+        plt.yscale('log')
+        ax.set_yticks(cls.create_y_range(wt_values[0] + mut_values[0]))
+        ax.set_xticks(np.arange(1, len(features) + 1))
+        ax.set_xticklabels([s.replace(' ', '\n') for s in features])
+
+        plt.xticks(fontsize=16)
+        plt.yticks(fontsize=16)
+        plt.ylabel('IC50 (micromolar)', fontsize=18)
+        plt.title(create_title(drug),  fontsize=18)
+        plt.tight_layout()
+
+        create_legend(Illustrator.tableau10['blue'], Illustrator.tableau10['grey'], 'Mutant', 'Wild type', 16, 9, False)
+
+        return fig
+
+
 class Signatures(Illustrator):
     colors = [Illustrator.tableau10['blue'], Illustrator.tableau10['orange'], Illustrator.tableau10['red'],
               Illustrator.tableau10['grey'], Illustrator.tableau10['cyan'], Illustrator.tableau10['pink']]
@@ -189,110 +295,3 @@ class ValidationOverlap(Illustrator):
         data = cls.format_data(df)
         figure = cls.plot_overlap_af(data, title=patient_id)
         Illustrator.save_fig(figure, folder, patient_id, 'validation_overlap.png')
-
-
-class PreclinicalEfficacy(Illustrator):
-    section = 'preclinical'
-    mut_values = COLNAMES[section]['mut_values']
-    wt_values = COLNAMES[section]['wt_values']
-    n_mut = COLNAMES[section]['n_mut_tested']
-    n_wt = COLNAMES[section]['n_wt_tested']
-    p_value = COLNAMES[section]['pvalue']
-
-    @classmethod
-    def convert_figure_base64(cls, fig):
-        image = io.BytesIO()
-        fig.savefig(image, tight=False, format='png')
-        base64_image = base64.encodebytes(image.getvalue()).decode().replace('\n', '')
-        return base64_image
-
-    @classmethod
-    def create_y_range(cls, values):
-        minimum = min(values)
-        maximum = max(values)
-
-        yaxis_minimum_log10 = math.floor(math.log10(minimum)) - 0
-        yaxis_maximum_log10 = math.ceil(math.log10(maximum)) + 1
-
-        yticks = []
-        for item in range(yaxis_minimum_log10, yaxis_maximum_log10):
-            yticks.append(10**item)
-        return yticks
-
-    @classmethod
-    def draw(cls, dictionary, drug, features, patient_id, feature_str, folder):
-        figure = cls.plot_boxplots(dictionary, drug, features)
-        Illustrator.save_fig(figure, folder, patient_id, f"{feature_str}.{drug.split(' ')[0]}.png")
-        return cls.convert_figure_base64(figure)
-
-    @classmethod
-    def plot_boxplots(cls, dictionary, drug, features):
-        def draw_boxplot(data, offset, width, axis, edge_color, alpha):
-            for i in np.arange(1, len(data) + 1):
-                x = np.random.normal(i, 0.04, size=len(data[i - 1]))
-                plt.plot(x + offset, data[i - 1], color=edge_color, marker='.', alpha=alpha, linestyle='None')
-
-            pos = np.arange(1, len(data) + 1) + offset
-            bp = axis.boxplot(data, positions=pos, widths=width, manage_ticks=False, showfliers=False)
-            for element in ['boxes', 'whiskers', 'caps']:
-                plt.setp(bp[element], color=Illustrator.tableau10['grey'], linewidth=2)
-            for element in ['medians']:
-                plt.setp(bp[element], color=Illustrator.tableau10['orange'], linewidth=2)
-            return bp
-
-        def create_legend(color1, color2, label1, label2, font_size, location, frame_on):
-            item1 = Line2D([0], [0], color='w', markerfacecolor=color1, label=label1, marker='o', markersize=10)
-            item2 = Line2D([0], [0], color='w', markerfacecolor=color2, label=label2, marker='o', markersize=10)
-            plt.legend(handles=[item1, item2], fontsize=font_size, loc=location, frameon=frame_on, ncol=2)
-
-        def create_title(string):
-            return 'Sensitivity of wild-type and mutant cell lines to\n{} (GDSC)'.format(string)
-
-        wt_values = []
-        mut_values = []
-        n_wt = []
-        n_mut = []
-        p_values = []
-
-        feature_length = len(features)
-        for feature in features:
-            feature_wt_values = dictionary[feature]['comparison'][cls.wt_values]
-            feature_mut_values = dictionary[feature]['comparison'][cls.mut_values]
-            if 0 in feature_wt_values:
-                feature_wt_values.remove(0)
-            if 0 in feature_mut_values:
-                feature_mut_values.remove(0)
-
-            wt_values.append(feature_wt_values)
-            mut_values.append(feature_mut_values)
-            n_wt.append(dictionary[feature]['comparison'][cls.n_wt])
-            n_mut.append(dictionary[feature]['comparison'][cls.n_mut])
-            p_values.append(dictionary[feature]['comparison'][cls.p_value])
-
-        fig = plt.figure(figsize=(10, 7.5))
-        ax = fig.add_subplot()
-        ax.spines["top"].set_visible(False)
-        ax.spines["bottom"].set_visible(False)
-        ax.spines["right"].set_visible(False)
-        ax.spines["left"].set_visible(False)
-        plt.tick_params(axis="both", which="both", bottom=False, top=False,
-                        labelbottom=True, left=False, right=False, labelleft=True)
-
-        bp_mut = draw_boxplot(mut_values, -0.15, 0.25, ax, Illustrator.tableau10['blue'], 0.50)
-        bp_wt = draw_boxplot(wt_values, +0.15, 0.25, ax, Illustrator.tableau10['grey'], 0.40)
-
-        plt.xlim([0.5, feature_length + 0.5])
-        plt.yscale('log')
-        ax.set_yticks(cls.create_y_range(wt_values[0] + mut_values[0]))
-        ax.set_xticks(np.arange(1, len(features) + 1))
-        ax.set_xticklabels([s.replace(' ', '\n') for s in features])
-
-        plt.xticks(fontsize=16)
-        plt.yticks(fontsize=16)
-        plt.ylabel('IC50 (micromolar)', fontsize=18)
-        plt.title(create_title(drug),  fontsize=18)
-        plt.tight_layout()
-
-        create_legend(Illustrator.tableau10['blue'], Illustrator.tableau10['grey'], 'Mutant', 'Wild type', 16, 9, False)
-
-        return fig

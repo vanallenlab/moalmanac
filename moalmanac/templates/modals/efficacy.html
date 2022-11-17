@@ -31,7 +31,7 @@
                                 <div class="tab-pane" id="tab{{ loop.index0 }}">
                             {% endif %}
                                     <center>
-                                        <img class="logo" src="data:image/png;base64,{{ preclinical_dict[index][therapy]['figure'] }}" style="height:500px">
+                                        <img class="logo" src="data:image/png;base64,{{ preclinical_dict[index][therapy]['figure_base64'] }}" style="height:500px">
                                         {% include 'modals/text_preclinical.html' %}
                                         {% include 'modals/table_preclinical.html' %}
                                     </center>

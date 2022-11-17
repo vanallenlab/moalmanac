@@ -122,7 +122,7 @@ class SensitivityDictionary(Investigator):
             return stats.mannwhitneyu(series1, series2, alternative='two-sided')
 
     @classmethod
-    def create(cls, dbs, df_actionable, patient_id, output_folder):
+    def create(cls, dbs, df_actionable):
         summary = dbs[cls.summary]
         variants = dbs[cls.variants]
         cnas = dbs[cls.cnas]
@@ -153,8 +153,11 @@ class SensitivityDictionary(Investigator):
                         drug_dict = cls.create_drug_dict(gdsc, therapy, wt_samples, mut_samples)
                         feature_dict_copy.update({'comparison': drug_dict})
                         therapy_dict.update({feature: feature_dict_copy})
-                    figure = PreclinicalEfficacy.draw(therapy_dict, therapy, features, patient_id, feature_display, output_folder)
+                    figure = PreclinicalEfficacy.draw(therapy_dict, therapy, features)
+                    figure_base64 = PreclinicalEfficacy.convert_figure_base64(figure)
                     therapy_dict.update({'figure': figure})
+                    therapy_dict.update({'figure_name': f"{feature_display}.{therapy.split(' ')[0]}"})
+                    therapy_dict.update({'figure_base64': figure_base64})
                     index_dict.update({therapy: therapy_dict})
                 dictionary.update({index: index_dict})
         return dictionary
@@ -359,7 +362,9 @@ class SummaryDataFrame(Investigator):
         list_of_series = []
         for index in dictionary.keys():
             for therapy in dictionary[index].keys():
-                for subfeature in list(dictionary[index][therapy].keys())[:-1]:
+                for subfeature in list(dictionary[index][therapy].keys()):
+                    if 'figure' in subfeature:
+                        continue
                     series = pd.Series(dictionary[index][therapy][subfeature]['comparison'])
                     series.loc[Investigator.feature_display] = dataframe.loc[index, Investigator.feature_display]
                     series.loc[Investigator.tested_subfeature] = subfeature
@@ -369,4 +374,8 @@ class SummaryDataFrame(Investigator):
         if list_of_series:
             return pd.concat(list_of_series, axis=1, ignore_index=True).T
         else:
-            return pd.DataFrame(columns=cls.columns)
+            return cls.create_empty_dataframe()
+
+    @classmethod
+    def create_empty_dataframe(cls):
+        return pd.DataFrame(columns=cls.columns)
