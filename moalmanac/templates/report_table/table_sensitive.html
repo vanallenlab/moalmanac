@@ -7,20 +7,20 @@
         <table class="table table-hover table-striped table-condensed">
             {% include 'report_table/columns_therapies.html' %}
             <tbody>
-                {% for index in df[df['sensitive_predictive_implication'] != ''].sort_values(['sensitive_predictive_implication_map', 'sensitive_score_bin_map'], ascending=[False, False]).index.tolist() %}
+                {% for index in report.alterations[report.alterations['sensitive_predictive_implication'] != ''].sort_values(['sensitive_predictive_implication_map', 'sensitive_score_bin_map'], ascending=[False, False]).index.tolist() %}
 
                 <tr>
-                    <td>{{ df.loc[index, 'sensitive_predictive_implication'] }}
+                    <td>{{ report.alterations.loc[index, 'sensitive_predictive_implication'] }}
                         <br>
-                        {{ df.loc[index, 'sensitive_score_bin'] }}
+                        {{ report.alterations.loc[index, 'sensitive_score_bin'] }}
                         <br>
                         {% include 'modals/evidence_sensitive.html' %}
                     </td>
-                    <td>{{ df.loc[index, 'feature_type'] }}</td>
-                    <td>{{ df.loc[index, 'feature_display'] }}
+                    <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
+                    <td>{{ report.alterations.loc[index, 'feature_display'] }}
                     <td>
-                        {% if df.loc[index, 'sensitive_therapy_name'] != '' %}
-                            {{ df.loc[index, 'sensitive_therapy_name'] }}
+                        {% if report.alterations.loc[index, 'sensitive_therapy_name'] != '' %}
+                            {{ report.alterations.loc[index, 'sensitive_therapy_name'] }}
                         {% else %}
                             {{ df.loc[index, 'sensitive_therapy_type'] }}
                         {% endif %}
@@ -31,7 +31,6 @@
                                 [source]
                             </a>
                         {% endif %}
-                        {% include 'modals/efficacy.html' %}
                     </td>
                 </tr>
                 {% endfor %}

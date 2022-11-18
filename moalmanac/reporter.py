@@ -8,7 +8,7 @@ from config import COLNAMES
 from config import CONFIG
 
 
-class Reporter(object):
+class Reporter:
     report_section = 'report'
     code = COLNAMES[report_section]['code']
     date = COLNAMES[report_section]['date']
@@ -67,46 +67,58 @@ class Reporter(object):
         }
 
     @classmethod
-    def generate_report(cls, actionable, report_dictionary,
-                        preclinical_dictionary,
-                        preclinical_dataframe,
-                        matchmaker,
-                        preclinical_reference_dict,
-                        output_directory):
-        version_dictionary = cls.generate_version_dictionary()
+    def generate_report(cls, actionable, report_dictionary, output_directory=""):
+        report = Report()
+        report.add_metadata(
+            name=report_dictionary['patient_id'],
+            code=report_dictionary['code'],
+            ontology=report_dictionary['ontology'],
+            normal=report_dictionary['normal_barcode'],
+            tumor=report_dictionary['tumor_barcode'],
+            stage=report_dictionary['stage'],
+            description=report_dictionary['description'],
+            date=report_dictionary['date'],
+            purity=report_dictionary['purity'],
+            ploidy=report_dictionary['ploidy'],
+            msi=report_dictionary['microsatellite_status']
+        )
+
+        versions = cls.generate_version_dictionary()
+        report.add_versions(
+            software=versions['software'],
+            database=versions['database']
+        )
+
+        #matches = cls.load_almanac_additional_matches(output_directory, report_dictionary['patient_id'])
+        actionable = cls.drop_double_fusion(actionable)
+        report.add_alterations(actionable)
 
         app = flask.Flask(__name__)
-        freezer = flask_frozen.Freezer(app, with_no_argument_rules=False, log_url_for=False)
+
+        #@app.route(f"/{report_dictionary['patient_id']}.report.html")
+        @app.route('/<name>.report.html')
+        def index(name):
+            return flask.render_template('index.html', report=report)
+                                         #df=actionable.fillna(''),
+                                         #dict=report_dictionary,
+                                         #version_dict=version_dictionary,
+                                         #matches=matches
+                                         #)
+
+        freezer = flask_frozen.Freezer(app, with_static_files=True, with_no_argument_rules=True, log_url_for=True)
         app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == "" else output_directory
         app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
 
-        actionable = cls.drop_double_fusion(actionable)
-        matches = cls.load_almanac_additional_matches(output_directory, report_dictionary['patient_id'])
-
-        lookup = {}
-        if not matchmaker.empty:
-            matchmaker = matchmaker[~matchmaker['comparison'].eq('case-profile')]
-            for index in matchmaker.index.tolist()[:10]:
-                cell_line = matchmaker.loc[index, 'comparison']
-                lookup[index] = preclinical_reference_dict[cell_line]
-
-        from warnings import simplefilter as filter_warnings
-        filter_warnings('ignore', flask_frozen.MissingURLGeneratorWarning)
-
-        @app.route(f"/{report_dictionary['patient_id']}.report.html")
+        @freezer.register_generator
         def index():
-            return flask.render_template('index.html',
-                                         df=actionable.fillna(''),
-                                         dict=report_dictionary,
-                                         version_dict=version_dictionary,
-                                         matches=matches,
-                                         preclinical_dict=preclinical_dictionary,
-                                         preclinical_df=preclinical_dataframe,
-                                         matchmaker=matchmaker,
-                                         lookup=lookup
-                                         )
+            yield {'name': report.metadata['patient_id']}
+            #yield 'index', {'name': report_dictionary['patient_id']}
+            #yield f"/{report_dictionary['patient_id']}.report.html"
+            #yield 'index', {'report': report}
 
+        #freezer.register_generator(index)
         freezer.freeze()
+        #freezer.serve()
 
     @classmethod
     def format_list_elements(cls, series):
@@ -138,3 +150,152 @@ class Reporter(object):
             return variants[column].unique()[0]
         else:
             return None
+
+        class Report:
+            def __init__(self):
+                self.metadata = {}
+                self.versions = {}
+                self.alterations = None
+
+            def add_metadata(self, name, code, ontology, normal, tumor, stage, description, date, purity, ploidy, msi):
+                self.metadata['patient_id'] = name
+                self.metadata['code'] = code
+                self.metadata['ontology'] = ontology
+                self.metadata['normal_barcode'] = normal
+                self.metadata['tumor_barcode'] = tumor
+                self.metadata['stage'] = stage
+                self.metadata['description'] = description
+                self.metadata['date'] = date
+                self.metadata['purity'] = purity
+                self.metadata['ploidy'] = ploidy
+                self.metadata['microsatellite_status'] = msi
+
+            def add_versions(self, software, database):
+                self.versions['software'] = software
+                self.versions['database'] = database
+
+            def add_alterations(self, alterations):
+                self.alterations = alterations
+
+        report = Report()
+        report.add_metadata(
+            name=report_dictionary['patient_id'],
+            code=report_dictionary['code'],
+            ontology=report_dictionary['ontology'],
+            normal=report_dictionary['normal_barcode'],
+            tumor=report_dictionary['tumor_barcode'],
+            stage=report_dictionary['stage'],
+            description=report_dictionary['description'],
+            date=report_dictionary['date'],
+            purity=report_dictionary['purity'],
+            ploidy=report_dictionary['ploidy'],
+            msi=report_dictionary['microsatellite_status']
+        )
+
+        versions = cls.generate_version_dictionary()
+        report.add_versions(
+            software=versions['software'],
+            database=versions['database']
+        )
+
+        #matches = cls.load_almanac_additional_matches(output_directory, report_dictionary['patient_id'])
+        actionable = cls.drop_double_fusion(actionable)
+        report.add_alterations(actionable)
+
+        #from warnings import simplefilter as filter_warnings
+        #filter_warnings('ignore', flask_frozen.MissingURLGeneratorWarning)
+
+        app = flask.Flask(__name__)
+
+        #@app.route(f"/{report_dictionary['patient_id']}.report.html")
+        @app.route('/<name>.report.html')
+        def index(name):
+            return flask.render_template('index.html', report=report)
+                                         #df=actionable.fillna(''),
+                                         #dict=report_dictionary,
+                                         #version_dict=version_dictionary,
+                                         #matches=matches
+                                         #)
+
+        freezer = flask_frozen.Freezer(app, with_static_files=True, with_no_argument_rules=True, log_url_for=True)
+        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == "" else output_directory
+        app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
+
+        @freezer.register_generator
+        def index():
+            yield {'name': report.metadata['patient_id']}
+            #yield 'index', {'name': report_dictionary['patient_id']}
+            #yield f"/{report_dictionary['patient_id']}.report.html"
+            #yield 'index', {'report': report}
+
+        #freezer.register_generator(index)
+        freezer.freeze()
+
+
+class Report:
+    def __init__(self):
+        self.metadata = {}
+        self.versions = {}
+        self.alterations = None
+
+    def add_metadata(self, name, code, ontology, normal, tumor, stage, description, date, purity, ploidy, msi):
+        self.metadata['patient_id'] = name
+        self.metadata['code'] = code
+        self.metadata['ontology'] = ontology
+        self.metadata['normal_barcode'] = normal
+        self.metadata['tumor_barcode'] = tumor
+        self.metadata['stage'] = stage
+        self.metadata['description'] = description
+        self.metadata['date'] = date
+        self.metadata['purity'] = purity
+        self.metadata['ploidy'] = ploidy
+        self.metadata['microsatellite_status'] = msi
+
+    def add_versions(self, software, database):
+        self.versions['software'] = software
+        self.versions['database'] = database
+
+    def add_alterations(self, alterations):
+        self.alterations = alterations
+
+
+def generate_report(actionable, report_dictionary, output_directory=""):
+    report = Report()
+    report.add_metadata(
+        name=report_dictionary['patient_id'],
+        code=report_dictionary['code'],
+        ontology=report_dictionary['ontology'],
+        normal=report_dictionary['normal_barcode'],
+        tumor=report_dictionary['tumor_barcode'],
+        stage=report_dictionary['stage'],
+        description=report_dictionary['description'],
+        date=report_dictionary['date'],
+        purity=report_dictionary['purity'],
+        ploidy=report_dictionary['ploidy'],
+        msi=report_dictionary['microsatellite_status']
+    )
+
+    versions = Reporter.generate_version_dictionary()
+    report.add_versions(
+        software=versions['software'],
+        database=versions['database']
+    )
+
+    actionable = Reporter.drop_double_fusion(actionable)
+    report.add_alterations(actionable)
+
+    app = flask.Flask(__name__, static_folder=None)
+
+    @app.route(f"/{report.metadata['patient_id']}.report.html")
+    def index():
+        return flask.render_template('index.html', report=report)
+
+    freezer = flask_frozen.Freezer(app)
+    app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == "" else output_directory
+    app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
+
+    @freezer.register_generator
+    def index_generator():
+        yield flask.url_for('index', report=report)
+
+    freezer.freeze()
