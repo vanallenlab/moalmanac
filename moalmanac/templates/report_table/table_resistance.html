@@ -7,25 +7,25 @@
         <table class="table table-hover table-striped table-condensed">
             {% include 'report_table/columns_therapies.html' %}
             <tbody>
-                {% for index in df[df['resistance_predictive_implication'] != ''].sort_values(['resistance_predictive_implication_map', 'resistance_score_bin_map'], ascending=[False, False]).index.tolist() %}
+                {% for index in report.alterations[report.alterations['resistance_predictive_implication'] != ''].sort_values(['resistance_predictive_implication_map', 'resistance_score_bin_map'], ascending=[False, False]).index.tolist() %}
                 <tr>
-                    <td>{{ df.loc[index, 'resistance_predictive_implication'] }}
+                    <td>{{ report.alterations.loc[index, 'resistance_predictive_implication'] }}
                         <br>
-                        {{ df.loc[index, 'resistance_score_bin'] }}
+                        {{ report.alterations.loc[index, 'resistance_score_bin'] }}
                         <br>
                         {% include 'modals/evidence_resistance.html' %}
-                    <td>{{ df.loc[index, 'feature_type'] }}</td>
-                    <td>{{ df.loc[index, 'feature_display'] }}</td>
+                    <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
+                    <td>{{ report.alterations.loc[index, 'feature_display'] }}</td>
                     <td>
-                        {% if df.loc[index, 'resistance_therapy_name'] != '' %}
-                            {{ df.loc[index, 'resistance_therapy_name'] }}
+                        {% if report.alterations.loc[index, 'resistance_therapy_name'] != '' %}
+                            {{ report.alterations.loc[index, 'resistance_therapy_name'] }}
                         {% else %}
-                            {{ df.loc[index, 'resistance_therapy_type'] }}
+                            {{ report.alterations.loc[index, 'resistance_therapy_type'] }}
                         {% endif %}
                         <br>
-                        {{ df.loc[index, 'resistance_description'] }}
-                        {% if df.loc[index, 'resistance_url'] != "" %}
-                            <a href="{{ df.loc[index, 'resistance_url'] }}" target="_blank">
+                        {{ report.alterations.loc[index, 'resistance_description'] }}
+                        {% if report.alterations.loc[index, 'resistance_url'] != "" %}
+                            <a href="{{ report.alterations.loc[index, 'resistance_url'] }}" target="_blank">
                                 [source]
                             </a>
                         {% endif %}

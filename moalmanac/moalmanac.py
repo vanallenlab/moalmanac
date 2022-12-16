@@ -240,7 +240,7 @@ def main(patient, inputs, output_folder):
 
     if TOGGLE_FEATURES.getboolean('generate_actionability_report'):
         report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
-        reporter.generate_report(
+        reporter.Reporter.generate_actionability_report(
             actionable,
             report_dictionary,
             output_directory=output_folder
