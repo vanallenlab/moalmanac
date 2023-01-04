@@ -140,15 +140,20 @@ class Almanac:
     genes = Datasources.genes
 
     predictive_implication_map = {
-        'FDA-Approved': 5.0, 'Guideline': 4.0, 'Clinical trial': 3.0,
-        'Clinical evidence': 2.0, 'Preclinical': 1.0, 'Inferential': 0.0}
+        'FDA-Approved': 5.0,
+        'Guideline': 4.0,
+        'Clinical trial': 3.0,
+        'Clinical evidence': 2.0,
+        'Preclinical': 1.0,
+        'Inferential': 0.0
+    }
 
     @classmethod
     def import_ds(cls, dbs):
-        df = Reader.read_tinydb(dbs['almanac_handle'])
-        return df
+        ds = Reader.read_json(dbs['almanac_handle'])
+        return ds
 
-    @staticmethod
+    @staticmethod # remove
     def close_ds(ds):
         ds.close()
 
