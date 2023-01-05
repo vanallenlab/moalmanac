@@ -135,6 +135,7 @@ class ActionabilityReport:
         self.metadata = {}
         self.versions = {}
         self.alterations = None
+        self.additional_matches = None
 
     def add_metadata(self, name, code, ontology, normal, tumor, stage, description, date, purity, ploidy, msi):
         self.metadata['patient_id'] = name
@@ -153,5 +154,6 @@ class ActionabilityReport:
         self.versions['software'] = software
         self.versions['database'] = database
 
-    def add_alterations(self, alterations):
+    def add_alterations(self, alterations, additional_matches=None):
         self.alterations = alterations.fillna('')
+        self.additional_matches = additional_matches
