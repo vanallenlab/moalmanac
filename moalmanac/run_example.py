@@ -56,6 +56,3 @@ end_time = time.time()
 
 time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
 print(time_statement)
-
-cmd = 'git checkout -- datasources/moalmanac/moalmanac.json'
-execute_cmd(cmd)
