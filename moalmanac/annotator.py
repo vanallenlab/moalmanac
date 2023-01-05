@@ -414,22 +414,24 @@ class Almanac:
         feature = series.loc[cls.feature]
         feature_type = series.loc[cls.feature_type]
 
-        query_same_ontology = (cls.Query[cls.oncotree_code] == ontology)
-        query_diff_ontology = (cls.Query[cls.oncotree_code] != ontology)
-        query_feature = (cls.Query[cls.event] == feature)
+        query_same_ontology = (table[cls.oncotree_code] == ontology)
+        query_diff_ontology = (table[cls.oncotree_code] != ontology)
+        query_feature = (table[cls.event] == feature)
 
         match_bins = []
 
         for assertion_type in cls.assertion_types_dict.keys():
-            query = cls.assertion_types_dict[assertion_type][cls.query]
+            query_key = cls.assertion_types_dict[assertion_type][cls.query_key]
+            query_values = cls.assertion_types_dict[assertion_type][cls.query_values]
+            query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(cls.assertion_types_dict[assertion_type][cls.columns])
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][cls.feature_type]
             columns[cls.event] = cls.assertion_types_dict[assertion_type][cls.feature]
 
-            if table.contains(query_feature & query):
-                results_same_ontology = table.search(query_same_ontology & query_feature & query)
-                results_diff_ontology = table.search(query_diff_ontology & query_feature & query)
+            if (query_feature & query).any():
+                results_same_ontology = (query_same_ontology & query_feature & query)
+                results_diff_ontology = (query_diff_ontology & query_feature & query)
                 feature_match_to_assertion_bin = 3
 
             else:
@@ -437,12 +439,12 @@ class Almanac:
                 match_bins.append(feature_match_to_assertion_bin)
                 continue
 
-            matches = cls.sort_and_subset_matches(results_same_ontology, results_diff_ontology)
-            series = cls.update_series_with_best_match(matches, feature_type, columns, series)
+            matches = cls.sort_and_subset_matches(table, results_same_ontology, results_diff_ontology)
+            series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
@@ -496,31 +498,33 @@ class Almanac:
         alt_type = series.loc[cls.alt_type]
         alt = series.loc[features.Features.segment_mean]
 
-        query_same_ontology = (cls.Query[cls.oncotree_code] == ontology)
-        query_diff_ontology = (cls.Query[cls.oncotree_code] != ontology)
-        query_feature = (cls.Query[cls.gene] == feature)
-        query_alt_type = (cls.Query[cls.direction] == alt_type)
+        query_same_ontology = (table[cls.oncotree_code] == ontology)
+        query_diff_ontology = (table[cls.oncotree_code] != ontology)
+        query_feature = (table[cls.gene] == feature)
+        query_alt_type = (table[cls.direction] == alt_type)
 
         query_to_alt_type = query_feature & query_alt_type
 
         match_bins = []
 
         for assertion_type in cls.assertion_types_dict.keys():
-            query = cls.assertion_types_dict[assertion_type][cls.query]
+            query_key = cls.assertion_types_dict[assertion_type][cls.query_key]
+            query_values = cls.assertion_types_dict[assertion_type][cls.query_values]
+            query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(cls.assertion_types_dict[assertion_type][cls.columns])
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][cls.feature_type]
             columns[cls.gene] = cls.assertion_types_dict[assertion_type][cls.feature]
             columns[cls.direction] = cls.assertion_types_dict[assertion_type][cls.alt_type]
 
-            if table.contains(query_to_alt_type & query):
-                results_same_ontology = table.search(query_same_ontology & query_to_alt_type & query)
-                results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type & query)
+            if (query_to_alt_type & query).any():
+                results_same_ontology = (query_same_ontology & query_to_alt_type & query)
+                results_diff_ontology = (query_diff_ontology & query_to_alt_type & query)
                 feature_match_to_assertion_bin = 4
 
-            elif table.contains(query_feature & query):
-                results_same_ontology = table.search(query_same_ontology & query_feature & query)
-                results_diff_ontology = table.search(query_diff_ontology & query_feature & query)
+            elif (query_feature & query).any():
+                results_same_ontology = (query_same_ontology & query_feature & query)
+                results_diff_ontology = (query_diff_ontology & query_feature & query)
                 feature_match_to_assertion_bin = 2
 
             else:
@@ -528,12 +532,12 @@ class Almanac:
                 match_bins.append(feature_match_to_assertion_bin)
                 continue
 
-            matches = cls.sort_and_subset_matches(results_same_ontology, results_diff_ontology)
-            series = cls.update_series_with_best_match(matches, feature_type, columns, series)
+            matches = cls.sort_and_subset_matches(table, results_same_ontology, results_diff_ontology)
+            series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
@@ -554,14 +558,16 @@ class Almanac:
             gene1 = feature
             gene2 = ''
 
-        query_same_ontology = (cls.Query[cls.oncotree_code] == ontology)
-        query_diff_ontology = (cls.Query[cls.oncotree_code] != ontology)
-        query_alt_type = (cls.Query[cls.rearrangement_type] == alt_type)
+        query_same_ontology = (table[cls.oncotree_code] == ontology)
+        query_diff_ontology = (table[cls.oncotree_code] != ontology)
+        query_alt_type = (table[cls.rearrangement_type] == alt_type)
 
         match_bins = []
 
         for assertion_type in cls.assertion_types_dict.keys():
-            query = cls.assertion_types_dict[assertion_type][cls.query]
+            query_key = cls.assertion_types_dict[assertion_type][cls.query_key]
+            query_values = cls.assertion_types_dict[assertion_type][cls.query_values]
+            query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(cls.assertion_types_dict[assertion_type][cls.columns])
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][cls.feature_type]
@@ -572,10 +578,10 @@ class Almanac:
             for first_gene, second_gene, feature_col in [(gene1, gene2, cls.gene1), (gene2, gene1, cls.gene2)]:
                 columns[feature_col] = cls.assertion_types_dict[assertion_type][cls.feature]
 
-                query_first_gene = (cls.Query[cls.gene1] == first_gene)
-                query_second_gene = (cls.Query[cls.gene2] == second_gene)
-                query_first_gene_reverse = (cls.Query[cls.gene1] == second_gene)
-                query_second_gene_reverse = (cls.Query[cls.gene2] == first_gene)
+                query_first_gene = (table[cls.gene1] == first_gene)
+                query_second_gene = (table[cls.gene2] == second_gene)
+                query_first_gene_reverse = (table[cls.gene1] == second_gene)
+                query_second_gene_reverse = (table[cls.gene2] == first_gene)
 
                 query_to_alt = query_first_gene & query_second_gene & query_alt_type
                 query_to_alt_reverse = query_first_gene_reverse & query_second_gene_reverse & query_alt_type
@@ -583,34 +589,34 @@ class Almanac:
                 query_to_alt_type = query_first_gene & query_alt_type
                 query_to_alt_type_reverse = query_first_gene_reverse & query_alt_type
 
-                if table.contains(query_to_alt & query):
-                    results_same_ontology = table.search(query_same_ontology & query_to_alt & query)
-                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt & query)
+                if (query_to_alt & query).any():
+                    results_same_ontology = (query_same_ontology & query_to_alt & query)
+                    results_diff_ontology = (query_diff_ontology & query_to_alt & query)
                     match_bin = 4
 
-                elif table.contains(query_to_alt_reverse & query):
-                    results_same_ontology = table.search(query_same_ontology & query_to_alt_reverse & query)
-                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt_reverse & query)
+                elif (query_to_alt_reverse & query).any():
+                    results_same_ontology = (query_same_ontology & query_to_alt_reverse & query)
+                    results_diff_ontology = (query_diff_ontology & query_to_alt_reverse & query)
                     match_bin = 4
 
-                elif table.contains(query_to_alt_type & query):
-                    results_same_ontology = table.search(query_same_ontology & query_to_alt_type & query)
-                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type & query)
+                elif (query_to_alt_type & query).any():
+                    results_same_ontology = (query_same_ontology & query_to_alt_type & query)
+                    results_diff_ontology = (query_diff_ontology & query_to_alt_type & query)
                     match_bin = 3
 
-                elif table.contains(query_to_alt_type_reverse & query):
-                    results_same_ontology = table.search(query_same_ontology & query_to_alt_type_reverse & query)
-                    results_diff_ontology = table.search(query_diff_ontology & query_to_alt_type_reverse & query)
+                elif (query_to_alt_type_reverse & query).any():
+                    results_same_ontology = (query_same_ontology & query_to_alt_type_reverse & query)
+                    results_diff_ontology = (query_diff_ontology & query_to_alt_type_reverse & query)
                     match_bin = 3
 
-                elif table.contains(query_first_gene & query):
-                    results_same_ontology = table.search(query_same_ontology & query_first_gene & query)
-                    results_diff_ontology = table.search(query_diff_ontology & query_first_gene & query)
+                elif (query_first_gene & query).any():
+                    results_same_ontology = (query_same_ontology & query_first_gene & query)
+                    results_diff_ontology = (query_diff_ontology & query_first_gene & query)
                     match_bin = 2
 
-                elif table.contains(query_second_gene & query):
-                    results_same_ontology = table.search(query_same_ontology & query_second_gene & query)
-                    results_diff_ontology = table.search(query_diff_ontology & query_second_gene & query)
+                elif (query_second_gene & query).any():
+                    results_same_ontology = (query_same_ontology & query_second_gene & query)
+                    results_diff_ontology = (query_diff_ontology & query_second_gene & query)
                     match_bin = 2
 
                 else:
@@ -633,16 +639,17 @@ class Almanac:
 
             results_same_ontology = better_match['results_same_ontology']
             results_diff_ontology = better_match['results_diff_ontology']
-            matches = cls.sort_and_subset_matches(results_same_ontology, results_diff_ontology)
+            matches = cls.sort_and_subset_matches(table, results_same_ontology, results_diff_ontology)
 
             feature_col = better_match['feature_col']
             columns[feature_col] = cls.assertion_types_dict[assertion_type][cls.feature]
-            series = cls.update_series_with_best_match(matches, feature_type, columns, series)
+            series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[alt_column] = better_match['alt']
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+
         series.loc[cls.bin_name] = max(match_bins)
         return series
 
@@ -692,22 +699,24 @@ class Almanac:
         feature = series.loc[cls.feature].split(' ')[-1]
         feature_type = series.loc[cls.feature_type]
 
-        query_same_ontology = (cls.Query[cls.oncotree_code] == ontology)
-        query_diff_ontology = (cls.Query[cls.oncotree_code] != ontology)
-        query_feature = (cls.Query[cls.cosmic_signature_number] == feature)
+        query_same_ontology = (table[cls.oncotree_code] == ontology)
+        query_diff_ontology = (table[cls.oncotree_code] != ontology)
+        query_feature = (table[cls.cosmic_signature_number] == feature)
 
         match_bins = []
 
         for assertion_type in cls.assertion_types_dict.keys():
-            query = cls.assertion_types_dict[assertion_type][cls.query]
+            query_key = cls.assertion_types_dict[assertion_type][cls.query_key]
+            query_values = cls.assertion_types_dict[assertion_type][cls.query_values]
+            query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(cls.assertion_types_dict[assertion_type][cls.columns])
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][cls.feature_type]
             columns[cls.cosmic_signature_number] = cls.assertion_types_dict[assertion_type][cls.feature]
 
-            if table.contains(query_feature & query):
-                results_same_ontology = table.search(query_same_ontology & query_feature & query)
-                results_diff_ontology = table.search(query_diff_ontology & query_feature & query)
+            if (query_feature & query).any():
+                results_same_ontology = (query_same_ontology & query_feature & query)
+                results_diff_ontology = (query_diff_ontology & query_feature & query)
                 feature_match_to_assertion_bin = 3
 
             else:
@@ -715,12 +724,12 @@ class Almanac:
                 match_bins.append(feature_match_to_assertion_bin)
                 continue
 
-            matches = cls.sort_and_subset_matches(results_same_ontology, results_diff_ontology)
-            series = cls.update_series_with_best_match(matches, feature_type, columns, series)
+            matches = cls.sort_and_subset_matches(table, results_same_ontology, results_diff_ontology)
+            series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
