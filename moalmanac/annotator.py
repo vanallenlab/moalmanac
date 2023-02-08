@@ -46,15 +46,15 @@ class Annotator(object):
         return df
 
     @classmethod
-    def annotate_almanac(cls, df, dbs, ontology, patient_id, output_folder):
+    def annotate_almanac(cls, df, dbs, ontology):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology, patient_id, output_folder)
+        df = Almanac.annotate(df, dbs, ontology)
         return df
 
     @classmethod
-    def annotate_germline(cls, df, dbs, ontology, patient_id, output_folder):
+    def annotate_germline(cls, df, dbs, ontology):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology, patient_id, output_folder)
+        df = Almanac.annotate(df, dbs, ontology)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
         df = ACMG.annotate(df, dbs)
@@ -65,9 +65,9 @@ class Annotator(object):
         return df
 
     @classmethod
-    def annotate_somatic(cls, df, dbs, ontology, patient_id, output_folder):
+    def annotate_somatic(cls, df, dbs, ontology):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology, patient_id, output_folder)
+        df = Almanac.annotate(df, dbs, ontology)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
@@ -79,9 +79,9 @@ class Annotator(object):
         return df
 
     @classmethod
-    def annotate_somatic_no_exac(cls, df, dbs, ontology, patient_id, output_folder):
+    def annotate_somatic_no_exac(cls, df, dbs, ontology):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology, patient_id, output_folder)
+        df = Almanac.annotate(df, dbs, ontology)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
@@ -314,16 +314,15 @@ class Almanac:
     prognostic_score_bin = Annotator.prognostic_score_bin
 
     columns = datasources.Almanac.columns
-    query = datasources.Almanac.query # remove
     genes = datasources.Almanac.genes
 
     query_key = 'query'
     query_values = 'query_values'
 
     matches = 'matches'
-    sensitivity_matches_tablename = datasources.Almanac.sensitivity_matches_tablename
-    resistance_matches_tablename = datasources.Almanac.resistance_matches_tablename
-    prognostic_matches_tablename = datasources.Almanac.prognostic_matches_tablename
+    sensitivity_matches = datasources.Almanac.sensitivity_matches
+    resistance_matches = datasources.Almanac.resistance_matches
+    prognostic_matches = datasources.Almanac.prognostic_matches
 
     assertion_types_dict = {
         sensitivity: {
@@ -335,31 +334,29 @@ class Almanac:
             feature_type: sensitive_feature_type,
             alt_type: sensitive_alt_type,
             alt: sensitive_alt,
-            matches: sensitivity_matches_tablename
+            matches: sensitivity_matches
         },
         resistance: {
             query_key: resistance,
             query_values: [1],
-            #query: (Query[resistance] == '1'),
             score_bin: resistance_score_bin,
             columns: column_map_resistance,
             feature: resistance_feature,
             feature_type: resistance_feature_type,
             alt_type: resistance_alt_type,
             alt: resistance_alt,
-            matches: resistance_matches_tablename
+            matches: resistance_matches
         },
         prognosis: {
             query_key: prognosis,
             query_values: [0, 1],
-            #query: (Query[prognosis].one_of(['0', '1'])),
             score_bin: prognostic_score_bin,
             columns: column_map_prognostic,
             feature: prognostic_feature,
             feature_type: prognostic_feature_type,
             alt_type: prognostic_alt_type,
             alt: prognostic_alt,
-            matches: prognostic_matches_tablename
+            matches: prognostic_matches
         }
     }
 
@@ -375,7 +372,7 @@ class Almanac:
     somatic_variant = feature_types_config['mut']
 
     @classmethod
-    def annotate(cls, df, dbs, ontology, patient_id, output_folder):
+    def annotate(cls, df, dbs, ontology):
         db = datasources.Almanac.import_ds(dbs)
         ds = db['content']
         list_genes = db['genes']
@@ -403,16 +400,14 @@ class Almanac:
 
             for index in group.index:
                 annotation_function = annotation_function_dict[feature_type]
-                df.loc[index, :] = annotation_function(df.loc[index, :], ontology, table, patient_id, output_folder)
+                df.loc[index, :] = annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table)
 
-        #datasources.Almanac.close_ds(ds)
         return df
 
     @classmethod
-    def annotate_aneuploidy(cls, sliced_series, ontology, table, patient_id, output_folder):
+    def annotate_aneuploidy(cls, sliced_series, ontology, table):
         series = sliced_series.copy(deep=True)
         feature = series.loc[cls.feature]
-        feature_type = series.loc[cls.feature_type]
 
         query_same_ontology = (table[cls.oncotree_code] == ontology)
         query_diff_ontology = (table[cls.oncotree_code] != ontology)
@@ -444,16 +439,16 @@ class Almanac:
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            column = cls.assertion_types_dict[assertion_type][cls.matches]
+            series.loc[column] = matches
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
 
     @classmethod
-    def annotate_burden(cls, sliced_series, ontology, table, patient_id, output_folder):
+    def annotate_burden(cls, sliced_series, ontology, table):
         series = sliced_series.copy(deep=True)
         feature = series.loc[cls.feature].split(' ')[0]
-        feature_type = series.loc[cls.feature_type]
 
         query_same_ontology = (table[cls.oncotree_code] == ontology)
         query_diff_ontology = (table[cls.oncotree_code] != ontology)
@@ -485,16 +480,16 @@ class Almanac:
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            column = cls.assertion_types_dict[assertion_type][cls.matches]
+            series.loc[column] = matches
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
 
     @classmethod
-    def annotate_copy_number(cls, sliced_series, ontology, table, patient_id, output_folder):
+    def annotate_copy_number(cls, sliced_series, ontology, table):
         series = sliced_series.copy(deep=True)
         feature = series.loc[cls.feature]
-        feature_type = series.loc[cls.feature_type]
         alt_type = series.loc[cls.alt_type]
         alt = series.loc[features.Features.segment_mean]
 
@@ -537,16 +532,16 @@ class Almanac:
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            column = cls.assertion_types_dict[assertion_type][cls.matches]
+            series.loc[column] = matches
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
 
     @classmethod
-    def annotate_fusion(cls, sliced_series, ontology, table, patient_id, output_folder):
+    def annotate_fusion(cls, sliced_series, ontology, table):
         series = sliced_series.fillna('').copy(deep=True)
         feature = series.loc[cls.feature]
-        feature_type = series.loc[cls.feature_type]
         alt_type = series.loc[cls.alt_type]
         alt = series.loc[cls.alt]
 
@@ -648,16 +643,16 @@ class Almanac:
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            column = cls.assertion_types_dict[assertion_type][cls.matches]
+            series.loc[column] = matches
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
 
     @classmethod
-    def annotate_microsatellite_stability(cls, sliced_series, ontology, table, patient_id, output_folder):
+    def annotate_microsatellite_stability(cls, sliced_series, ontology, table):
         series = sliced_series.copy(deep=True)
         feature = series.loc[cls.feature].split(' ')[-1]
-        feature_type = series.loc[cls.feature_type]
 
         query_same_ontology = (table[cls.oncotree_code] == ontology)
         query_diff_ontology = (table[cls.oncotree_code] != ontology)
@@ -689,15 +684,16 @@ class Almanac:
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            column = cls.assertion_types_dict[assertion_type][cls.matches]
+            series.loc[column] = matches
+
         series.loc[cls.bin_name] = max(match_bins)
         return series
 
     @classmethod
-    def annotate_signatures(cls, sliced_series, ontology, table, patient_id, output_folder):
+    def annotate_signatures(cls, sliced_series, ontology, table):
         series = sliced_series.copy(deep=True)
         feature = series.loc[cls.feature].split(' ')[-1]
-        feature_type = series.loc[cls.feature_type]
 
         query_same_ontology = (table[cls.oncotree_code] == ontology)
         query_diff_ontology = (table[cls.oncotree_code] != ontology)
@@ -729,16 +725,16 @@ class Almanac:
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            column = cls.assertion_types_dict[assertion_type][cls.matches]
+            series.loc[column] = matches
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
 
     @classmethod
-    def annotate_variants(cls, sliced_series, ontology, table, patient_id, output_folder):
+    def annotate_variants(cls, sliced_series, ontology, table):
         series = sliced_series.copy(deep=True)
         feature = series.loc[cls.feature]
-        feature_type = series.loc[cls.feature_type]
         alt_type = series.loc[cls.alt_type]
         alt = series.loc[cls.alt]
 
@@ -789,7 +785,8 @@ class Almanac:
             series.loc[score_bin] = feature_match_to_assertion_bin
             match_bins.append(feature_match_to_assertion_bin)
 
-            #series = cls.insert_matches(patient_id, feature_type, sliced_series.name, assertion_type, matches, series, output_folder)
+            column = cls.assertion_types_dict[assertion_type][cls.matches]
+            series.loc[column] = matches
 
         series.loc[cls.bin_name] = max(match_bins)
         return series
@@ -801,35 +798,6 @@ class Almanac:
     @staticmethod
     def extract_values_from_list_of_dicts(key, list_of_dicts):
         return [x[key] for x in list_of_dicts]
-
-    @staticmethod
-    def initialize_matches_db(table_name, patient_id, output_folder):
-        if output_folder == "":
-            handle = f"{patient_id}.{CONFIG['databases']['additional_matches']}"
-        else:
-            handle = f"{output_folder}/{patient_id}.{CONFIG['databases']['additional_matches']}"
-        db = tinydb.TinyDB(handle)
-        return db.table(table_name)
-
-    @classmethod
-    def insert_matches(cls, patient_id, feature_type, index, assertion_type, matches, series, output_folder):
-        table_name = f'{feature_type}-{index}-{assertion_type}'
-        assertion_table = cls.initialize_matches_db(table_name, patient_id, output_folder)
-        if len(matches) > 1:
-            cls.insert_documents(assertion_table, matches[1:])
-        else:
-            cls.insert_documents(assertion_table, [])
-        column = cls.assertion_types_dict[assertion_type][cls.matches]
-        series.loc[column] = table_name
-        return series
-
-    @staticmethod
-    def insert_documents(table, documents):
-        table.insert_multiple(documents)
-
-    @staticmethod
-    def query_by_search(db, query):
-        return db.search(query)
 
     @classmethod
     def select_better_fusion_match(cls, list_of_matches):
@@ -1296,8 +1264,8 @@ class PreclinicalMatchmaking:
     somatic_variant = feature_types_config['mut']
 
     evidence_map = {
-        'FDA-Approved': 5.0, 'Guideline': 4.0, 'Clinical trial': 3.0,
-        'Clinical evidence': 2.0, 'Preclinical': 1.0, 'Inferential': 0.0}
+        'FDA-Approved': 5, 'Guideline': 4, 'Clinical trial': 3,
+        'Clinical evidence': 2, 'Preclinical': 1, 'Inferential': 0}
     inv_evidence_map = {float(v): k for k, v in evidence_map.items()}
 
     variants = 'variants'
@@ -1326,10 +1294,11 @@ class PreclinicalMatchmaking:
     @classmethod
     def annotate_copy_numbers(cls, df, dbs):
         almanac = datasources.Almanac.import_ds(dbs)
-        almanac_genes = almanac.table(cls.genes).all()[0][cls.genes]
+        almanac_genes = datasources.Almanac.import_genes(dbs)
 
         df = df[df[cls.feature_type].eq(cls.copy_number)]
-        db = pd.DataFrame(almanac.table(cls.copy_number).all())
+        db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.copy_number)
+        db = pd.DataFrame(db)
 
         column_map = {cls.gene: cls.feature, cls.direction: cls.alteration_type}
         db = cls.format_db(list(column_map.keys()), column_map, db)
@@ -1338,16 +1307,16 @@ class PreclinicalMatchmaking:
         df = cls.annotate_match_2(df, db)
         df = cls.annotate_match_3(df, db)
         df = cls.annotate_other_datasources(df, dbs)
-        datasources.Almanac.close_ds(almanac)
         return df
 
     @classmethod
     def annotate_fusions(cls, df, dbs):
         almanac = datasources.Almanac.import_ds(dbs)
-        almanac_genes = almanac.table(cls.genes).all()[0][cls.genes]
+        almanac_genes = datasources.Almanac.import_genes(dbs)
 
         df = df[df[cls.feature_type].eq(cls.fusion)]
-        db = pd.DataFrame(almanac.table(cls.fusion).all())
+        db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.fusion)
+        db = pd.DataFrame(db)
 
         column_map = {cls.rearrangement_type: cls.alteration_type}
         db = cls.format_db([cls.gene1, cls.gene2, cls.rearrangement_type], column_map, db)
@@ -1444,7 +1413,6 @@ class PreclinicalMatchmaking:
         df = cls.annotate_other_datasources(df, dbs)
         group1 = cls.annotate_other_datasources(group1, dbs)
         group3 = cls.annotate_other_datasources(group3, dbs)
-        datasources.Almanac.close_ds(almanac)
         return df, group1, group3
 
     @classmethod
@@ -1463,10 +1431,11 @@ class PreclinicalMatchmaking:
     @classmethod
     def annotate_somatic_variants(cls, df, dbs):
         almanac = datasources.Almanac.import_ds(dbs)
-        almanac_genes = almanac.table(cls.genes).all()[0][cls.genes]
+        almanac_genes = datasources.Almanac.import_genes(dbs)
 
         df = df[df[cls.feature_type].eq(cls.somatic_variant)]
-        db = pd.DataFrame(almanac.table(cls.somatic_variant).all())
+        db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.somatic_variant)
+        db = pd.DataFrame(db)
         db[cls.variant_annotation].replace({'Oncogenic Mutations': '', 'Activating mutation': ''}, inplace=True)
 
         column_map = {cls.gene: cls.feature,
@@ -1479,7 +1448,6 @@ class PreclinicalMatchmaking:
         df = cls.annotate_match_3(df, db)
         df = cls.annotate_match_4(df, db)
         df = cls.annotate_other_datasources(df, dbs)
-        datasources.Almanac.close_ds(almanac)
         return df
 
     @classmethod
@@ -1493,6 +1461,7 @@ class PreclinicalMatchmaking:
         match_columns = [feature]
         df = (df
               .merge(db
+                     .loc[(~db[feature].eq('')), :]
                      .loc[:, match_columns + [cls.evidence_map_str, cls.merged]]
                      .sort_values(cls.evidence_map_str, ascending=False)
                      .drop_duplicates(match_columns, keep='first'),
@@ -1510,7 +1479,8 @@ class PreclinicalMatchmaking:
     def annotate_match_3(cls, df, db, feature=feature, alteration_type=alteration_type):
         match_columns = [feature, alteration_type]
         df = (df
-              .merge(db[~db[alteration_type].eq('')]
+              .merge(db
+                     .loc[(~db[feature].eq('') & ~db[alteration_type].eq('')), :]
                      .loc[:, match_columns + [cls.evidence_map_str, cls.merged]]
                      .sort_values(cls.evidence_map_str, ascending=False)
                      .drop_duplicates(match_columns, keep='first'),
@@ -1528,7 +1498,8 @@ class PreclinicalMatchmaking:
     def annotate_match_4(cls, df, db, feature=feature, alteration_type=alteration_type, alteration=alteration):
         match_columns = [feature, alteration_type, alteration]
         df = (df
-              .merge(db[~db[alteration_type].eq('') & ~db[alteration].eq('')]
+              .merge(db
+                     .loc[(~db[feature].eq('') & ~db[alteration_type].eq('') & ~db[alteration].eq('')), :]
                      .loc[:, match_columns + [cls.evidence_map_str, cls.merged]]
                      .sort_values(cls.evidence_map_str, ascending=False)
                      .drop_duplicates(match_columns, keep='first'),
