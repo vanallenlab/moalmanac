@@ -70,7 +70,7 @@ class Reporter:
             return series
 
     @classmethod
-    def generate_actionability_report(cls, actionable, report_dictionary, output_directory=""):
+    def generate_actionability_report(cls, actionable, report_dictionary, similarity=None, output_directory=None):
         report = ActionabilityReport()
         report.add_metadata(
             name=report_dictionary['patient_id'],
@@ -94,6 +94,9 @@ class Reporter:
 
         actionable = cls.format_alterations(actionable)
         report.add_alterations(actionable)
+        report.add_similar_profiles(similarity)
+        #if similarity is not None and bool(similarity):
+        #    report.add_similar_profiles(similarity)
 
         app = flask.Flask(__name__, static_folder=None)
 
@@ -102,7 +105,7 @@ class Reporter:
             return flask.render_template('index.html', report=report)
 
         freezer = flask_frozen.Freezer(app)
-        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == "" else output_directory
+        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == ("" or None) else output_directory
         app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
 
         @freezer.register_generator
@@ -160,6 +163,7 @@ class ActionabilityReport:
         self.metadata = {}
         self.versions = {}
         self.alterations = None
+        self.similar_profiles = None
 
     def add_metadata(self, name, code, ontology, normal, tumor, stage, description, date, purity, ploidy, msi):
         self.metadata['patient_id'] = name
@@ -180,3 +184,6 @@ class ActionabilityReport:
 
     def add_alterations(self, alterations):
         self.alterations = alterations
+
+    def add_similar_profiles(self, similar_profiles):
+        self.similar_profiles = similar_profiles

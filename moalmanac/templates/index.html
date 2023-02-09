@@ -15,6 +15,9 @@
             {% include 'header.html' %}
             {% include 'metadata.html' %}
             {% include 'report_table/table.html' %}
+            {% if report.similar_profiles %}
+                {% include 'report_table/table_similarity.html' %}
+            {% endif %}
             {% include 'footer.html' %}
         </div>
     </div>

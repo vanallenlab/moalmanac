@@ -46,9 +46,9 @@ class Datasources:
     pmid = COLNAMES[datasources_section]['pmid']
     nct = COLNAMES[datasources_section]['nct']
 
-    sensitivity_matches_tablename = COLNAMES[datasources_section]['sensitivity_matches_tablename']
-    resistance_matches_tablename = COLNAMES[datasources_section]['resistance_matches_tablename']
-    prognostic_matches_tablename = COLNAMES[datasources_section]['prognostic_matches_tablename']
+    sensitivity_matches = COLNAMES[datasources_section]['sensitivity_matches']
+    resistance_matches = COLNAMES[datasources_section]['resistance_matches']
+    prognostic_matches = COLNAMES[datasources_section]['prognostic_matches']
 
     columns = COLNAMES[datasources_section]['columns']
     query = COLNAMES[datasources_section]['query']
@@ -131,9 +131,9 @@ class Almanac:
     pmid = Datasources.pmid
     nct = Datasources.nct
 
-    sensitivity_matches_tablename = Datasources.sensitivity_matches_tablename
-    resistance_matches_tablename = Datasources.resistance_matches_tablename
-    prognostic_matches_tablename = Datasources.prognostic_matches_tablename
+    sensitivity_matches = Datasources.sensitivity_matches
+    resistance_matches = Datasources.resistance_matches
+    prognostic_matches = Datasources.prognostic_matches
 
     columns = Datasources.columns
     query = Datasources.query
@@ -148,14 +148,25 @@ class Almanac:
         'Inferential': 0.0
     }
 
-    @classmethod
-    def import_ds(cls, dbs):
+    @staticmethod
+    def import_ds(dbs):
         ds = Reader.read_json(dbs['almanac_handle'])
         return ds
 
-    @staticmethod # remove
-    def close_ds(ds):
-        ds.close()
+    @classmethod
+    def import_genes(cls, dbs):
+        ds = cls.import_ds(dbs)
+        return ds['genes']
+
+
+class AlmanacGenes:
+    # Is this used anywhere?
+    gene = Datasources.feature
+
+    @classmethod
+    def import_ds(cls, dbs):
+        gene_list = Almanac.import_genes(dbs)
+        return pd.DataFrame(gene_list, columns=[cls.gene])
 
 
 class CancerGeneCensus:

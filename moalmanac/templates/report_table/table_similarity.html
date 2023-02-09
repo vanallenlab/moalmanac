@@ -11,7 +11,7 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">The 5 most similar cancer cell lines, of {{ matchmaker.shape[0] }} tested</h4>
+                    <h4 class="panel-title">The 5 most similar cancer cell lines, of 452 tested</h4>
                 </div>
 
                 <div class="panel panel-body">
@@ -29,15 +29,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for index in matchmaker.index.tolist()[:5] %}
+                            {% for index, neighbor in report.similar_profiles.items() %}
                                 <tr>
                                     <td>
-                                        {{ lookup[index]['ccle_name'] }}
+                                        {{ neighbor['ccle_name'] }}
                                         <br>
                                         {% include 'modals/cell_line_info.html' %}
                                     </td>
-                                    <td>{{ lookup[index]['sensitive to'] }}</td>
-                                    <td>{{ lookup[index]['events'] }}</td>
+                                    <td>{{ neighbor['sensitive to'] }}</td>
+                                    <td>{{ neighbor['events'] }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
