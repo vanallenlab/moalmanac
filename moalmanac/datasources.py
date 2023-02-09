@@ -159,16 +159,6 @@ class Almanac:
         return ds['genes']
 
 
-class AlmanacGenes:
-    # Is this used anywhere?
-    gene = Datasources.feature
-
-    @classmethod
-    def import_ds(cls, dbs):
-        gene_list = Almanac.import_genes(dbs)
-        return pd.DataFrame(gene_list, columns=[cls.gene])
-
-
 class CancerGeneCensus:
     gene = Datasources.feature
 
