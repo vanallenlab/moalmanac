@@ -386,7 +386,6 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         }
 
         for key, value in expected_cdkn2a_del.items():
-            print(key, value, result.loc[0, key], expected_cdkn2a_del[key])
             self.assertEqual(result.loc[0, key], expected_cdkn2a_del[key])
         for key, value in expected_cdkn2a_amp.items():
             self.assertEqual(result.loc[1, key], expected_cdkn2a_amp[key])
@@ -846,7 +845,6 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(result.loc[3, match_2], result.loc[3, 'expectation1'])
 
         result = PreclinicalMatchmaking.annotate_match_2(df, db, feature='gene2').fillna(0)
-        print(result.loc[3, :])
         self.assertEqual(result.loc[0, match_2], result.loc[0, 'expectation2'])
         self.assertEqual(result.loc[1, match_2], result.loc[1, 'expectation2'])
         self.assertEqual(result.loc[2, match_2], result.loc[2, 'expectation2'])

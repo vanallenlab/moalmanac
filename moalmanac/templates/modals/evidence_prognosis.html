@@ -32,7 +32,7 @@
                         <tr>
                             <td>Assertion:</td>
                             <td>
-                                {% if report.alterations.loc[index, 'favorable_prognosis'] == '1' %}
+                                {% if report.alterations.loc[index, 'favorable_prognosis'] == 1 %}
                                     {{
                                         'Favorable prognosis in {} ({})'.format(
                                         report.alterations.loc[index, 'prognostic_oncotree_term'],
@@ -51,6 +51,63 @@
                 <p>{{ report.alterations.loc[index, 'prognostic_description'] }}
                     <a href="{{ report.alterations.loc[index, 'prognostic_url'] }} " target=_blank>[source]</a></p>
                 </p>
+
+                <br>
+
+                {% if 'prognosis_matches' in report.alterations.columns %}
+                    {% if report.alterations.loc[index, 'prognosis_matches']|length > 1 %}
+                        <p>The following assertions are equivalent matches within this patient's ontology or stronger in another cancer type.</p>
+                        <table class="table table-hover table-striped table-condensed">
+                            <colgroup>
+                                <col class="col-xs-4">
+                                <col class="col-xs-8">
+                            </colgroup>
+
+                            <thead>
+                                <tr>
+                                    <th>Molecular feature & evidence</th>
+                                    <th>Assertion & rationale</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for match in report.alterations.loc[index, 'prognosis_matches'][1:] %}
+                                <tr>
+                                    <td>
+                                        {{ match['feature_display'] }}
+                                        <br>
+                                        {{ match['predictive_implication'] }}
+                                    </td>
+                                    <td>
+                                        {% if match['favorable_prognosis'] == 1.0 %}
+                                            {{
+                                                'Favorable prognosis in {} ({})'.format(
+                                                match['oncotree_term'],
+                                                match['oncotree_code'])
+                                            }}
+                                        {% elif match['favorable_prognosis'] == 0.0 %}
+                                            {{
+                                                'Not favorable prognosis in {} ({})'.format(
+                                                match['oncotree_term'],
+                                                match['oncotree_code'])
+                                            }}
+                                        {% else %}
+                                            {{
+                                                'Prognostic in {} ({})'.format(
+                                                match['oncotree_term'],
+                                                match['oncotree_code'])
+                                            }}
+                                        {% endif %}
+                                        <br>
+                                        {{ match['description'] }}
+                                        <a href="{{ match['url'] }}" target=_blank>[source]</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                {% endif %}
 
             </div>
 

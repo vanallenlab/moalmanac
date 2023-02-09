@@ -1,8 +1,8 @@
 import flask
 import flask_frozen
 import datetime
+import pandas
 import os
-import tinydb
 
 from config import COLNAMES
 from config import CONFIG
@@ -35,6 +35,41 @@ class Reporter:
         return dataframe.loc[idx_keep, :]
 
     @classmethod
+    def format_alterations(cls, dataframe):
+        if dataframe.empty:
+            return dataframe
+
+        dataframe = cls.drop_double_fusion(dataframe)
+
+        lookup = COLNAMES['datasources']
+        columns = [lookup['sensitivity'], lookup['resistance'], lookup['prognosis']]
+        for column in columns:
+            dataframe[column] = cls.format_clinical_columns(dataframe[column], convert_to_float=True)
+
+        columns = [lookup['sensitive_implication'], lookup['resistance_implication'], lookup['prognostic_implication']]
+        for column in columns:
+            dataframe[column] = cls.format_clinical_columns(dataframe[column], convert_to_float=False)
+
+        columns = [lookup['sensitivity_matches'], lookup['resistance_matches'], lookup['prognostic_matches']]
+        for column in columns:
+            if column in dataframe.columns:
+                dataframe[column] = cls.preallocate_matches_columns(dataframe[column])
+
+        return dataframe
+
+    @staticmethod
+    def format_clinical_columns(series, convert_to_float=False):
+        series = (
+            series
+            .where(series.notna(), None)
+            .where(~series.eq(''), None)
+        )
+        if convert_to_float:
+            return series.astype(float)
+        else:
+            return series
+
+    @classmethod
     def generate_actionability_report(cls, actionable, report_dictionary, output_directory=""):
         report = ActionabilityReport()
         report.add_metadata(
@@ -51,13 +86,13 @@ class Reporter:
             msi=report_dictionary['microsatellite_status']
         )
 
-        versions = Reporter.generate_version_dictionary()
+        versions = cls.generate_version_dictionary()
         report.add_versions(
             software=versions['software'],
             database=versions['database']
         )
 
-        actionable = Reporter.drop_double_fusion(actionable)
+        actionable = cls.format_alterations(actionable)
         report.add_alterations(actionable)
 
         app = flask.Flask(__name__, static_folder=None)
@@ -109,18 +144,8 @@ class Reporter:
         }
 
     @staticmethod
-    def load_almanac_additional_matches(output_folder, patient_id):
-        if output_folder == "":
-            handle = f"{patient_id}.{CONFIG['databases']['additional_matches']}"
-        else:
-            handle = f"{output_folder}/{patient_id}.{CONFIG['databases']['additional_matches']}"
-        db = tinydb.TinyDB(handle)
-        matches = {}
-        for table in db.tables():
-            if table == '_default':
-                continue
-            matches[table] = db.table(table).all()
-        return matches
+    def preallocate_matches_columns(series):
+        return series.apply(lambda x: [] if not isinstance(x, list) and pandas.isna(x) else x)
 
     @classmethod
     def return_sample_barcode(cls, variants, column):
@@ -135,7 +160,6 @@ class ActionabilityReport:
         self.metadata = {}
         self.versions = {}
         self.alterations = None
-        self.additional_matches = None
 
     def add_metadata(self, name, code, ontology, normal, tumor, stage, description, date, purity, ploidy, msi):
         self.metadata['patient_id'] = name
@@ -154,6 +178,5 @@ class ActionabilityReport:
         self.versions['software'] = software
         self.versions['database'] = database
 
-    def add_alterations(self, alterations, additional_matches=None):
-        self.alterations = alterations.fillna('')
-        self.additional_matches = additional_matches
+    def add_alterations(self, alterations):
+        self.alterations = alterations

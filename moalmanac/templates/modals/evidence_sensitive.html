@@ -51,9 +51,48 @@
                     </tbody>
                 </table>
                 <p>{{ report.alterations.loc[index, 'sensitive_description'] }}
-                    <a href="{{ report.alterations.loc[index, 'sensitive_url'] }} " target=_blank>[source]</a></p>
+                    <a href="{{ report.alterations.loc[index, 'sensitive_url'] }} " target=_blank>[source]</a>
+                </p>
 
                 <br>
+
+                {% if 'therapy_sensitivity_matches' in report.alterations.columns %}
+                    {% if report.alterations.loc[index, 'therapy_sensitivity_matches']|length > 1 %}
+                        <p>The following assertions are equivalent matches within this patient's ontology or stronger in another cancer type.</p>
+                        <table class="table table-hover table-striped table-condensed">
+                            <colgroup>
+                                <col class="col-xs-4">
+                                <col class="col-xs-8">
+                            </colgroup>
+
+                            <thead>
+                                <tr>
+                                    <th>Molecular feature & evidence</th>
+                                    <th>Assertion & rationale</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for match in report.alterations.loc[index, 'therapy_sensitivity_matches'][1:] %}
+                                <tr>
+                                    <td>
+                                        {{ match['feature_display'] }}
+                                        <br>
+                                        {{ match['predictive_implication'] }}
+                                    </td>
+                                    <td>{{ 'Sensitivity to {} in {} ({})'.format(match['therapy_name'],
+                                        match['oncotree_term'], match['oncotree_code'])
+                                        }}
+                                        <br>
+                                        {{ match['description'] }}
+                                        <a href="{{ match['url'] }}" target=_blank>[source]</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                {% endif %}
 
             </div>
 
