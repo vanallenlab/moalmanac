@@ -5,7 +5,7 @@ import subprocess
 
 patient_dict = {
     'patient_id': 'example',
-    'reported_tumor_type': 'COADREAD',
+    'reported_tumor_type': 'SKCM',
     'stage': 'Metastatic',
     'description': 'Test patient for development runs',
     'purity': 0.85,
@@ -15,7 +15,7 @@ patient_dict = {
 }
 
 empty_dict = {
-    'snv_handle': '',
+    'snv_handle': '../example_data/example_patient.capture.somatic.snvs.maf',
     'indel_handle': '',
     'bases_covered_handle': '',
     'called_cn_handle': '',
@@ -43,7 +43,7 @@ def execute_cmd(command):
     subprocess.call(command, shell=True)
 
 
-output_directory = ""
+output_directory = "example"
 if output_directory != "":
     cmd = f"mkdir -p {output_directory}"
     execute_cmd(cmd)
