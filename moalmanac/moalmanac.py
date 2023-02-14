@@ -18,9 +18,6 @@ import writer
 from config import COLNAMES
 from config import CONFIG
 
-import warnings
-warnings.filterwarnings('error')
-
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
 bases_covered_handle = 'bases_covered_handle'
