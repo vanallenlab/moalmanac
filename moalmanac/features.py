@@ -412,8 +412,12 @@ class CosmicSignatures:
     @classmethod
     def calculate_contributions(cls, snv_handle, folder, patient_id):
         if os.path.exists(snv_handle):
-            if folder != "":
+            if folder == "" or folder == ".":
+                folder = f"./"
+            elif folder[-1] != "/":
                 folder = f"{folder}/"
+            else:
+                folder = folder
             cls.run_deconstructsigs(patient_id, snv_handle, folder)
 
     @classmethod

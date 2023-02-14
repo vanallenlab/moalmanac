@@ -135,6 +135,7 @@ class SensitivityDictionary(Investigator):
 
         idx_feature_type = df_actionable[cls.feature_type].isin(cls.input_dtypes)
         idx_sensitive = ~(df_actionable[cls.sensitive_therapy].isnull() | df_actionable[cls.sensitive_therapy].eq(''))
+
         dictionary = {}
         for index in df_actionable[idx_feature_type & idx_sensitive].index:
             sensitive_therapy = df_actionable.loc[index, cls.sensitive_therapy]

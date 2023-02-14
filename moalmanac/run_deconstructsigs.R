@@ -27,7 +27,7 @@ sigs.input <- mut.to.sigs.input(mut.ref = maf,
     sample.id = sample, chr = chr,
     pos = pos, ref = ref,
     alt = alt)
-    
+
 temp.filename <- paste(folder, patient_id, ".sigs.context.txt", sep = "")
 write.table(sigs.input, file = temp.filename, sep = '\t', row.names = FALSE)
 

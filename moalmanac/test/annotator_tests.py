@@ -6,7 +6,9 @@ import scipy.stats as stats
 from annotator import Annotator, ACMG, Almanac, ExAC, OverlapValidation, PreclinicalEfficacy, PreclinicalMatchmaking
 from datasources import Datasources
 from datasources import Almanac as datasource_Almanac
+from datasources import Preclinical as datasources_Preclinical
 from features import Features
+from investigator import SensitivityDictionary
 from config import CONFIG
 
 
@@ -309,10 +311,12 @@ class UnitTestValidation(unittest.TestCase):
 class UnitTestPreclinicalEfficacy(unittest.TestCase):
     df1 = pd.read_csv('../example_output/example.actionable.txt', sep='\t')
     df2 = pd.read_csv('../example_output/example.preclinical.efficacy.txt', sep='\t')
+    dbs_preclinical = datasources_Preclinical.import_dbs()
+    efficacy_dictionary = SensitivityDictionary.create(dbs_preclinical, df1)
 
     def test_annotate(self):
         column = 'preclinical_efficacy_observed'
-        result = PreclinicalEfficacy.annotate(UnitTestPreclinicalEfficacy.df1, UnitTestPreclinicalEfficacy.df2)
+        result = PreclinicalEfficacy.annotate(self.df1, self.df2, self.efficacy_dictionary)
         self.assertEqual(result[column].isnull().sum(), 17)
         self.assertEqual(result[column].dropna().astype(int).tolist(), [1, 0])
 

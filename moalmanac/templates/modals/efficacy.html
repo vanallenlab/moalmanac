@@ -1,4 +1,4 @@
-{% if (df.loc[index, 'preclinical_efficacy_observed'] != '') %}
+{% if (report.alterations.loc[index, 'preclinical_efficacy_lookup'] != '') %}
     <div id="preclinicalModal_{{ index }}" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
 
@@ -8,14 +8,15 @@
                         &times;
                     </button>
                     <h4 class="modal-title">
-                        {{ df.loc[index, 'feature_display'] }} and sensitivity to
-                        {{ df.loc[index, 'sensitive_therapy_name'] }}
+                        {{ report.alterations.loc[index, 'feature_display'] }} and sensitivity to
+                        {{ report.alterations.loc[index, 'sensitive_therapy_name'] }}
                     </h4>
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-tabs" id="tabContent">
-                        {% for therapy in preclinical_dict[index].keys() %}
-                        {% if loop.index0 == 0 %}<li class="active">{% else %}<li>{% endif %}
+                        {% set lookup = report.alterations.loc[index, 'preclinical_efficacy_lookup'][0] %}
+                        {% for therapy in lookup.keys() %}
+                            {% if loop.index0 == 0 %}<li class="active">{% else %}<li>{% endif %}
                             <a href="#tab{{ loop.index0 }}" data-toggle="tab">
                                 {{ therapy }}
                             </a>
@@ -24,14 +25,14 @@
                     </ul>
 
                     <div class="tab-content">
-                        {% for therapy in preclinical_dict[index].keys() %}
+                        {% for therapy in lookup.keys() %}
                             {% if loop.index0 == 0 %}
                                 <div class="tab-pane active" id="tab{{ loop.index0 }}">
                             {% else %}
                                 <div class="tab-pane" id="tab{{ loop.index0 }}">
                             {% endif %}
                                     <center>
-                                        <img class="logo" src="data:image/png;base64,{{ preclinical_dict[index][therapy]['figure_base64'] }}" style="height:500px">
+                                        <img class="logo" src="data:image/png;base64,{{ lookup[therapy]['figure_base64'] }}" style="height:500px">
                                         {% include 'modals/text_preclinical.html' %}
                                         {% include 'modals/table_preclinical.html' %}
                                     </center>

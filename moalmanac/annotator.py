@@ -697,7 +697,7 @@ class Almanac:
 
         query_same_ontology = (table[cls.oncotree_code] == ontology)
         query_diff_ontology = (table[cls.oncotree_code] != ontology)
-        query_feature = (table[cls.cosmic_signature_number] == feature)
+        query_feature = (table[cls.cosmic_signature_number].astype(int) == int(feature))
 
         match_bins = []
 
@@ -1204,9 +1204,10 @@ class PreclinicalEfficacy:
     feature_display = COLNAMES[section]['feature_display']
     pvalue = COLNAMES[section]['pvalue']
     efficacy = COLNAMES[section]['efficacy_obs']
+    lookup = COLNAMES[section]['efficacy_lookup']
 
     @classmethod
-    def annotate(cls, actionable, efficacy):
+    def annotate(cls, actionable, efficacy, dictionary, append_lookup=True):
         series_all_features = actionable[cls.feature_display]
         series_features = series_all_features[series_all_features.isin(efficacy[cls.feature_display])]
         for index in series_features.index:
@@ -1215,7 +1216,19 @@ class PreclinicalEfficacy:
             efficacy_observed = cls.search_for_significance(dataframe[cls.pvalue])
             actionable.loc[index, cls.efficacy] = efficacy_observed
         actionable[cls.efficacy].fillna(pd.NA, inplace=True)
+        idx = actionable.index
+        if append_lookup:
+            actionable.loc[idx, cls.lookup] = cls.create_lookup(idx, series_features.index, dictionary)
+        else:
+            actionable.loc[idx, cls.lookup] = ''
         return actionable
+
+    @classmethod
+    def create_lookup(cls, all_index_values, relevant_index_values, dictionary):
+        series = pd.Series('', index=all_index_values, name=cls.lookup)
+        for index in relevant_index_values:
+            series.loc[index] = [dictionary[index]]
+        return series
 
     @classmethod
     def search_for_significance(cls, series):

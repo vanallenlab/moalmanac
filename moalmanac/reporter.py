@@ -95,8 +95,6 @@ class Reporter:
         actionable = cls.format_alterations(actionable)
         report.add_alterations(actionable)
         report.add_similar_profiles(similarity)
-        #if similarity is not None and bool(similarity):
-        #    report.add_similar_profiles(similarity)
 
         app = flask.Flask(__name__, static_folder=None)
 

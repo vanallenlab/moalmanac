@@ -18,6 +18,9 @@ import writer
 from config import COLNAMES
 from config import CONFIG
 
+import warnings
+warnings.filterwarnings('error')
+
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
 bases_covered_handle = 'bases_covered_handle'
@@ -185,14 +188,14 @@ def main(patient, inputs, output_folder):
     evaluated_ms_variants = evaluator.Microsatellite.evaluate_variants(evaluated_somatic, evaluated_germline)
     evaluated_ms_status = evaluator.Microsatellite.evaluate_status(annotated_ms_status, evaluated_ms_variants)
 
-    plot_signatures = TOGGLE_FEATURES.get('plot_mutational_signatures')
     evaluated_mutational_signatures = load_and_process_mutational_signatures(
         handle=inputs[snv_handle],
         folder=output_folder,
         label=string_id,
         dbs=dbs,
         tumor_type=code,
-        plot=plot_signatures
+        calculate=TOGGLE_FEATURES.get('calculate_mutational_signatures'),
+        plot=TOGGLE_FEATURES.get('plot_mutational_signatures')
     )
 
     actionable = evaluator.Actionable.evaluate(
@@ -222,10 +225,22 @@ def main(patient, inputs, output_folder):
         cell_lines_dictionary = dbs_preclinical['dictionary']
         if preclinical_efficacy_on:
             plot_preclinical = TOGGLE_FEATURES.getboolean('plot_preclinical_efficacy')
-            efficacy_results = process_preclinical_efficacy(dbs_preclinical, actionable, output_folder, string_id, plot=plot_preclinical)
+            efficacy_results = process_preclinical_efficacy(
+                dbs_preclinical,
+                actionable,
+                output_folder,
+                string_id,
+                plot=plot_preclinical
+            )
             efficacy_dictionary = efficacy_results[0]
             efficacy_summary = efficacy_results[1]
-            actionable = annotator.PreclinicalEfficacy.annotate(actionable, efficacy_results[1])
+
+            actionable = annotator.PreclinicalEfficacy.annotate(
+                actionable,
+                efficacy_summary,
+                efficacy_dictionary,
+                append_lookup=TOGGLE_FEATURES.getboolean('include_preclinical_efficacy_in_actionability_report')
+            )
         if model_similarity_on:
             similarity_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, string_id)
             similarity_summary = matchmaker.Report.create_report_dictionary(similarity_results, cell_lines_dictionary)

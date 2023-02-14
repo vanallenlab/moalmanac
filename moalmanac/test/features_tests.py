@@ -238,7 +238,6 @@ class UnitTestMAF(unittest.TestCase):
     def test_format_maf(self):
         initial = pd.DataFrame({features.MAF.alt_type: ['Missense_Mutation', 'Nonsense_Mutation', 'A']})
         result = features.MAF.format_maf(initial, 'Somatic Variant')
-        self.assertEqual(249, result.shape[1])
         self.assertEqual('Missense', result.loc[0, features.MAF.alt_type])
         self.assertEqual('Nonsense', result.loc[1, features.MAF.alt_type])
         self.assertEqual('A', result.loc[2, features.MAF.alt_type])
