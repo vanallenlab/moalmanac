@@ -65,6 +65,21 @@ class Annotator(object):
         return df
 
     @classmethod
+    def annotate_simple(cls, df, dbs, ontology):
+        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df = Almanac.annotate(df, dbs, ontology)
+        df = CancerHotspots.annotate(df, dbs)
+        df = CancerHotspots3D.annotate(df, dbs)
+        df = CancerGeneCensus.annotate(df, dbs)
+        df = Cosmic.annotate(df, dbs)
+        df = GSEACancerPathways.annotate(df, dbs)
+        df = GSEACancerModules.annotate(df, dbs)
+        df = ACMG.annotate(df, dbs)
+        df = Hereditary.annotate(df, dbs)
+        df = MSI.annotate(df)
+        return df
+
+    @classmethod
     def annotate_somatic(cls, df, dbs, ontology):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
         df = Almanac.annotate(df, dbs, ontology)
@@ -491,7 +506,6 @@ class Almanac:
         series = sliced_series.copy(deep=True)
         feature = series.loc[cls.feature]
         alt_type = series.loc[cls.alt_type]
-        alt = series.loc[features.Features.segment_mean]
 
         query_same_ontology = (table[cls.oncotree_code] == ontology)
         query_diff_ontology = (table[cls.oncotree_code] != ontology)

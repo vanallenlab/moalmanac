@@ -734,3 +734,47 @@ class MAFValidation(MAF):
         df = df.drop(df.columns[df.columns.str.contains('validation')], axis=1)
         df = df.rename(columns=cls.column_map).loc[:, cls.columns]
         return df, df_reject
+
+
+class Simple:
+    section = 'simple_input'
+    feature_type = COLNAMES[section]['feature_type']
+    feature = COLNAMES[section]['feature']
+    gene = COLNAMES[section]['gene']
+    alt_type = COLNAMES[section]['alt_type']
+    alt = COLNAMES[section]['alt']
+
+    column_map_feature = {
+        feature: feature,
+        feature_type: feature_type,
+        alt_type: alt_type,
+        alt: alt
+    }
+
+    column_map_gene = {
+        gene: feature,
+        feature_type: feature_type,
+        alt_type: alt_type,
+        alt: alt
+    }
+
+    columns = [feature_type, gene, alt_type, alt]
+
+    @classmethod
+    def check_format(cls, df):
+        if "feature" in df.columns:
+            return cls.column_map_feature
+        elif "gene" in df.columns:
+            return cls.column_map_gene
+        else:
+            sys.exit("Neither 'feature' nor 'gene' are present columns, cannot read input file")
+
+    @classmethod
+    def import_feature(cls, handle):
+        if os.path.exists(handle):
+            df_mini = Reader.read(handle, delimiter='\t', nrows=2)
+            column_map = cls.check_format(df_mini)
+            df = Reader.safe_read(handle, '\t', column_map=column_map)
+            return Features.preallocate_missing_columns(df)
+        else:
+            return Features.create_empty_dataframe()
