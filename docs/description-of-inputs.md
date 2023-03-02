@@ -22,6 +22,7 @@ Example inputs can be found in the [`example_data/`](/example_data/) folder, fou
     - [Disable matchmaking](#disable-matchmaking)
     - [Description](#description)
     - [Output directory](#output-directory)
+    - [Simplified input](#simplified-input)
     
 # Required arguments
 The following arguments are required to run Molecular Oncology Almanac.
@@ -56,6 +57,7 @@ Required fields can be changed from their default expectations by editing the ap
 - `Start_position`, genomic start position of the variant
 - `End_position`, genomic end position of the variant
 - `Reference_Allele`, reference allele at the genomic location
+- `Variant_Classification`, consequence of variant: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
 - `Tumor_Seq_Allele1`, alternate allele at the genomic location
 - `Tumor_Seq_Allele2`, second allele at the genomic location (will be the same as `Reference_Allele` for SNVs)
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
@@ -86,6 +88,7 @@ Required fields can be changed from their default expectations by editing the ap
 - `Start_position`, genomic start position of the variant
 - `End_position`, genomic end position of the variant
 - `Reference_Allele`, reference allele at the genomic location
+- `Variant_Classification`, consequence of variant: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
 - `Tumor_Seq_Allele1`, alternate allele at the genomic location
 - `Tumor_Seq_Allele2`, second allele at the genomic location (will be the same as `Reference_Allele` for SNVs)
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
@@ -180,6 +183,7 @@ Required fields can be changed from their default expectations by editing the ap
 - `Start_position`, genomic start position of the variant
 - `End_position`, genomic end position of the variant
 - `Reference_Allele`, reference allele at the genomic location
+- `Variant_Classification`, consequence of variant: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
 - `Tumor_Seq_Allele1`, alternate allele at the genomic location
 - `Tumor_Seq_Allele2`, second allele at the genomic location (will be the same as `Reference_Allele` for SNVs)
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
@@ -212,6 +216,7 @@ Required fields can be changed from their default expectations by editing the ap
 - `Start_position`, genomic start position of the variant
 - `End_position`, genomic end position of the variant
 - `Reference_Allele`, reference allele at the genomic location
+- `Variant_Classification`, consequence of variant: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
 - `Tumor_Seq_Allele1`, alternate allele at the genomic location
 - `Tumor_Seq_Allele2`, second allele at the genomic location (will be the same as `Reference_Allele` for SNVs)
 - `Tumor_Sample_Barcode`, string associated with the tumor profile
@@ -251,6 +256,26 @@ Microsatellite status is reported in the clinical actionability report.
 ## Output directory
 `--output-directory` allows users to specify an output directory to write outputs to, the current working directory will be used if unspecified. 
 
+## Simplified input
+`--input` is an argument only used with `simplified_input.py`. It accepts a tab delimited file with one genomic alteration per row based on MOAlmanac's [standardized feature columns](../docs/description-of-outputs.md#standardized-feature-columns). In short the following columns are expected,
+1. `feature_type`, the data type of the molecular features and accepts `Somatic Variant`, `Germline Variant`, `Copy Number`, or `Rearrangement`. These strings can be customized in the `feature_types` section of [config.ini](config.ini).
+2. `gene` or `feature`, the gene name of the genomic alteration.
+3. `alteration_type`, classification or consequence of the genomic alteration
+    - For somatic and germline variants: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
+    - For copy number alterations: `Amplification` or `Deletion`
+    - For rearrangements: `Fusion` or `Translocation`
+4. `alteration`, specific genomic alteration,
+    - For somatic and germline variants: the protein change with [1-letter amino acid codes](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/), `p.HGVSp_Short`
+    - For copy number alterations: Leave blank
+    - For rearrangements: the full fusion separated by two dashes, `--`
+
+For example,
+| feature_type | feature | alteration_type | alteration |
+|---|---|---|---|
+| Somatic Variant | BRAF | Missense | p.V600E |
+| Copy Number | CDK4 | Amplification |  |
+| Rearrangement | COL1A1 | Fusion | COL1A1--CITED4 |
+| Germline Variant | BRCA2 | Frameshift | p.S1982fs |
 
 If you use this method, please cite our publication:
 > [Reardon, B., Moore, N.D., Moore, N.S., *et al*. Integrating molecular profiles into clinical frameworks through the Molecular Oncology Almanac to prospectively guide precision oncology. *Nat Cancer* (2021). https://doi.org/10.1038/s43018-021-00243-3](https://www.nature.com/articles/s43018-021-00243-3)

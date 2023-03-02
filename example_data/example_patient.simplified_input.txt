@@ -1,0 +1,5 @@
+feature_type	feature	alteration_type	alteration
+Somatic Variant	BRAF	Missense	p.V600E
+Copy Number	CDK4	Amplification	
+Rearrangement	COL1A1	Fusion	COL1A1--CITED4
+Germline Variant	BRCA2	Frameshift	p.S1982fs
