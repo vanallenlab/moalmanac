@@ -1,8 +1,8 @@
 # Molecular Oncology Almanac 
-Molecular Oncology Almanac can be run by executing either `moalmanac.py` with [standard input formats](#standard-usage) or `simplified_input.py` with [simplified inputs](#simplified-input). Please follow the [installation instructions](README.md#Installation) before use.
+Molecular Oncology Almanac can be run by executing either `moalmanac.py` with [standard input formats](#standard-usage) or `simplified_input.py` with [simplified inputs](#simplified-input). Please follow the [installation instructions](../README.md#installation) before use.
 
 ## Standard usage
-Molecular Oncology Almanac may be executed on any combination of input data but does require a patient_id to label output files. Additional settings can be set by modifying the [config.ini](moalmanac/config.ini) file and column names may be modified by editing the [colnames.ini](moalmanac/colnames.ini) file.
+Molecular Oncology Almanac may be executed on any combination of input data but does require a patient_id to label output files. Additional settings can be set by modifying the [config.ini](config.ini) file and column names may be modified by editing the [colnames.ini](colnames.ini) file.
 
 Required arguments:
 ```
@@ -52,12 +52,12 @@ python moalmanac.py \
 
 These example inputs may also be processed by executing `run_example.py`. 
 
-Please also view our additional documentation on the [descriptions of inputs](docs/description-of-inputs.md) for more details about input file formats. 
+Please also view our additional documentation on the [descriptions of inputs](../docs/description-of-inputs.md) for more details about input file formats. 
 
 ## Simplified input
 A simplified input of a single file for somatic variants, germline variants, called copy number alterations, and fusions may also be used for a minimal interpretation. This mode also allows for [MSI status](../docs/description-of-inputs.md#microsatellite-status) and [whole-genome doubling](../docs/description-of-inputs.md#whole-genome-doubling) to be considered. With this format, MOAlmanac will be unable to annotate with any datasources that rely on nucleotide position. 
 
-As with the [standard usage](#standard-usage), additional settings can be set by modifying the [config.ini](moalmanac/config.ini) file and column names may be modified by editing the [colnames.ini](moalmanac/colnames.ini) file.
+As with the [standard usage](#standard-usage), additional settings can be set by modifying the [config.ini](config.ini) file and column names may be modified by editing the [colnames.ini](colnames.ini) file.
 
 Input for simplified input is a tab delimited file with one genomic alteration per row based on MOAlmanac's [standardized feature columns](../docs/description-of-outputs.md#standardized-feature-columns). In short the following columns are expected,
 1. `feature_type`, the data type of the molecular features and accepts `Somatic Variant`, `Germline Variant`, `Copy Number`, or `Rearrangement`. These strings can be customized in the `feature_types` section of [config.ini](config.ini).
@@ -121,7 +121,27 @@ python simplified_input.py \
 ```
 
 ## Configuration
+MOAlmanac can be customized by modifying the [config.ini](config.ini) file and column names may be modified by editing the [colnames.ini](colnames.ini) file.
 
+### config.ini
+The configuration file [config.ini](config.ini) lets users change settings, thresholds, and input string values. The file contains the following sections,
+- `function_toggle` allows users to enable or disable the [actionability report](../docs/description-of-outputs.md#report), [model_similarity](../docs/description-of-outputs.md#profile-to-cell-line-matchmaking), [mutational signature](../docs/description-of-outputs.md#mutational-signatures), and [preclinical efficacy](../docs/description-of-outputs.md#preclinical-efficacy) functions. 
+- `versions` are string inputs to describe the MOAlmanac algorithm and database versions
+- `exac` allows users to specify a threshold for [Allele frequency in ExAC](https://gnomad.broadinstitute.org/help/faf) to identify common variants
+- `fusion` allows users to specify the minimum spanning fragments required for fusions
+- `mutation` allows users to specify minimum values for coverage and allelic fraction for evaluation of somatic and germline variants
+- `seg` allows users to specify thresholds for total copy number 
+- `signatures` allows users to specify the minimum required contribution to consider mutational signatures
+- `validation_sequencing` allows users to specify minimum power and allelic fraction to consider for variants from validation sequencing
+- `feature_types` allows users to specify strings for considered feature types
+- `databases` specifies file paths for databases used for annotation, found in the `moalmanac/databases/` folder
+- `preclinical` specifies file paths for datasources used for preclinical functions, [model_similarity](../docs/description-of-outputs.md#profile-to-cell-line-matchmaking) and [preclinical efficacy](../docs/description-of-outputs.md#preclinical-efficacy)
+
+### colnames.ini
+The configuration file [colnames.ini](colnames.ini) lets users change strings associated with column names for input and output files. The file contains the following relevant sections,
+- `input_data`, allows users to change column names for input data
+
+Other sections in this configuration file are used internally to MOAlmanac for processing.
 
 ## Citation
 If you find this tool or any code herein useful, please cite:  

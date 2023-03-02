@@ -45,39 +45,7 @@ Rscript -e 'install.packages("RCurl", repos = "http://cran.rstudio.com/")' \
 ```
 
 ## Usage
-Molecular Oncology Almanac will run based on any combination of input data but does require a patient_id to label outputs. Additional settings can be set by modifying the [config.ini](moalmanac/config.ini) file and column names may be modified by editing the [colnames.ini](moalmanac/colnames.ini) file.
-
-Required arguments:
-```
-    --patient_id            <string>    patient identifier
-```
-
-Optional arguments:
-```
-    --tumor_type            <string>    tumor ontology, default=Unknown
-    --stage                 <string>    tumor stage, default=Unknown
-    --snv_handle            <string>    handle for MAF file of somatic single nucleotide variants
-    --indel_handle          <string>    handle for MAF file of somatic insertions and deletions
-    --bases_covered_handle  <string>    handle for text file which contains the number of calcable somatic bases
-    --called_cn_handle      <string>    handle for text file which contained genes and copy number calls, will be used over `--cnv_handle`
-    --cnv_handle            <string>    handle for annotated seg file for somatic copy number
-    --fusion_handle         <string>    handle for STAR fusion output, .final.abridged
-    --germline_handle       <string>    handle for MAF file of germline single nucleotide variants and insertions and deletions
-    --validation_handle     <string>    handle for MAF file of somatic single nucleotide variant called from validation sequencing
-    --ms_status             <string>    microsatellite status as deemed by MSI sensor, MSI or MSS, default=Unknown
-    --purity                <float>     tumor purity
-    --ploidy                <float>     tumor ploidy
-    --wgd                   <boolean>   specify the occurence of whole genome duplication
-    --disable_matchmaking   <boolean>   remove patient-to-cell line matchmaking from report
-    --description           <string>    description of patient
-    --output-directory      <string>    specify location of produced outputs
-```
-
-## Example
-A file `run_example.py` was packaged with this application to run Molecular Oncology Almanac on data found in the folder `example_data`. The outputs produced are the same as those hosted in the folder `example_output`. From the application's folder, run
-```bash
-python run_example.py
-```
+Usage documentation can be found within the [moalmanac/](moalmanac) directory of this repository.
 
 ## How to contribute
 Please follow [our contribution instructions](docs/how-to-contribute.md) if you are interested in contributing to this project. 
