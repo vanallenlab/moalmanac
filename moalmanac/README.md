@@ -2,7 +2,7 @@
 Molecular Oncology Almanac can be run by executing either `moalmanac.py` with [standard input formats](#standard-usage) or `simplified_input.py` with [simplified inputs](#simplified-input). Please follow the [installation instructions](../README.md#installation) before use.
 
 ## Standard usage
-Molecular Oncology Almanac may be executed on any combination of input data but does require a patient_id to label output files. Additional settings can be set by modifying the [config.ini](config.ini) file and column names may be modified by editing the [colnames.ini](colnames.ini) file.
+Molecular Oncology Almanac may be executed on any combination of input data but does require a patient_id to label output files. Additional settings can be set by modifying the [config.ini](#configini) file and column names may be modified by editing the [colnames.ini](#colnamesini) file.
 
 Required arguments:
 ```
@@ -57,10 +57,10 @@ Please also view our additional documentation on the [descriptions of inputs](..
 ## Simplified input
 A simplified input of a single file for somatic variants, germline variants, called copy number alterations, and fusions may also be used for a minimal interpretation. This mode also allows for [MSI status](../docs/description-of-inputs.md#microsatellite-status) and [whole-genome doubling](../docs/description-of-inputs.md#whole-genome-doubling) to be considered. With this format, MOAlmanac will be unable to annotate with any datasources that rely on nucleotide position. 
 
-As with the [standard usage](#standard-usage), additional settings can be set by modifying the [config.ini](config.ini) file and column names may be modified by editing the [colnames.ini](colnames.ini) file.
+As with the [standard usage](#standard-usage), additional settings can be set by modifying the [config.ini](#configini) file and column names may be modified by editing the [colnames.ini](#colnamesini) file.
 
 Input for simplified input is a tab delimited file with one genomic alteration per row based on MOAlmanac's [standardized feature columns](../docs/description-of-outputs.md#standardized-feature-columns). In short the following columns are expected,
-1. `feature_type`, the data type of the molecular features and accepts `Somatic Variant`, `Germline Variant`, `Copy Number`, or `Rearrangement`. These strings can be customized in the `feature_types` section of [config.ini](config.ini).
+1. `feature_type`, the data type of the molecular features and accepts `Somatic Variant`, `Germline Variant`, `Copy Number`, or `Rearrangement`. These strings can be customized in the `feature_types` section of [config.ini](#configini).
 2. `gene` or `feature`, the gene name of the genomic alteration.
 3. `alteration_type`, classification or consequence of the genomic alteration
     - For somatic and germline variants: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
