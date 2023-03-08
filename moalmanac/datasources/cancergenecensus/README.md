@@ -7,7 +7,7 @@ The Cancer Gene Census is developed and maintained by the [Wellcome Trust Sanger
 ## Usage: Downloading the Cancer Gene Census
 Data can be downloaded for the CGC from either [COSMIC's data downloads page](http://cancer.sanger.ac.uk/cosmic/download) or directly exported as a csv or tsv from [the CGC's webpage](http://cancer.sanger.ac.uk/census). Once downloaded, gene names can be extracted with the script `extract_genes.py`. For example,
 ```bash
-python extract_genes.py -input cancer_gene_census.tsv -output cancer_gene_census_v97.genes.tsv -gene_column_name "Gene Symbol"
+python extract_genes.py --input cancer_gene_census.tsv --output cancer_gene_census_v97.genes.tsv --gene_column_name "Gene Symbol"
 ```
 
 The script `diff_versions.py` may be also be used to compare two versions of the Cancer Gene Census to identify genes added or removed between versions. For example,
