@@ -15,7 +15,7 @@ patient_dict = {
 }
 
 empty_dict = {
-    'snv_handle': '',
+    'snv_handle': '../example_data/example_patient.capture.somatic.snvs.maf',
     'indel_handle': '',
     'bases_covered_handle': '',
     'called_cn_handle': '',
@@ -43,7 +43,7 @@ def execute_cmd(command):
     subprocess.call(command, shell=True)
 
 
-output_directory = ""
+output_directory = "example"
 if output_directory != "":
     cmd = f"mkdir -p {output_directory}"
     execute_cmd(cmd)
@@ -56,6 +56,3 @@ end_time = time.time()
 
 time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
 print(time_statement)
-
-cmd = 'git checkout -- datasources/moalmanac/moalmanac.json'
-execute_cmd(cmd)

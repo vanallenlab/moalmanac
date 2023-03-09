@@ -5,7 +5,7 @@ from config import COLNAMES
 from config import CONFIG
 
 
-class Datasources(object):
+class Datasources:
     """
     Loads datasources
     """
@@ -46,9 +46,9 @@ class Datasources(object):
     pmid = COLNAMES[datasources_section]['pmid']
     nct = COLNAMES[datasources_section]['nct']
 
-    sensitivity_matches_tablename = COLNAMES[datasources_section]['sensitivity_matches_tablename']
-    resistance_matches_tablename = COLNAMES[datasources_section]['resistance_matches_tablename']
-    prognostic_matches_tablename = COLNAMES[datasources_section]['prognostic_matches_tablename']
+    sensitivity_matches = COLNAMES[datasources_section]['sensitivity_matches']
+    resistance_matches = COLNAMES[datasources_section]['resistance_matches']
+    prognostic_matches = COLNAMES[datasources_section]['prognostic_matches']
 
     columns = COLNAMES[datasources_section]['columns']
     query = COLNAMES[datasources_section]['query']
@@ -91,7 +91,7 @@ class Datasources(object):
         }
 
 
-class ACMG(object):
+class ACMG:
     gene = Datasources.feature
 
     column_map = {
@@ -103,7 +103,7 @@ class ACMG(object):
         return Reader.safe_read(dbs['acmg_handle'], '\t', cls.column_map, comment_character='#')
 
 
-class Almanac(object):
+class Almanac:
     feature_type = Datasources.feature_type
     feature = Datasources.feature
     alt_type = Datasources.alt_type
@@ -131,29 +131,35 @@ class Almanac(object):
     pmid = Datasources.pmid
     nct = Datasources.nct
 
-    sensitivity_matches_tablename = Datasources.sensitivity_matches_tablename
-    resistance_matches_tablename = Datasources.resistance_matches_tablename
-    prognostic_matches_tablename = Datasources.prognostic_matches_tablename
+    sensitivity_matches = Datasources.sensitivity_matches
+    resistance_matches = Datasources.resistance_matches
+    prognostic_matches = Datasources.prognostic_matches
 
     columns = Datasources.columns
     query = Datasources.query
     genes = Datasources.genes
 
     predictive_implication_map = {
-        'FDA-Approved': 5.0, 'Guideline': 4.0, 'Clinical trial': 3.0,
-        'Clinical evidence': 2.0, 'Preclinical': 1.0, 'Inferential': 0.0}
-
-    @classmethod
-    def import_ds(cls, dbs):
-        df = Reader.read_tinydb(dbs['almanac_handle'])
-        return df
+        'FDA-Approved': 5.0,
+        'Guideline': 4.0,
+        'Clinical trial': 3.0,
+        'Clinical evidence': 2.0,
+        'Preclinical': 1.0,
+        'Inferential': 0.0
+    }
 
     @staticmethod
-    def close_ds(ds):
-        ds.close()
+    def import_ds(dbs):
+        ds = Reader.read_json(dbs['almanac_handle'])
+        return ds
+
+    @classmethod
+    def import_genes(cls, dbs):
+        ds = cls.import_ds(dbs)
+        return ds['genes']
 
 
-class CancerGeneCensus(object):
+class CancerGeneCensus:
     gene = Datasources.feature
 
     column_map = {
@@ -165,7 +171,7 @@ class CancerGeneCensus(object):
         return Reader.safe_read(dbs['cgc_handle'], '\t', cls.column_map)
 
 
-class CancerHotspots(object):
+class CancerHotspots:
     gene = Datasources.feature
     alt = Datasources.alt
     aa_pos = 'aa_pos'
@@ -192,7 +198,7 @@ class CancerHotspots(object):
         return cls.format_cancerhotspots(df)
 
 
-class CancerHotspots3D(object):
+class CancerHotspots3D:
     gene = Datasources.feature
     alt = Datasources.alt
 
@@ -206,7 +212,7 @@ class CancerHotspots3D(object):
         return Reader.safe_read(dbs['3dhotspots_handle'], '\t', cls.column_map)
 
 
-class ClinVar(object):
+class ClinVar:
     gene = Datasources.feature
     chr = Datasources.chr
     start = Datasources.start
@@ -234,7 +240,7 @@ class ClinVar(object):
         return Reader.safe_read(dbs['clinvar_handle'], '\t', cls.column_map)
 
 
-class Cosmic(object):
+class Cosmic:
     gene = Datasources.feature
     alt = Datasources.alt
 
@@ -248,7 +254,7 @@ class Cosmic(object):
         return Reader.safe_read(dbs['cosmic_handle'], '\t', cls.column_map)
 
 
-class ExAC(object):
+class ExAC:
     chr = Datasources.chr
     start = Datasources.start
     ref = Datasources.ref
@@ -320,7 +326,7 @@ class ExACExtended:
         return Reader.safe_read(dbs['exac_handle'], '\t', cls.column_map)
 
 
-class GSEACancerPathways(object):
+class GSEACancerPathways:
     gene = Datasources.feature
 
     @classmethod
@@ -336,7 +342,7 @@ class GSEACancerPathways(object):
         return cls.format_pathways(df)
 
 
-class GSEACancerModules(object):
+class GSEACancerModules:
     gene = Datasources.feature
 
     @classmethod
@@ -356,7 +362,7 @@ class GSEACancerModules(object):
         return cls.format_modules(df)
 
 
-class Hereditary(object):
+class Hereditary:
     gene = Datasources.feature
 
     column_map = {
@@ -368,7 +374,7 @@ class Hereditary(object):
         return Reader.safe_read(dbs['hereditary_handle'], '\t', cls.column_map)
 
 
-class Lawrence(object):
+class Lawrence:
     code = Datasources.code
     ontology = Datasources.ontology
     mutational_burden = Datasources.mutational_burden
@@ -384,7 +390,7 @@ class Lawrence(object):
         return Reader.safe_read(dbs['lawrence_handle'], '\t', cls.column_map)
 
 
-class Oncotree(object):
+class Oncotree:
     ontology = Datasources.ontology
     code = Datasources.code
 

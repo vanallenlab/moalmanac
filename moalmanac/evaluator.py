@@ -403,7 +403,7 @@ class Integrative(object):
 
     @classmethod
     def return_genes_almanac(cls, ds):
-        return ds.table(cls.genes).all()[0][cls.genes]
+        return ds[cls.genes]
 
     @classmethod
     def subset_nonempty_df(cls, df):

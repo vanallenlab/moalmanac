@@ -9,15 +9,15 @@
                 <table>
                     <tr>
                         <td>Patient ID:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['patient_id'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.patient_id }}</td> <!--input -->
                     </tr>
                     <tr>
                         <td>Tumor Barcode:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['tumor_barcode'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.tumor_barcode }}</td> <!--input -->
                     </tr>
                     <tr>
                         <td>Normal Barcode:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['normal_barcode'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.normal_barcode }}</td> <!--input -->
                     </tr>
                 </table>
             </div>
@@ -26,15 +26,15 @@
                 <table>
                     <tr>
                         <td>Code:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['code'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.code }}</td> <!--input -->
                     </tr>
                     <tr>
                         <td>Ontology:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['ontology'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.ontology}}</td> <!--input -->
                     </tr>
                     <tr>
                         <td>Stage:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['stage'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.stage }}</td> <!--input -->
                     </tr>
                 </table>
             </div>
@@ -43,15 +43,15 @@
                 <table>
                     <tr>
                         <td>Tumor Purity:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['purity'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.purity }}</td> <!--input -->
                     </tr>
                     <tr>
                         <td>Tumor Ploidy:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['ploidy'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.ploidy }}</td> <!--input -->
                     </tr>
                     <tr>
                         <td>Microsatellite Stability:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ dict['microsatellite_status'] }}</td> <!--input -->
+                        <td class="info-value">{{ report.metadata.microsatellite_status }}</td> <!--input -->
                     </tr>
                 </table>
             </div>

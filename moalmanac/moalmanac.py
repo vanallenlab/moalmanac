@@ -69,6 +69,9 @@ feature_types = {
     'aneuploidy': feature_type_aneuploidy
 }
 
+generate_illustrations = 'generate_illustrations'
+TOGGLE_FEATURES = CONFIG['function_toggle']
+
 
 def execute_cmd(command):
     subprocess.call(command, shell=True)
@@ -84,11 +87,54 @@ def format_output_directory(directory):
         return directory
 
 
+def load_and_process_mutational_signatures(handle, folder, label, dbs, tumor_type, calculate: bool = False, plot: bool = False):
+    if calculate:
+        features.CosmicSignatures.calculate_contributions(handle, folder, label)
+    contexts = features.CosmicSignatures.import_context(folder, label)
+    signatures = features.CosmicSignatures.import_feature(folder, label)
+    return process_mutational_signatures(contexts, signatures, folder, label, dbs, tumor_type, plot)
+
+
+def plot_mutational_signatures(series, folder, label):
+    for drawing_function, output_name in [
+        (illustrator.Signatures.generate_context_plot, 'counts'),
+        (illustrator.Signatures.generate_context_plot_normalized, 'normalized'),
+    ]:
+        figure = drawing_function(series)
+        writer.Illustrations.write(figure, folder, label, f"sigs.tricontext.{output_name}.png")
+
+
+def plot_preclinical_efficacy(dictionary, folder, label):
+    for index_value, nested_dictionary in dictionary.items():
+        for therapy_name, therapy_dictionary in nested_dictionary.items():
+            figure = therapy_dictionary['figure']
+            figure_name = therapy_dictionary['figure_name']
+            writer.Illustrations.write(figure, folder, label, f"{figure_name}.png")
+
+
+def process_mutational_signatures(contexts, signatures, folder, label, dbs, ontology_code, plot: bool = False):
+    if contexts is not None and plot:
+        plot_mutational_signatures(contexts, folder, label)
+    annotated = annotator.Annotator.annotate_almanac(signatures, dbs, ontology_code)
+    evaluated = evaluator.Evaluator.evaluate_almanac(annotated)
+    return evaluated
+
+
+def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = False):
+    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs, dataframe)
+    if plot:
+        plot_preclinical_efficacy(efficacy_dictionary, folder, label)
+    efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, dataframe, label)
+    return efficacy_dictionary, efficacy_summary
+
+
 def main(patient, inputs, output_folder):
     dbs = datasources.Datasources.generate_db_dict(CONFIG)
     output_folder = format_output_directory(output_folder)
     if output_folder != "":
         execute_cmd(f"mkdir -p {output_folder}")
+
+    string_id = patient[patient_id]
 
     mapped_ontology = ontologymapper.OntologyMapper.map(dbs, patient[tumor_type])
     patient[ontology] = mapped_ontology[ontology]
@@ -105,18 +151,18 @@ def main(patient, inputs, output_folder):
     germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
 
     if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code], patient[patient_id], output_folder)
+        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code])
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
 
         validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
         if not validation_accept.empty:
             evaluated_somatic = annotator.OverlapValidation.append_validation(evaluated_somatic, validation_accept)
-            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, patient[patient_id], output_folder)
+            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, string_id, output_folder)
     else:
         evaluated_somatic = features.Features.create_empty_dataframe()
 
     if not germline_variants.empty:
-        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code], patient[patient_id], output_folder)
+        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code])
         evaluated_germline = evaluator.Evaluator.evaluate_germline(annotated_germline)
     else:
         evaluated_germline = features.Features.create_empty_dataframe()
@@ -125,60 +171,100 @@ def main(patient, inputs, output_folder):
     integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, feature_types)
 
     somatic_burden = features.BurdenReader.import_feature(inputs[bases_covered_handle], patient, somatic_variants, dbs)
-    somatic_signatures = features.CosmicSignatures.import_feature(inputs[snv_handle], patient, output_folder)
+
     patient_wgd = features.Aneuploidy.summarize(patient[wgd])
     patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
     patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code], patient[patient_id], output_folder)
-    annotated_signatures = annotator.Annotator.annotate_almanac(somatic_signatures, dbs, patient[code], patient[patient_id], output_folder)
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code], patient[patient_id], output_folder)
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code], patient[patient_id], output_folder)
+    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code])
+    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code])
+    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code])
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
-    evaluated_signatures = evaluator.Evaluator.evaluate_almanac(annotated_signatures)
     evaluated_wgd = evaluator.Evaluator.evaluate_almanac(annotated_wgd)
     evaluated_ms_variants = evaluator.Microsatellite.evaluate_variants(evaluated_somatic, evaluated_germline)
     evaluated_ms_status = evaluator.Microsatellite.evaluate_status(annotated_ms_status, evaluated_ms_variants)
 
-    actionable = evaluator.Actionable.evaluate(evaluated_somatic, evaluated_germline,
-                                               evaluated_ms_variants, evaluated_ms_status,
-                                               evaluated_burden, evaluated_signatures, evaluated_wgd)
+    evaluated_mutational_signatures = load_and_process_mutational_signatures(
+        handle=inputs[snv_handle],
+        folder=output_folder,
+        label=string_id,
+        dbs=dbs,
+        tumor_type=code,
+        calculate=TOGGLE_FEATURES.get('calculate_mutational_signatures'),
+        plot=TOGGLE_FEATURES.get('plot_mutational_signatures')
+    )
+
+    actionable = evaluator.Actionable.evaluate(
+        evaluated_somatic,
+        evaluated_germline,
+        evaluated_ms_variants,
+        evaluated_ms_status,
+        evaluated_burden,
+        evaluated_mutational_signatures,
+        evaluated_wgd
+    )
 
     strategies = evaluator.Strategies.report_therapy_strategies(actionable)
 
-    dbs_preclinical = datasources.Preclinical.import_dbs()
-    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs_preclinical, actionable, patient[patient_id], output_folder)
-    efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, actionable, patient[patient_id])
-    actionable = annotator.PreclinicalEfficacy.annotate(actionable, efficacy_summary)
+    efficacy_summary = investigator.SummaryDataFrame.create_empty_dataframe()
+    efficacy_dictionary = {}
+    cell_lines_dictionary = {}
+    preclinical_efficacy_on = TOGGLE_FEATURES.getboolean('calculate_preclinical_efficacy')
 
-    if inputs[disable_matchmaking]:
-        matchmaker_results = matchmaker.Matchmaker.create_empty_output()
-    else:
-        matchmaker_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, patient[patient_id])
+    # The input argument --disable_matchmaking will be removed in the next non-backwards compatible release
+    model_similarity_on = TOGGLE_FEATURES.getboolean('calculate_model_similarity') and not inputs[disable_matchmaking]
+    similarity_results = matchmaker.Matchmaker.create_empty_output()
+    similarity_summary = {}
 
-    report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
-    reporter.Reporter.generate_report(actionable,
-                                      report_dictionary,
-                                      efficacy_dictionary,
-                                      efficacy_summary,
-                                      matchmaker_results,
-                                      dbs_preclinical['dictionary'],
-                                      output_folder
-                                      )
+    if preclinical_efficacy_on or model_similarity_on:
+        dbs_preclinical = datasources.Preclinical.import_dbs()
+        cell_lines_dictionary = dbs_preclinical['dictionary']
+        if preclinical_efficacy_on:
+            plot_preclinical = TOGGLE_FEATURES.getboolean('plot_preclinical_efficacy')
+            efficacy_results = process_preclinical_efficacy(
+                dbs_preclinical,
+                actionable,
+                output_folder,
+                string_id,
+                plot=plot_preclinical
+            )
+            efficacy_dictionary = efficacy_results[0]
+            efficacy_summary = efficacy_results[1]
 
-    writer.Actionable.write(actionable, patient[patient_id], output_folder)
-    writer.GermlineACMG.write(evaluated_germline, patient[patient_id], output_folder)
-    writer.GermlineCancer.write(evaluated_germline, patient[patient_id], output_folder)
-    writer.GermlineHereditary.write(evaluated_germline, patient[patient_id], output_folder)
-    writer.Integrated.write(integrated, patient[patient_id], output_folder)
-    writer.MSI.write(evaluated_ms_variants, patient[patient_id], output_folder)
-    writer.MutationalBurden.write(evaluated_burden, patient[patient_id], output_folder)
-    writer.SomaticScored.write(evaluated_somatic, patient[patient_id], output_folder)
-    writer.SomaticFiltered.write(somatic_filtered, patient[patient_id], output_folder)
-    writer.Strategies.write(strategies, patient[patient_id], output_folder)
-    writer.PreclinicalEfficacy.write(efficacy_summary, patient[patient_id], output_folder)
-    writer.PreclinicalMatchmaking.write(matchmaker_results, patient[patient_id], output_folder)
+            actionable = annotator.PreclinicalEfficacy.annotate(
+                actionable,
+                efficacy_summary,
+                efficacy_dictionary,
+                append_lookup=TOGGLE_FEATURES.getboolean('include_preclinical_efficacy_in_actionability_report')
+            )
+        if model_similarity_on:
+            similarity_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, string_id)
+            similarity_summary = matchmaker.Report.create_report_dictionary(similarity_results, cell_lines_dictionary)
+
+    writer.Actionable.write(actionable, string_id, output_folder)
+    writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
+    writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
+    writer.GermlineHereditary.write(evaluated_germline, string_id, output_folder)
+    writer.Integrated.write(integrated, string_id, output_folder)
+    writer.MSI.write(evaluated_ms_variants, string_id, output_folder)
+    writer.MutationalBurden.write(evaluated_burden, string_id, output_folder)
+    writer.SomaticScored.write(evaluated_somatic, string_id, output_folder)
+    writer.SomaticFiltered.write(somatic_filtered, string_id, output_folder)
+    writer.Strategies.write(strategies, string_id, output_folder)
+    writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
+    writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
+
+    if TOGGLE_FEATURES.getboolean('generate_actionability_report'):
+        report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
+
+        include_similarity = TOGGLE_FEATURES.getboolean('include_model_similarity_in_actionability_report')
+        reporter.Reporter.generate_actionability_report(
+            actionable,
+            report_dictionary,
+            similarity=similarity_summary if include_similarity else None,
+            output_directory=output_folder
+        )
 
 
 if __name__ == "__main__":

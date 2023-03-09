@@ -139,7 +139,9 @@
         "type": "Targeted therapy"
     },
     "Cetuximab + Encorafenib": {
-        "gdsc": [],
+        "gdsc": [
+            "Cetuximab"
+        ],
         "type": "Targeted therapy"
     },
     "Cetuximab + Vemurafenib": {
