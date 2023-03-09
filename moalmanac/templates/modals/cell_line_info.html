@@ -5,47 +5,47 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">
-                    {{ '{} ({})'.format(lookup[index]['ccle_name'], lookup[index]['tumor_type']) }}
+                    {{ '{} ({})'.format(neighbor['ccle_name'], neighbor['tumor_type']) }}
                 </h4>
             </div>
 
             <div class="modal-body">
                 <p>
-                    <b>Aliases</b>{{ ': {} (Broad/DepMap), {} (Sanger)'.format(lookup[index]['broad_name'], lookup[index]['sanger_name']) }}
+                    <b>Aliases</b>{{ ': {} (Broad/DepMap), {} (Sanger)'.format(neighbor['broad_name'], neighbor['sanger_name']) }}
                     <br><br>
-                    <b>Sensitive to</b>: {{ lookup[index]['sensitive to'] }}
+                    <b>Sensitive to</b>: {{ neighbor['sensitive to'] }}
                     <br><br>
-                    <b>Clinically relevant features</b>: {{ lookup[index]['events'] }}
+                    <b>Clinically relevant features</b>: {{ neighbor['events'] }}
                 </p>
                 <br>
                 <p align="center">Below lists somatic variants, copy number alterations, or fusions that appear in a Molecular Oncology Almanac, Cancer Hotspot, or Cancer Gene Census gene as well as the top 10 sensitive therapies that were tested against the cell line in GDSC1/GDSC2.</p>
                 <br>
 
                 <b>Somatic variants</b>:
-                {% if lookup[index]['all somatic variants'] != '' %}
+                {% if neighbor['all somatic variants'] != '' %}
                     <div class="well well-sm">
-                        {{ lookup[index]['all somatic variants'] }}
+                        {{ neighbor['all somatic variants'] }}
                     </div>
                 {% else %}
-                    (None observed)
+                    None observed
                 {% endif %}
 
                 <b>Copy number alterations</b>:
-                {% if lookup[index]['all copy number alterations'] != '' %}
+                {% if neighbor['all copy number alterations'] != '' %}
                     <div class="well well-sm">
-                        {{ lookup[index]['all copy number alterations'] }}
+                        {{ neighbor['all copy number alterations'] }}
                     </div>
                 {% else %}
-                    (None observed)
+                    None observed
                 {% endif %}
 
                 <b>Fusions</b>:
-                {% if lookup[index]['all fusions'] != '' %}
+                {% if neighbor['all fusions'] != '' %}
                     <div class="well well-sm">
-                        {{ lookup[index]['all fusions'] }}
+                        {{ neighbor['all fusions'] }}
                     </div>
                 {% else %}
-                    (None observed)
+                    None observed
                 {% endif %}
 
                 <br><br>
@@ -70,13 +70,13 @@
                     </thead>
 
                     <tbody>
-                        {% for zindex in lookup[index]['zscores'].index.tolist()[:10] %}
+                        {% for zindex in neighbor['zscores'].index.tolist()[:10] %}
                            <tr>
-                               <td>{{ lookup[index]['zscores'].loc[zindex, 'DATASET'] }}</td>
-                               <td>{{ lookup[index]['zscores'].loc[zindex, 'therapy_name'] }}</td>
-                               <td>{{ lookup[index]['zscores'].loc[zindex, 'ln_ic50'] }}</td>
-                               <td>{{ lookup[index]['zscores'].loc[zindex, 'AUC'] }}</td>
-                               <td>{{ lookup[index]['zscores'].loc[zindex, 'z_score'] }}</td>
+                               <td>{{ neighbor['zscores'].loc[zindex, 'DATASET'] }}</td>
+                               <td>{{ neighbor['zscores'].loc[zindex, 'therapy_name'] }}</td>
+                               <td>{{ neighbor['zscores'].loc[zindex, 'ln_ic50'] }}</td>
+                               <td>{{ neighbor['zscores'].loc[zindex, 'AUC'] }}</td>
+                               <td>{{ neighbor['zscores'].loc[zindex, 'z_score'] }}</td>
                            </tr>
                         {% endfor %}
                     </tbody>

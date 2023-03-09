@@ -1,7 +1,7 @@
 import argparse
 import configparser
-import tinydb
-import pandas as pd
+import json
+import sys
 
 
 def create_config():
@@ -11,285 +11,250 @@ def create_config():
 
 
 CONFIG = create_config()
+feature_type_section = 'feature_types'
+FEATURE_TYPE_SOMATIC = CONFIG[feature_type_section]['mut']
+FEATURE_TYPE_GERMLINE = CONFIG[feature_type_section]['germline']
+FEATURE_TYPE_COPY_NUMBER = CONFIG[feature_type_section]['cna']
+FEATURE_TYPE_FUSION = CONFIG[feature_type_section]['fusion']
+FEATURE_TYPE_MUTATIONAL_BURDEN = CONFIG[feature_type_section]['burden']
+FEATURE_TYPE_MUTATIONAL_SIGNATURE = CONFIG[feature_type_section]['signature']
+FEATURE_TYPE_MICROSATELLITE_STABILITY = CONFIG[feature_type_section]['microsatellite']
+FEATURE_TYPE_ANEUPLOIDY = CONFIG[feature_type_section]['aneuploidy']
+FEATURE_TYPE_KNOCKDOWN = CONFIG[feature_type_section]['knockdown']
+
+ASSERTION_FIELDS = [
+    'disease', 'context', 'oncotree_term', 'oncotree_code',
+    'therapy_name', 'therapy_strategy', 'therapy_type',
+    'therapy_sensitivity', 'therapy_resistance', 'favorable_prognosis',
+    'predictive_implication', 'description', 'last_updated', 'preferred_assertion'
+]
+
+SOURCE_FIELDS = [
+    'source_type', 'citation', 'url', 'doi', 'pmid', 'nct', 'last_updated'
+]
+
+VARIANT_FIELDS = [
+    'gene', 'chromosome', 'start_position', 'end_position', 'exon',
+    'reference_allele', 'alternate_allele', 'cdna_change', 'protein_change',
+    'variant_annotation', 'rsid'
+]
+
+GERMLINE_FIELDS = [
+    'gene', 'chromosome', 'start_position', 'end_position', 'exon',
+    'reference_allele', 'alternate_allele', 'cdna_change', 'protein_change',
+    'variant_annotation', 'rsid', 'pathogenic'
+]
+
+COPY_NUMBER_FIELDS = [
+    'gene', 'cytoband', 'direction'
+
+]
+
+REARRANGEMENT_FIELDS = [
+    'gene1', 'gene2', 'rearrangement_type', 'locus'
+]
+
+MUTATIONAL_BURDEN_FIELDS = [
+    'classification', 'minimum_mutations', 'mutations_per_mb'
+]
+
+MUTATIONAL_SIGNATURE_FIELDS = [
+    'cosmic_signature_number', 'cosmic_signature_version'
+]
+
+MICROSATELLITE_FIELDS = [
+    'status'
+]
+
+ANEUPLOIDY_FIELDS = [
+    'event'
+]
+
+KNOCKDOWN_FIELDS = [
+    'gene', 'technique'
+]
 
 
-class Reader(object):
-    feature_type_section = 'feature_types'
-    feature_type_somatic = CONFIG[feature_type_section]['mut']
-    feature_type_germline = CONFIG[feature_type_section]['germline']
-    feature_type_cna = CONFIG[feature_type_section]['cna']
-    feature_type_fusion = CONFIG[feature_type_section]['fusion']
-    feature_type_burden = CONFIG[feature_type_section]['burden']
-    feature_type_signature = CONFIG[feature_type_section]['signature']
-    feature_type_microsatellite = CONFIG[feature_type_section]['microsatellite']
-    feature_type_aneuploidy = CONFIG[feature_type_section]['aneuploidy']
-    feature_types = {
-        'somatic': feature_type_somatic,
-        'germline': feature_type_germline,
-        'copynumber': feature_type_cna,
-        'rearrangement': feature_type_fusion,
-        'burden': feature_type_burden,
-        'signature': feature_type_signature,
-        'microsatellite': feature_type_microsatellite,
-        'aneuploidy': feature_type_aneuploidy
-    }
-
-    source_columns = {
-        'source_type': str, 'citation': str, 'url': str, 'doi': str, 'pmid': object, 'nct': str
-    }
-
-    assertion_columns = {
-        'disease': str, 'context': str, 'oncotree_term': str, 'oncotree_code': str,
-        'therapy_name': str, 'therapy_strategy': str, 'therapy_type': str,
-        'therapy_sensitivity': object, 'therapy_resistance': object, 'favorable_prognosis': object,
-        'predictive_implication': str, 'description': str, 'last_updated': str, 'preferred_assertion': object
-    }
-
-    variant_columns = {
-        'gene': str, 'chromosome': object, 'start_position': object, 'end_position': object, 'exon': object,
-        'reference_allele': str, 'alternate_allele': str, 'cdna_change': str, 'protein_change': str,
-        'variant_annotation': str, 'rsid': str
-    }
-
-    somatic_columns = {
-        **variant_columns,
-        **assertion_columns, **source_columns}
-    germline_columns = {
-        **variant_columns, 'pathogenic': str,
-        **assertion_columns, **source_columns}
-    copynumber_columns = {
-        'gene': str, 'direction': str, 'cytoband': str,
-        **assertion_columns, **source_columns}
-    rearrangement_columns = {
-        'gene1': str, 'gene2': str, 'rearrangement_type': str, 'locus': str,
-        **assertion_columns, **source_columns}
-    aneuploidy_columns = {
-        'event': str,
-        **assertion_columns, **source_columns}
-    microsatellite_stability_columns = {
-        'status': str,
-        **assertion_columns, **source_columns}
-    mutational_burden_columns = {
-        'classification': str, 'minimum_mutations': object, 'mutations_per_mb': float,
-        **assertion_columns, **source_columns}
-    mutational_signature_columns = {
-        'cosmic_signature_number': object,
-        **assertion_columns, **source_columns}
-
-    feature_type_dictionary = {
-        'somatic': {'handle': 'somatic_variant',
-                    'columns': somatic_columns},
-        'germline': {'handle': 'germline_variant',
-                     'columns': germline_columns},
-        'copynumber': {'handle': 'copy_number',
-                       'columns': copynumber_columns},
-        'rearrangement': {'handle': 'rearrangement',
-                          'columns': rearrangement_columns},
-        'aneuploidy': {'handle': 'aneuploidy',
-                       'columns': aneuploidy_columns},
-        'microsatellite': {'handle': 'microsatellite_stability',
-                           'columns': microsatellite_stability_columns},
-        'burden': {'handle': 'mutational_burden',
-                   'columns': mutational_burden_columns},
-        'signature': {'handle': 'mutational_signature',
-                      'columns': mutational_signature_columns}
-    }
-
-    for feature_type in feature_type_dictionary.keys():
-        feature_type_dictionary[feature_type]['label'] = feature_types[feature_type]
+class DisplayAlteration:
+    @classmethod
+    def aneuploidy(cls, record):
+        return f"{record['event']}"
 
     @classmethod
-    def read_csv(cls, label, dictionary, root):
-        column_types = dictionary[label]['columns']
-        columns = column_types.keys()
-        handle_feature_type = dictionary[label]['handle']
-        handle = '{}{}.tsv'.format(root, handle_feature_type)
-        return pd.read_csv(handle, sep='\t', usecols=columns, dtype=column_types)
-
-
-#    predictive_implication_map = {
-#        'FDA-Approved': 5.0, 'Guideline': 4.0, 'Clinical trial': 3.0,
-#        'Clinical evidence': 2.0, 'Preclinical': 1.0, 'Inferential': 0.0}
-#    @classmethod
-#    def map_predictive_implication(cls, series):
-#        return series.replace(cls.predictive_implication_map)
-
-
-class DBCreator(object):
-    basename = 'moalmanac'
+    def copy_number(cls, record):
+        return f"{record['gene']} {record['direction']}"
 
     @classmethod
-    def initialize(cls):
-        handle = f'{cls.basename}.json'
-        print('Documents will be added to {}'.format(handle))
-        return tinydb.TinyDB(handle)
+    def cosmic_mutational_signature(cls, record):
+        return f"Cosmic signature (version {record['cosmic_signature_version']}) {record['cosmic_signature_number']}"
 
     @classmethod
-    def create_table(cls, db, table_name):
-        return db.table(table_name)
-
-    @classmethod
-    def insert_documents(cls, table, documents):
-        table.insert_multiple(documents)
-
-    @classmethod
-    def create_gene_list(cls, db):
-        gene_list = []
-        for table_name in db.tables():
-            table = db.table(table_name)
-            for gene_column in ['gene', 'gene1', 'gene2']:
-                query = tinydb.Query()[gene_column].exists()
-                results = table.search(query)
-                table_genes = [document[gene_column] for document in results if str(document[gene_column]) != 'nan']
-                gene_list.extend(table_genes)
-        return sorted(list((set(gene_list))))
-
-    @classmethod
-    def create_gene_table(cls, db):
-        gene_list = cls.create_gene_list(db)
-        genes_dictionary = {'genes': gene_list}
-
-        table = db.table('genes')
-        table.insert(genes_dictionary)
-
-    @classmethod
-    def create_release_table(cls, db, version):
-        release_dictionary = {'release': version}
-        table = db.table('Release')
-        table.insert(release_dictionary)
-
-
-class Formatter(object):
-    feature_types = Reader.feature_types
-    feature_display = 'feature_display'
-
-    @classmethod
-    def format_aneuploidy(cls, df):
-        df.loc[:, cls.feature_display] = df.loc[:, 'event']
-        return df
-
-    @classmethod
-    def format_mutational_burden(cls, df):
-        df.loc[:, cls.feature_display] = df.loc[:, 'classification'] + ' mutational burden'
-        return df
-
-    @classmethod
-    def format_copy_number_variants(cls, df):
-        df.loc[:, cls.feature_display] = df.loc[:, 'gene'] + ' ' + df.loc[:, 'direction']
-        return df
-
-    @classmethod
-    def format_germline_variants(cls, df):
-        df = cls.format_somatic_variants(df)
-        df.loc[:, 'pathogenic'] = df.loc[:, 'pathogenic'].fillna('')
-
-        for idx in df.index:
-            pathogenic = df.loc[idx, 'pathogenic']
-            if pathogenic == 1:
-                display = df.loc[idx, cls.feature_display] + ' (Pathogenic)'
-            else:
-                continue
-            df.loc[idx, cls.feature_display] = display
-        return df
-
-    @classmethod
-    def format_microsatellite_stability(cls, df):
-        df.loc[:, cls.feature_display] = df.loc[:, 'status']
-        return df
-
-    @classmethod
-    def format_rearrangements(cls, df):
-        df.loc[:, cls.feature_display] = df.loc[:, 'gene1']
-
-        idx_gene2_not_null = df[~df['gene2'].isnull()].index
-        df.loc[idx_gene2_not_null, cls.feature_display] = (
-                df.loc[idx_gene2_not_null, cls.feature_display] + '--' + df.loc[idx_gene2_not_null, 'gene2'])
-
-        idx_type_not_null = df[~df['rearrangement_type'].isnull()].index
-        df.loc[idx_type_not_null, cls.feature_display] = (
-                df.loc[idx_type_not_null, cls.feature_display] + ' ' + df.loc[idx_type_not_null, 'rearrangement_type'])
-        return df
-
-    @classmethod
-    def format_signatures(cls, df):
-        df.loc[:, cls.feature_display] = 'Cosmic signature ' + df.loc[:, 'cosmic_signature_number']
-        return df
-
-    @classmethod
-    def format_somatic_variants(cls, df):
-        df.loc[:, cls.feature_display] = ''
-
-        columns = ['gene', 'protein_change', 'exon', 'variant_annotation']
-        df.loc[:, columns] = df.loc[:, columns].fillna('')
-        for idx in df.index:
-            gene = df.loc[idx, 'gene']
-            protein_change = df.loc[idx, 'protein_change']
-            exon = df.loc[idx, 'exon']
-            annotation = df.loc[idx, 'variant_annotation']
-
-            if protein_change != '':
-                display = '{} {} ({})'.format(gene, protein_change, annotation)
-            elif exon != '' and annotation != '':
-                display = '{} Exon {} ({})'.format(gene, exon, annotation)
-            elif exon != '' and annotation == '':
-                display = '{} Exon {}'.format(gene, exon)
-            elif annotation != '':
-                display = '{} ({})'.format(gene, annotation)
-            else:
-                display = '{}'.format(gene)
-            df.loc[idx, cls.feature_display] = display
-        return df
-
-    @classmethod
-    def format_feature_display(cls, feature_type, dataframe):
-        if feature_type == cls.feature_types['somatic']:
-            return cls.format_somatic_variants(dataframe)
-        elif feature_type == cls.feature_types['germline']:
-            return cls.format_germline_variants(dataframe)
-        elif feature_type == cls.feature_types['copynumber']:
-            return cls.format_copy_number_variants(dataframe)
-        elif feature_type == cls.feature_types['rearrangement']:
-            return cls.format_rearrangements(dataframe)
-        elif feature_type == cls.feature_types['aneuploidy']:
-            return cls.format_aneuploidy(dataframe)
-        elif feature_type == cls.feature_types['burden']:
-            return cls.format_mutational_burden(dataframe)
-        elif feature_type == cls.feature_types['microsatellite']:
-            return cls.format_microsatellite_stability(dataframe)
-        elif feature_type == cls.feature_types['signature']:
-            return cls.format_signatures(dataframe)
+    def germline_variant(cls, record):
+        string = cls.somatic_variant(record)
+        if record['pathogenic'] == 1:
+            return f"{string} (Pathogenic)"
         else:
-            print('ERROR: {} does not have a feature display format function!'.format(feature_type))
-            return dataframe
+            return string
+
+    @classmethod
+    def knockdown(cls, record):
+        return f"{record['gene']} knockdown ({record['technique']})"
+
+    @classmethod
+    def microsatellite_stability(cls, record):
+        return f"{record['status']}"
+
+    @classmethod
+    def mutational_burden(cls, record):
+        return f"{record['classification']} mutational burden"
+
+    @classmethod
+    def rearrangements(cls, record):
+        string = f"{record['gene1']}"
+        if record['gene2'] != '':
+            string = f"{string}--{record['gene2']}"
+        if record['rearrangement_type'] != '':
+            string = f"{string} {record['rearrangement_type']}"
+        return string
+
+    @classmethod
+    def somatic_variant(cls, record):
+        gene = record['gene']
+        protein_change = record['protein_change']
+        exon = record['exon']
+        annotation = record['variant_annotation']
+        if protein_change != '':
+            return f"{gene} {protein_change} ({annotation})"
+        elif exon != "" and annotation != "":
+            return f"{gene} Exon {exon} ({annotation})"
+        elif exon != "" and annotation == "":
+            return f"{gene} Exon {exon}"
+        elif annotation != "":
+            return f"{gene} ({annotation})"
+        else:
+            return f"{gene}"
+
+    @classmethod
+    def generate(cls, record):
+        feature_type = record['feature_type']
+        if feature_type == FEATURE_TYPE_SOMATIC:
+            return cls.somatic_variant(record)
+        elif feature_type == FEATURE_TYPE_GERMLINE:
+            return cls.germline_variant(record)
+        elif feature_type == FEATURE_TYPE_COPY_NUMBER:
+            return cls.copy_number(record)
+        elif feature_type == FEATURE_TYPE_FUSION:
+            return cls.rearrangements(record)
+        elif feature_type == FEATURE_TYPE_ANEUPLOIDY:
+            return cls.aneuploidy(record)
+        elif feature_type == FEATURE_TYPE_MUTATIONAL_BURDEN:
+            return cls.mutational_burden(record)
+        elif feature_type == FEATURE_TYPE_MICROSATELLITE_STABILITY:
+            return cls.microsatellite_stability(record)
+        elif feature_type == FEATURE_TYPE_MUTATIONAL_SIGNATURE:
+            return cls.cosmic_mutational_signature(record)
+        elif feature_type == FEATURE_TYPE_KNOCKDOWN:
+            return cls.knockdown(record)
+        else:
+            print(f'ERROR: {feature_type} does not have a feature display format function.')
 
 
-def main(directory, version):
-    database = DBCreator.initialize()
+def check_fields(fields, record):
+    for field in fields:
+        if field not in record.keys():
+            sys.exit(f'{field} not present in record.\n{record}')
 
-    for feature_type in Reader.feature_type_dictionary.keys():
-        table = DBCreator.create_table(database, Reader.feature_type_dictionary[feature_type]['label'])
-        tmp = Reader.read_csv(feature_type, Reader.feature_type_dictionary, directory)
-        tmp = Formatter.format_feature_display(Reader.feature_types[feature_type], tmp)
-        # tmp['predictive_implication_map'] = Reader.map_predictive_implication(tmp.loc[:, 'predictive_implication'])
-        documents = tmp.to_dict(orient='records')
-        DBCreator.insert_documents(table, documents)
 
-    DBCreator.create_gene_table(database)
-    DBCreator.create_release_table(database, version)
+def check_format(record):
+    check_fields(SOURCE_FIELDS, record)
+    check_fields(ASSERTION_FIELDS, record)
 
-    print(database.tables)
-    print('creation, complete!')
+    feature_type = record['feature_type']
+    feature_type_fields = get_feature_type_fields(feature_type)
+    check_fields(feature_type_fields, record)
+
+
+def extract_genes(records):
+    genes = []
+    for record in records:
+        for string in ['gene', 'gene1', 'gene2']:
+            if string in record.keys():
+                if record[string] != '':
+                    genes.append(record[string])
+    genes_unique = set(genes)
+    genes_sorted = sorted(genes_unique)
+    return genes_sorted
+
+
+def get_feature_type_fields(feature_type):
+    if feature_type == FEATURE_TYPE_SOMATIC:
+        return VARIANT_FIELDS
+    elif feature_type == FEATURE_TYPE_GERMLINE:
+        return GERMLINE_FIELDS
+    elif feature_type == FEATURE_TYPE_COPY_NUMBER:
+        return COPY_NUMBER_FIELDS
+    elif feature_type == FEATURE_TYPE_FUSION:
+        return REARRANGEMENT_FIELDS
+    elif feature_type == FEATURE_TYPE_MUTATIONAL_BURDEN:
+        return MUTATIONAL_BURDEN_FIELDS
+    elif feature_type == FEATURE_TYPE_MUTATIONAL_SIGNATURE:
+        return MUTATIONAL_SIGNATURE_FIELDS
+    elif feature_type == FEATURE_TYPE_MICROSATELLITE_STABILITY:
+        return MICROSATELLITE_FIELDS
+    elif feature_type == FEATURE_TYPE_ANEUPLOIDY:
+        return ANEUPLOIDY_FIELDS
+    elif feature_type == FEATURE_TYPE_KNOCKDOWN:
+        return KNOCKDOWN_FIELDS
+    else:
+        sys.exit(f'feature type {feature_type} present in database but not accounted for.')
+
+
+def initialize():
+    return {
+        'release': '',
+        'version': '',
+        'genes': [],
+        'content': []
+    }
+
+
+def load_json(json_file):
+    with open(json_file, 'r') as f:
+        json_data = json.load(f)
+    return json_data
+
+
+def write_json(file, data):
+    with open(file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+def main(version, release, content):
+    db = initialize()
+    db['release'] = release
+    db['version'] = version
+
+    db_genes = extract_genes(content)
+    db['genes'] = db_genes
+
+    for record in content:
+        check_format(record)
+        record['feature_display'] = DisplayAlteration.generate(record)
+    db['content'] = content
+    write_json('molecular-oncology-almanac.json', db)
 
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser(prog='Create Molecular Oncology Almanac datasource',
-                                         description='Compiles molecular oncology almanac into TinyDB for the method.')
-    arg_parser.add_argument('--directory', '-d',
-                            help='Root path to database flat files of feature types',
-                            default='/Users/brendan/Github/moalmanac-db/content/')
+                                         description='Compiles MOAlmanac db for use with algorithm')
+    arg_parser.add_argument('--file', '-f',
+                            help='Molecular Oncology Almanac db file from https://github.com/vanallenlab/moalmanac-db')
     arg_parser.add_argument('--version', '-v',
-                            help='Version for output database',
-                            default='')
+                            help='Database version; e.g. 1.0.0')
+    arg_parser.add_argument('--release', '-r',
+                            help='Database content release; e.g. v.2022-12-01')
     args = arg_parser.parse_args()
+    print(args)
 
-    main(args.directory, args.version)
+    moalmanac_json = load_json(args.file)
+    main(args.version, args.release, moalmanac_json)

@@ -1,9 +1,13 @@
+import numpy as np
 import pandas as pd
-from annotator import PreclinicalMatchmaking
-from datasources import Almanac, CancerGeneCensus, Preclinical
-from sklearn import neighbors
 import snf
-import tinydb
+from sklearn import neighbors
+
+from annotator import Almanac as AnnotatorAlmanac
+from annotator import PreclinicalMatchmaking as AnnotatorPreclinicalMatchmaking
+from datasources import Almanac as DatasourceAlmanac
+from datasources import CancerGeneCensus as DatasourceCGC
+from datasources import Preclinical as DatasourcePreclinical
 
 from config import COLNAMES
 from config import CONFIG
@@ -40,9 +44,9 @@ class Matchmaker:
         if case_fusions.shape[0] > 0:
             case_fusions = cls.format_fusions(case_fusions)
 
-        comparison_variants = dbs[Preclinical.variants]
-        comparison_cnas = dbs[Preclinical.cnas]
-        comparison_fusions = dbs[Preclinical.fusions]
+        comparison_variants = dbs[DatasourcePreclinical.variants]
+        comparison_cnas = dbs[DatasourcePreclinical.cnas]
+        comparison_fusions = dbs[DatasourcePreclinical.fusions]
 
         columns = [cls.feature, cls.alt_type, cls.alt, cls.model_id]
         variants = cls.concat_dataframes(case_variants, comparison_variants, columns)
@@ -63,14 +67,14 @@ class Matchmaker:
 
     @classmethod
     def compare(cls, dbs, dbs_preclinical, somatic, case_sample_id):
+        cgc = DatasourceCGC.import_ds(dbs)
+        almanac = DatasourceAlmanac.import_ds(dbs)
+
         merged = cls.concat_case_comparisons(somatic, dbs_preclinical)
-        annotated = PreclinicalMatchmaking.annotate(merged, dbs)
+        annotated = AnnotatorPreclinicalMatchmaking.annotate(merged, dbs)
         samples_to_use = cls.subset_samples(dbs_preclinical)
 
-        annotated[CGC.input_label] = CancerGeneCensus.import_ds(dbs)
-        annotated[Almanac.almanac] = dbs['almanac_handle']
-
-        calculated = SNFTypesCGCwithEvidence.calculate(annotated, samples_to_use)
+        calculated = SNFTypesCGCwithEvidence.calculate(annotated, samples_to_use, cgc, almanac)
         case = cls.subset_dataframe_eq(calculated, 'case', cls.case_profile)
         case = case.reset_index(drop=True)
         case = case.sort_values(by=SNFTypesCGCwithEvidence.label, ascending=True)
@@ -202,18 +206,16 @@ class Almanac(Models):
 
     @classmethod
     def import_dbs(cls, inputs):
-        db = tinydb.TinyDB(inputs[cls.almanac])
+        db = DatasourceAlmanac.import_ds(inputs)
         tables = {}
         for table in [cls.variant, cls.copy_number, cls.rearrangement]:
-            tmp = pd.DataFrame(db.table(table).all())
-            tables[table] = tmp
-        tables[cls.genes] = pd.Series(db.table(cls.genes).all()[0][cls.genes])
+            tables[table] = AnnotatorAlmanac.subset_records(db['content'], AnnotatorAlmanac.feature_type, table)
+        tables[cls.genes] = db['genes']
         return tables
 
     @classmethod
     def generate_features(cls, dbs):
-        missense = cls.generate_features_missense(dbs[cls.variant], cls.gene, cls.variant_annotation,
-                                                  cls.protein_change)
+        missense = cls.generate_features_missense(dbs[cls.variant], cls.gene, cls.variant_annotation, cls.protein_change)
         truncating = cls.generate_features_truncating_aggregated(dbs[cls.variant], cls.gene, cls.variant_annotation)
         nonspecific_variant = cls.generate_features_nonspecific_variant(dbs[cls.variant])
         copy_number = cls.generate_features_copy_number(dbs[cls.copy_number], cls.gene, cls.direction)
@@ -305,6 +307,33 @@ class Almanac(Models):
             df.loc[index, gene1_col] = sorted_genes[0]
             df.loc[index, gene2_col] = sorted_genes[1]
         return df
+
+
+class AlmanacEvidence(Almanac):
+    label = 'FDA features'
+    description = 'We sort by agreement based measure (jaccard) by considering somatic variant, copy number, and ' \
+                  'rearrangement molecular features catalogued in the Molecular Oncology Almanac that are associated ' \
+                  'either with a FDA approved therapy'
+
+    predictive_implication = 'predictive_implication'
+
+    @classmethod
+    def calculate(cls, input_dtypes, samples_list):
+        almanac = cls.import_dbs(input_dtypes)
+        almanac_subset = cls.subset_almanac_by_evidence(almanac, 'FDA-Approved')
+        boolean_dataframe = AlmanacFeatures.create_boolean_table(input_dtypes, samples_list, almanac_subset)
+        distance_dataframe = AlmanacFeatures.calculate_distance(boolean_dataframe, cls.jaccard.pairwise)
+        stacked_dataframe = cls.stack_distances(distance_dataframe, cls.label)
+        return stacked_dataframe
+
+    @classmethod
+    def subset_almanac_by_evidence(cls, db, evidence_tier):
+        tables = {}
+        for table in [cls.variant, cls.copy_number, cls.rearrangement]:
+            db_table = AnnotatorAlmanac.subset_records(db, cls.feature_type, table)
+            db_table = AnnotatorAlmanac.subset_records(db_table, cls.predictive_implication, evidence_tier)
+            tables[table] = pd.DataFrame(db_table)
+        return tables
 
 
 class AlmanacFeatures(Almanac):
@@ -404,31 +433,6 @@ class AlmanacFeatures(Almanac):
             drop=True)
 
 
-class AlmanacEvidence(Almanac):
-    label = 'FDA features'
-    description = 'We sort by agreement based measure (jaccard) by considering somatic variant, copy number, and ' \
-                  'rearrangement molecular features catalogued in the Molecular Oncology Almanac that are associated ' \
-                  'either with a FDA approved therapy'
-
-    predictive_implication = 'predictive_implication'
-
-    @classmethod
-    def calculate(cls, input_dtypes, samples_list):
-        almanac = cls.import_dbs(input_dtypes)
-        almanac_subset = cls.subset_almanac_by_evidence(almanac, ['FDA-Approved'])
-        boolean_dataframe = AlmanacFeatures.create_boolean_table(input_dtypes, samples_list, almanac_subset)
-        distance_dataframe = AlmanacFeatures.calculate_distance(boolean_dataframe, cls.jaccard.pairwise)
-        stacked_dataframe = cls.stack_distances(distance_dataframe, cls.label)
-        return stacked_dataframe
-
-    @classmethod
-    def subset_almanac_by_evidence(cls, db, evidence_list):
-        for table in [cls.variant, cls.copy_number, cls.rearrangement]:
-            db_table = db[table]
-            db[table] = db_table[db_table[cls.predictive_implication].isin(evidence_list)]
-        return db
-
-
 class CGC(Models):
     label = 'Jaccard cgc genes'
     input_label = 'cgc'
@@ -453,7 +457,7 @@ class CGC(Models):
 
     @classmethod
     def create_boolean_table(cls, inputs, samples):
-        cgc = inputs[CGC.input_label]
+        cgc = inputs[cls.input_label]
         features = cls.create_features_list(cgc)
 
         variants = inputs[cls.variants]
@@ -474,8 +478,43 @@ class CGC(Models):
         return df.pivot_table(index=cls.model_id, columns=cls.feature, values=cls.label)
 
     @classmethod
+    def create_boolean_table_single_feature_type(cls, inputs, samples, feature_type, cgc):
+        features = cls.create_features_list(cgc)
+
+        if feature_type == cls.fusions:
+            columns = [cls.fusions_gene1, cls.fusions_gene2]
+        else:
+            columns = [feature_type]
+
+        index = pd.MultiIndex.from_product([features, samples])
+        df = pd.DataFrame(columns=columns, index=index)
+        for column in columns:
+            df[column] = CGC.create_bool(inputs[column], CGC.cgc_bin, column)
+        df = cls.reset_multi_indexed_dataframe(df.fillna(0), {'level_0': cls.feature, 'level_1': cls.model_id})
+
+        sum_columns = columns
+        df[cls.label] = df.loc[:, sum_columns].sum(axis=1).astype(bool).astype(int)
+        return df.pivot_table(index=cls.model_id, columns=cls.feature, values=cls.label)
+
+    @classmethod
     def create_features_list(cls, db):
         return cls.series_to_list(db[cls.gene], drop_duplicates=True)
+
+
+class Report:
+    case = Models.case
+    comparison = Models.comparison
+    case_profile = Matchmaker.case_profile
+
+    @classmethod
+    def create_report_dictionary(cls, results, reference, display_count=5):
+        dictionary = {}
+        if not results.empty:
+            results = results[~results[cls.comparison].eq(cls.case_profile)]
+            for index in results.index.tolist()[:display_count]:
+                comparison = results.loc[index, cls.comparison]
+                dictionary[index] = reference[comparison]
+        return dictionary
 
 
 class SNFTypesCGCwithEvidence(Models):
@@ -489,46 +528,26 @@ class SNFTypesCGCwithEvidence(Models):
                   '(4) Almanac features associated with FDA evidence.'
 
     @classmethod
-    def create_boolean_table(cls, inputs, dtype, samples):
-        cgc = inputs[CGC.input_label]
-        features = CGC.create_features_list(cgc)
+    def calculate(cls, inputs, samples, cgc, almanac, seed=42):
+        boolean_dataframe_variants = CGC.create_boolean_table_single_feature_type(inputs, samples, cls.variants, cgc)
+        boolean_dataframe_copy_numbers = CGC.create_boolean_table_single_feature_type(inputs, samples, cls.cnas, cgc)
+        boolean_dataframe_fusions = CGC.create_boolean_table_single_feature_type(inputs, samples, cls.fusions, cgc)
 
-        if dtype == cls.fusions:
-            columns = [cls.fusions_gene1, cls.fusions_gene2]
-        else:
-            columns = [dtype]
+        almanac_content = almanac['content']
+        almanac_subset = AlmanacEvidence.subset_almanac_by_evidence(almanac_content, 'FDA-Approved')
+        boolean_dataframe_1 = AlmanacFeatures.create_boolean_table(inputs, samples, almanac_subset)
 
-        index = pd.MultiIndex.from_product([features, samples])
-        df = pd.DataFrame(columns=columns, index=index)
-        for column in columns:
-            df[column] = CGC.create_bool(inputs[column], CGC.cgc_bin, column)
-        df = cls.reset_multi_indexed_dataframe(df.fillna(0), {'level_0': cls.feature, 'level_1': cls.model_id})
+        data = [
+            boolean_dataframe_variants.loc[samples, :].fillna(0),
+            boolean_dataframe_copy_numbers.loc[samples, :].fillna(0),
+            boolean_dataframe_fusions.loc[samples, :].fillna(0),
+            boolean_dataframe_1.loc[samples, :].fillna(0),
+        ]
 
-        sum_columns = columns
-        df[cls.label] = df.loc[:, sum_columns].sum(axis=1).astype(bool).astype(int)
-        return df.pivot_table(index=cls.model_id, columns=cls.feature, values=cls.label)
-
-    @classmethod
-    def calculate(cls, input_dtypes, samples_list):
-        boolean_dataframe_variants = cls.create_boolean_table(input_dtypes, cls.variants, samples_list)
-        boolean_dataframe_copy_numbers = cls.create_boolean_table(input_dtypes, cls.cnas, samples_list)
-        boolean_dataframe_fusions = cls.create_boolean_table(input_dtypes, cls.fusions, samples_list)
-
-        almanac = AlmanacEvidence.import_dbs(input_dtypes)
-        almanac_subset = AlmanacEvidence.subset_almanac_by_evidence(almanac, ['FDA-Approved'])
-        boolean_dataframe_1 = AlmanacFeatures.create_boolean_table(input_dtypes, samples_list, almanac_subset)
-
-        data = [boolean_dataframe_variants.loc[samples_list, :].fillna(0),
-                boolean_dataframe_copy_numbers.loc[samples_list, :].fillna(0),
-                boolean_dataframe_fusions.loc[samples_list, :].fillna(0),
-                boolean_dataframe_1.loc[samples_list, :].fillna(0),
-                ]
-        affinity_networks = snf.make_affinity(data,
-                                              metric='jaccard',
-                                              normalize=False,
-                                              K=20, mu=0.5)
+        np.random.seed(seed)
+        affinity_networks = snf.make_affinity(data, metric='jaccard', normalize=False, K=20, mu=0.5)
         fused_network = snf.snf(affinity_networks, K=20)
-        fused_dataframe = pd.DataFrame(fused_network, index=samples_list, columns=samples_list)
-        distance_dataframe = pd.DataFrame(1, index=samples_list, columns=samples_list).subtract(fused_dataframe)
+        fused_dataframe = pd.DataFrame(fused_network, index=samples, columns=samples)
+        distance_dataframe = pd.DataFrame(1, index=samples, columns=samples).subtract(fused_dataframe)
         stacked_dataframe = cls.stack_distances(distance_dataframe, cls.label)
         return stacked_dataframe.reset_index()

@@ -1,14 +1,14 @@
 import flask
 import flask_frozen
 import datetime
+import pandas
 import os
-import tinydb
 
 from config import COLNAMES
 from config import CONFIG
 
 
-class Reporter(object):
+class Reporter:
     report_section = 'report'
     code = COLNAMES[report_section]['code']
     date = COLNAMES[report_section]['date']
@@ -33,6 +33,84 @@ class Reporter(object):
         idx_rearrangement_drop = idx_rearrangement.difference(idx_rearrangement_keep)
         idx_keep = dataframe.index.difference(idx_rearrangement_drop)
         return dataframe.loc[idx_keep, :]
+
+    @classmethod
+    def format_alterations(cls, dataframe):
+        if dataframe.empty:
+            return dataframe
+
+        dataframe = cls.drop_double_fusion(dataframe)
+
+        lookup = COLNAMES['datasources']
+        columns = [lookup['sensitivity'], lookup['resistance'], lookup['prognosis']]
+        for column in columns:
+            dataframe[column] = cls.format_clinical_columns(dataframe[column], convert_to_float=True)
+
+        columns = [lookup['sensitive_implication'], lookup['resistance_implication'], lookup['prognostic_implication']]
+        for column in columns:
+            dataframe[column] = cls.format_clinical_columns(dataframe[column], convert_to_float=False)
+
+        columns = [lookup['sensitivity_matches'], lookup['resistance_matches'], lookup['prognostic_matches']]
+        for column in columns:
+            if column in dataframe.columns:
+                dataframe[column] = cls.preallocate_matches_columns(dataframe[column])
+
+        return dataframe
+
+    @staticmethod
+    def format_clinical_columns(series, convert_to_float=False):
+        series = (
+            series
+            .where(series.notna(), None)
+            .where(~series.eq(''), None)
+        )
+        if convert_to_float:
+            return series.astype(float)
+        else:
+            return series
+
+    @classmethod
+    def generate_actionability_report(cls, actionable, report_dictionary, similarity=None, output_directory=None):
+        report = ActionabilityReport()
+        report.add_metadata(
+            name=report_dictionary['patient_id'],
+            code=report_dictionary['code'],
+            ontology=report_dictionary['ontology'],
+            normal=report_dictionary['normal_barcode'],
+            tumor=report_dictionary['tumor_barcode'],
+            stage=report_dictionary['stage'],
+            description=report_dictionary['description'],
+            date=report_dictionary['date'],
+            purity=report_dictionary['purity'],
+            ploidy=report_dictionary['ploidy'],
+            msi=report_dictionary['microsatellite_status']
+        )
+
+        versions = cls.generate_version_dictionary()
+        report.add_versions(
+            software=versions['software'],
+            database=versions['database']
+        )
+
+        actionable = cls.format_alterations(actionable)
+        report.add_alterations(actionable)
+        report.add_similar_profiles(similarity)
+
+        app = flask.Flask(__name__, static_folder=None)
+
+        @app.route(f"/{report.metadata['patient_id']}.report.html")
+        def index():
+            return flask.render_template('index.html', report=report)
+
+        freezer = flask_frozen.Freezer(app)
+        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == ("" or None) else output_directory
+        app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
+
+        @freezer.register_generator
+        def index_generator():
+            yield flask.url_for('index', report=report)
+
+        freezer.freeze()
 
     @staticmethod
     def generate_date():
@@ -66,71 +144,9 @@ class Reporter(object):
             'microsatellite_status': patient[cls.ms_status]
         }
 
-    @classmethod
-    def generate_report(cls, actionable, report_dictionary,
-                        preclinical_dictionary,
-                        preclinical_dataframe,
-                        matchmaker,
-                        preclinical_reference_dict,
-                        output_directory):
-        version_dictionary = cls.generate_version_dictionary()
-
-        app = flask.Flask(__name__)
-        freezer = flask_frozen.Freezer(app, with_no_argument_rules=False, log_url_for=False)
-        app.config['FREEZER_DESTINATION'] = f"{os.getcwd()}" if output_directory == "" else output_directory
-        app.config['FREEZER_REMOVE_EXTRA_FILES'] = False  # DO NOT REMOVE THIS, FLASK FROZEN WILL DELETE FILES IF TRUE
-
-        actionable = cls.drop_double_fusion(actionable)
-        matches = cls.load_almanac_additional_matches(output_directory, report_dictionary['patient_id'])
-
-        lookup = {}
-        if not matchmaker.empty:
-            matchmaker = matchmaker[~matchmaker['comparison'].eq('case-profile')]
-            for index in matchmaker.index.tolist()[:10]:
-                cell_line = matchmaker.loc[index, 'comparison']
-                lookup[index] = preclinical_reference_dict[cell_line]
-
-        from warnings import simplefilter as filter_warnings
-        filter_warnings('ignore', flask_frozen.MissingURLGeneratorWarning)
-
-        @app.route(f"/{report_dictionary['patient_id']}.report.html")
-        def index():
-            return flask.render_template('index.html',
-                                         df=actionable.fillna(''),
-                                         dict=report_dictionary,
-                                         version_dict=version_dictionary,
-                                         matches=matches,
-                                         preclinical_dict=preclinical_dictionary,
-                                         preclinical_df=preclinical_dataframe,
-                                         matchmaker=matchmaker,
-                                         lookup=lookup
-                                         )
-
-        freezer.freeze()
-
-    @classmethod
-    def format_list_elements(cls, series):
-        return (series
-                .str.replace("\[\'", "")
-                .str.replace("\'\]", "")
-                .str.replace("\'", "")
-                .str.split(',', expand=True)
-                .apply(lambda x: ', '.join(x.sort_values().dropna().tolist()), axis=1)
-                )
-
     @staticmethod
-    def load_almanac_additional_matches(output_folder, patient_id):
-        if output_folder == "":
-            handle = f"{patient_id}.{CONFIG['databases']['additional_matches']}"
-        else:
-            handle = f"{output_folder}/{patient_id}.{CONFIG['databases']['additional_matches']}"
-        db = tinydb.TinyDB(handle)
-        matches = {}
-        for table in db.tables():
-            if table == '_default':
-                continue
-            matches[table] = db.table(table).all()
-        return matches
+    def preallocate_matches_columns(series):
+        return series.apply(lambda x: [] if not isinstance(x, list) and pandas.isna(x) else x)
 
     @classmethod
     def return_sample_barcode(cls, variants, column):
@@ -138,3 +154,34 @@ class Reporter(object):
             return variants[column].unique()[0]
         else:
             return None
+
+
+class ActionabilityReport:
+    def __init__(self):
+        self.metadata = {}
+        self.versions = {}
+        self.alterations = None
+        self.similar_profiles = None
+
+    def add_metadata(self, name, code, ontology, normal, tumor, stage, description, date, purity, ploidy, msi):
+        self.metadata['patient_id'] = name
+        self.metadata['code'] = code
+        self.metadata['ontology'] = ontology
+        self.metadata['normal_barcode'] = normal
+        self.metadata['tumor_barcode'] = tumor
+        self.metadata['stage'] = stage
+        self.metadata['description'] = description
+        self.metadata['date'] = date
+        self.metadata['purity'] = purity
+        self.metadata['ploidy'] = ploidy
+        self.metadata['microsatellite_status'] = msi
+
+    def add_versions(self, software, database):
+        self.versions['software'] = software
+        self.versions['database'] = database
+
+    def add_alterations(self, alterations):
+        self.alterations = alterations
+
+    def add_similar_profiles(self, similar_profiles):
+        self.similar_profiles = similar_profiles
