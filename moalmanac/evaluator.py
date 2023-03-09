@@ -304,7 +304,7 @@ class Actionable:
     def format_mutations(cls, df):
         for column in [Evaluator.alt_type, Evaluator.sensitive_alt_type, Evaluator.resistance_alt_type,
                        Evaluator.prognostic_alt_type]:
-            df[column] = cls.format_variant_classification(df[Evaluator.alt_type])
+            df[column] = cls.format_variant_classification(df[Evaluator.alt_type].fillna(''))
         return df
 
     @classmethod
@@ -317,8 +317,14 @@ class Actionable:
         msi_summary = features.Features.create_empty_dataframe()
         if not df.empty:
             feature = Evaluator.supporting_variants
-            feature_displays = cls.format_feature_display(df, Evaluator.feature_display,
-               Evaluator.feature_type, Evaluator.feature, Evaluator.alt_type, Evaluator.alt)
+            feature_displays = cls.format_feature_display(
+                df,
+                Evaluator.feature_display,
+                Evaluator.feature_type,
+                Evaluator.feature,
+                Evaluator.alt_type,
+                Evaluator.alt
+            )
             feature_displays_list = cls.create_string_list(feature_displays)
 
             msi_summary.loc[0, Evaluator.feature_type] = Evaluator.microsatellite_type
