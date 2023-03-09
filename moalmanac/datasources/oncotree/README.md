@@ -14,6 +14,4 @@ python get_oncotree.py -d 2023-03-09
 The output will be of the following name, `oncotree.2023-03-09.txt`
 
 ## References
-[1]: http://oncotree.mskcc.org/oncotree/#/home "Oncotree"
-[2]: http://oncotree.mskcc.org/oncotree/swagger-ui.html "Oncotree Swagger (API)"
-[3]: https://github.com/cBioPortal/oncotree "Oncotree Github"
+[Kundra, R. et al. OncoTree: A Cancer Classification System for Precision Oncology. JCO Clin Cancer Inform 5, 221-230 (2021).](https://ascopubs.org/doi/10.1200/CCI.20.00108)
