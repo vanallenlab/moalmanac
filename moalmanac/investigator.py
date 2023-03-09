@@ -139,6 +139,8 @@ class SensitivityDictionary(Investigator):
         dictionary = {}
         for index in df_actionable[idx_feature_type & idx_sensitive].index:
             sensitive_therapy = df_actionable.loc[index, cls.sensitive_therapy]
+            if sensitive_therapy not in list(mappings.keys()):
+                continue
             mapped = list(mappings[sensitive_therapy][cls.gdsc])
             feature_display = df_actionable.loc[index, cls.feature_display]
             index_dict = {}

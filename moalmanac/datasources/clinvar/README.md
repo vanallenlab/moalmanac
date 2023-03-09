@@ -9,7 +9,7 @@ Releases of ClinVar [are available for download from their FTP server](ftp://ftp
 
 The script `prepare_clinvar.py` is used to extract relevant columns for use
 ```bash
-python prepare_clinvar.py --clinvarVariantSummary variant_summary.txt
+python prepare_clinvar.py --input variant_summary.txt --date 2023-03-09
 ```
 
 ## References
