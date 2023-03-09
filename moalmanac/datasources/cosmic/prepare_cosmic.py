@@ -16,12 +16,12 @@ def write_file(dataframe, version):
 
 
 if __name__ == "__main__":
-	arg_parser = argparse.ArgumentParser(prog='extract genes', description='Extract genes from tab separated values.')
-	arg_parser.add_argument('--input', '-i', help='input file, CosmicMutantExport.tsv', required=True)
-	arg_parser.add_argument('--version', '-v', help='input file version; e.g., v97', required=True)
-	arg_parser.add_argument('--gene_column_name', '-g', help='column that contains gene names', default="Gene name")
-	arg_parser.add_argument('--protein_column_name', '-p', help='column that contains protein changes', default="Mutation AA")
-	args = arg_parser.parse_args()
+	parser = argparse.ArgumentParser(prog='prepare COSMIC', description='Prepare COSMIC for use with MOAlmanac')
+	parser.add_argument('--input', '-i', help='input file, CosmicMutantExport.tsv', required=True)
+	parser.add_argument('--version', '-v', help='input file version; e.g., v97', required=True)
+	parser.add_argument('--gene_column_name', '-g', help='column that contains gene names', default="Gene name")
+	parser.add_argument('--protein_column_name', '-p', help='column that contains protein changes', default="Mutation AA")
+	args = parser.parse_args()
 
 	df = read_file(args.input, [args.gene_column_name, args.protein_column_name])
 	df.drop_duplicates(inplace=True)
