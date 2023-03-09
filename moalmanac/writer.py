@@ -396,6 +396,7 @@ class SomaticScored:
         df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df.loc[:, 'therapy_sensitivity_matches'], f'{output_name}.matches.txt')
 
 
 class Strategies:
