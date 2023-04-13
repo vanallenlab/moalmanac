@@ -1,5 +1,5 @@
 {
-    "release": "v.2023-02-02",
+    "release": "v.2023-04-06",
     "version": "1.0.0",
     "genes": [
         "ABL1",
@@ -29219,6 +29219,41 @@
             "nct": "",
             "last_updated": "2/2/23",
             "feature_display": "ESR1"
+        },
+        {
+            "feature_type": "Somatic Variant",
+            "gene": "BRAF",
+            "chromosome": "7",
+            "start_position": 140453136,
+            "end_position": 140453136,
+            "reference_allele": "A",
+            "alternate_allele": "T",
+            "cdna_change": "c.1799T>A",
+            "protein_change": "p.V600E",
+            "variant_annotation": "Missense",
+            "exon": 15,
+            "rsid": "rs113488022",
+            "disease": "Low-grade glioma",
+            "context": "Unresctable or metastatic",
+            "oncotree_term": "Low-Grade Glioma, NOS",
+            "oncotree_code": "LGGNOS",
+            "therapy_name": "Dabrafenib + Trametinib",
+            "therapy_strategy": "B-RAF inhibition + MEK inhibition",
+            "therapy_type": "Targeted therapy",
+            "therapy_sensitivity": 1,
+            "therapy_resistance": "",
+            "favorable_prognosis": "",
+            "predictive_implication": "FDA-Approved",
+            "description": "The U.S. Food and Drug Administration (FDA) granted approval to dabrafenib in combination with trametinib for the treament of pediatric patients 1 year of age or older with low-grade glioma (LGG) with a BRAF V600E mutation who require systemic therapy.",
+            "preferred_assertion": "",
+            "source_type": "FDA",
+            "citation": "Novartis Pharmaceuticals Corporation. Tafinlar (dabrafenib) [package insert]. U.S. Food and Drug Administration website. https://www.accessdata.fda.gov/drugsatfda_docs/label/2023/202806s025lbl.pdf. Revised March 2023. Accessed April 6, 2023.",
+            "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2023/202806s025lbl.pdf",
+            "doi": "",
+            "pmid": "",
+            "nct": "",
+            "last_updated": "4/6/23",
+            "feature_display": "BRAF p.V600E (Missense)"
         }
     ]
 }
