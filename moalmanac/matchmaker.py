@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import snf
-from sklearn import neighbors
+from sklearn import metrics
 
 from annotator import Almanac as AnnotatorAlmanac
 from annotator import PreclinicalMatchmaking as AnnotatorPreclinicalMatchmaking
@@ -89,7 +89,7 @@ class Matchmaker:
 
     @classmethod
     def create_empty_output(cls):
-        return pd.DataFrame(columns={'case', 'comparison'})
+        return pd.DataFrame(columns=['case', 'comparison'])
 
     @classmethod
     def format_fusions(cls, dataframe):
@@ -137,7 +137,7 @@ class Models:
     copy_number = 'Copy Number'
     rearrangement = 'Rearrangement'
 
-    jaccard = neighbors.DistanceMetric.get_metric('jaccard')
+    jaccard = metrics.DistanceMetric.get_metric('jaccard')
 
     @staticmethod
     def aggregate_columns_by_row(dataframe, delimiter):

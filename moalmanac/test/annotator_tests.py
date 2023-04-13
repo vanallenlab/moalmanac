@@ -244,11 +244,11 @@ class UnitTestValidation(unittest.TestCase):
 
     def test_append_validation(self):
         result = OverlapValidation.append_validation(UnitTestValidation.dataframe1, UnitTestValidation.dataframe2)
-        result = result.fillna(pd.NA)
+        result = result.fillna('')
         self.assertEqual(UnitTestValidation.dataframe1['feature'].tolist(), result['feature'].tolist())
-        self.assertEqual([0.20, pd.NA, 0.66, 0.0], result['validation_tumor_f'].tolist())
-        self.assertEqual([8.0, pd.NA, 29.0, 0.0], result['validation_total_coverage'].tolist())
-        self.assertEqual([0.4103, pd.NA, 0.9715, 0.0], result['validation_detection_power'].tolist())
+        self.assertEqual([0.20, '', 0.66, 0.0], result['validation_tumor_f'].tolist())
+        self.assertEqual([8.0, '', 29.0, 0.0], result['validation_total_coverage'].tolist())
+        self.assertEqual([0.4103, '', 0.9715, 0.0], result['validation_detection_power'].tolist())
 
     def test_calculate_beta_binomial(self):
         self.assertEqual(0.7006851149078945, stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63))
