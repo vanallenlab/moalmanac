@@ -1,7 +1,6 @@
 import json
 import pandas as pd
 import pickle
-import tinydb
 
 
 class Reader(object):
@@ -35,10 +34,6 @@ class Reader(object):
     def read_pickle(handle):
         with open(handle, 'rb') as pickle_handle:
             return pickle.load(pickle_handle)
-
-    @staticmethod
-    def read_tinydb(handle):
-        return tinydb.TinyDB(handle)
 
     @staticmethod
     def return_columns_as_lowercase(dataframe):
