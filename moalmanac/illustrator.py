@@ -40,7 +40,8 @@ class PreclinicalEfficacy(Illustrator):
     @classmethod
     def convert_figure_base64(cls, fig):
         image = io.BytesIO()
-        fig.savefig(image, tight=False, format='png')
+        #fig.savefig(image, tight=False, format='png')
+        fig.savefig(image, format='png')
         base64_image = base64.encodebytes(image.getvalue()).decode().replace('\n', '')
         return base64_image
 
@@ -168,9 +169,9 @@ class Signatures(Illustrator):
             plt.text(6.05 + 16 * i, label_height, label_,  fontsize=15,
                      bbox={'facecolor': cls.colors[i], 'alpha': 0.4, 'pad': 3})
 
-        plt.xlim(0, 95)
+        plt.xlim(0, 96)
         xlabels = data.index.str[0] + data.index.str[4] + data.index.str[6]
-        plt.xticks(range(0, 95), xlabels, rotation=90, fontsize=10)
+        plt.xticks(range(0, 96), xlabels, rotation=90, fontsize=10)
 
         plt.ylabel(ylabel,  fontsize=14)
         plt.title(title,  fontsize=16, y=1.30)
