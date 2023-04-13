@@ -55,6 +55,9 @@ class Reporter:
             if column in dataframe.columns:
                 dataframe[column] = cls.preallocate_matches_columns(dataframe[column])
 
+        if 'preclinical_efficacy_lookup' in dataframe.columns:
+            dataframe['preclinical_efficacy_lookup'].fillna('', inplace=True)
+
         return dataframe
 
     @staticmethod
