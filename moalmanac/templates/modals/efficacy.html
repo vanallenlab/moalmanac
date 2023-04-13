@@ -1,52 +1,54 @@
-{% if (report.alterations.loc[index, 'preclinical_efficacy_lookup'] != '') %}
-    <div id="preclinicalModal_{{ index }}" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
+{% if 'preclinical_efficacy_lookup' in report.alterations.columns.tolist() %}
+    {% if report.alterations.loc[index, 'preclinical_efficacy_lookup'] != '' %}
+        <div id="preclinicalModal_{{ index }}" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        &times;
-                    </button>
-                    <h4 class="modal-title">
-                        {{ report.alterations.loc[index, 'feature_display'] }} and sensitivity to
-                        {{ report.alterations.loc[index, 'sensitive_therapy_name'] }}
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <ul class="nav nav-tabs" id="tabContent">
-                        {% set lookup = report.alterations.loc[index, 'preclinical_efficacy_lookup'][0] %}
-                        {% for therapy in lookup.keys() %}
-                            {% if loop.index0 == 0 %}<li class="active">{% else %}<li>{% endif %}
-                            <a href="#tab{{ loop.index0 }}" data-toggle="tab">
-                                {{ therapy }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            &times;
+                        </button>
+                        <h4 class="modal-title">
+                            {{ report.alterations.loc[index, 'feature_display'] }} and sensitivity to
+                            {{ report.alterations.loc[index, 'sensitive_therapy_name'] }}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs" id="tabContent">
+                            {% set lookup = report.alterations.loc[index, 'preclinical_efficacy_lookup'][0] %}
+                            {% for therapy in lookup.keys() %}
+                                {% if loop.index0 == 0 %}<li class="active">{% else %}<li>{% endif %}
+                                <a href="#tab{{ loop.index0 }}" data-toggle="tab">
+                                    {{ therapy }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
 
-                    <div class="tab-content">
-                        {% for therapy in lookup.keys() %}
-                            {% if loop.index0 == 0 %}
-                                <div class="tab-pane active" id="tab{{ loop.index0 }}">
-                            {% else %}
-                                <div class="tab-pane" id="tab{{ loop.index0 }}">
-                            {% endif %}
-                                    <center>
-                                        <img class="logo" src="data:image/png;base64,{{ lookup[therapy]['figure_base64'] }}" style="height:500px">
-                                        {% include 'modals/text_preclinical.html' %}
-                                        {% include 'modals/table_preclinical.html' %}
-                                    </center>
-                                </div>
-                        {% endfor %}
+                        <div class="tab-content">
+                            {% for therapy in lookup.keys() %}
+                                {% if loop.index0 == 0 %}
+                                    <div class="tab-pane active" id="tab{{ loop.index0 }}">
+                                {% else %}
+                                    <div class="tab-pane" id="tab{{ loop.index0 }}">
+                                {% endif %}
+                                        <center>
+                                            <img class="logo" src="data:image/png;base64,{{ lookup[therapy]['figure_base64'] }}" style="height:500px">
+                                            {% include 'modals/text_preclinical.html' %}
+                                            {% include 'modals/table_preclinical.html' %}
+                                        </center>
+                                    </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
+
             </div>
-
         </div>
-    </div>
 
-    <br>
-    <a data-toggle="modal" data-target="#preclinicalModal_{{ index }}">
-        [Preclinical evidence]
-    </a>
+        <br>
+        <a data-toggle="modal" data-target="#preclinicalModal_{{ index }}">
+            [Preclinical evidence]
+        </a>
+   {% endif %}
 {% endif %}
