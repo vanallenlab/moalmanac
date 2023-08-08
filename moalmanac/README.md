@@ -107,13 +107,7 @@ python simplified_input.py \
     --tumor_type "SKCM" \
     --stage "Metastatic" \
     --description "Example profile for interpretation with the Molecular Oncology Almanac" \
-    --input "../example_data/example_patient.capture.somatic.snvs.maf" \
-    --indel_handle "../example_data/example_patient.capture.somatic.indels.maf" \
-    --bases_covered_handle "../example_data/example_patient.capture.somatic.coverage.txt" \
-    --called_cn_handle "../example_data/example_patient.capture.somatic.called.cna.txt" \
-    --fusion_handle "../example_data/example_patient.capture.somatic.seg.annotated" \
-    --germline_handle "../example_data/example_patient.rna.star.fusions.txt" \
-    --validation_handle "../example_data/example_patient.rna.somatic.snvs.maf" \
+    --input "../example_data/example_patient.simplified_input.txt" \
     --purity 0.85 \
     --ploidy 4.02 \
     --ms_status "msih"
