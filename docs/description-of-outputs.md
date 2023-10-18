@@ -256,7 +256,7 @@ Germline variants whose gene appears in the gene list from the [American College
 ### Somatic cancers
 Filename suffix: `.germline.cancer_related.txt`
 
-Germline variants whose gene appears in appearing in [Molecular Oncology Almanac](/moalmanac/datasources/almanac), Cancer Hotspots [Molecular Oncology Almanac](/moalmanac/datasources/cancerhotspots), or [Cancer Gene Census](/moalmanac/datasources/cancergenecensus) will appear in this output. Columns included are:
+Germline variants whose gene appears in appearing in [Molecular Oncology Almanac](/moalmanac/datasources/almanac), [Cancer Hotspots](/moalmanac/datasources/cancerhotspots), or [Cancer Gene Census](/moalmanac/datasources/cancergenecensus) will appear in this output. Columns included are:
 - [Standardized features](#standardized-feature-columns)
 - [Somatic and germline variants](#somatic-and-germline-variants)
 - [Germline variants](#germline-variants)
