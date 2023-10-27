@@ -1,60 +1,30 @@
 <div class="row">
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4 class="panel-title"><a name="info"></a>Patient Information</h4>
+    <div class="card px-0 border border-primary-subtle rounded-3">
+        <div class="card-header text-primary-emphasis bg-primary-subtle" style="border-radius: 0.25rem 0.25rem 0 0;">
+            <h5 class="card-title px-0 my-0">Patient Information</h5>
         </div>
-        <div class="panel-body">
-            <div class="col-sm-5">
-                <h4>Identifiers</h4>
-                <table>
+        <div class="card-body">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>Patient ID:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.patient_id }}</td> <!--input -->
+                        <th scope="col" class="col-sm-5">Identifiers</th>
+                        <th scope="col" class="col-sm-4">Disease</th>
+                        <th scope="col" class="col-sm-3">Metrics</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Patient ID:&nbsp;&nbsp; {{ report.metadata.patient_id }}</td>
+                        <td>Code:&nbsp;&nbsp; {{ report.metadata.code }}</td>
+                        <td>Tumor Purity:&nbsp;&nbsp; {{ report.metadata.purity }}</td>
                     </tr>
                     <tr>
-                        <td>Tumor Barcode:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.tumor_barcode }}</td> <!--input -->
+                        <td>Tumor Barcode:&nbsp;&nbsp; {{ report.metadata.tumor_barcode }}</td>
+                        <td>Ontology:&nbsp;&nbsp; {{ report.metadata.ontology }}</td>
+                        <td>Tumor Ploidy:&nbsp;&nbsp; {{ report.metadata.ploidy }}</td>
                     </tr>
-                    <tr>
-                        <td>Normal Barcode:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.normal_barcode }}</td> <!--input -->
-                    </tr>
-                </table>
-            </div>
-            <div class="col-sm-4">
-                <h4>Disease</h4>
-                <table>
-                    <tr>
-                        <td>Code:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.code }}</td> <!--input -->
-                    </tr>
-                    <tr>
-                        <td>Ontology:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.ontology}}</td> <!--input -->
-                    </tr>
-                    <tr>
-                        <td>Stage:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.stage }}</td> <!--input -->
-                    </tr>
-                </table>
-            </div>
-            <div class="col-sm-3">
-                <h4>Metrics</h4>
-                <table>
-                    <tr>
-                        <td>Tumor Purity:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.purity }}</td> <!--input -->
-                    </tr>
-                    <tr>
-                        <td>Tumor Ploidy:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.ploidy }}</td> <!--input -->
-                    </tr>
-                    <tr>
-                        <td>Microsatellite Stability:&nbsp;&nbsp;</td>
-                        <td class="info-value">{{ report.metadata.microsatellite_status }}</td> <!--input -->
-                    </tr>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
