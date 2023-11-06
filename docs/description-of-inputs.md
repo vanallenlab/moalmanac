@@ -16,6 +16,7 @@ Example inputs can be found in the [`example_data/`](/example_data/) folder, fou
     - [Germline variants](#germline-variants)
     - [Somatic variants from validation sequencing](#somatic-variants-from-validation-sequencing)
     - [Microsatellite status](#microsatellite-status)
+    - [Mutational signatures](#mutational-signatures)
     - [Purity](#purity)
     - [Ploidy](#ploidy)
     - [Whole genome doubling](#whole-genome-doubling)
@@ -237,6 +238,9 @@ At least one of the following also must be included:
 - `--msih` for microsatellite instability "high", MSI-H 
 
 Microsatellite status is reported in the clinical actionability report. 
+
+## Mutational signatures
+
 
 ## Purity
 `--purity` anticipates a float value between 0.0 and 1.0 for the reported tumor purity. This is just used for reporting in the clinical actionability report.
