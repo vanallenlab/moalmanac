@@ -177,7 +177,6 @@ class Almanac:
     implication = datasources.Almanac.implication
     implication_map = datasources.Almanac.implication_map
     description = datasources.Almanac.description
-    preferred_assertion = datasources.Almanac.preferred_assertion
 
     source_type = datasources.Almanac.source_type
     citation = datasources.Almanac.citation
@@ -185,6 +184,8 @@ class Almanac:
     doi = datasources.Almanac.doi
     pmid = datasources.Almanac.pmid
     nct = datasources.Almanac.nct
+    publication_date = datasources.Almanac.publication_date
+    last_updated = datasources.Almanac.last_updated
 
     predictive_implication_map = datasources.Almanac.predictive_implication_map
 
@@ -820,8 +821,8 @@ class Almanac:
 
     @classmethod
     def sort_and_subset_matches(cls, table, results_same_ontology, results_diff_ontology):
-        sort_columns = [cls.implication_map, cls.preferred_assertion]
-        sort_ascending = [False, False]
+        sort_columns = [cls.implication_map, cls.publication_date, cls.last_updated]
+        sort_ascending = [False, False, False]
         if results_same_ontology.any():
             results_same_ontology_sorted = cls.sort_dataframe(table[results_same_ontology], sort_columns, sort_ascending)
             results_same_ontology_records = cls.convert_dataframe_to_records(results_same_ontology_sorted)

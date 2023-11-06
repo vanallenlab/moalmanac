@@ -37,7 +37,6 @@ class Datasources:
     implication_map = COLNAMES[datasources_section]['implication_map']
     connections = COLNAMES[datasources_section]['connections']
     description = COLNAMES[datasources_section]['description']
-    preferred_assertion = COLNAMES[datasources_section]['preferred_assertion']
 
     source_type = COLNAMES[datasources_section]['source_type']
     citation = COLNAMES[datasources_section]['citation']
@@ -45,6 +44,8 @@ class Datasources:
     doi = COLNAMES[datasources_section]['doi']
     pmid = COLNAMES[datasources_section]['pmid']
     nct = COLNAMES[datasources_section]['nct']
+    publication_date = COLNAMES[datasources_section]['publication_date']
+    last_updated = COLNAMES[datasources_section]['last_updated']
 
     sensitivity_matches = COLNAMES[datasources_section]['sensitivity_matches']
     resistance_matches = COLNAMES[datasources_section]['resistance_matches']
@@ -122,7 +123,6 @@ class Almanac:
     implication = Datasources.implication
     implication_map = Datasources.implication_map
     description = Datasources.description
-    preferred_assertion = Datasources.preferred_assertion
 
     source_type = Datasources.source_type
     citation = Datasources.citation
@@ -130,6 +130,8 @@ class Almanac:
     doi = Datasources.doi
     pmid = Datasources.pmid
     nct = Datasources.nct
+    publication_date = Datasources.publication_date
+    last_updated = Datasources.last_updated
 
     sensitivity_matches = Datasources.sensitivity_matches
     resistance_matches = Datasources.resistance_matches
