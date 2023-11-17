@@ -81,16 +81,18 @@ class UnitTestAlmanac(unittest.TestCase):
 
     def test_sort_and_subset_matches(self):
         implication_map = Almanac.implication_map
-        preferred_assertion = Almanac.preferred_assertion
+        publication_date = Almanac.publication_date
+        last_updated = Almanac.last_updated
 
         table = pd.DataFrame([
-            {implication_map: 1, preferred_assertion: 0, 'label': 'a'},
-            {implication_map: 2, preferred_assertion: 0, 'label': 'b'},
-            {implication_map: 2, preferred_assertion: 1, 'label': 'c'},
-            {implication_map: 0, preferred_assertion: 0, 'label': 'd'},
-            {implication_map: 2, preferred_assertion: 1, 'label': 'e'}
+            {implication_map: 1, publication_date: 0, 'label': 'a'},
+            {implication_map: 2, publication_date: 0, 'label': 'b'},
+            {implication_map: 2, publication_date: 1, 'label': 'c'},
+            {implication_map: 0, publication_date: 0, 'label': 'd'},
+            {implication_map: 2, publication_date: 1, 'label': 'e'}
         ])
-
+    
+        # key, value pair in each record is if the index matched to the corresponding record in `table`
         records1 = pd.Series({0: True, 1: True, 2: True, 3: False, 4: False})
         records2 = pd.Series({0: False, 1: False, 2: False, 3: True, 4: True})
         records3 = pd.Series({0: False, 1: False, 2: False, 3: False, 4: False})
