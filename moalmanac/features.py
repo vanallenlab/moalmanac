@@ -393,7 +393,7 @@ class CoverageMetrics:
         return formatted_series
 
 
-class CosmicSignatures:
+class CosmicSignatures(Features):
     feature_type_section = 'feature_types'
     feature_type = CONFIG[feature_type_section]['signature']
 
@@ -402,82 +402,37 @@ class CosmicSignatures:
 
     min_contribution = SIGNATURES_CONFIG['min_contribution']
 
-    input_section = 'input_data'
-    input_sample = COLNAMES[input_section]['tumor']
-    input_ref = COLNAMES[input_section]['ref']
-    input_alt = COLNAMES[input_section]['allele2']
-    input_chr = COLNAMES[input_section]['chr']
-    input_pos = COLNAMES[input_section]['start']
+    input_section = 'mutational_signature_input'
+    input_signature = COLNAMES[input_section]['signature']
+    input_contribution = COLNAMES[input_section]['contribution']
 
     @classmethod
-    def calculate_contributions(cls, snv_handle, folder, patient_id):
-        if os.path.exists(snv_handle):
-            if folder == "" or folder == ".":
-                folder = f"./"
-            elif folder[-1] != "/":
-                folder = f"{folder}/"
-            else:
-                folder = folder
-            cls.run_deconstructsigs(patient_id, snv_handle, folder)
+    def create_column_map(cls):
+        section = 'mutational_signature_input'
+        column_names = COLNAMES[section]
+        return {
+            column_names[cls.input_signature]: Features.feature,
+            column_names[cls.input_contribution]: Features.alt
+        }
 
     @classmethod
-    def import_context(cls, folder, patient_id):
-        context_handle = cls.create_handle(folder, patient_id, 'sigs.context.txt')
-        if os.path.exists(context_handle):
-            contexts = Reader.read(context_handle, '\t')
-            contexts_series = contexts.loc[0, :]
-            return contexts_series
+    def import_feature(cls, path):
+        '''loads file for Cosmic Mutational Signatures based on provided file path'''
+        if os.path.exists(path):
+            column_map = cls.create_column_map()
+            df = Reader.safe_read(path, '\t', column_map, index_col=False)
+            df[Features.feature_type] = cls.feature_type
+            df[Features.alt_type] = 'version 3.4'
+            return df
         else:
-            return None
+            return cls.create_empty_dataframe()
 
-    @classmethod
-    def import_feature(cls, folder, patient_id):
-        weights_handle = cls.create_handle(folder, patient_id, 'sigs.cosmic.txt')
-        if os.path.exists(weights_handle):
-            weights = Reader.read(weights_handle, '\t')
-            series_weights = cls.format_weights(weights.iloc[0, :30])
-        else:
-            series_weights = pd.Series()
-
-        series_significant_weights = cls.subset_significant_signatures(series_weights)
-        df = cls.create_feature_dataframe(patient_id, series_significant_weights)
-        return df
-
-    @classmethod
-    def create_feature_dataframe(cls, patient_id, series_weights):
-        dataframe = Features.create_empty_dataframe()
-        dataframe[Features.feature] = series_weights.index
-        dataframe[Features.alt] = series_weights.values
-        dataframe[Features.alt_type] = 'version 2'
-        dataframe.loc[:, Features.feature_type] = cls.feature_type
-        dataframe.loc[:, cls.patient_id] = patient_id
-        return dataframe
-
-    @staticmethod
-    def create_handle(folder, patient_id, suffix):
-        return f"{folder}/{patient_id}.{suffix}"
 
     @staticmethod
     def format_weights(weights):
         nonzero = weights[weights.astype(float) != 0.0]
         nonzero.index = nonzero.index.str.replace('weights', 'COSMIC').str.replace('.', ' ').tolist()
         return nonzero.astype(float).round(3)
-
-    @staticmethod
-    def illustrate_contexts(folder, patient_id, contexts):
-        Signatures.generate_context_plot(folder, patient_id, contexts)
-        Signatures.generate_context_plot_normalized(folder, patient_id, contexts)
-
-    @classmethod
-    def run_deconstructsigs(cls, patient_id, snv_handle, folder):
-        cmd = f"bash wrapper_deconstructsigs.sh {patient_id} {snv_handle} " \
-              f"{cls.input_sample} {cls.input_ref} {cls.input_alt} {cls.input_chr} {cls.input_pos} " \
-              f"{folder}"
-        cls.run_subprocess(cmd)
-
-    @staticmethod
-    def run_subprocess(cmd):
-        subprocess.call(cmd, shell=True)
 
     @classmethod
     def subset_significant_signatures(cls, series):
