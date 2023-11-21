@@ -26,11 +26,11 @@ ASSERTION_FIELDS = [
     'disease', 'context', 'oncotree_term', 'oncotree_code',
     'therapy_name', 'therapy_strategy', 'therapy_type',
     'therapy_sensitivity', 'therapy_resistance', 'favorable_prognosis',
-    'predictive_implication', 'description', 'last_updated', 'preferred_assertion'
+    'predictive_implication', 'description', 'last_updated'
 ]
 
 SOURCE_FIELDS = [
-    'source_type', 'citation', 'url', 'doi', 'pmid', 'nct', 'last_updated'
+    'source_type', 'citation', 'url', 'doi', 'pmid', 'nct', 'publication_date', 'last_updated'
 ]
 
 VARIANT_FIELDS = [
@@ -59,7 +59,7 @@ MUTATIONAL_BURDEN_FIELDS = [
 ]
 
 MUTATIONAL_SIGNATURE_FIELDS = [
-    'cosmic_signature_number', 'cosmic_signature_version'
+    'cosmic_signature'
 ]
 
 MICROSATELLITE_FIELDS = [
@@ -86,7 +86,7 @@ class DisplayAlteration:
 
     @classmethod
     def cosmic_mutational_signature(cls, record):
-        return f"Cosmic signature (version {record['cosmic_signature_version']}) {record['cosmic_signature_number']}"
+        return f"Cosmic signature {record['cosmic_signature']} (version 3.4)"
 
     @classmethod
     def germline_variant(cls, record):
