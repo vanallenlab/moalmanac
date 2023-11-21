@@ -125,7 +125,7 @@ This input is looking for an integer value.
 
 The rows associated with _TP53_, _CDKN2A_, and _EGFR_ will be interpreted and scored by Molecular Oncology Almanac while _BRAF_ will be filtered.
 
-### Required files
+### Required fields
 Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `gene`, gene symbol associated with the copy number alteration
 - `call`, copy number event of the gene. `Amplification` and `Deletion` are accepted and all other values will be filtered.
