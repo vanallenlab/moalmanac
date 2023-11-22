@@ -45,7 +45,7 @@ def execute_cmd(command):
     subprocess.call(command, shell=True)
 
 
-output_directory = "2023-11-22-signatures"
+output_directory = "example"
 if output_directory != "":
     cmd = f"mkdir -p {output_directory}"
     execute_cmd(cmd)
