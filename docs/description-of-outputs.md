@@ -28,11 +28,6 @@ All outputs will be produced by Molecular Oncology Almanac, though some may not 
   * [Integrated summary](#integrated-summary)
   * [Microsatellite Instability variants](#microsatellite-instability-variants)
   * [Mutational burden](#mutational-burden)
-  * [Mutational signatures](#mutational-signatures)
-    * [Trinucleotide context counts](#trinucleotide-context-counts)
-    * [COSMIC signature (v2) weights](#cosmic-signature-v2-weights)
-    * [Trinucleotide context counts image](#trinucleotide-context-counts-image)
-    * [Trinucleotide context normalized counts image](#trinucleotide-context-normalized-counts-image)
   * [Preclinical efficacy](#preclinical-efficacy)
   * [Profile-to-cell line matchmaking](#profile-to-cell-line-matchmaking)
   * [Report](#report)
@@ -63,7 +58,7 @@ Molecular Oncology Almanac standardizes primary descriptors for molecular featur
   * Rearrangements: gene name, Molecular Oncology Almanac will process each partner in the fusion separately
   * Microsatellite stability: microsatellite stability status (MSI-High or MSI-Low)
   * Mutational burden: High Mutational Burden, if the mutational burden is deemed to be high
-  * Mutational signatures: the specific COSMIC (v2) mutational signature, formatted as "COSMIC Signature (number)"
+  * Mutational signatures: the specific COSMIC (v3.4) mutational signature, formatted as "COSMIC Signature (number)"
   * Aneuploidy: Whole-genome doubling, this will only be populated if the `--wgd` value is passed to Molecular Oncology Almanac.
 * `alteration_type` is a descriptor to provide more granular detail on the molecular event.
   * Somatic variants: variant classification of the variant (Missense, Nonsense, etc.)
@@ -319,31 +314,8 @@ Molecular Oncology Almanac designates high mutational burden under two circumsta
 - Mutations per Mb > 10 
 - At least a mutational burden of 80th percentile of TCGA tumor type, if matched, or TCGA generally, if not matched.
 
-## Mutational signatures
-Molecular Oncology Almanac runs [deconstructSigs](https://github.com/raerose01/deconstructSigs) as a subprocess based on the MAF file passed with the input argument `--snv_handle`, performing NMF against the 30 COSMIC v2 signatures. 
-
-### Trinucleotide context counts
-Filename suffix: `.sigs.context.txt`
-
-Trinucleotide context counts of observed somatic variants for all 96 bins are listed in this tab delimited file.
-
-### COSMIC signature (v2) weights
-Filename suffix: `.sigs.cosmic.txt`
-
-Weights for the 30 COSMIC (v2) mutational signatures are listed in this tab delimited file. Thresholds for a signature to be considered present or not present by Molecular Oncology Almanac are specified in [config.ini](/moalmanac/config.ini) under the `[signatures]` heading.
-
-### Trinucleotide context counts image
-Filename suffix: `.sigs.tricontext.counts.png`
-
-Trinucleotide context raw counts of observed somatic variants for all 96 bins are visualized in this png file.
-
-### Trinucleotide context normalized counts image
-Filename suffix: `.sigs.tricontext.normalized.png`
-
-Trinucleotide context normalized counts of observed somatic variants for all 96 bins are visualized in this png file.
-
 ## Preclinical efficacy
-Filename suffix: `.preclinical.efficacy.txt`
+Filename suffix: `.preclinical_efficacy.txt`
 
 Therapies listed in [actionable](#actionable) that have been evaluated on cancer cell lines through the Sanger Institute's GDSC are evaluated for efficacy in the presence and absence of the associated molecular feature. This is performed for relationships associated with therapeutic sensitivity. Columns include:
 - `patient_id` (str) - the string associated with the given molecular profile (`--patient_id`)
@@ -396,7 +368,7 @@ Additional equivalent within a provided ontology or stronger matches from anothe
 
 For molecular features associated with therapeutic sensitivity that have a therapy evaluated on cancer cell lines, a button `[Preclinical evidence]` will appear below the therapy and rationale which will open a modal to compare the sensitivity to the therapy of interest between mutant and wild type cell lines.
 
-Molecular features which are biologically relevant are listed without clinical association. Molecular features will appear here if the associated gene is catalogued in the Molecular Oncology Almanac but under a different feature type, variants are associated with microsatellite stability, and all present COSMIC version 2 mutational signatures not associated with a clinical assertion are reported.
+Molecular features which are biologically relevant are listed without clinical association. Molecular features will appear here if the associated gene is catalogued in the Molecular Oncology Almanac but under a different feature type, variants are associated with microsatellite stability, and all present COSMIC v3.4 mutational signatures not associated with a clinical assertion are reported.
 
 The last section of the report, comparison of molecular profile to cancer cell lines, displays results from Molecular Oncology Almanac's patient-to-cell line matchmaking module. **This will not appear in the report if `--disable_matchmaking` is passed as an argument**. The 5 most similar cancer cell lines to the provided profile are listed each listing the cell line name, sensitive therapies from GDSC, and clinically relevant features present. Users can click `[More details]` under each cell line's name for more details about a given cell line: aliases, sensitive therapies, clinically relevant molecular features, all somatic variants, copy number alterations, and fusions occuring in cancer gene census genes, and the 10 most sensitive therapies to the cancer cell line.
 

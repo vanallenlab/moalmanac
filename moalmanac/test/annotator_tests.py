@@ -85,11 +85,11 @@ class UnitTestAlmanac(unittest.TestCase):
         last_updated = Almanac.last_updated
 
         table = pd.DataFrame([
-            {implication_map: 1, publication_date: 0, 'label': 'a'},
-            {implication_map: 2, publication_date: 0, 'label': 'b'},
-            {implication_map: 2, publication_date: 1, 'label': 'c'},
-            {implication_map: 0, publication_date: 0, 'label': 'd'},
-            {implication_map: 2, publication_date: 1, 'label': 'e'}
+            {implication_map: 1, publication_date: 0, 'last_updated': 0, 'label': 'a'},
+            {implication_map: 2, publication_date: 0, 'last_updated': 0, 'label': 'b'},
+            {implication_map: 2, publication_date: 1, 'last_updated': 0, 'label': 'c'},
+            {implication_map: 0, publication_date: 0, 'last_updated': 0, 'label': 'd'},
+            {implication_map: 2, publication_date: 1, 'last_updated': 0, 'label': 'e'}
         ])
     
         # key, value pair in each record is if the index matched to the corresponding record in `table`
@@ -471,7 +471,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         expected_index_2 = {
             'feature_match_1': 1,
             'feature_match_2': 1,
-            'feature_match_3': 0,
+            'feature_match_3': 1,
             'feature_match_4': 0,
             'feature_match': 2,
             'evidence': 'FDA-Approved',
@@ -549,7 +549,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         expected_index_2_group1 = {
             'feature_match_1': 1,
             'feature_match_2': 1,
-            'feature_match_3': 0,
+            'feature_match_3': 1,
             'feature_match_4': 0,
             'feature_match': 2,
             'evidence': 'FDA-Approved',

@@ -25,6 +25,7 @@ cnv_handle = 'cnv_handle'
 called_cn_handle = 'called_cn_handle'
 fusion_handle = 'fusion_handle'
 germline_handle = 'germline_handle'
+mutational_signatures_path = 'mutational_signatures_path'
 validation_handle = 'validation_handle'
 disable_matchmaking = 'disable_matchmaking'
 
@@ -87,21 +88,11 @@ def format_output_directory(directory):
         return directory
 
 
-def load_and_process_mutational_signatures(handle, folder, label, dbs, tumor_type, calculate: bool = False, plot: bool = False):
-    if calculate:
-        features.CosmicSignatures.calculate_contributions(handle, folder, label)
-    contexts = features.CosmicSignatures.import_context(folder, label)
-    signatures = features.CosmicSignatures.import_feature(folder, label)
-    return process_mutational_signatures(contexts, signatures, folder, label, dbs, tumor_type, plot)
-
-
-def plot_mutational_signatures(series, folder, label):
-    for drawing_function, output_name in [
-        (illustrator.Signatures.generate_context_plot, 'counts'),
-        (illustrator.Signatures.generate_context_plot_normalized, 'normalized'),
-    ]:
-        figure = drawing_function(series)
-        writer.Illustrations.write(figure, folder, label, f"sigs.tricontext.{output_name}.png")
+def load_and_process_mutational_signatures(input, dbs, tumor_type):
+    signatures = features.CosmicSignatures.import_feature(input)
+    annotated = annotator.Annotator.annotate_almanac(signatures, dbs, tumor_type)
+    evaluated = evaluator.Evaluator.evaluate_almanac(annotated)
+    return evaluated
 
 
 def plot_preclinical_efficacy(dictionary, folder, label):
@@ -110,14 +101,6 @@ def plot_preclinical_efficacy(dictionary, folder, label):
             figure = therapy_dictionary['figure']
             figure_name = therapy_dictionary['figure_name']
             writer.Illustrations.write(figure, folder, label, f"{figure_name}.png")
-
-
-def process_mutational_signatures(contexts, signatures, folder, label, dbs, ontology_code, plot: bool = False):
-    if contexts is not None and plot:
-        plot_mutational_signatures(contexts, folder, label)
-    annotated = annotator.Annotator.annotate_almanac(signatures, dbs, ontology_code)
-    evaluated = evaluator.Evaluator.evaluate_almanac(annotated)
-    return evaluated
 
 
 def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = False):
@@ -186,13 +169,9 @@ def main(patient, inputs, output_folder):
     evaluated_ms_status = evaluator.Microsatellite.evaluate_status(annotated_ms_status, evaluated_ms_variants)
 
     evaluated_mutational_signatures = load_and_process_mutational_signatures(
-        handle=inputs[snv_handle],
-        folder=output_folder,
-        label=string_id,
+        input=inputs[mutational_signatures_path],
         dbs=dbs,
-        tumor_type=code,
-        calculate=TOGGLE_FEATURES.get('calculate_mutational_signatures'),
-        plot=TOGGLE_FEATURES.get('plot_mutational_signatures')
+        tumor_type=code
     )
 
     actionable = evaluator.Actionable.evaluate(
@@ -275,6 +254,9 @@ if __name__ == "__main__":
     arg_parser.add_argument('--patient_id',
                             help='patient id label',
                             required=True)
+    arg_parser.add_argument('--description',
+                            default='',
+                            help='description of patient')
     arg_parser.add_argument('--tumor_type',
                             default='Unknown',
                             help='reported tumor type')
@@ -305,13 +287,13 @@ if __name__ == "__main__":
     arg_parser.add_argument('--validation_handle',
                             default='',
                             help='handle for SNV MAF called from validation sequencing')
-    arg_parser.add_argument('--description',
-                            default='',
-                            help='description of patient')
     arg_parser.add_argument('--ms_status',
                             default='unk',
                             choices=['msih', 'msil', 'mss', 'unk'],
                             help='microsatellite instability status')
+    arg_parser.add_argument('--mutational_signatures',
+                            default='',
+                            help='file for SBS signature contributions, version 3.4')
     arg_parser.add_argument('--purity',
                             default='Unknown',
                             help='Tumor purity')
@@ -348,6 +330,7 @@ if __name__ == "__main__":
         called_cn_handle: args.called_cn_handle,
         fusion_handle: args.fusion_handle,
         germline_handle: args.germline_handle,
+        mutational_signatures_path: args.mutational_signatures,
         validation_handle: args.validation_handle,
         disable_matchmaking: args.disable_matchmaking
     }

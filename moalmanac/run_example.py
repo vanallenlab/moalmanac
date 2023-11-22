@@ -15,7 +15,7 @@ patient_dict = {
 }
 
 empty_dict = {
-    'snv_handle': '../example_data/example_patient.capture.somatic.snvs.maf',
+    'snv_handle': '',
     'indel_handle': '',
     'bases_covered_handle': '',
     'called_cn_handle': '',
@@ -23,6 +23,7 @@ empty_dict = {
     'fusion_handle': '',
     'germline_handle': '',
     'validation_handle': '',
+    'mutational_signatures_path': '',
     'disable_matchmaking': False
 }
 
@@ -35,6 +36,7 @@ example_dict = {
     'fusion_handle': '../example_data/example_patient.rna.star.fusions.txt',
     'germline_handle': '../example_data/example_patient.capture.germline.maf',
     'validation_handle': '../example_data/example_patient.rna.somatic.snvs.maf',
+    'mutational_signatures_path': '../example_data/example_patient.capture.sbs_contributions.txt',
     'disable_matchmaking': False
 }
 

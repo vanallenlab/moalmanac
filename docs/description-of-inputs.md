@@ -16,6 +16,7 @@ Example inputs can be found in the [`example_data/`](/example_data/) folder, fou
     - [Germline variants](#germline-variants)
     - [Somatic variants from validation sequencing](#somatic-variants-from-validation-sequencing)
     - [Microsatellite status](#microsatellite-status)
+    - [Mutational signatures](#mutational-signatures)
     - [Purity](#purity)
     - [Ploidy](#ploidy)
     - [Whole genome doubling](#whole-genome-doubling)
@@ -124,7 +125,7 @@ This input is looking for an integer value.
 
 The rows associated with _TP53_, _CDKN2A_, and _EGFR_ will be interpreted and scored by Molecular Oncology Almanac while _BRAF_ will be filtered.
 
-### Required files
+### Required fields
 Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `gene`, gene symbol associated with the copy number alteration
 - `call`, copy number event of the gene. `Amplification` and `Deletion` are accepted and all other values will be filtered.
@@ -237,6 +238,23 @@ At least one of the following also must be included:
 - `--msih` for microsatellite instability "high", MSI-H 
 
 Microsatellite status is reported in the clinical actionability report. 
+
+## Mutational signatures
+`--mutational_signatures` anticipates a tab delimited file which contains contributions to Single Base Substitution (SBS) Mutational Signatures from [COSMIC version 3.4](https://cancer.sanger.ac.uk/signatures/sbs/). The file should only contain signature contributions for the tumor sample being studied. We recommend generating SBS mutational signatures with [SigProfilerAssignment](https://github.com/AlexandrovLab/SigProfilerAssignment), and have prepared [a wrapper GitHub repository](https://github.com/vanallenlab/SigProfilerAssignment-wrapper) to run SigProfilerAssignment and format signature contributions as expected.  
+
+### Example
+| signature | contribution | 
+|---|--------------|
+| SBS1 | 0.03846154   |
+| SBS2 | 0            |
+| SBS3 | 0.8525641    |
+| ... | ...          |
+| SBS95 | 0            |
+
+### Required fields,
+The required fields for this file can be changed from their default expectations by editing the appropriate section of `colnames.ini`. Column names are **not** case sensitive.
+- `signature`, labels for each of the 79 SBS mutational signatures included in COSMIC mutational signatures [version 3.4](https://cancer.sanger.ac.uk/signatures/sbs/) 
+- `contribution`, a float value between 0 and 1 for the row's associated signature weight. This column's values should sum to 1. 
 
 ## Purity
 `--purity` anticipates a float value between 0.0 and 1.0 for the reported tumor purity. This is just used for reporting in the clinical actionability report.
