@@ -7,7 +7,6 @@ import sys
 
 from datasources import Lawrence
 from reader import Reader
-from illustrator import Signatures
 
 from config import COLNAMES
 from config import CONFIG
@@ -417,26 +416,27 @@ class CosmicSignatures(Features):
 
     @classmethod
     def import_feature(cls, path):
-        '''loads file for Cosmic Mutational Signatures based on provided file path'''
-        if os.path.exists(path):
-            column_map = cls.create_column_map()
-            df = Reader.safe_read(path, '\t', column_map, index_col=False)
+        """Loads and formats Cosmic Mutational Signatures based on provided file path."""
+        column_map = cls.create_column_map()
+        df = Features.import_if_path_exists(path, delimiter='\t', column_map=column_map)
+        if not df.empty:
             df[Features.feature_type] = cls.feature_type
-            df[Features.alt_type] = 'version 3.4'
-            return df
+            df[Features.alt_type] = 'v3.4'
+            df[Features.alt] = cls.round_contributions(df[Features.alt])
+            idx = cls.subset_significant_signatures(df[Features.alt])
+            return df[idx]
         else:
-            return cls.create_empty_dataframe()
-
+            return Features.create_empty_dataframe()
 
     @staticmethod
-    def format_weights(weights):
-        nonzero = weights[weights.astype(float) != 0.0]
-        nonzero.index = nonzero.index.str.replace('weights', 'COSMIC').str.replace('.', ' ').tolist()
-        return nonzero.astype(float).round(3)
+    def round_contributions(series, decimals=3):
+        """Rounds a pandas series of float values to the specified number of decimal places, 3 by default."""
+        return series.astype(float).round(decimals)
 
     @classmethod
     def subset_significant_signatures(cls, series):
-        return series[series.astype(float) >= float(cls.min_contribution)]
+        """Subsets the provided SBS signatures to those that pass the minimum contribution, specified in config.ini"""
+        return series.astype(float) >= float(cls.min_contribution)
 
 
 class Fusion:

@@ -25,6 +25,7 @@ cnv_handle = 'cnv_handle'
 called_cn_handle = 'called_cn_handle'
 fusion_handle = 'fusion_handle'
 germline_handle = 'germline_handle'
+mutational_signatures_path = 'mutational_signatures_path'
 validation_handle = 'validation_handle'
 disable_matchmaking = 'disable_matchmaking'
 
@@ -87,8 +88,8 @@ def format_output_directory(directory):
         return directory
 
 
-def load_and_process_mutational_signatures(folder, dbs, tumor_type):
-    signatures = features.CosmicSignatures.import_feature(folder)
+def load_and_process_mutational_signatures(input, dbs, tumor_type):
+    signatures = features.CosmicSignatures.import_feature(input)
     annotated = annotator.Annotator.annotate_almanac(signatures, dbs, tumor_type)
     evaluated = evaluator.Evaluator.evaluate_almanac(annotated)
     return evaluated
@@ -168,7 +169,7 @@ def main(patient, inputs, output_folder):
     evaluated_ms_status = evaluator.Microsatellite.evaluate_status(annotated_ms_status, evaluated_ms_variants)
 
     evaluated_mutational_signatures = load_and_process_mutational_signatures(
-        folder=output_folder,
+        input=inputs[mutational_signatures_path],
         dbs=dbs,
         tumor_type=code
     )
@@ -329,12 +330,13 @@ if __name__ == "__main__":
         called_cn_handle: args.called_cn_handle,
         fusion_handle: args.fusion_handle,
         germline_handle: args.germline_handle,
+        mutational_signatures_path: args.mutational_signatures,
         validation_handle: args.validation_handle,
         disable_matchmaking: args.disable_matchmaking
     }
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
-
+    print(inputs_dict)
     main(patient_dict, inputs_dict, output_directory)
 
     end_time = time.time()
