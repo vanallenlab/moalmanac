@@ -707,11 +707,11 @@ class Almanac:
     @classmethod
     def annotate_signatures(cls, sliced_series, ontology, table):
         series = sliced_series.copy(deep=True)
-        feature = series.loc[cls.feature].split(' ')[-1]
+        feature = series.loc[cls.feature]
 
         query_same_ontology = (table[cls.oncotree_code] == ontology)
         query_diff_ontology = (table[cls.oncotree_code] != ontology)
-        query_feature = (table[cls.cosmic_signature_number].astype(int) == int(feature))
+        query_feature = (table[cls.cosmic_signature_number].astype(str) == str(feature))
 
         match_bins = []
 
