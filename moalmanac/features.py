@@ -423,20 +423,20 @@ class CosmicSignatures(Features):
             df[Features.feature_type] = cls.feature_type
             df[Features.alt_type] = 'v3.4'
             df[Features.alt] = cls.round_contributions(df[Features.alt])
-            idx = cls.subset_significant_signatures(df[Features.alt])
+            idx = cls.index_for_minimum_contribution(df[Features.alt])
             return df[idx]
         else:
             return Features.create_empty_dataframe()
+
+    @classmethod
+    def index_for_minimum_contribution(cls, series, minimum_value=min_contribution):
+        """Subsets the provided SBS signatures to those that pass the minimum contribution, specified in config.ini"""
+        return series.astype(float) >= float(minimum_value)
 
     @staticmethod
     def round_contributions(series, decimals=3):
         """Rounds a pandas series of float values to the specified number of decimal places, 3 by default."""
         return series.astype(float).round(decimals)
-
-    @classmethod
-    def subset_significant_signatures(cls, series):
-        """Subsets the provided SBS signatures to those that pass the minimum contribution, specified in config.ini"""
-        return series.astype(float) >= float(cls.min_contribution)
 
 
 class Fusion:

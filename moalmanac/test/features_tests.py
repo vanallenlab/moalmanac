@@ -121,52 +121,34 @@ class UnitTestCopyNumberTotal(unittest.TestCase):
 
 
 class UnitTestCosmicSignatures(unittest.TestCase):
-    def test_create_feature_dataframe(self):
-        string = {features.CosmicSignatures.patient_id: "Example"}
-        weights = {
-            'COSMIC signature 1': 0,
-            'COSMIC signature 3': 0.5,
-            'COSMIC signature 7': 1.0
+    def test_round_contributions(self):
+        contributions = {
+            'COSMIC signature 1': 0.0000,
+            'COSMIC signature 3': 0.5001,
+            'COSMIC signature 7': 0.9999,
+            'COSMIC signature 10': 0.2456,
+            'COSMIC signature 11': 0.1985,
         }
-        series = pd.Series(weights)
-        result = features.CosmicSignatures.create_feature_dataframe(string, series)
-        self.assertEqual(True, isinstance(result, pd.DataFrame))
-        self.assertEqual(3, result.shape[0])
-        self.assertEqual('COSMIC signature 1', result.loc[0, features.Features.feature])
-        self.assertEqual('COSMIC signature 3', result.loc[1, features.Features.feature])
-        self.assertEqual('COSMIC signature 7', result.loc[2, features.Features.feature])
-        self.assertEqual(0, result.loc[0, features.Features.alt])
-        self.assertEqual(0.5, result.loc[1, features.Features.alt])
-        self.assertEqual(1.0, result.loc[2, features.Features.alt])
-
-    def test_create_handle(self):
-        string1 = '.'
-        string2 = 'Foo'
-        string3 = 'Bar'
-        self.assertEqual('./Foo.Bar', features.CosmicSignatures.create_handle(string1, string2, string3))
-
-    def test_format_weights(self):
-        weights = {
-            'weights.signature.1': 0,
-            'weights.signature.3': 0.5,
-            'weights.signature 7': 1.0
-        }
-        series = pd.Series(weights)
-        result = features.CosmicSignatures.format_weights(series)
-        self.assertEqual(2, result.shape[0])
-        self.assertEqual('COSMIC signature 3', result.index[0])
-        self.assertEqual('COSMIC signature 7', result.index[1])
+        series = pd.Series(contributions)
+        result = features.CosmicSignatures.round_contributions(series)
+        self.assertEqual(5, result.shape[0])
+        self.assertEqual(result.loc['COSMIC signature 1'], 0.000)
+        self.assertEqual(result.loc['COSMIC signature 3'], 0.500)
+        self.assertEqual(result.loc['COSMIC signature 7'], 1.000)
+        self.assertEqual(result.loc['COSMIC signature 10'], 0.246)
+        self.assertEqual(result.loc['COSMIC signature 11'], 0.198)
 
     def test_subset_significant_signatures(self):
-        weights = {
+        contributions = {
             'COSMIC signature 1': 0,
             'COSMIC signature 3': 0.5,
             'COSMIC signature 7': 1.0,
             'COSMIC signature 10': 0.2,
             'COSMIC signature 11': 0.19,
         }
-        series = pd.Series(weights)
-        result = features.CosmicSignatures.subset_significant_signatures(series)
+        series = pd.Series(contributions)
+        idx = features.CosmicSignatures.index_for_minimum_contribution(series, minimum_value=0.20)
+        result = series[idx]
         self.assertEqual(3, result.shape[0])
         self.assertEqual('COSMIC signature 3', result.index[0])
         self.assertEqual('COSMIC signature 7', result.index[1])
