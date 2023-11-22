@@ -336,7 +336,7 @@ if __name__ == "__main__":
     }
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
-    print(inputs_dict)
+
     main(patient_dict, inputs_dict, output_directory)
 
     end_time = time.time()
