@@ -373,7 +373,7 @@ class CoverageMetrics:
     @classmethod
     def append_tumor_f(cls, series_alt_count, series_total_coverage):
         idx = cls.get_dnp_boolean(series_alt_count)
-        tumor_f = pd.Series(0, index=idx.index)
+        tumor_f = pd.Series(0, index=idx.index, dtype=float)
 
         idx_snp = series_alt_count[~idx].index
         idx_dnp = series_alt_count[idx].index
