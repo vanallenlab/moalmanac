@@ -326,70 +326,39 @@ class CopyNumberTotal(CopyNumber):
 
 
 class CoverageMetrics:
-    @staticmethod
-    def get_dnp_boolean(series):
-        return series.astype(str).str.contains('\|')
-
-    @staticmethod
-    def split_counts(series_alt_count):
-        return series_alt_count.str.split('\|', expand=True).fillna(np.nan)
+    @classmethod
+    def apply_min_coverage_for_onps(cls, series):
+        idx = cls.get_onp_boolean(series)
+        split_counts = cls.split_counts(series.loc[idx])
+        min_counts = cls.get_minimum_values_dataframe(split_counts, axis=1)
+        series.loc[idx] = min_counts.loc[idx]
+        return series
 
     @staticmethod
     def calculate_coverage(series_alt_count, series_ref_count):
         return series_alt_count.astype(float).add(series_ref_count.astype(float))
-
-    @classmethod
-    def calculate_coverage_dnp(cls, series_alt_count, series_ref_count):
-        df_alt_split = cls.split_counts(series_alt_count)
-        added = df_alt_split.astype(float).add(series_ref_count.astype(float), axis=0)
-        return added.apply(lambda x: '|'.join(x.dropna().astype(int).astype(str)), axis=1)
-
-    @classmethod
-    def append_coverage(cls, series_alt_count, series_ref_count):
-        idx = cls.get_dnp_boolean(series_alt_count)
-        total = pd.Series(0, index=idx.index)
-
-        idx_snp = series_alt_count[~idx].index
-        idx_dnp = series_alt_count[idx].index
-
-        if not idx_snp.empty:
-            total[idx_snp] = cls.calculate_coverage(series_alt_count[idx_snp], series_ref_count[idx_snp])
-        if not idx_dnp.empty:
-            total[idx_dnp] = cls.calculate_coverage_dnp(series_alt_count[idx_dnp], series_ref_count[idx_dnp])
-
-        return total
 
     @staticmethod
     def calculate_tumor_f(series_alt_count, series_total_coverage):
         return series_alt_count.astype(float).divide(series_total_coverage.astype(float))
 
     @classmethod
-    def calculate_tumor_f_dnp(cls, series_alt_count, series_total_coverage):
-        df_alt_split = cls.split_counts(series_alt_count)
-        df_cov_split = cls.split_counts(series_total_coverage)
-        divided = df_alt_split.astype(float).divide(df_cov_split.astype(float), axis=0)
-        return divided.apply(lambda x: '|'.join(x.dropna().astype(int).astype(str)), axis=1)
-
-    @classmethod
-    def append_tumor_f(cls, series_alt_count, series_total_coverage):
-        idx = cls.get_dnp_boolean(series_alt_count)
-        tumor_f = pd.Series(0, index=idx.index, dtype=float)
-
-        idx_snp = series_alt_count[~idx].index
-        idx_dnp = series_alt_count[idx].index
-
-        if not idx_snp.empty:
-            tumor_f[idx_snp] = cls.calculate_tumor_f(series_alt_count[idx_snp], series_total_coverage[idx_snp])
-        if not idx_dnp.empty:
-            tumor_f[idx_dnp] = cls.calculate_tumor_f_dnp(series_alt_count[idx_dnp], series_total_coverage[idx_dnp])
-
-        return tumor_f.round(4)
+    def format_coverage_col(cls, series):
+        formatted_series = series.replace('__UNKNOWN__', np.nan).fillna(np.nan)
+        formatted_series = cls.apply_min_coverage_for_onps(formatted_series)
+        return formatted_series
 
     @staticmethod
-    def format_coverage_col(series):
-        formatted_series = series.replace('__UNKNOWN__', np.nan)
-        formatted_series = formatted_series.fillna(np.nan)
-        return formatted_series
+    def get_minimum_values_dataframe(dataframe, axis=1):
+        return dataframe.min(axis=axis)
+
+    @staticmethod
+    def get_onp_boolean(series):
+        return series.astype(str).str.contains('|', regex=False)
+
+    @staticmethod
+    def split_counts(series):
+        return series.str.split('|', expand=True, regex=False)
 
 
 class CosmicSignatures(Features):
@@ -604,8 +573,8 @@ class MAF(Features):
         df[Features.feature_type] = cls.annotate_feature_type(feature_type, df.index)
         df[Features.alt_count] = CoverageMetrics.format_coverage_col(df[cls.alt_count])
         df[Features.ref_count] = CoverageMetrics.format_coverage_col(df[cls.ref_count])
-        df[Features.coverage] = CoverageMetrics.append_coverage(df[cls.alt_count], df[cls.ref_count])
-        df[Features.tumor_f] = CoverageMetrics.append_tumor_f(df[cls.alt_count], df[cls.coverage])
+        df[Features.coverage] = CoverageMetrics.calculate_coverage(df[cls.alt_count], df[cls.ref_count])
+        df[Features.tumor_f] = CoverageMetrics.calculate_tumor_f(df[cls.alt_count], df[cls.coverage])
         df[Features.alt_type] = cls.rename_coding_classifications(df[cls.alt_type])
         return df
 
