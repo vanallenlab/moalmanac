@@ -406,6 +406,9 @@ class Almanac:
         for feature_type, group in df.groupby(cls.feature_type):
             feature_type_records = cls.subset_records(ds, cls.feature_type, feature_type)
             table = pd.DataFrame(feature_type_records)
+
+            # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+            pd.set_option('future.no_silent_downcasting', True)
             table[cls.implication_map] = table[cls.implication].replace(cls.predictive_implication_map)
 
             if feature_type in [cls.somatic_variant, cls.germline_variant, cls.copynumber_variant, cls.fusion]:
