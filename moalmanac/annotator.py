@@ -13,7 +13,7 @@ from config import CONFIG
 EXAC_CONFIG = CONFIG['exac']
 
 
-class Annotator(object):
+class Annotator:
     """
     Annotates variants using datasources
     """
@@ -127,6 +127,12 @@ class Annotator(object):
         return idx
 
     @classmethod
+    def fill_na(cls, dataframe, column, fill_value, fill_data_type):
+        if column not in dataframe.columns:
+            dataframe = cls.preallocate_empty_columns(dataframe, [column])
+        return dataframe.loc[dataframe.index, column].astype(fill_data_type).fillna(fill_value)
+
+    @classmethod
     def match_ds(cls, df, ds, bin_column, compare_columns):
         df[bin_column] = cls.preallocate_bin(bin_column, df.index)
 
@@ -147,7 +153,7 @@ class Annotator(object):
         return df
 
 
-class ACMG(object):
+class ACMG:
     gene = datasources.ACMG.gene
 
     bin_name = Annotator.acmg_bin
@@ -906,7 +912,7 @@ class CancerHotspots:
         return Annotator.annotate(df, dbs, datasources.CancerHotspots, cls.bin_name, cls.comparison_columns)
 
 
-class CancerHotspots3D(object):
+class CancerHotspots3D:
     gene = datasources.CancerHotspots3D.gene
     alteration = datasources.CancerHotspots3D.alt
 
@@ -918,7 +924,7 @@ class CancerHotspots3D(object):
         return Annotator.annotate(df, dbs, datasources.CancerHotspots3D, cls.bin_name, cls.comparison_columns)
 
 
-class CancerGeneCensus(object):
+class CancerGeneCensus:
     gene = datasources.CancerGeneCensus.gene
 
     bin_name = Annotator.cgc_bin
@@ -929,7 +935,7 @@ class CancerGeneCensus(object):
         return Annotator.annotate(df, dbs, datasources.CancerGeneCensus, cls.bin_name, cls.comparison_columns)
 
 
-class ClinVar(object):
+class ClinVar:
     chr = datasources.ClinVar.chr
     start = datasources.ClinVar.start
     end = datasources.ClinVar.end
@@ -956,7 +962,7 @@ class ClinVar(object):
         return features.Features.preallocate_missing_columns(df)
 
 
-class Cosmic(object):
+class Cosmic:
     gene = datasources.Cosmic.gene
     alteration = datasources.Cosmic.alt
 
@@ -996,9 +1002,21 @@ class ExAC:
             ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
 
         merged = variants.merge(ds, how='left')
-        merged.loc[merged.index, cls.af] = cls.fill_na(merged, cls.af, 0.0, float, 6)
-        not_variants.loc[not_variants.index, cls.af] = cls.fill_na(not_variants, cls.af, 0.0, float, 6)
-        return pd.concat([merged, not_variants]).sort_index()
+        merged.loc[merged.index, cls.af] = Annotator.fill_na(
+            dataframe=merged,
+            column=cls.af,
+            fill_value=0.0,
+            fill_data_type=float
+        )
+        not_variants.loc[not_variants.index, cls.af] = Annotator.fill_na(
+            dataframe=not_variants,
+            column=cls.af,
+            fill_value=0.0,
+            fill_data_type=float
+        )
+        result = pd.concat([merged, not_variants])
+        result[cls.af] = result[cls.af].round(6)
+        return result
 
     @classmethod
     def annotate(cls, df, dbs):
@@ -1027,12 +1045,6 @@ class ExAC:
     @classmethod
     def drop_existing_columns(cls, dataframe):
         return dataframe.drop(dataframe.columns[dataframe.columns.str.contains('exac')], axis=1)
-
-    @classmethod
-    def fill_na(cls, dataframe, column, fill_value, fill_data_type, round_places):
-        if column not in dataframe.columns:
-            dataframe = Annotator.preallocate_empty_columns(dataframe, [column])
-        return dataframe.loc[dataframe.index, column].astype(fill_data_type).fillna(fill_value).round(round_places)
 
     @classmethod
     def format_columns(cls, dataframe, column, data_type):
@@ -1081,7 +1093,7 @@ class ExACExtended:
         return features.Features.preallocate_missing_columns(df_annotated)
 
 
-class GSEACancerModules(object):
+class GSEACancerModules:
     gene = datasources.GSEACancerModules.gene
 
     bin_name = Annotator.gsea_module_bin
@@ -1092,7 +1104,7 @@ class GSEACancerModules(object):
         return Annotator.annotate(df, dbs, datasources.GSEACancerModules, cls.bin_name, cls.comparison_columns)
 
 
-class GSEACancerPathways(object):
+class GSEACancerPathways:
     gene = datasources.GSEACancerPathways.gene
 
     bin_name = Annotator.gsea_pathway_bin
@@ -1103,7 +1115,7 @@ class GSEACancerPathways(object):
         return Annotator.annotate(df, dbs, datasources.GSEACancerPathways, cls.bin_name, cls.comparison_columns)
 
 
-class Hereditary(object):
+class Hereditary:
     gene = datasources.Hereditary.gene
 
     bin_name = Annotator.hereditary_bin
@@ -1114,7 +1126,7 @@ class Hereditary(object):
         return Annotator.annotate(df, dbs, datasources.Hereditary, cls.bin_name, cls.comparison_columns)
 
 
-class MSI(object):
+class MSI:
     gene = datasources.Datasources.feature
 
     bin_name = Annotator.msi_bin
@@ -1134,7 +1146,7 @@ class MSI(object):
         return df
 
 
-class OverlapValidation(object):
+class OverlapValidation:
     section = 'validation_sequencing'
     gene = COLNAMES[section]['gene']
     feature_type = COLNAMES[section]['feature_type']
@@ -1156,7 +1168,13 @@ class OverlapValidation(object):
         df = cls.drop_validation_columns(primary)
         df = cls.merge_data_frames(df, validation, cls.merge_cols)
         idx = cls.get_mutation_index(df)
-        df.loc[idx, cls.fill_cols] = df.loc[idx, cls.fill_cols].fillna(0.0)
+        for column in cls.fill_cols:
+            df.loc[idx, column] = Annotator.fill_na(
+                dataframe=df.loc[idx, :],
+                column=column,
+                fill_value=0.0,
+                fill_data_type=float
+            )
 
         df.loc[idx, cls.validation_detection_power] = cls.calculate_validation_detection_power(
             df.loc[idx, cls.tumor_f].astype(float),
@@ -1195,7 +1213,7 @@ class OverlapValidation(object):
         return series.round(n)
 
 
-class OverlapSomaticGermline(object):
+class OverlapSomaticGermline:
     section = 'overlap_somatic_germline'
     gene = COLNAMES[section]['gene']
     alt_type = COLNAMES[section]['alt_type']
