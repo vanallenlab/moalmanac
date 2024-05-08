@@ -74,6 +74,13 @@ generate_illustrations = 'generate_illustrations'
 TOGGLE_FEATURES = CONFIG['function_toggle']
 
 
+def create_metadata_dictionary(input_dictionary):
+    dictionary = {}
+    for key, value in input_dictionary.items():
+        dictionary[key] = value
+    return dictionary
+
+
 def execute_cmd(command):
     subprocess.call(command, shell=True)
 
@@ -112,16 +119,18 @@ def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = Fal
 
 
 def main(patient, inputs, output_folder):
+    metadata_dictionary = create_metadata_dictionary(patient)
+
     dbs = datasources.Datasources.generate_db_dict(CONFIG)
     output_folder = format_output_directory(output_folder)
     if output_folder != "":
         execute_cmd(f"mkdir -p {output_folder}")
 
-    string_id = patient[patient_id]
+    string_id = metadata_dictionary[patient_id]
 
-    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, patient[tumor_type])
-    patient[ontology] = mapped_ontology[ontology]
-    patient[code] = mapped_ontology[code]
+    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, metadata_dictionary[tumor_type])
+    metadata_dictionary[ontology] = mapped_ontology[ontology]
+    metadata_dictionary[code] = mapped_ontology[code]
 
     df_snv, df_snv_reject = features.MAFSomatic.import_feature(inputs[snv_handle])
     df_indel, df_indel_reject = features.MAFSomatic.import_feature(inputs[indel_handle])
@@ -134,7 +143,7 @@ def main(patient, inputs, output_folder):
     germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
 
     if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code])
+        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, metadata_dictionary[code])
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
 
         validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
@@ -145,7 +154,7 @@ def main(patient, inputs, output_folder):
         evaluated_somatic = features.Features.create_empty_dataframe()
 
     if not germline_variants.empty:
-        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code])
+        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, metadata_dictionary[code])
         evaluated_germline = evaluator.Evaluator.evaluate_germline(annotated_germline)
     else:
         evaluated_germline = features.Features.create_empty_dataframe()
@@ -153,15 +162,15 @@ def main(patient, inputs, output_folder):
     evaluated_somatic = annotator.OverlapSomaticGermline.append_germline_hits(evaluated_somatic, evaluated_germline)
     integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, feature_types)
 
-    somatic_burden = features.BurdenReader.import_feature(inputs[bases_covered_handle], patient, somatic_variants, dbs)
+    somatic_burden = features.BurdenReader.import_feature(inputs[bases_covered_handle], metadata_dictionary, somatic_variants, dbs)
 
-    patient_wgd = features.Aneuploidy.summarize(patient[wgd])
-    patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
-    patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
+    patient_wgd = features.Aneuploidy.summarize(metadata_dictionary[wgd])
+    patient_ms_status = features.MicrosatelliteReader.summarize(metadata_dictionary[ms_status])
+    metadata_dictionary[ms_status] = features.MicrosatelliteReader.map_status(metadata_dictionary[ms_status])
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code])
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code])
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code])
+    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, metadata_dictionary[code])
+    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, metadata_dictionary[code])
+    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, metadata_dictionary[code])
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
     evaluated_wgd = evaluator.Evaluator.evaluate_almanac(annotated_wgd)
@@ -235,7 +244,7 @@ def main(patient, inputs, output_folder):
     writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
 
     if TOGGLE_FEATURES.getboolean('generate_actionability_report'):
-        report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
+        report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
 
         include_similarity = TOGGLE_FEATURES.getboolean('include_model_similarity_in_actionability_report')
         reporter.Reporter.generate_actionability_report(
