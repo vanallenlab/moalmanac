@@ -177,7 +177,7 @@ class Evaluator(object):
 
     @classmethod
     def subset_almanac_bin(cls, df):
-        return df[df[cls.almanac_bin].fillna(0.0).astype(float) != 0.0]
+        return df[df[cls.almanac_bin].astype(float).fillna(0.0) != 0.0]
 
 
 class Actionable:
@@ -258,7 +258,7 @@ class Actionable:
         df = pd.concat(actionable_list, ignore_index=True)
 
         df[Evaluator.feature_display] = cls.format_feature_display(
-            df.fillna(''), Evaluator.feature_display,
+            df, Evaluator.feature_display,
             Evaluator.feature_type, Evaluator.feature,
             Evaluator.alt_type, Evaluator.alt)
         return df.sort_values(cls.sort_columns, ascending=False)
