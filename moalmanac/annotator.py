@@ -408,8 +408,13 @@ class Almanac:
             table = pd.DataFrame(feature_type_records)
 
             # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-            pd.set_option('future.no_silent_downcasting', True)
-            table[cls.implication_map] = table[cls.implication].replace(cls.predictive_implication_map)
+            with pd.option_context("future.no_silent_downcasting", True):
+                table[cls.implication_map] = (
+                    table[cls.implication]
+                    .astype(str)
+                    .replace(cls.predictive_implication_map)
+                    .astype(float)
+                )
 
             if feature_type in [cls.somatic_variant, cls.germline_variant, cls.copynumber_variant, cls.fusion]:
                 idx = group[cls.feature].isin(list_genes)
@@ -418,7 +423,9 @@ class Almanac:
 
             for index in group.index:
                 annotation_function = annotation_function_dict[feature_type]
-                df.loc[index, :] = annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table)
+                new_series = annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table)
+                df.loc[index, new_series.index] = new_series
+                # annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table))
 
         return df
 
@@ -1025,7 +1032,7 @@ class ExAC:
     def fill_na(cls, dataframe, column, fill_value, fill_data_type, round_places):
         if column not in dataframe.columns:
             dataframe = Annotator.preallocate_empty_columns(dataframe, [column])
-        return dataframe.loc[dataframe.index, column].fillna(fill_value).astype(fill_data_type).round(round_places)
+        return dataframe.loc[dataframe.index, column].astype(fill_data_type).fillna(fill_value).round(round_places)
 
     @classmethod
     def format_columns(cls, dataframe, column, data_type):
