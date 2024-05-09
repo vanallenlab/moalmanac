@@ -102,8 +102,11 @@ class UnitTestEvaluator(unittest.TestCase):
 
     def test_remap_almanac_bins(self):
         series = pd.Series([0, 0, 1, 2])
-        remapped = Evaluator.remap_almanac_bins(series, 0, 4)
-        self.assertEqual(True, 4 in remapped.tolist())
+        remapped = Evaluator.remap_almanac_bins(series=series, old_value=0, new_value=4)
+        self.assertEqual(4, remapped.loc[0])
+        self.assertEqual(4, remapped.loc[1])
+        self.assertEqual(1, remapped.loc[2])
+        self.assertEqual(2, remapped.loc[3])
 
     def test_remove_low_allele_fraction_variants(self):
         feature_type = Evaluator.feature_type
