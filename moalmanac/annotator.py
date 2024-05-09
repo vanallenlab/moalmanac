@@ -429,10 +429,8 @@ class Almanac:
 
             for index in group.index:
                 annotation_function = annotation_function_dict[feature_type]
-                print(feature_type)
                 new_series = annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table)
                 df.loc[index, new_series.index] = new_series
-                # annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table))
 
         return df
 
@@ -571,7 +569,7 @@ class Almanac:
 
     @classmethod
     def annotate_fusion(cls, sliced_series, ontology, table):
-        series = sliced_series.fillna(pd.NA).copy(deep=True) #.fillna('').copy(deep=True)
+        series = sliced_series.fillna(pd.NA).copy(deep=True)
         feature = series.loc[cls.feature]
         alt_type = series.loc[cls.alt_type]
         alt = series.loc[cls.alt]
