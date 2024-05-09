@@ -311,8 +311,8 @@ class UnitTestValidation(unittest.TestCase):
 
 
 class UnitTestPreclinicalEfficacy(unittest.TestCase):
-    df1 = pd.read_csv('../example_output/example.actionable.txt', sep='\t')
-    df2 = pd.read_csv('../example_output/example.preclinical.efficacy.txt', sep='\t')
+    df1 = pd.read_csv('../example_output/example_output.actionable.txt', sep='\t')
+    df2 = pd.read_csv('../example_output/example_output.preclinical.efficacy.txt', sep='\t')
     dbs_preclinical = datasources_Preclinical.import_dbs()
     efficacy_dictionary = SensitivityDictionary.create(dbs_preclinical, df1)
 
