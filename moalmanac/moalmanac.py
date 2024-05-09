@@ -118,6 +118,10 @@ def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = Fal
     return efficacy_dictionary, efficacy_summary
 
 
+def remove_na_columns_from_dataframe(dataframe):
+    return ''
+
+
 def main(patient, inputs, output_folder):
     metadata_dictionary = create_metadata_dictionary(patient)
 
@@ -137,8 +141,10 @@ def main(patient, inputs, output_folder):
     df_cnv, df_cnv_reject = features.CopyNumber.import_feature(inputs[called_cn_handle], inputs[cnv_handle])
     df_fusion, df_fusion_reject = features.Fusion.import_feature(inputs[fusion_handle])
 
-    somatic_variants = pd.concat([df_snv, df_indel, df_cnv, df_fusion], ignore_index=True)
-    somatic_filtered = pd.concat([df_snv_reject, df_indel_reject, df_cnv_reject, df_fusion_reject], ignore_index=True)
+    accepted_variants = [df_snv, df_indel, df_cnv, df_fusion]
+    filtered_variants = [df_snv_reject, df_indel_reject, df_cnv_reject, df_fusion_reject]
+    somatic_variants = features.Features.concat_list_of_dataframes(accepted_variants)
+    somatic_filtered = features.Features.concat_list_of_dataframes(filtered_variants)
 
     germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
 

@@ -66,6 +66,33 @@ class Features:
         return np.percentile(array.astype(float), float(percentile))
 
     @classmethod
+    def concat_list_of_dataframes(cls, list_of_dataframes, ignore_index=True):
+        # Remove empty dataframes
+        non_empty_dataframes = [dataframe for dataframe in list_of_dataframes if not dataframe.empty]
+        # Remove dataframes with only null values
+        dataframes = [dataframe for dataframe in non_empty_dataframes if not dataframe.isnull().all().all()]
+
+        if len(dataframes) > 1:
+            # Trim each dataframe to remove columns with all NA values
+            trimmed_dataframes = []
+            for dataframe in dataframes:
+                na_columns = dataframe.columns[dataframe.isnull().all()]
+                dataframe = dataframe.drop(columns=na_columns)
+                trimmed_dataframes.append(dataframe)
+
+            # Concatenate the trimmed, nonempty, and nonnull dataframes
+            # The resulting dataframe will have columns that are an intersection of all concat'd dataframe columns
+            # https://pandas.pydata.org/docs/reference/api/pandas.concat.html
+            dataframe = pd.concat(trimmed_dataframes, ignore_index=ignore_index)
+
+            # Repopulate removed columns
+            return cls.preallocate_missing_columns(dataframe)
+        elif len(non_empty_dataframes) == 1:
+            return non_empty_dataframes[0]
+        else:
+            return cls.create_empty_dataframe()
+
+    @classmethod
     def create_empty_dataframe(cls):
         return pd.DataFrame(columns=cls.all_columns)
 
