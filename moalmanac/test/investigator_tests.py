@@ -55,7 +55,7 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
 
     def test_create(self):
         dbs = Preclinical.import_dbs()
-        actionable = pd.read_csv('../example_output/example.actionable.txt', sep='\t')
+        actionable = pd.read_csv('../example_output/example_output.actionable.txt', sep='\t')
         patient_id = 'example'
         expected_dabrafenib = '2.322e-12'
         expected_trametinib = '2.344e-09'
