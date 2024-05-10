@@ -997,8 +997,11 @@ class ExAC:
         ds = ds.loc[:, ds_columns]
 
         for column, data_type in [(cls.str_columns, str), (cls.int_columns, float), (cls.int_columns, int)]:
-            variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
-            ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
+            variants[column] = variants[column].astype(data_type)
+            ds[column] = ds[column].astype(data_type)
+
+            #variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
+            #ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
 
         merged = variants.merge(ds, how='left')
         merged.loc[merged.index, cls.af] = Annotator.fill_na(
@@ -1256,7 +1259,7 @@ class PreclinicalEfficacy:
             dataframe = efficacy[efficacy[cls.feature_display].eq(feature)]
             efficacy_observed = cls.search_for_significance(dataframe[cls.pvalue])
             actionable.loc[index, cls.efficacy] = efficacy_observed
-        actionable[cls.efficacy].fillna(pd.NA, inplace=True)
+        actionable[cls.efficacy] = actionable[cls.efficacy].fillna(pd.NA)
         idx = actionable.index
         if append_lookup:
             actionable.loc[idx, cls.lookup] = cls.create_lookup(idx, series_features.index, dictionary)
@@ -1396,7 +1399,14 @@ class PreclinicalMatchmaking:
             group3.rename(columns={cls.evidence_map_str: cls.group3})[cls.group3],
             group4.rename(columns={cls.evidence_map_str: cls.group4})[cls.group4],
         ], axis=1)
-        values = values.fillna(-1).idxmax(axis=1)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            values = (
+                values
+                .fillna(-1.0)
+                .idxmax(axis=1)
+            )
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -1426,7 +1436,14 @@ class PreclinicalMatchmaking:
             group1.rename(columns={cls.evidence_map_str: cls.group1})[cls.group1],
             group2.rename(columns={cls.evidence_map_str: cls.group2})[cls.group2],
         ], axis=1)
-        values = values.fillna(-1).idxmax(axis=1)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            values = (
+                values
+                .fillna(-1.0)
+                .idxmax(axis=1)
+            )
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -1448,7 +1465,14 @@ class PreclinicalMatchmaking:
             group3.rename(columns={cls.evidence_map_str: cls.group3})[cls.group3],
             group4.rename(columns={cls.evidence_map_str: cls.group4})[cls.group4],
         ], axis=1)
-        values = values.fillna(-1).idxmax(axis=1)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            values = (
+                values
+                .fillna(-1.0)
+                .idxmax(axis=1)
+            )
 
         idx_group3 = values[values.eq(cls.group3)].index
         idx_group4 = values[values.eq(cls.group4)].index
@@ -1490,7 +1514,9 @@ class PreclinicalMatchmaking:
         df = df[df[cls.feature_type].eq(cls.somatic_variant)]
         db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.somatic_variant)
         db = pd.DataFrame(db)
-        db[cls.variant_annotation].replace({'Oncogenic Mutations': '', 'Activating mutation': ''}, inplace=True)
+
+        replacement_dictionary = {'Oncogenic Mutations': '', 'Activating mutation': ''}
+        db[cls.variant_annotation] = db[cls.variant_annotation].replace(replacement_dictionary)
 
         column_map = {cls.gene: cls.feature,
                       cls.variant_annotation: cls.alteration_type,
@@ -1583,7 +1609,15 @@ class PreclinicalMatchmaking:
         column_map[cls.predictive_implication] = cls.evidence
         db = db.loc[:, columns].drop_duplicates()
         db.rename(columns=column_map, inplace=True)
-        db[cls.evidence_map_str] = db[cls.evidence].replace(cls.evidence_map)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            db[cls.evidence_map_str] = (
+                db[cls.evidence]
+                .astype(str)
+                .replace(cls.evidence_map)
+                .astype(int)
+            )
         db.sort_values([cls.evidence_map_str, cls.feature_display], ascending=[False, True], inplace=True)
         db[cls.merged] = 1
         return db

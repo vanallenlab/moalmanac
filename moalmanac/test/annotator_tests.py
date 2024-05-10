@@ -311,16 +311,37 @@ class UnitTestValidation(unittest.TestCase):
 
 
 class UnitTestPreclinicalEfficacy(unittest.TestCase):
-    df1 = pd.read_csv('../example_output/example_output.actionable.txt', sep='\t')
-    df2 = pd.read_csv('../example_output/example_output.preclinical.efficacy.txt', sep='\t')
+    data_dictionary = {
+        'feature_type': ['Somatic Variant', 'Rearrangement'],
+        'feature': ['BRAF', 'COL1A1'],
+        'alteration_type': ['Missense', 'Fusion'],
+        'alteration': ['p.V600E', 'COL1A1--CITED4'],
+        'feature_display': ['BRAF p.V600E', 'COL1A1--CITED4 Fusion'],
+        'sensitive_therapy_name': ['Dabrafenib + Trametinib', 'Imatinib'],
+        'preclinical_efficacy_observed': [1, 0]
+    }
+    df1 = pd.DataFrame(data_dictionary, index=[0, 1])
+    data_dictionary = {
+        'feature_display': ['BRAF p.V600E', 'BRAF p.V600E', 'COL1A1--CITED4'],
+        'tested_subfeatre': ['BRAF', 'BRAF Somatic Variant', 'COL1A1'],
+        'pvalue_mww': [2.322E-12, 7.627E-17, 0.835]
+    }
+    df2 = pd.DataFrame(data_dictionary, index=[0, 1, 2])
     dbs_preclinical = datasources_Preclinical.import_dbs()
     efficacy_dictionary = SensitivityDictionary.create(dbs_preclinical, df1)
 
     def test_annotate(self):
-        column = 'preclinical_efficacy_observed'
-        result = PreclinicalEfficacy.annotate(self.df1, self.df2, self.efficacy_dictionary)
-        self.assertEqual(result[column].isnull().sum(), 17)
-        self.assertEqual(result[column].dropna().astype(int).tolist(), [1, 0])
+        result = PreclinicalEfficacy.annotate(
+            actionable=self.df1,
+            efficacy=self.df2,
+            dictionary=self.efficacy_dictionary,
+        )
+
+        result_braf = result.loc[0, 'preclinical_efficacy_lookup'][0]
+        result_pvalue_index_0 = float(result_braf['Dabrafenib']['BRAF']['comparison']['pvalue_mww'])
+        result_pvalue_index_1 = float(result_braf['Dabrafenib']['BRAF Somatic Variant']['comparison']['pvalue_mww'])
+        self.assertEqual(result_pvalue_index_0, float(self.df2.loc[0, 'pvalue_mww']))
+        self.assertEqual(result_pvalue_index_1, float(self.df2.loc[1, 'pvalue_mww']))
 
     def test_series_for_significance(self):
         series1 = pd.Series([0, 0.06, pd.NA])

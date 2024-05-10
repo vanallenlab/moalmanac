@@ -371,7 +371,9 @@ class CoverageMetrics:
 
     @classmethod
     def format_coverage_col(cls, series):
-        formatted_series = series.replace('__UNKNOWN__', np.nan).fillna(np.nan)
+        # # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            formatted_series = series.replace('__UNKNOWN__', pd.NA).astype(object).fillna(pd.NA)
         formatted_series = cls.apply_min_coverage_for_onps(formatted_series)
         return formatted_series
 
@@ -385,10 +387,10 @@ class CoverageMetrics:
 
     @staticmethod
     def split_counts(series):
-        return series.str.split('|', expand=True, regex=False)
+        return series.fillna('').astype(str).str.split('|', expand=True, regex=False)
 
 
-class CosmicSignatures(Features):
+class CosmicSignatures:
     feature_type_section = 'feature_types'
     feature_type = CONFIG[feature_type_section]['signature']
 
