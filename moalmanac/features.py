@@ -363,7 +363,7 @@ class CoverageMetrics:
 
     @staticmethod
     def calculate_coverage(series_alt_count, series_ref_count):
-        return series_alt_count.astype(float).add(series_ref_count.astype(float))
+        return series_alt_count.astype(int).add(series_ref_count.astype(int))
 
     @staticmethod
     def calculate_tumor_f(series_alt_count, series_total_coverage):

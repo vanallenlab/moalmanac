@@ -1013,7 +1013,7 @@ class ExAC:
             fill_data_type=float
         )
         result = pd.concat([merged, not_variants])
-        result[cls.af] = result[cls.af].round(6)
+        result[cls.af] = result[cls.af].astype(float).round(6)
         return result
 
     @classmethod
