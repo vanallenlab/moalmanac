@@ -371,7 +371,7 @@ class CoverageMetrics:
 
     @classmethod
     def format_coverage_col(cls, series):
-        # # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
         with pd.option_context("future.no_silent_downcasting", True):
             formatted_series = series.replace('__UNKNOWN__', pd.NA).astype(object).fillna(pd.NA)
         formatted_series = cls.apply_min_coverage_for_onps(formatted_series)
