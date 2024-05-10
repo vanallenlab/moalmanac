@@ -118,10 +118,6 @@ def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = Fal
     return efficacy_dictionary, efficacy_summary
 
 
-def remove_na_columns_from_dataframe(dataframe):
-    return ''
-
-
 def main(patient, inputs, output_folder):
     metadata_dictionary = create_metadata_dictionary(patient)
 
