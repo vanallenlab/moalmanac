@@ -993,15 +993,11 @@ class ExAC:
     @classmethod
     def append_exac_af(cls, df, ds, ds_columns):
         variants, not_variants = cls.subset_for_variants(df)
-        #ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
         ds = ds.loc[:, ds_columns]
 
         for column, data_type in [(cls.str_columns, str), (cls.int_columns, float), (cls.int_columns, int)]:
             variants[column] = variants[column].astype(data_type)
             ds[column] = ds[column].astype(data_type)
-
-            #variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
-            #ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
 
         merged = variants.merge(ds, how='left')
         merged.loc[merged.index, cls.af] = Annotator.fill_na(
