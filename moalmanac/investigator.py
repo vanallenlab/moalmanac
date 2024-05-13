@@ -132,6 +132,7 @@ class SensitivityDictionary(Investigator):
         mappings = dbs[cls.mappings]
 
         samples = Preclinical.generate_sample_list(summary, cls.use_column, cls.model_id)
+        pd.Series(samples).isnull().value_counts()
 
         idx_feature_type = df_actionable[cls.feature_type].isin(cls.input_dtypes)
         idx_sensitive = ~(df_actionable[cls.sensitive_therapy].isnull() | df_actionable[cls.sensitive_therapy].eq(''))
@@ -156,11 +157,11 @@ class SensitivityDictionary(Investigator):
                         drug_dict = cls.create_drug_dict(gdsc, therapy, wt_samples, mut_samples)
                         feature_dict_copy.update({'comparison': drug_dict})
                         therapy_dict.update({feature: feature_dict_copy})
-                    figure = PreclinicalEfficacy.draw(therapy_dict, therapy, features)
-                    figure_base64 = PreclinicalEfficacy.convert_figure_base64(figure)
-                    therapy_dict.update({'figure': figure})
-                    therapy_dict.update({'figure_name': f"{feature_display}.{therapy.split(' ')[0]}"})
-                    therapy_dict.update({'figure_base64': figure_base64})
+                    #figure = PreclinicalEfficacy.draw(therapy_dict, therapy, features)
+                    #figure_base64 = PreclinicalEfficacy.convert_figure_base64(figure)
+                    #therapy_dict.update({'figure': figure})
+                    #therapy_dict.update({'figure_name': f"{feature_display}.{therapy.split(' ')[0]}"})
+                    #therapy_dict.update({'figure_base64': figure_base64})
                     index_dict.update({therapy: therapy_dict})
                 dictionary.update({index: index_dict})
         return dictionary
@@ -222,6 +223,8 @@ class SensitivityDictionary(Investigator):
         for dataframe, condition, feature_string in groups:
             mutated_samples = cls.retrieve_mut_samples(dataframe, condition)
             wt_samples = cls.retrieve_wt_samples(all_samples, mutated_samples)
+            mutated_samples = pd.Series(mutated_samples).dropna().tolist()
+            wt_samples = pd.Series(wt_samples).dropna().tolist()
             dictionary[feature_string] = {}
             dictionary[feature_string]['samples'] = [wt_samples, mutated_samples]
         return dictionary
