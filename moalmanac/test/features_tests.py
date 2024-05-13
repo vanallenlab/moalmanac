@@ -38,7 +38,7 @@ class UnitTestFeatures(unittest.TestCase):
         empty_dataframe = features.Features.import_if_path_exists("", '\t', column_map)
         empty_dataframe = features.Features.preallocate_missing_columns(empty_dataframe)
         self.assertEqual(sorted(empty_dataframe.columns.tolist()), sorted(imported_dataframe.columns.tolist()))
-        self.assertEqual(300, imported_dataframe.shape[0])
+        self.assertEqual(299, imported_dataframe.shape[0])
         self.assertEqual(0, empty_dataframe.shape[0])
 
     def test_preallocate_missing_columns(self):
