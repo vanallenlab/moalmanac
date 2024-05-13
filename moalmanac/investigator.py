@@ -132,8 +132,6 @@ class SensitivityDictionary(Investigator):
         mappings = dbs[cls.mappings]
 
         samples = Preclinical.generate_sample_list(summary, cls.use_column, cls.model_id)
-        pd.Series(samples).isnull().value_counts()
-
         idx_feature_type = df_actionable[cls.feature_type].isin(cls.input_dtypes)
         idx_sensitive = ~(df_actionable[cls.sensitive_therapy].isnull() | df_actionable[cls.sensitive_therapy].eq(''))
 
