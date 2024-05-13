@@ -55,8 +55,16 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
 
     def test_create(self):
         dbs = Preclinical.import_dbs()
-        actionable = pd.read_csv('../example_output/example.actionable.txt', sep='\t')
-        patient_id = 'example'
+        data_dictionary = {
+            'feature_type': ['Somatic Variant'],
+            'feature': ['BRAF'],
+            'alteration_type': ['Missense'],
+            'alteration': ['p.V600E'],
+            'feature_display': ['BRAF p.V600E'],
+            'sensitive_therapy_name': ['Dabrafenib + Trametinib'],
+            'preclinical_efficacy_observed': [1]
+        }
+        actionable = pd.DataFrame(data_dictionary, index=[0])
         expected_dabrafenib = '2.322e-12'
         expected_trametinib = '2.344e-09'
         result = SensitivityDictionary.create(dbs, actionable)

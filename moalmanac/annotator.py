@@ -13,7 +13,7 @@ from config import CONFIG
 EXAC_CONFIG = CONFIG['exac']
 
 
-class Annotator(object):
+class Annotator:
     """
     Annotates variants using datasources
     """
@@ -127,6 +127,12 @@ class Annotator(object):
         return idx
 
     @classmethod
+    def fill_na(cls, dataframe, column, fill_value, fill_data_type):
+        if column not in dataframe.columns:
+            dataframe = cls.preallocate_empty_columns(dataframe, [column])
+        return dataframe.loc[dataframe.index, column].astype(fill_data_type).fillna(fill_value)
+
+    @classmethod
     def match_ds(cls, df, ds, bin_column, compare_columns):
         df[bin_column] = cls.preallocate_bin(bin_column, df.index)
 
@@ -147,7 +153,7 @@ class Annotator(object):
         return df
 
 
-class ACMG(object):
+class ACMG:
     gene = datasources.ACMG.gene
 
     bin_name = Annotator.acmg_bin
@@ -406,7 +412,15 @@ class Almanac:
         for feature_type, group in df.groupby(cls.feature_type):
             feature_type_records = cls.subset_records(ds, cls.feature_type, feature_type)
             table = pd.DataFrame(feature_type_records)
-            table[cls.implication_map] = table[cls.implication].replace(cls.predictive_implication_map)
+
+            # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+            with pd.option_context("future.no_silent_downcasting", True):
+                table[cls.implication_map] = (
+                    table[cls.implication]
+                    .astype(str)
+                    .replace(cls.predictive_implication_map)
+                    .astype(float)
+                )
 
             if feature_type in [cls.somatic_variant, cls.germline_variant, cls.copynumber_variant, cls.fusion]:
                 idx = group[cls.feature].isin(list_genes)
@@ -415,7 +429,8 @@ class Almanac:
 
             for index in group.index:
                 annotation_function = annotation_function_dict[feature_type]
-                df.loc[index, :] = annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table)
+                new_series = annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table)
+                df.loc[index, new_series.index] = new_series
 
         return df
 
@@ -554,7 +569,7 @@ class Almanac:
 
     @classmethod
     def annotate_fusion(cls, sliced_series, ontology, table):
-        series = sliced_series.fillna('').copy(deep=True)
+        series = sliced_series.fillna(pd.NA).copy(deep=True)
         feature = series.loc[cls.feature]
         alt_type = series.loc[cls.alt_type]
         alt = series.loc[cls.alt]
@@ -896,7 +911,7 @@ class CancerHotspots:
         return Annotator.annotate(df, dbs, datasources.CancerHotspots, cls.bin_name, cls.comparison_columns)
 
 
-class CancerHotspots3D(object):
+class CancerHotspots3D:
     gene = datasources.CancerHotspots3D.gene
     alteration = datasources.CancerHotspots3D.alt
 
@@ -908,7 +923,7 @@ class CancerHotspots3D(object):
         return Annotator.annotate(df, dbs, datasources.CancerHotspots3D, cls.bin_name, cls.comparison_columns)
 
 
-class CancerGeneCensus(object):
+class CancerGeneCensus:
     gene = datasources.CancerGeneCensus.gene
 
     bin_name = Annotator.cgc_bin
@@ -919,7 +934,7 @@ class CancerGeneCensus(object):
         return Annotator.annotate(df, dbs, datasources.CancerGeneCensus, cls.bin_name, cls.comparison_columns)
 
 
-class ClinVar(object):
+class ClinVar:
     chr = datasources.ClinVar.chr
     start = datasources.ClinVar.start
     end = datasources.ClinVar.end
@@ -946,7 +961,7 @@ class ClinVar(object):
         return features.Features.preallocate_missing_columns(df)
 
 
-class Cosmic(object):
+class Cosmic:
     gene = datasources.Cosmic.gene
     alteration = datasources.Cosmic.alt
 
@@ -978,17 +993,28 @@ class ExAC:
     @classmethod
     def append_exac_af(cls, df, ds, ds_columns):
         variants, not_variants = cls.subset_for_variants(df)
-        #ds = ds.loc[:, [cls.chr, cls.start, cls.ref, cls.alt, cls.af]]
         ds = ds.loc[:, ds_columns]
 
         for column, data_type in [(cls.str_columns, str), (cls.int_columns, float), (cls.int_columns, int)]:
-            variants.loc[variants.index, column] = cls.format_columns(variants, column, data_type)
-            ds.loc[ds.index, column] = cls.format_columns(ds, column, data_type)
+            variants[column] = variants[column].astype(data_type)
+            ds[column] = ds[column].astype(data_type)
 
         merged = variants.merge(ds, how='left')
-        merged.loc[merged.index, cls.af] = cls.fill_na(merged, cls.af, 0.0, float, 6)
-        not_variants.loc[not_variants.index, cls.af] = cls.fill_na(not_variants, cls.af, 0.0, float, 6)
-        return pd.concat([merged, not_variants]).sort_index()
+        merged.loc[merged.index, cls.af] = Annotator.fill_na(
+            dataframe=merged,
+            column=cls.af,
+            fill_value=0.0,
+            fill_data_type=float
+        )
+        not_variants.loc[not_variants.index, cls.af] = Annotator.fill_na(
+            dataframe=not_variants,
+            column=cls.af,
+            fill_value=0.0,
+            fill_data_type=float
+        )
+        result = pd.concat([merged, not_variants])
+        result[cls.af] = result[cls.af].astype(float).round(6)
+        return result
 
     @classmethod
     def annotate(cls, df, dbs):
@@ -1017,12 +1043,6 @@ class ExAC:
     @classmethod
     def drop_existing_columns(cls, dataframe):
         return dataframe.drop(dataframe.columns[dataframe.columns.str.contains('exac')], axis=1)
-
-    @classmethod
-    def fill_na(cls, dataframe, column, fill_value, fill_data_type, round_places):
-        if column not in dataframe.columns:
-            dataframe = Annotator.preallocate_empty_columns(dataframe, [column])
-        return dataframe.loc[dataframe.index, column].fillna(fill_value).astype(fill_data_type).round(round_places)
 
     @classmethod
     def format_columns(cls, dataframe, column, data_type):
@@ -1071,7 +1091,7 @@ class ExACExtended:
         return features.Features.preallocate_missing_columns(df_annotated)
 
 
-class GSEACancerModules(object):
+class GSEACancerModules:
     gene = datasources.GSEACancerModules.gene
 
     bin_name = Annotator.gsea_module_bin
@@ -1082,7 +1102,7 @@ class GSEACancerModules(object):
         return Annotator.annotate(df, dbs, datasources.GSEACancerModules, cls.bin_name, cls.comparison_columns)
 
 
-class GSEACancerPathways(object):
+class GSEACancerPathways:
     gene = datasources.GSEACancerPathways.gene
 
     bin_name = Annotator.gsea_pathway_bin
@@ -1093,7 +1113,7 @@ class GSEACancerPathways(object):
         return Annotator.annotate(df, dbs, datasources.GSEACancerPathways, cls.bin_name, cls.comparison_columns)
 
 
-class Hereditary(object):
+class Hereditary:
     gene = datasources.Hereditary.gene
 
     bin_name = Annotator.hereditary_bin
@@ -1104,7 +1124,7 @@ class Hereditary(object):
         return Annotator.annotate(df, dbs, datasources.Hereditary, cls.bin_name, cls.comparison_columns)
 
 
-class MSI(object):
+class MSI:
     gene = datasources.Datasources.feature
 
     bin_name = Annotator.msi_bin
@@ -1124,7 +1144,7 @@ class MSI(object):
         return df
 
 
-class OverlapValidation(object):
+class OverlapValidation:
     section = 'validation_sequencing'
     gene = COLNAMES[section]['gene']
     feature_type = COLNAMES[section]['feature_type']
@@ -1146,7 +1166,13 @@ class OverlapValidation(object):
         df = cls.drop_validation_columns(primary)
         df = cls.merge_data_frames(df, validation, cls.merge_cols)
         idx = cls.get_mutation_index(df)
-        df.loc[idx, cls.fill_cols] = df.loc[idx, cls.fill_cols].fillna(0.0)
+        for column in cls.fill_cols:
+            df.loc[idx, column] = Annotator.fill_na(
+                dataframe=df.loc[idx, :],
+                column=column,
+                fill_value=0.0,
+                fill_data_type=float
+            )
 
         df.loc[idx, cls.validation_detection_power] = cls.calculate_validation_detection_power(
             df.loc[idx, cls.tumor_f].astype(float),
@@ -1185,7 +1211,7 @@ class OverlapValidation(object):
         return series.round(n)
 
 
-class OverlapSomaticGermline(object):
+class OverlapSomaticGermline:
     section = 'overlap_somatic_germline'
     gene = COLNAMES[section]['gene']
     alt_type = COLNAMES[section]['alt_type']
@@ -1229,7 +1255,7 @@ class PreclinicalEfficacy:
             dataframe = efficacy[efficacy[cls.feature_display].eq(feature)]
             efficacy_observed = cls.search_for_significance(dataframe[cls.pvalue])
             actionable.loc[index, cls.efficacy] = efficacy_observed
-        actionable[cls.efficacy].fillna(pd.NA, inplace=True)
+        actionable[cls.efficacy] = actionable[cls.efficacy].fillna(pd.NA)
         idx = actionable.index
         if append_lookup:
             actionable.loc[idx, cls.lookup] = cls.create_lookup(idx, series_features.index, dictionary)
@@ -1369,7 +1395,14 @@ class PreclinicalMatchmaking:
             group3.rename(columns={cls.evidence_map_str: cls.group3})[cls.group3],
             group4.rename(columns={cls.evidence_map_str: cls.group4})[cls.group4],
         ], axis=1)
-        values = values.fillna(-1).idxmax(axis=1)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            values = (
+                values
+                .fillna(-1.0)
+                .idxmax(axis=1)
+            )
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -1399,7 +1432,14 @@ class PreclinicalMatchmaking:
             group1.rename(columns={cls.evidence_map_str: cls.group1})[cls.group1],
             group2.rename(columns={cls.evidence_map_str: cls.group2})[cls.group2],
         ], axis=1)
-        values = values.fillna(-1).idxmax(axis=1)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            values = (
+                values
+                .fillna(-1.0)
+                .idxmax(axis=1)
+            )
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -1421,7 +1461,14 @@ class PreclinicalMatchmaking:
             group3.rename(columns={cls.evidence_map_str: cls.group3})[cls.group3],
             group4.rename(columns={cls.evidence_map_str: cls.group4})[cls.group4],
         ], axis=1)
-        values = values.fillna(-1).idxmax(axis=1)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            values = (
+                values
+                .fillna(-1.0)
+                .idxmax(axis=1)
+            )
 
         idx_group3 = values[values.eq(cls.group3)].index
         idx_group4 = values[values.eq(cls.group4)].index
@@ -1463,7 +1510,9 @@ class PreclinicalMatchmaking:
         df = df[df[cls.feature_type].eq(cls.somatic_variant)]
         db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.somatic_variant)
         db = pd.DataFrame(db)
-        db[cls.variant_annotation].replace({'Oncogenic Mutations': '', 'Activating mutation': ''}, inplace=True)
+
+        replacement_dictionary = {'Oncogenic Mutations': '', 'Activating mutation': ''}
+        db[cls.variant_annotation] = db[cls.variant_annotation].replace(replacement_dictionary)
 
         column_map = {cls.gene: cls.feature,
                       cls.variant_annotation: cls.alteration_type,
@@ -1556,7 +1605,15 @@ class PreclinicalMatchmaking:
         column_map[cls.predictive_implication] = cls.evidence
         db = db.loc[:, columns].drop_duplicates()
         db.rename(columns=column_map, inplace=True)
-        db[cls.evidence_map_str] = db[cls.evidence].replace(cls.evidence_map)
+
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            db[cls.evidence_map_str] = (
+                db[cls.evidence]
+                .astype(str)
+                .replace(cls.evidence_map)
+                .astype(int)
+            )
         db.sort_values([cls.evidence_map_str, cls.feature_display], ascending=[False, True], inplace=True)
         db[cls.merged] = 1
         return db

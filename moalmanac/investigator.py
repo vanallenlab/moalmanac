@@ -132,7 +132,6 @@ class SensitivityDictionary(Investigator):
         mappings = dbs[cls.mappings]
 
         samples = Preclinical.generate_sample_list(summary, cls.use_column, cls.model_id)
-
         idx_feature_type = df_actionable[cls.feature_type].isin(cls.input_dtypes)
         idx_sensitive = ~(df_actionable[cls.sensitive_therapy].isnull() | df_actionable[cls.sensitive_therapy].eq(''))
 
@@ -222,6 +221,8 @@ class SensitivityDictionary(Investigator):
         for dataframe, condition, feature_string in groups:
             mutated_samples = cls.retrieve_mut_samples(dataframe, condition)
             wt_samples = cls.retrieve_wt_samples(all_samples, mutated_samples)
+            mutated_samples = pd.Series(mutated_samples).dropna().tolist()
+            wt_samples = pd.Series(wt_samples).dropna().tolist()
             dictionary[feature_string] = {}
             dictionary[feature_string]['samples'] = [wt_samples, mutated_samples]
         return dictionary

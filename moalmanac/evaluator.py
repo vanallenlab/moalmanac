@@ -141,8 +141,8 @@ class Evaluator(object):
         return series.map(cls.almanac_bin_map)
 
     @staticmethod
-    def remap_almanac_bins(series, old_values, new_values):
-        return series.astype(int).replace(to_replace=old_values, value=new_values)
+    def remap_almanac_bins(series, old_value, new_value):
+        return series.astype(int).replace(to_replace=old_value, value=new_value)
 
     @classmethod
     def remove_low_allele_fraction_variants(cls, df):
@@ -177,7 +177,7 @@ class Evaluator(object):
 
     @classmethod
     def subset_almanac_bin(cls, df):
-        return df[df[cls.almanac_bin].fillna(0.0).astype(float) != 0.0]
+        return df[df[cls.almanac_bin].astype(float).fillna(0.0) != 0.0]
 
 
 class Actionable:
@@ -255,10 +255,10 @@ class Actionable:
         actionable_list = []
         for dataframe in [somatic, germline, ms_variants_summary, ms_status, burden, signatures, wgd]:
             actionable_list.append(Evaluator.subset_almanac_bin(dataframe))
-        df = pd.concat(actionable_list, ignore_index=True)
+        df = features.Features.concat_list_of_dataframes(list_of_dataframes=actionable_list)
 
         df[Evaluator.feature_display] = cls.format_feature_display(
-            df.fillna(''), Evaluator.feature_display,
+            df, Evaluator.feature_display,
             Evaluator.feature_type, Evaluator.feature,
             Evaluator.alt_type, Evaluator.alt)
         return df.sort_values(cls.sort_columns, ascending=False)
@@ -434,7 +434,7 @@ class Microsatellite(object):
         columns = [Evaluator.almanac_bin, Evaluator.sensitive_bin, Evaluator.resistance_bin, Evaluator.prognostic_bin]
         if variants.empty:
             for bin_column in columns:
-                df[bin_column] = Evaluator.remap_almanac_bins(df[bin_column].fillna(0), [3], [2])
+                df[bin_column] = Evaluator.remap_almanac_bins(series=df[bin_column], old_value=3, new_value=2)
         return Evaluator.evaluate_almanac(df)
 
     @classmethod
@@ -449,7 +449,8 @@ class Microsatellite(object):
 
         msi_somatic = cls.return_msi_variants(somatic)
         msi_germline = cls.return_msi_variants(germline)
-        return pd.concat([msi_somatic, msi_germline], axis=0, ignore_index=True)
+        msi_variants = [msi_somatic, msi_germline]
+        return features.Features.concat_list_of_dataframes(list_of_dataframes=msi_variants)
 
 
 class Strategies:
