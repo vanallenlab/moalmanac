@@ -218,7 +218,12 @@ class UnitTestMAF(unittest.TestCase):
         self.assertEqual(False, gdc_unexpected_key)
 
     def test_format_maf(self):
-        initial = pd.DataFrame({features.MAF.alt_type: ['Missense_Mutation', 'Nonsense_Mutation', 'A']})
+        data = {
+            features.MAF.alt_type: ['Missense_Mutation', 'Nonsense_Mutation', 'A'],
+            features.MAF.alt_count: [0, 0, 0],
+            features.MAF.ref_count: [1, 1, 1]
+        }
+        initial = pd.DataFrame(data)
         result = features.MAF.format_maf(initial, 'Somatic Variant')
         self.assertEqual('Missense', result.loc[0, features.MAF.alt_type])
         self.assertEqual('Nonsense', result.loc[1, features.MAF.alt_type])

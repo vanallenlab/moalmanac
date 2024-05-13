@@ -158,7 +158,7 @@ class Actionable:
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
         return df_sorted
 
 
@@ -184,7 +184,7 @@ class GermlineACMG:
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns], output_name)
 
 
 class GermlineCancer:
@@ -222,7 +222,7 @@ class GermlineCancer:
         df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
         idx = cls.get_cancer_idx(df)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns], output_name)
 
 
 class GermlineHereditary:
@@ -247,7 +247,7 @@ class GermlineHereditary:
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns], output_name)
 
 
 class Illustrations:
@@ -272,7 +272,7 @@ class Integrated:
     def write(cls, df, patient_id, folder):
         df_sorted = df.sort_index()
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe_indexed(df_sorted.loc[:, cls.output_columns].fillna(''), output_name, Writer.feature)
+        Writer.export_dataframe_indexed(df_sorted.loc[:, cls.output_columns], output_name, Writer.feature)
 
 
 class MSI:
@@ -288,7 +288,6 @@ class MSI:
                       Writer.spanningfrags,
                       Writer.left_gene, Writer.left_chr, Writer.left_start,
                       Writer.right_gene, Writer.right_chr, Writer.right_start,
-                      # validation_total_coverage, validation_tumor_f, validation_power, dnarna_concordance,
                       Writer.rationale, Writer.patient_id, Writer.tumor, Writer.normal,
                       Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                       Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin]
@@ -302,7 +301,7 @@ class MSI:
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
 
 
 class MutationalBurden:
@@ -328,7 +327,7 @@ class MutationalBurden:
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df.loc[:, cls.output_columns].fillna(''), output_name)
+        Writer.export_dataframe(df.loc[:, cls.output_columns], output_name)
 
 
 class PreclinicalEfficacy:
@@ -337,7 +336,7 @@ class PreclinicalEfficacy:
     @classmethod
     def write(cls, df, patient_id, folder):
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df.fillna(''), output_name)
+        Writer.export_dataframe(df, output_name)
 
 
 class PreclinicalMatchmaking:
@@ -346,7 +345,7 @@ class PreclinicalMatchmaking:
     @classmethod
     def write(cls, df, patient_id, folder):
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df.fillna(''), output_name)
+        Writer.export_dataframe(df, output_name)
 
 
 class SomaticFiltered:
@@ -366,7 +365,7 @@ class SomaticFiltered:
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
 
 
 class SomaticScored:
@@ -395,7 +394,7 @@ class SomaticScored:
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
 
 
 class Strategies:

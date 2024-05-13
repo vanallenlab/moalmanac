@@ -18,7 +18,7 @@ You can view additional documentation, including [descriptions of inputs](docs/d
 The codebase is available for download through this GitHub repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). The method can also be run on Terra, without having to use Terra, by using [our portal](https://portal.moalmanac.org/). **Accessing Molecular Oncology Almanac through GitHub will require building some of the [datasources](moalmanac/datasources/) but they are also contained in the Docker container**.
 
 ### Installation
-Molecular Oncology Almanac is a Python application using Python 3.11. This application, datasources, and all dependencies are packaged on Docker and can be downloaded with the command
+Molecular Oncology Almanac is a Python application using Python 3.12. This application, datasources, and all dependencies are packaged on Docker and can be downloaded with the command
  ```bash
 docker pull vanallenlab/moalmanac
 ```
@@ -30,7 +30,7 @@ git clone https://github.com/vanallenlab/moalmanac.git
 
 We recommend using a [virtual environment](https://docs.python.org/3/tutorial/venv.html) and running Python with either [Anaconda](https://www.anaconda.com/download/) or  [Miniconda](https://conda.io/miniconda.html). After installing Anaconda or Miniconda, you can set up by running
 ```bash
-conda create -n moalmanac python=3.11 -y
+conda create -n moalmanac python=3.12 -y
 source activate moalmanac
 pip install -r requirements.txt
 ```

@@ -5,7 +5,7 @@ import subprocess
 
 patient_dict = {
     'patient_id': 'example',
-    'reported_tumor_type': 'SKCM',
+    'reported_tumor_type': 'MEL',
     'stage': 'Metastatic',
     'description': 'Test patient for development runs',
     'purity': 0.85,

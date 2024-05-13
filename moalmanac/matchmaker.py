@@ -78,7 +78,7 @@ class Matchmaker:
         case = cls.subset_dataframe_eq(calculated, 'case', cls.case_profile)
         case = case.reset_index(drop=True)
         case = case.sort_values(by=SNFTypesCGCwithEvidence.label, ascending=True)
-        case['case'].replace(cls.case_profile, case_sample_id, inplace=True)
+        case['case'] = case['case'].replace(cls.case_profile, case_sample_id)
         return case
 
     @classmethod
@@ -109,12 +109,16 @@ class Matchmaker:
     @classmethod
     def subset_samples(cls, dbs):
         summary = dbs[cls.summary]
-        idx_samples_to_use = (summary['use']
-                              .astype(str)
-                              .replace('True', 1)
-                              .replace('False', 0)
-                              .astype(int)
-                              .eq(1))
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            idx_samples_to_use = (
+                summary['use']
+                .astype(str)
+                .replace('True', 1)
+                .replace('False', 0)
+                .astype(int)
+                .eq(1)
+            )
         return summary[idx_samples_to_use]['broad'].tolist() + [cls.case_profile]
 
 

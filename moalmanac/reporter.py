@@ -56,7 +56,7 @@ class Reporter:
                 dataframe[column] = cls.preallocate_matches_columns(dataframe[column])
 
         if 'preclinical_efficacy_lookup' in dataframe.columns:
-            dataframe['preclinical_efficacy_lookup'].fillna('', inplace=True)
+            dataframe.fillna({'preclinical_efficacy_lookup': ''}, inplace=True)
 
         return dataframe
 
