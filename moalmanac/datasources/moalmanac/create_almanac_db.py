@@ -268,14 +268,14 @@ if __name__ == "__main__":
         help='Molecular Oncology Almanac db file from https://github.com/vanallenlab/moalmanac-db'
     )
     arg_parser.add_argument(
-        '--version',
-        '-v',
-        help='Database version; e.g. 1.0.0'
-    )
-    arg_parser.add_argument(
         '--release',
         '-r',
         help='Database content release; e.g. v.2022-12-01'
+    )
+    arg_parser.add_argument(
+        '--version',
+        '-v',
+        help='Database version; e.g. 1.0.0'
     )
     args = arg_parser.parse_args()
     print(args)
