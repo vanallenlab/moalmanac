@@ -3,102 +3,388 @@ import json
 
 
 class Writer:
-    section = 'outputs'
-    score_bin = COLNAMES[section]['score_bin']
-    almanac_bin = COLNAMES[section]['almanac_bin']
-    cancerhotspots_bin = COLNAMES[section]['cancerhotspots_bin']
-    cancerhotspots3D_bin = COLNAMES[section]['cancerhotspots3d_bin']
-    cgc_bin = COLNAMES[section]['cgc_bin']
-    gsea_pathways_bin = COLNAMES[section]['gsea_pathways_bin']
-    gsea_cm_bin = COLNAMES[section]['gsea_cm_bin']
-    cosmic_bin = COLNAMES[section]['cosmic_bin']
-    clinvar_bin = COLNAMES[section]['clinvar_bin']
-    acmg_bin = COLNAMES[section]['acmg_bin']
-    hereditary_bin = COLNAMES[section]['hereditary_bin']
-    msi_bin = COLNAMES[section]['msi_bin']
+    section = "outputs"
 
-    sensitive_bin = COLNAMES[section]['sensitive_bin']
-    resistance_bin = COLNAMES[section]['resistance_bin']
-    prognostic_bin = COLNAMES[section]['prognostic_bin']
-    sensitive_implication = COLNAMES[section]['sensitive_implication']
-    resistance_implication = COLNAMES[section]['resistance_implication']
-    prognostic_implication = COLNAMES[section]['prognostic_implication']
-    sensitive_map = COLNAMES[section]['sensitive_implication_map']
-    resistance_map = COLNAMES[section]['resistance_implication_map']
-    prognostic_map = COLNAMES[section]['prognostic_implication_map']
-    sensitive_therapy = COLNAMES[section]['sensitive_therapy']
-    resistance_therapy = COLNAMES[section]['resistance_therapy']
-    sensitive_therapy_strategy = COLNAMES[section]['sensitive_therapy_strategy']
-    resistance_therapy_strategy = COLNAMES[section]['resistance_therapy_strategy']
-    sensitive_therapy_type = COLNAMES[section]['sensitive_therapy_type']
-    resistance_therapy_type = COLNAMES[section]['resistance_therapy_type']
-    favorable_prognosis = COLNAMES[section]['favorable_prognosis']
-    sensitive_oncotree_code = COLNAMES[section]['sensitive_oncotree_code']
-    resistance_oncotree_code = COLNAMES[section]['resistance_oncotree_code']
-    prognostic_oncotree_code = COLNAMES[section]['prognostic_oncotree_code']
-    sensitive_description = COLNAMES[section]['sensitive_description']
-    resistance_description = COLNAMES[section]['resistance_description']
-    prognostic_description = COLNAMES[section]['prognostic_description']
-    sensitive_url = COLNAMES[section]['sensitive_url']
-    resistance_url = COLNAMES[section]['resistance_url']
-    prognostic_url = COLNAMES[section]['prognostic_url']
-    sensitive_citation = COLNAMES[section]['sensitive_citation']
-    resistance_citation = COLNAMES[section]['resistance_citation']
-    prognostic_citation = COLNAMES[section]['prognostic_citation']
+    def __init__(self, strings):
+        self.strings = strings
 
-    feature_type = COLNAMES[section]['feature_type']
-    feature = COLNAMES[section]['feature']
-    alt_type = COLNAMES[section]['alt_type']
-    alt = COLNAMES[section]['alt']
-    chr = COLNAMES[section]['chr']
-    start = COLNAMES[section]['start']
-    end = COLNAMES[section]['end']
-    ref = COLNAMES[section]['ref']
-    allele1 = COLNAMES[section]['allele1']
-    allele2 = COLNAMES[section]['allele2']
-    tumor_f = COLNAMES[section]['tumor_f']
-    coverage = COLNAMES[section]['coverage']
-    clinvar = COLNAMES[section]['clinvar']
-    number_germline_mutations = COLNAMES[section]['number_germline_mutations']
+    """
+    Defining properties for each datasource bin
+    """
+    @property
+    def score_bin(self):
+        return self.strings[self.section]['score_bin']
 
-    exac_common = COLNAMES[section]['exac_common']
-    exac_af = COLNAMES[section]['exac_af']
-    exac_ac = COLNAMES[section]['exac_ac']
-    exac_an = COLNAMES[section]['exac_an']
-    exac_afr_ac = COLNAMES[section]['exac_afr_ac']
-    exac_amr_ac = COLNAMES[section]['exac_amr_ac']
-    exac_eas_ac = COLNAMES[section]['exac_eas_ac']
-    exac_fin_ac = COLNAMES[section]['exac_fin_ac']
-    exac_nfe_ac = COLNAMES[section]['exac_nfe_ac']
-    exac_sas_ac = COLNAMES[section]['exac_sas_ac']
-    exac_oth_ac = COLNAMES[section]['exac_oth_ac']
-    exac_afr_an = COLNAMES[section]['exac_afr_an']
-    exac_amr_an = COLNAMES[section]['exac_amr_an']
-    exac_eas_an = COLNAMES[section]['exac_eas_an']
-    exac_fin_an = COLNAMES[section]['exac_fin_an']
-    exac_nfe_an = COLNAMES[section]['exac_nfe_an']
-    exac_sas_an = COLNAMES[section]['exac_sas_an']
-    exac_oth_an = COLNAMES[section]['exac_oth_an']
+    @property
+    def almanac_bin(self):
+        return self.strings[self.section]['almanac_bin']
 
-    spanningfrags = COLNAMES[section]['spanningfrags']
-    left_gene = COLNAMES[section]['left_gene']
-    left_chr = COLNAMES[section]['left_chr']
-    left_start = COLNAMES[section]['left_start']
-    right_gene = COLNAMES[section]['right_gene']
-    right_chr = COLNAMES[section]['right_chr']
-    right_start = COLNAMES[section]['right_start']
+    @property
+    def cancer_hotspots_bin(self):
+        return self.strings[self.section]['cancer_hotspots_bin']
 
-    validation_tumor_f = COLNAMES[section]['validation_tumor_f']
-    validation_coverage = COLNAMES[section]['validation_coverage']
-    validation_detection_power = COLNAMES[section]['validation_detection_power']
+    @property
+    def cgc_bin(self):
+        return self.strings[self.section]['cgc_bin']
 
-    feature_display = COLNAMES[section]['feature_display']
-    preclinical_efficacy = COLNAMES[section]['efficacy_obs']
-    connections = COLNAMES[section]['connections']
-    rationale = COLNAMES[section]['rationale']
-    patient_id = COLNAMES[section]['patient_id']
-    tumor = COLNAMES[section]['tumor']
-    normal = COLNAMES[section]['normal']
+    @property
+    def gsea_pathways_bin(self):
+        return self.strings[self.section]['gsea_pathways_bin']
+
+    @property
+    def gsea_cm_bin(self):
+        return self.strings[self.section]['gsea_cm_bin']
+
+    @property
+    def cosmic_bin(self):
+        return self.strings[self.section]['cosmic_bin']
+
+    @property
+    def clinvar_bin(self):
+        return self.strings[self.section]['clinvar_bin']
+
+    @property
+    def acmg_bin(self):
+        return self.strings[self.section]['acmg_bin']
+
+    @property
+    def hereditary_bin(self):
+        return self.strings[self.section]['hereditary_bin']
+
+    @property
+    def msi_bin(self):
+        return self.strings[self.section]['msi_bin']
+
+    """
+    Defining properties for moalmanac specific annotations
+    """
+
+    @property
+    def sensitive_bin(self):
+        return self.strings[self.section]['sensitive_bin']
+
+    @property
+    def resistance_bin(self):
+        return self.strings[self.section]['resistance_bin']
+
+    @property
+    def prognostic_bin(self):
+        return self.strings[self.section]['prognostic_bin']
+
+    @property
+    def sensitive_implication(self):
+        return self.strings[self.section]['sensitive_implication']
+
+    @property
+    def resistance_implication(self):
+        return self.strings[self.section]['resistance_implication']
+
+    @property
+    def prognostic_implication(self):
+        return self.strings[self.section]['prognostic_implication']
+
+    @property
+    def sensitive_map(self):
+        return self.strings[self.section]['sensitive_map']
+
+    @property
+    def resistance_map(self):
+        return self.strings[self.section]['resistance_map']
+
+    @property
+    def prognostic_map(self):
+        return self.strings[self.section]['prognostic_map']
+
+    @property
+    def sensitive_therapy(self):
+        return self.strings[self.section]['sensitive_therapy']
+
+    @property
+    def resistance_therapy(self):
+        return self.strings[self.section]['resistance_therapy']
+
+    @property
+    def sensitive_therapy_strategy(self):
+        return self.strings[self.section]['sensitive_therapy_strategy']
+
+    @property
+    def resistance_therapy_strategy(self):
+        return self.strings[self.section]['resistance_therapy_strategy']
+
+    @property
+    def sensitive_therapy_type(self):
+        return self.strings[self.section]['sensitive_therapy_type']
+
+    @property
+    def resistance_therapy_type(self):
+        return self.strings[self.section]['resistance_therapy_type']
+
+    @property
+    def favorable_prognosis(self):
+        return self.strings[self.section]['favorable_prognosis']
+
+    @property
+    def sensitive_oncotree_code(self):
+        return self.strings[self.section]['sensitive_oncotree_code']
+
+    @property
+    def resistance_oncotree_code(self):
+        return self.strings[self.section]['resistance_oncotree_code']
+
+    @property
+    def prognostic_oncotree_code(self):
+        return self.strings[self.section]['prognostic_oncotree_code']
+
+    @property
+    def sensitive_description(self):
+        return self.strings[self.section]['sensitive_description']
+
+    @property
+    def resistance_description(self):
+        return self.strings[self.section]['resistance_description']
+
+    @property
+    def prognostic_description(self):
+        return self.strings[self.section]['prognostic_description']
+
+    @property
+    def sensitive_url(self):
+        return self.strings[self.section]['sensitive_url']
+
+    @property
+    def resistance_url(self):
+        return self.strings[self.section]['resistance_url']
+
+    @property
+    def prognostic_url(self):
+        return self.strings[self.section]['prognostic_url']
+
+    @property
+    def sensitive_citation(self):
+        return self.strings[self.section]['sensitive_citation']
+
+    @property
+    def resistance_citation(self):
+        return self.strings[self.section]['resistance_citation']
+
+    @property
+    def prognostic_citation(self):
+        return self.strings[self.section]['prognostic_citation']
+
+    """
+    Defining properties for describing biomarkers
+    """
+
+    @property
+    def feature_type(self):
+        return self.strings[self.section]['feature_type']
+
+    @property
+    def feature(self):
+        return self.strings[self.section]['feature']
+
+    @property
+    def alt_type(self):
+        return self.strings[self.section]['alt_type']
+
+    @property
+    def alt(self):
+        return self.strings[self.section]['alt']
+
+    @property
+    def chr(self):
+        return self.strings[self.section]['chr']
+
+    @property
+    def start(self):
+        return self.strings[self.section]['start']
+
+    @property
+    def end(self):
+        return self.strings[self.section]['end']
+
+    @property
+    def ref(self):
+        return self.strings[self.section]['ref']
+
+    @property
+    def allele1(self):
+        return self.strings[self.section]['allele1']
+
+    @property
+    def allele2(self):
+        return self.strings[self.section]['allele2']
+
+    @property
+    def tumor_f(self):
+        return self.strings[self.section]['tumor_f']
+
+    @property
+    def coverage(self):
+        return self.strings[self.section]['coverage']
+
+    @property
+    def clinvar(self):
+        return self.strings[self.section]['clinvar']
+
+    @property
+    def number_germline_mutations(self):
+        return self.strings[self.section]['number_germline_mutations']
+
+    """
+    Defining properties for ExAC annotations
+    """
+
+    @property
+    def exac_common(self):
+        return self.strings[self.section]['exac_common']
+
+    @property
+    def exac_af(self):
+        return self.strings[self.section]['exac_af']
+
+    @property
+    def exac_ac(self):
+        return self.strings[self.section]['exac_ac']
+
+    @property
+    def exac_an(self):
+        return self.strings[self.section]['exac_an']
+
+    @property
+    def exac_afr_ac(self):
+        return self.strings[self.section]['exac_afr_ac']
+
+    @property
+    def exac_amr_ac(self):
+        return self.strings[self.section]['exac_eas_ac']
+
+    @property
+    def exac_eas_ac(self):
+        return self.strings[self.section]['exac_eas_ac']
+
+    @property
+    def exac_fin_ac(self):
+        return self.strings[self.section]['exac_nfe_ac']
+
+    @property
+    def exac_nfe_ac(self):
+        return self.strings[self.section]['exac_nfe_ac']
+
+    @property
+    def exac_sas_ac(self):
+        return self.strings[self.section]['exac_sas_ac']
+
+    @property
+    def exac_oth_ac(self):
+        return self.strings[self.section]['exac_oth_ac']
+
+    @property
+    def exac_afr_an(self):
+        return self.strings[self.section]['exac_afr_an']
+
+    @property
+    def exac_amr_an(self):
+        return self.strings[self.section]['exac_amr_an']
+
+    @property
+    def exac_eas_an(self):
+        return self.strings[self.section]['exac_eas_an']
+
+    @property
+    def exac_fin_an(self):
+        return self.strings[self.section]['exac_fin_an']
+
+    @property
+    def exac_nfe_an(self):
+        return self.strings[self.section]['exac_nfe_an']
+
+    @property
+    def exac_sas_an(self):
+        return self.strings[self.section]['exac_sas_an']
+
+    @property
+    def exac_oth_an(self):
+        return self.strings[self.section]['exac_oth_an']
+
+    """
+    Defining properties to describe fusions
+    """
+
+    @property
+    def spanningfrags(self):
+        return self.strings[self.section]['spanningfrags']
+
+    @property
+    def left_gene(self):
+        return self.strings[self.section]['left_gene']
+
+    @property
+    def left_chr(self):
+        return self.strings[self.section]['left_chr']
+
+    @property
+    def left_start(self):
+        return self.strings[self.section]['left_start']
+
+    @property
+    def right_gene(self):
+        return self.strings[self.section]['right_gene']
+
+    @property
+    def right_chr(self):
+        return self.strings[self.section]['right_chr']
+
+    @property
+    def right_start(self):
+        return self.strings[self.section]['right_start']
+
+    """
+    Define properties for annotations to annotate somatic variants with those observed in validation sequencing 
+    """
+
+    @property
+    def validation_tumor_f(self):
+        return self.strings[self.section]['validation_tumor_f']
+
+    @property
+    def validation_coverage(self):
+        return self.strings[self.section]['validation_coverage']
+
+    @property
+    def validation_detection_power(self):
+        return self.strings[self.section]['validation_detection_power']
+
+    """
+    Defining remaining properties
+    """
+    @property
+    def feature_display(self):
+        return self.strings[self.section]['feature_display']
+
+    @property
+    def preclinical_efficacy(self):
+        return self.strings[self.section]['preclinical_efficacy']
+
+    @property
+    def connections(self):
+        return self.strings[self.section]['connections']
+
+    @property
+    def rationale(self):
+        return self.strings[self.section]['rationale']
+
+    @property
+    def patient_id(self):
+        return self.strings[self.section]['patient_id']
+
+    @property
+    def tumor(self):
+        return self.strings[self.section]['tumor']
+
+    @property
+    def normal(self):
+        return self.strings[self.section]['normal']
 
     @staticmethod
     def create_output_name(folder, patient_id, output_suffix):
@@ -154,7 +440,7 @@ class Actionable:
     output_suffix = 'actionable.txt'
 
     @classmethod
-    def write(cls, df, patient_id, folder):
+    def write(cls, df, patient_id, strings, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
