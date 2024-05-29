@@ -1,8 +1,8 @@
-import time
 import argparse
 import os
 import pandas as pd
 import subprocess
+import time
 
 import annotator
 import datasources
@@ -15,8 +15,9 @@ import ontologymapper
 import reporter
 import writer
 
-from config import COLNAMES
-from config import CONFIG
+from reader import Config
+#from config import COLNAMES
+#from config import CONFIG
 
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
@@ -118,10 +119,10 @@ def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = Fal
     return efficacy_dictionary, efficacy_summary
 
 
-def main(patient, inputs, output_folder):
+def main(patient, inputs, output_folder, config, strings):
     metadata_dictionary = create_metadata_dictionary(patient)
 
-    dbs = datasources.Datasources.generate_db_dict(CONFIG)
+    dbs = datasources.Datasources.generate_db_dict(config)
     output_folder = format_output_directory(output_folder)
     if output_folder != "":
         execute_cmd(f"mkdir -p {output_folder}")
@@ -245,10 +246,10 @@ def main(patient, inputs, output_folder):
     writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
     writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
 
-    if TOGGLE_FEATURES.getboolean('generate_actionability_report'):
+    if config['function_toggle'].getboolean('generate_actionability_report'):
         report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
 
-        include_similarity = TOGGLE_FEATURES.getboolean('include_model_similarity_in_actionability_report')
+        include_similarity = config['function_toggle'].getboolean('include_model_similarity_in_actionability_report')
         reporter.Reporter.generate_actionability_report(
             actionable,
             report_dictionary,
@@ -320,6 +321,10 @@ if __name__ == "__main__":
     arg_parser.add_argument('--output_directory',
                             default=None,
                             help='Output directory for generated files')
+    arg_parser.add_argument('--config',
+                            help='Path to config.ini file')
+    arg_parser.add_argument('--strings',
+                            help='Path to strings.ini file')
     args = arg_parser.parse_args()
 
     patient_dict = {
@@ -348,7 +353,16 @@ if __name__ == "__main__":
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
 
-    main(patient_dict, inputs_dict, output_directory)
+    config_ini = Config.read(args.config, convert_to_dictionary=False)
+    strings_dictionary = Config.read(args.strings, convert_to_dictionary=True)
+
+    main(
+        patient=patient_dict,
+        inputs=inputs_dict,
+        output_folder=output_directory,
+        config=config_ini,
+        strings=strings_dictionary
+    )
 
     end_time = time.time()
     time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)

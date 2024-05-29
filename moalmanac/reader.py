@@ -1,9 +1,31 @@
+import configparser
 import json
 import pandas as pd
 import pickle
 
 
-class Reader(object):
+class Config:
+    @classmethod
+    def read(cls, path, convert_to_dictionary=False):
+        ini = cls.load(path)
+        if convert_to_dictionary:
+            return cls.convert_ini_to_dictionary(ini)
+        else:
+            return ini
+
+    @staticmethod
+    def convert_ini_to_dictionary(ini):
+        dictionary = {section: dict(ini[section]) for section in ini.sections()}
+        return dictionary
+
+    @staticmethod
+    def load(path):
+        config = configparser.ConfigParser()
+        config.read(path)
+        return config
+
+
+class Reader:
     @staticmethod
     def check_comment_rows(handle, comment_character):
         skip_rows = 0
