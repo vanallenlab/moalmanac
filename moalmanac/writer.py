@@ -416,6 +416,22 @@ class Writer:
 
 
 class Actionable:
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+        self.sort_columns = [
+            self.writer.almanac_bin,
+            self.writer.sensitive_map,
+            self.writer.resistance_map,
+            self.writer.prognostic_map
+        ]
+        self.output_columns = [
+            self.writer.score_bin,
+            self.writer.sensitive_implication,
+            self.writer.resistance_implication,
+            self.writer.prognostic_implication,
+
+        ]
+
     sort_columns = [Writer.almanac_bin, Writer.sensitive_map,  Writer.resistance_map, Writer.prognostic_map]
     output_columns = [Writer.score_bin,
                       Writer.sensitive_implication, Writer.resistance_implication, Writer.prognostic_implication,
