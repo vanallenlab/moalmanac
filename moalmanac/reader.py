@@ -6,8 +6,8 @@ import pickle
 
 class Config:
     @classmethod
-    def read(cls, path, convert_to_dictionary=False):
-        ini = cls.load(path)
+    def read(cls, path, extended_interpolation=False, convert_to_dictionary=False):
+        ini = cls.load(path, extended_interpolation=extended_interpolation)
         if convert_to_dictionary:
             return cls.convert_ini_to_dictionary(ini)
         else:
@@ -15,12 +15,19 @@ class Config:
 
     @staticmethod
     def convert_ini_to_dictionary(ini):
-        dictionary = {section: dict(ini[section]) for section in ini.sections()}
+        dictionary = {}
+        for section in ini.sections():
+            dictionary[section] = {}
+            for (key, value) in ini.items(section):
+                dictionary[section][key] = value
         return dictionary
 
     @staticmethod
-    def load(path):
-        config = configparser.ConfigParser()
+    def load(path, extended_interpolation=False):
+        if extended_interpolation:
+            config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+        else:
+            config = configparser.ConfigParser()
         config.read(path)
         return config
 
