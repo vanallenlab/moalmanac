@@ -27,8 +27,8 @@ class Annotator:
     resistance_score_bin = COLNAMES[bin_section]['resistance_score_bin']
     prognostic_score_bin = COLNAMES[bin_section]['prognostic_score_bin']
     acmg_bin = COLNAMES[bin_section]['acmg']
-    cancerhotspots_bin = COLNAMES[bin_section]['cancerhotspots']
-    cancerhotspots3d_bin = COLNAMES[bin_section]['cancerhotspots3d']
+    cancerhotspots_bin = COLNAMES[bin_section]['cancer_hotspots']
+    cancerhotspots3d_bin = COLNAMES[bin_section]['cancer_hotspots_3d']
     cgc_bin = COLNAMES[bin_section]['cgc']
     clinvar_bin = COLNAMES[bin_section]['clinvar']
     cosmic_bin = COLNAMES[bin_section]['cosmic']
@@ -1243,8 +1243,8 @@ class PreclinicalEfficacy:
     section = 'preclinical'
     feature_display = COLNAMES[section]['feature_display']
     pvalue = COLNAMES[section]['pvalue']
-    efficacy = COLNAMES[section]['efficacy_obs']
-    lookup = COLNAMES[section]['efficacy_lookup']
+    efficacy = COLNAMES[section]['preclinical_efficacy_obs']
+    lookup = COLNAMES[section]['preclinical_efficacy_lookup']
 
     @classmethod
     def annotate(cls, actionable, efficacy, dictionary, append_lookup=True):

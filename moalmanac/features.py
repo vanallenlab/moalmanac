@@ -145,8 +145,8 @@ class BurdenReader:
     burden_section = 'burden'
     patient_id = COLNAMES[burden_section]['patient']
     tumor_type = COLNAMES[burden_section]['tumor_type']
-    ontology = COLNAMES[burden_section]['ontology']
-    code = COLNAMES[burden_section]['code']
+    ontology = COLNAMES[burden_section]['oncotree_term']
+    code = COLNAMES[burden_section]['oncotree_code']
     bases_covered = COLNAMES[burden_section]['bases_covered']
     n_nonsyn_mutations = COLNAMES[burden_section]['n_nonsyn_mutations']
     mutational_burden = COLNAMES[burden_section]['mutational_burden']

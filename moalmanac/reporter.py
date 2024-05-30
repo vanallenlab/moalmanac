@@ -10,12 +10,12 @@ from config import CONFIG
 
 class Reporter:
     report_section = 'report'
-    code = COLNAMES[report_section]['code']
     date = COLNAMES[report_section]['date']
     description = COLNAMES[report_section]['description']
     normal = COLNAMES[report_section]['normal']
     tumor = COLNAMES[report_section]['tumor']
-    ontology = COLNAMES[report_section]['ontology']
+    ontology = COLNAMES[report_section]['oncotree_term']
+    code = COLNAMES[report_section]['oncotree_code']
     patient_id = COLNAMES[report_section]['patient_id']
     stage = COLNAMES[report_section]['stage']
     purity = COLNAMES[report_section]['purity']
