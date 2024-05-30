@@ -369,7 +369,7 @@ class Writer:
 
     @property
     def preclinical_efficacy(self):
-        return self.strings[self.section]['preclinical_efficacy']
+        return self.strings[self.section]['preclinical_efficacy_obs']
 
     @property
     def connections(self):
