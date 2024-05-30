@@ -199,18 +199,23 @@ def main(patient, inputs, output_folder, config, strings):
             similarity_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, string_id)
             similarity_summary = matchmaker.Report.create_report_dictionary(similarity_results, cell_lines_dictionary)
 
-    writer.Actionable.write(actionable, string_id, output_folder)
-    writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
-    writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
-    writer.GermlineHereditary.write(evaluated_germline, string_id, output_folder)
-    writer.Integrated.write(integrated, string_id, output_folder)
-    writer.MSI.write(evaluated_ms_variants, string_id, output_folder)
-    writer.MutationalBurden.write(evaluated_burden, string_id, output_folder)
-    writer.SomaticScored.write(evaluated_somatic, string_id, output_folder)
-    writer.SomaticFiltered.write(somatic_filtered, string_id, output_folder)
-    writer.Strategies.write(strategies, string_id, output_folder)
-    writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
-    writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
+    writers_and_dataframes = [
+        (writer.Actionable, actionable),
+        (writer.GermlineACMG, evaluated_germline),
+        (writer.GermlineCancer, evaluated_germline),
+        (writer.GermlineHereditary, evaluated_germline),
+        (writer.Integrated, integrated),
+        (writer.MSI, evaluated_ms_variants),
+        (writer.MutationalBurden, evaluated_burden),
+        (writer.SomaticScored, evaluated_somatic),
+        (writer.SomaticFiltered, somatic_filtered),
+        (writer.Strategies, strategies),
+        (writer.PreclinicalEfficacy, efficacy_summary),
+        (writer.PreclinicalMatchmaking, similarity_results)
+    ]
+    for writer_class, dataframe in writers_and_dataframes:
+        writer_instance = writer_class(strings=strings)
+        writer_instance.write(dataframe=dataframe, patient_label=string_id, folder=output_folder)
 
     if function_toggle.getboolean('generate_actionability_report'):
         report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
@@ -319,8 +324,8 @@ if __name__ == "__main__":
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
 
-    config_ini = Config.read(args.config, convert_to_dictionary=False)
-    strings_dictionary = Config.read(args.strings, convert_to_dictionary=True)
+    config_ini = Config.read(args.config, extended_interpolation=False, convert_to_dictionary=False)
+    strings_dictionary = Config.read(args.strings, extended_interpolation=True, convert_to_dictionary=True)
 
     main(
         patient=patient_dict,
