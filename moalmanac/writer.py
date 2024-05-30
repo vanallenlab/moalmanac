@@ -1,4 +1,3 @@
-from config import COLNAMES
 import json
 
 
@@ -11,6 +10,7 @@ class Writer:
     """
     Defining properties for each datasource bin
     """
+
     @property
     def score_bin(self):
         return self.strings[self.section]['score_bin']
@@ -22,6 +22,10 @@ class Writer:
     @property
     def cancer_hotspots_bin(self):
         return self.strings[self.section]['cancer_hotspots_bin']
+
+    @property
+    def cancer_hotspots_3d_bin(self):
+        return self.strings[self.section]['cancer_hotspots_3d_bin']
 
     @property
     def cgc_bin(self):
@@ -85,15 +89,15 @@ class Writer:
 
     @property
     def sensitive_map(self):
-        return self.strings[self.section]['sensitive_map']
+        return self.strings[self.section]['sensitive_implication_map']
 
     @property
     def resistance_map(self):
-        return self.strings[self.section]['resistance_map']
+        return self.strings[self.section]['resistance_implication_map']
 
     @property
     def prognostic_map(self):
-        return self.strings[self.section]['prognostic_map']
+        return self.strings[self.section]['prognostic_implication_map']
 
     @property
     def sensitive_therapy(self):
@@ -358,6 +362,7 @@ class Writer:
     """
     Defining remaining properties
     """
+
     @property
     def feature_display(self):
         return self.strings[self.section]['feature_display']
@@ -385,6 +390,10 @@ class Writer:
     @property
     def normal(self):
         return self.strings[self.section]['normal']
+
+    """
+    Writer class functions
+    """
 
     @staticmethod
     def create_output_name(folder, patient_id, output_suffix):
@@ -416,6 +425,8 @@ class Writer:
 
 
 class Actionable:
+    output_suffix = "actionable.txt"
+
     def __init__(self, strings):
         self.writer = Writer(strings)
         self.sort_columns = [
@@ -429,283 +440,693 @@ class Actionable:
             self.writer.sensitive_implication,
             self.writer.resistance_implication,
             self.writer.prognostic_implication,
-
+            self.writer.feature_type,
+            self.writer.feature,
+            self.writer.alt_type,
+            self.writer.alt,
+            self.writer.tumor_f,
+            self.writer.coverage,
+            self.writer.exac_af,
+            self.writer.exac_common,
+            self.writer.clinvar,
+            self.writer.sensitive_bin,
+            self.writer.sensitive_therapy,
+            self.writer.sensitive_therapy_strategy,
+            self.writer.sensitive_therapy_type,
+            self.writer.sensitive_oncotree_code,
+            self.writer.sensitive_description,
+            self.writer.sensitive_citation,
+            self.writer.sensitive_url,
+            self.writer.resistance_bin,
+            self.writer.resistance_therapy,
+            self.writer.resistance_therapy_strategy,
+            self.writer.resistance_therapy_type,
+            self.writer.resistance_oncotree_code,
+            self.writer.resistance_description,
+            self.writer.resistance_citation,
+            self.writer.resistance_url,
+            self.writer.prognostic_bin,
+            self.writer.favorable_prognosis,
+            self.writer.prognostic_oncotree_code,
+            self.writer.prognostic_description,
+            self.writer.prognostic_citation,
+            self.writer.prognostic_url,
+            self.writer.number_germline_mutations,
+            self.writer.validation_coverage,
+            self.writer.validation_tumor_f,
+            self.writer.validation_detection_power,
+            self.writer.feature_display,
+            self.writer.preclinical_efficacy,
+            self.writer.patient_id,
+            self.writer.tumor,
+            self.writer.normal
         ]
 
-    sort_columns = [Writer.almanac_bin, Writer.sensitive_map,  Writer.resistance_map, Writer.prognostic_map]
-    output_columns = [Writer.score_bin,
-                      Writer.sensitive_implication, Writer.resistance_implication, Writer.prognostic_implication,
-                      Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
-                      Writer.tumor_f, Writer.coverage, Writer.exac_af, Writer.exac_common, Writer.clinvar,
-                      Writer.sensitive_bin,
-                      Writer.sensitive_therapy, Writer.sensitive_therapy_strategy, Writer.sensitive_therapy_type,
-                      Writer.sensitive_oncotree_code,
-                      Writer.sensitive_description, Writer.sensitive_citation, Writer.sensitive_url,
-                      Writer.resistance_bin,
-                      Writer.resistance_therapy, Writer.resistance_therapy_strategy, Writer.resistance_therapy_type,
-                      Writer.resistance_oncotree_code,
-                      Writer.resistance_description, Writer.resistance_citation, Writer.resistance_url,
-                      Writer.prognostic_bin, Writer.favorable_prognosis,
-                      Writer.prognostic_oncotree_code,
-                      Writer.prognostic_description, Writer.prognostic_citation, Writer.prognostic_url,
-                      Writer.number_germline_mutations,
-                      Writer.validation_coverage, Writer.validation_tumor_f, Writer.validation_detection_power,
-                      Writer.feature_display, Writer.preclinical_efficacy,
-                      Writer.patient_id, Writer.tumor, Writer.normal]
-
-    output_suffix = 'actionable.txt'
-
-    @classmethod
-    def write(cls, df, patient_id, strings, folder):
-        df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
-        return df_sorted
+    def write(self, dataframe, patient_label, folder):
+        dataframe[self.writer.patient_id] = patient_label
+        dataframe_sorted = Writer.sort_columns(
+            df=dataframe,
+            columns=self.sort_columns,
+            ascending_boolean=False
+        )
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe_sorted.loc[:, self.output_columns],
+            output_name=output_name
+        )
+        return dataframe_sorted
 
 
 class GermlineACMG:
-    sort_columns = [Writer.clinvar_bin, Writer.feature, Writer.feature_type]
-    output_columns = [Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
-                      Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
-                      Writer.tumor_f, Writer.coverage,
-                      Writer.clinvar, Writer.exac_common, Writer.exac_af, Writer.exac_ac, Writer.exac_an,
-                      Writer.exac_afr_ac, Writer.exac_amr_ac, Writer.exac_eas_ac, Writer.exac_fin_ac,
-                      Writer.exac_nfe_ac, Writer.exac_sas_ac, Writer.exac_oth_ac,
-                      Writer.exac_afr_an, Writer.exac_amr_an, Writer.exac_eas_an, Writer.exac_fin_an,
-                      Writer.exac_nfe_an, Writer.exac_sas_an, Writer.exac_oth_an,
-                      Writer.patient_id, Writer.tumor, Writer.normal]
+    output_suffix = "germline.acmg.txt"
 
-    output_suffix = 'germline.acmg.txt'
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+        self.bin = self.writer.acmg_bin
+        self.sort_columns = [
+            self.writer.clinvar_bin,
+            self.writer.feature,
+            self.writer.feature_type
+        ]
+        self.output_columns = [
+            self.writer.feature_type,
+            self.writer.feature,
+            self.writer.alt_type,
+            self.writer.alt,
+            self.writer.chr,
+            self.writer.start,
+            self.writer.end,
+            self.writer.ref,
+            self.writer.allele1,
+            self.writer.allele2,
+            self.writer.tumor_f,
+            self.writer.coverage,
+            self.writer.clinvar,
+            self.writer.exac_common,
+            self.writer.exac_af,
+            self.writer.exac_ac,
+            self.writer.exac_an,
+            self.writer.exac_afr_ac,
+            self.writer.exac_amr_ac,
+            self.writer.exac_eas_ac,
+            self.writer.exac_fin_ac,
+            self.writer.exac_nfe_ac,
+            self.writer.exac_sas_ac,
+            self.writer.exac_oth_ac,
+            self.writer.exac_afr_an,
+            self.writer.exac_amr_an,
+            self.writer.exac_eas_an,
+            self.writer.exac_fin_an,
+            self.writer.exac_nfe_an,
+            self.writer.exac_sas_ac,
+            self.writer.exac_oth_an,
+            self.writer.patient_id,
+            self.writer.tumor,
+            self.writer.normal
+        ]
 
-    bin = Writer.acmg_bin
-
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns], output_name)
+    def write(self, dataframe, patient_label, folder):
+        dataframe[self.writer.patient_id] = patient_label
+        dataframe_sorted = Writer.sort_columns(dataframe, self.sort_columns, ascending_boolean=False)
+        idx = Writer.return_nonzero_bin_idx(dataframe.loc[:, self.bin])
+        output_name = Writer.create_output_name(folder, patient_label, self.__class__.output_suffix)
+        Writer.export_dataframe(dataframe_sorted.loc[idx, self.output_columns], output_name)
+        return dataframe_sorted
 
 
 class GermlineCancer:
-    sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
-                    Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
-                    Writer.exac_common, Writer.exac_af]
-    sort_ascending = [False, False, False, False, False, False, False, True, True]
-    output_columns = [Writer.score_bin, Writer.sensitive_bin, Writer.resistance_bin, Writer.prognostic_bin,
-                      Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
-                      Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
-                      Writer.tumor_f, Writer.coverage,
-                      Writer.clinvar, Writer.exac_common, Writer.exac_af, Writer.exac_ac, Writer.exac_an,
-                      Writer.exac_afr_ac, Writer.exac_amr_ac, Writer.exac_eas_ac, Writer.exac_fin_ac,
-                      Writer.exac_nfe_ac, Writer.exac_sas_ac, Writer.exac_oth_ac,
-                      Writer.exac_afr_an, Writer.exac_amr_an, Writer.exac_eas_an, Writer.exac_fin_an,
-                      Writer.exac_nfe_an, Writer.exac_sas_an, Writer.exac_oth_an,
-                      Writer.patient_id, Writer.tumor, Writer.normal]
-
     output_suffix = 'germline.cancer_related.txt'
 
-    almanac_bin = Writer.almanac_bin
-    hotspots_bin = Writer.cancerhotspots_bin
-    cgc_bin = Writer.cgc_bin
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+        self.almanac_bin = self.writer.almanac_bin
+        self.hotspots_bin = self.writer.cancer_hotspots_bin
+        self.cgc_bin = self.writer.cgc_bin
+        self.sort_columns = [
+            self.writer.almanac_bin,
+            self.writer.cancer_hotspots_bin,
+            self.writer.cancer_hotspots_3d_bin,
+            self.writer.cgc_bin,
+            self.writer.gsea_pathways_bin,
+            self.writer.gsea_cm_bin,
+            self.writer.cosmic_bin,
+            self.writer.exac_common,
+            self.writer.exac_af
+        ]
+        self.ascending = [
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            True,
+            True
+        ]
+        self.output_columns = [
+            self.writer.score_bin,
+            self.writer.sensitive_bin,
+            self.writer.resistance_bin,
+            self.writer.prognostic_bin,
+            self.writer.feature_type,
+            self.writer.feature,
+            self.writer.alt_type,
+            self.writer.alt,
+            self.writer.chr,
+            self.writer.start,
+            self.writer.end,
+            self.writer.ref,
+            self.writer.allele1,
+            self.writer.allele2,
+            self.writer.tumor_f,
+            self.writer.coverage,
+            self.writer.clinvar,
+            self.writer.exac_common,
+            self.writer.exac_af,
+            self.writer.exac_ac,
+            self.writer.exac_an,
+            self.writer.exac_afr_ac,
+            self.writer.exac_amr_ac,
+            self.writer.exac_eas_ac,
+            self.writer.exac_fin_ac,
+            self.writer.exac_nfe_ac,
+            self.writer.exac_sas_ac,
+            self.writer.exac_oth_ac,
+            self.writer.exac_afr_an,
+            self.writer.exac_amr_an,
+            self.writer.exac_eas_an,
+            self.writer.exac_fin_an,
+            self.writer.exac_nfe_an,
+            self.writer.exac_sas_ac,
+            self.writer.exac_oth_an,
+            self.writer.patient_id,
+            self.writer.tumor,
+            self.writer.normal
+        ]
 
-    @classmethod
-    def get_cancer_idx(cls, df):
-        idx_almanac = Writer.return_nonzero_bin_idx(df.loc[:, cls.almanac_bin])
-        idx_hotspot = Writer.return_nonzero_bin_idx(df.loc[:, cls.hotspots_bin])
-        idx_cgc = Writer.return_nonzero_bin_idx(df.loc[:, cls.cgc_bin])
+    def get_cancer_idx(self, dataframe):
+        idx_almanac = Writer.return_nonzero_bin_idx(dataframe.loc[:, self.almanac_bin])
+        idx_hotspot = Writer.return_nonzero_bin_idx(dataframe.loc[:, self.hotspots_bin])
+        idx_cgc = Writer.return_nonzero_bin_idx(dataframe.loc[:, self.cgc_bin])
         return idx_almanac.union(idx_hotspot).union(idx_cgc)
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
-        idx = cls.get_cancer_idx(df)
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns], output_name)
+    def write(self, dataframe, patient_label, folder):
+        dataframe[self.writer.patient_id] = patient_label
+        dataframe_sorted = Writer.sort_columns(
+            df=dataframe,
+            columns=self.sort_columns,
+            ascending_boolean=self.ascending
+        )
+        idx = self.__class__.get_cancer_idx(self=self, dataframe=dataframe_sorted)
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe_sorted.loc[idx, self.output_columns],
+            output_name=output_name
+        )
 
 
 class GermlineHereditary:
-    sort_columns = [Writer.clinvar_bin, Writer.feature, Writer.feature_type]
-    output_columns = [Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
-                      Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
-                      Writer.tumor_f, Writer.coverage,
-                      Writer.clinvar, Writer.exac_common, Writer.exac_af, Writer.exac_ac, Writer.exac_an,
-                      Writer.exac_afr_ac, Writer.exac_amr_ac, Writer.exac_eas_ac, Writer.exac_fin_ac,
-                      Writer.exac_nfe_ac, Writer.exac_sas_ac, Writer.exac_oth_ac,
-                      Writer.exac_afr_an, Writer.exac_amr_an, Writer.exac_eas_an, Writer.exac_fin_an,
-                      Writer.exac_nfe_an, Writer.exac_sas_an, Writer.exac_oth_an,
-                      Writer.patient_id, Writer.tumor, Writer.normal]
-
     output_suffix = 'germline.hereditary_cancers.txt'
 
-    bin = Writer.hereditary_bin
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+        self.bin = self.writer.hereditary_bin
+        self.sort_columns = [
+            self.writer.clinvar_bin,
+            self.writer.feature,
+            self.writer.feature_type
+        ]
+        self.output_columns = [
+            self.writer.feature_type,
+            self.writer.feature,
+            self.writer.alt_type,
+            self.writer.alt,
+            self.writer.chr,
+            self.writer.start,
+            self.writer.end,
+            self.writer.ref,
+            self.writer.allele1,
+            self.writer.allele2,
+            self.writer.tumor_f,
+            self.writer.coverage,
+            self.writer.clinvar,
+            self.writer.exac_common,
+            self.writer.exac_af,
+            self.writer.exac_ac,
+            self.writer.exac_an,
+            self.writer.exac_afr_ac,
+            self.writer.exac_amr_ac,
+            self.writer.exac_eas_ac,
+            self.writer.exac_fin_ac,
+            self.writer.exac_nfe_ac,
+            self.writer.exac_sas_ac,
+            self.writer.exac_oth_ac,
+            self.writer.exac_afr_an,
+            self.writer.exac_amr_an,
+            self.writer.exac_eas_an,
+            self.writer.exac_fin_an,
+            self.writer.exac_nfe_an,
+            self.writer.exac_sas_ac,
+            self.writer.exac_oth_an,
+            self.writer.patient_id,
+            self.writer.tumor,
+            self.writer.normal
+        ]
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns], output_name)
+    def write(self, dataframe, patient_label, folder):
+        dataframe[self.writer.patient_id] = patient_label
+        dataframe_sorted = Writer.sort_columns(
+            df=dataframe,
+            columns=self.sort_columns,
+            ascending_boolean=False
+        )
+        idx = Writer.return_nonzero_bin_idx(series=dataframe.loc[:, self.bin])
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe_sorted.loc[idx, self.output_columns],
+            output_name=output_name
+        )
 
 
 class Illustrations:
-    @classmethod
-    def write(cls, figure, folder, profile_id, output_suffix):
-        output_name = Writer.create_output_name(folder, profile_id, output_suffix)
-        Writer.save_figure(figure, output_name)
+    @staticmethod
+    def write(figure, folder, profile_label, output_suffix):
+        output_name = Writer.create_output_name(folder, profile_label, output_suffix)
+        Writer.save_figure(figure=figure, output_name=output_name)
 
 
 class Integrated:
-    section = 'integrative'
-    somatic = COLNAMES[section]['somatic']
-    copynumber = COLNAMES[section]['copynumber']
-    fusion = COLNAMES[section]['fusion']
-    germline = COLNAMES[section]['germline']
-
-    output_columns = [somatic, copynumber, fusion, germline]
-
     output_suffix = 'integrated.summary.txt'
+    section = 'integrative'
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df_sorted = df.sort_index()
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe_indexed(df_sorted.loc[:, cls.output_columns], output_name, Writer.feature)
+    def __init__(self, strings):
+        self.strings = strings
+        self.writer = Writer(strings)
+        self.output_columns = [self.somatic, self.copynumber, self.fusion, self.germline]
+
+    @property
+    def somatic(self):
+        return self.strings[self.section]['somatic']
+
+    @property
+    def copynumber(self):
+        return self.strings[self.section]['copynumber']
+
+    @property
+    def fusion(self):
+        return self.strings[self.section]['fusion']
+
+    @property
+    def germline(self):
+        return self.strings[self.section]['germline']
+
+    def write(self, dataframe, patient_label, folder):
+        dataframe_sorted = dataframe.sort_index()
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe_indexed(
+            df=dataframe_sorted.loc[:, self.output_columns],
+            output_name=output_name,
+            index_label=Writer.feature
+        )
 
 
 class MSI:
-    sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
-                    Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
-                    Writer.exac_common, Writer.exac_af]
-    sort_ascending = [False, False, False, False, False, False, False, True, True]
-    output_columns = [Writer.score_bin, Writer.sensitive_bin, Writer.resistance_bin, Writer.prognostic_bin,
-                      Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
-                      Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
-                      Writer.tumor_f, Writer.coverage, Writer.exac_af, Writer.exac_common, Writer.clinvar,
-                      Writer.number_germline_mutations,
-                      Writer.spanningfrags,
-                      Writer.left_gene, Writer.left_chr, Writer.left_start,
-                      Writer.right_gene, Writer.right_chr, Writer.right_start,
-                      Writer.rationale, Writer.patient_id, Writer.tumor, Writer.normal,
-                      Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
-                      Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin]
-
     output_suffix = 'msi_variants.txt'
 
-    bin = Writer.msi_bin
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+        self.bin = self.writer.msi_bin
+        self.sort_columns = [
+            self.writer.almanac_bin,
+            self.writer.cancer_hotspots_bin,
+            self.writer.cancer_hotspots_3d_bin,
+            self.writer.cgc_bin,
+            self.writer.gsea_pathways_bin,
+            self.writer.gsea_cm_bin,
+            self.writer.cosmic_bin,
+            self.writer.exac_common,
+            self.writer.exac_af
+        ],
+        self.ascending=[
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            True,
+            True
+        ]
+        self.output_columns = [
+            self.writer.score_bin,
+            self.writer.sensitive_bin,
+            self.writer.resistance_bin,
+            self.writer.prognostic_bin,
+            self.writer.feature_type,
+            self.writer.feature,
+            self.writer.alt_type,
+            self.writer.alt,
+            self.writer.chr,
+            self.writer.start,
+            self.writer.end,
+            self.writer.ref,
+            self.writer.allele1,
+            self.writer.allele2,
+            self.writer.tumor_f,
+            self.writer.coverage,
+            self.writer.exac_af,
+            self.writer.exac_common,
+            self.writer.clinvar,
+            self.writer.number_germline_mutations,
+            self.writer.spanningfrags,
+            self.writer.left_gene,
+            self.writer.left_chr,
+            self.writer.left_start,
+            self.writer.right_gene,
+            self.writer.right_chr,
+            self.writer.right_start,
+            self.writer.rationale,
+            self.writer.patient_id,
+            self.writer.tumor,
+            self.writer.normal,
+            self.writer.almanac_bin,
+            self.writer.cancer_hotspots_bin,
+            self.writer.cancer_hotspots_3d_bin,
+            self.writer.cgc_bin,
+            self.writer.gsea_pathways_bin,
+            self.writer.gsea_cm_bin,
+            self.writer.cosmic_bin
+        ]
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
+    def write(self, dataframe, patient_label, folder):
+        dataframe[Writer.patient_id] = patient_label
+        dataframe_sorted = Writer.sort_columns(
+            df=dataframe,
+            columns=self.sort_columns,
+            ascending_boolean=False
+        )
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe_sorted.loc[:, self.output_columns],
+            output_name=output_name
+        )
 
 
 class MutationalBurden:
-    section = 'burden'
-    patient = COLNAMES[section]['patient']
-    tumor_type = COLNAMES[section]['tumor_type']
-    ontology = COLNAMES[section]['ontology']
-    code = COLNAMES[section]['code']
-    bases_covered = COLNAMES[section]['bases_covered']
-    n_nonsyn_mutations = COLNAMES[section]['n_nonsyn_mutations']
-    mutational_burden = COLNAMES[section]['mutational_burden']
-    percentile_tcga = COLNAMES[section]['percentile_tcga']
-    percentile_tcga_tissue = COLNAMES[section]['percentile_tcga_tissue']
-    high_burden_boolean = COLNAMES[section]['high_burden_boolean']
-
-    output_columns = [patient, tumor_type, ontology, code,
-                      bases_covered, n_nonsyn_mutations, mutational_burden,
-                      percentile_tcga, percentile_tcga_tissue, high_burden_boolean]
-
     output_suffix = 'mutational_burden.txt'
+    section = 'burden'
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df[Writer.patient_id] = patient_id
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df.loc[:, cls.output_columns], output_name)
+    def __init__(self, strings):
+        self.strings = strings
+        self.writer = Writer(strings)
+        self.output_columns = [
+            self.patient,
+            self.tumor_type,
+            self.ontology,
+            self.code,
+            self.bases_covered,
+            self.n_nonsyn_mutations,
+            self.mutational_burden,
+            self.percentile_tcga,
+            self.percentile_tcga_tissue,
+            self.high_burden_boolean
+        ]
+
+    @property
+    def patient(self):
+        return self.strings[self.section]['patient']
+
+    @property
+    def tumor_type(self):
+        return self.strings[self.section]['tumor_type']
+
+    @property
+    def ontology(self):
+        return self.strings[self.section]['ontology']
+
+    @property
+    def code(self):
+        return self.strings[self.section]['code']
+
+    @property
+    def bases_covered(self):
+        return self.strings[self.section]['bases_covered']
+
+    @property
+    def n_nonsyn_mutations(self):
+        return self.strings[self.section]['n_nonsyn_mutations']
+
+    @property
+    def mutational_burden(self):
+        return self.strings[self.section]['mutational_burden']
+
+    @property
+    def percentile_tcga(self):
+        return self.strings[self.section]['percentile_tcga']
+
+    @property
+    def percentile_tcga_tissue(self):
+        return self.strings[self.section]['percentile_tcga_tissue']
+
+    @property
+    def high_burden_boolean(self):
+        return self.strings[self.section]['high_burden_boolean']
+
+    def write(self, dataframe, patient_label, folder):
+        dataframe[self.writer.patient_id] = patient_label
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe,
+            output_name=output_name
+        )
 
 
 class PreclinicalEfficacy:
     output_suffix = 'preclinical.efficacy.txt'
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df, output_name)
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+
+    def write(self, dataframe, patient_label, folder):
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe,
+            output_name=output_name
+        )
 
 
 class PreclinicalMatchmaking:
     output_suffix = 'matchmaker.txt'
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df, output_name)
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+
+    def write(self, dataframe, patient_label, folder):
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe,
+            output_name=output_name
+        )
 
 
 class SomaticFiltered:
-    sort_columns = [Writer.feature, Writer.feature_type]
-    output_columns = [Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
-                      Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
-                      Writer.tumor_f, Writer.coverage,
-                      Writer.spanningfrags,
-                      Writer.left_gene, Writer.left_chr, Writer.left_start,
-                      Writer.right_gene, Writer.right_chr, Writer.right_start,
-                      Writer.rationale, Writer.patient_id, Writer.tumor, Writer.normal]
-
     output_suffix = 'somatic.filtered.txt'
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+        self.sort_columns = [
+            self.writer.feature,
+            self.writer.feature_type
+        ]
+        self.output_columns = [
+            self.writer.feature_type,
+            self.writer.feature,
+            self.writer.alt_type,
+            self.writer.alt,
+            self.writer.chr,
+            self.writer.start,
+            self.writer.end,
+            self.writer.ref,
+            self.writer.allele1,
+            self.writer.allele2,
+            self.writer.tumor_f,
+            self.writer.coverage,
+            self.writer.spanningfrags,
+            self.writer.left_gene,
+            self.writer.left_chr,
+            self.writer.left_start,
+            self.writer.right_gene,
+            self.writer.right_chr,
+            self.writer.right_start,
+            self.writer.rationale,
+            self.writer.patient_id,
+            self.writer.tumor,
+            self.writer.normal
+        ]
+
+    def write(self, dataframe, patient_label, folder):
+        dataframe[Writer.patient_id] = patient_label
+        dataframe_sorted = Writer.sort_columns(
+            df=dataframe,
+            columns=self.sort_columns,
+            ascending_boolean=False
+        )
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe(
+            df=dataframe_sorted.loc[:, self.output_columns],
+            output_name=output_name
+        )
 
 
 class SomaticScored:
-    sort_columns = [Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
-                    Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin,
-                    Writer.validation_detection_power, Writer.validation_coverage, Writer.number_germline_mutations,
-                    Writer.exac_common, Writer.exac_af]
-    sort_ascending = [False, False, False, False, False, False, False, False, False, False, True, True]
-    output_columns = [Writer.score_bin, Writer.sensitive_bin, Writer.resistance_bin, Writer.prognostic_bin,
-                      Writer.feature_type, Writer.feature, Writer.alt_type, Writer.alt,
-                      Writer.chr, Writer.start, Writer.end, Writer.ref, Writer.allele1, Writer.allele2,
-                      Writer.tumor_f, Writer.coverage, Writer.exac_af, Writer.exac_common, Writer.clinvar,
-                      Writer.number_germline_mutations,
-                      Writer.spanningfrags,
-                      Writer.left_gene, Writer.left_chr, Writer.left_start,
-                      Writer.right_gene, Writer.right_chr, Writer.right_start,
-                      Writer.validation_coverage, Writer.validation_tumor_f, Writer.validation_detection_power,
-                      Writer.rationale, Writer.patient_id, Writer.tumor, Writer.normal,
-                      Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
-                      Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin]
-
     output_suffix = 'somatic.scored.txt'
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns], output_name)
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+        self.sort_columns = [
+            self.writer.almanac_bin,
+            self.writer.cancer_hotspots_bin,
+            self.writer.cancer_hotspots_3d_bin,
+            self.writer.cgc_bin,
+            self.writer.gsea_pathways_bin,
+            self.writer.gsea_cm_bin,
+            self.writer.cosmic_bin,
+            self.writer.validation_detection_power,
+            self.writer.validation_coverage,
+            self.writer.number_germline_mutations,
+            self.writer.exac_common,
+            self.writer.exac_af
+        ]
+        self.ascending = [
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            True,
+            True
+        ]
+        self.output_columns = [
+            self.writer.score_bin,
+            self.writer.sensitive_bin,
+            self.writer.resistance_bin,
+            self.writer.prognostic_bin,
+            self.writer.feature_type,
+            self.writer.feature,
+            self.writer.alt_type,
+            self.writer.alt,
+            self.writer.chr,
+            self.writer.start,
+            self.writer.end,
+            self.writer.ref,
+            self.writer.allele1,
+            self.writer.allele2,
+            self.writer.tumor_f,
+            self.writer.coverage,
+            self.writer.exac_af,
+            self.writer.exac_common,
+            self.writer.clinvar,
+            self.writer.number_germline_mutations,
+            self.writer.spanningfrags,
+            self.writer.left_gene,
+            self.writer.left_chr,
+            self.writer.left_start,
+            self.writer.right_gene,
+            self.writer.right_chr,
+            self.writer.right_start,
+            self.writer.validation_coverage,
+            self.writer.validation_tumor_f,
+            self.writer.validation_detection_power,
+            self.writer.rationale,
+            self.writer.patient_id,
+            self.writer.tumor,
+            self.writer.normal,
+            self.writer.almanac_bin,
+            self.writer.cancer_hotspots_bin,
+            self.writer.cancer_hotspots_3d_bin,
+            self.writer.cgc_bin,
+            self.writer.gsea_pathways_bin,
+            self.writer.gsea_cm_bin,
+            self.writer.cosmic_bin
+        ]
+
+    def write(self, dataframe, patient_label, folder):
+        dataframe[self.writer.patient_id] = patient_label
+        dataframe_sorted = Writer.sort_columns(
+            df=dataframe,
+            columns=self.sort_columns,
+            ascending_boolean=self.ascending
+        )
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix)
+        Writer.export_dataframe(
+            df=dataframe_sorted.loc[:, self.output_columns],
+            output_name=output_name
+        )
 
 
 class Strategies:
     output_suffix = 'therapeutic_strategies.txt'
 
-    @classmethod
-    def write(cls, df, patient_id, folder):
-        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe_indexed(df, output_name, 'Assertion / Strategy')
+    def __init__(self, strings):
+        self.writer = Writer(strings)
+
+    def write(self, dataframe, patient_label, folder):
+        output_name = Writer.create_output_name(
+            folder=folder,
+            patient_id=patient_label,
+            output_suffix=self.__class__.output_suffix
+        )
+        Writer.export_dataframe_indexed(
+            df=dataframe,
+            output_name=output_name,
+            index_label='Assertion / Strategy'
+        )
 
 
 class Json:
