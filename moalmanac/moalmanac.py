@@ -16,6 +16,8 @@ import reporter
 import writer
 
 from reader import Config
+from config import COLNAMES
+from config import CONFIG
 
 
 def create_biomarker_type_dictionary(config):
@@ -132,13 +134,31 @@ def main(patient, inputs, output_folder, config, strings):
         dbs=dbs
     )
 
-    patient_wgd = features.Aneuploidy.summarize(metadata_dictionary['wgd'])
-    patient_ms_status = features.MicrosatelliteReader.summarize(metadata_dictionary['ms_status'])
-    metadata_dictionary['ms_status'] = features.MicrosatelliteReader.map_status(metadata_dictionary['ms_status'])
+    patient_wgd = features.Aneuploidy.summarize(
+        boolean=metadata_dictionary[strings['patient']['wgd']]
+    )
+    patient_ms_status = features.MicrosatelliteReader.summarize(
+        status=metadata_dictionary[strings['patient']['ms_status']]
+    )
+    metadata_dictionary[strings['patient']['ms_status']] = features.MicrosatelliteReader.map_status(
+        status=metadata_dictionary[strings['patient']['ms_status']]
+    )
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, metadata_dictionary['code'])
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, metadata_dictionary['code'])
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, metadata_dictionary['code'])
+    annotated_burden = annotator.Annotator.annotate_almanac(
+        somatic_burden,
+        dbs,
+        metadata_dictionary[strings['oncotree']['code']]
+    )
+    annotated_wgd = annotator.Annotator.annotate_almanac(
+        patient_wgd,
+        dbs,
+        metadata_dictionary[strings['oncotree']['code']]
+    )
+    annotated_ms_status = annotator.Annotator.annotate_almanac(
+        patient_ms_status,
+        dbs,
+        metadata_dictionary[strings['oncotree']['code']]
+    )
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
     evaluated_wgd = evaluator.Evaluator.evaluate_almanac(annotated_wgd)

@@ -22,8 +22,8 @@ class Datasources:
     allele2 = COLNAMES[datasources_section]['allele2']
 
     disease = COLNAMES[datasources_section]['disease']
-    ontology = COLNAMES[datasources_section]['ontology']
-    code = COLNAMES[datasources_section]['code']
+    ontology = COLNAMES[datasources_section]['oncotree_term']
+    code = COLNAMES[datasources_section]['oncotree_code']
     context = COLNAMES[datasources_section]['context']
     mutational_burden = COLNAMES[datasources_section]['mutational_burden']
     therapy = COLNAMES[datasources_section]['therapy']
