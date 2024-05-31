@@ -1,8 +1,8 @@
-import time
 import argparse
 import os
 import pandas as pd
 import subprocess
+import time
 
 import annotator
 import datasources
@@ -15,63 +15,23 @@ import ontologymapper
 import reporter
 import writer
 
+from reader import Config
 from config import COLNAMES
 from config import CONFIG
 
-snv_handle = 'snv_handle'
-indel_handle = 'indel_handle'
-bases_covered_handle = 'bases_covered_handle'
-cnv_handle = 'cnv_handle'
-called_cn_handle = 'called_cn_handle'
-fusion_handle = 'fusion_handle'
-germline_handle = 'germline_handle'
-mutational_signatures_path = 'mutational_signatures_path'
-validation_handle = 'validation_handle'
-disable_matchmaking = 'disable_matchmaking'
 
-snv_input = 'snv_input'
-indel_input = 'indel_input'
-seg_input = 'seg_input'
-called_cn_input = 'called_cn_input'
-fusion_input = 'fusion_input'
-germline_input = 'germline_input'
-
-patient_section = 'patient'
-patient_id = COLNAMES[patient_section]['patient_id']
-tumor_type = COLNAMES[patient_section]['tumor_type']
-stage = COLNAMES[patient_section]['stage']
-description = COLNAMES[patient_section]['description']
-purity = COLNAMES[patient_section]['purity']
-ploidy = COLNAMES[patient_section]['ploidy']
-wgd = COLNAMES[patient_section]['wgd']
-ms_status = COLNAMES[patient_section]['ms_status']
-
-oncotree_section = 'oncotree'
-ontology = COLNAMES[oncotree_section]['ontology']
-code = COLNAMES[oncotree_section]['code']
-
-feature_type_section = 'feature_types'
-feature_type_mut = CONFIG[feature_type_section]['mut']
-feature_type_germline = CONFIG[feature_type_section]['germline']
-feature_type_cna = CONFIG[feature_type_section]['cna']
-feature_type_fusion = CONFIG[feature_type_section]['fusion']
-feature_type_burden = CONFIG[feature_type_section]['burden']
-feature_type_signature = CONFIG[feature_type_section]['signature']
-feature_type_microsatellite = CONFIG[feature_type_section]['microsatellite']
-feature_type_aneuploidy = CONFIG[feature_type_section]['aneuploidy']
-feature_types = {
-    'mutation': feature_type_mut,
-    'germline': feature_type_germline,
-    'copynumber': feature_type_cna,
-    'fusion': feature_type_fusion,
-    'burden': feature_type_burden,
-    'signature': feature_type_signature,
-    'microsatellite': feature_type_microsatellite,
-    'aneuploidy': feature_type_aneuploidy
-}
-
-generate_illustrations = 'generate_illustrations'
-TOGGLE_FEATURES = CONFIG['function_toggle']
+def create_biomarker_type_dictionary(config):
+    section = config['feature_types']
+    return {
+        'mutation': section['mut'],
+        'germline': section['germline'],
+        'copynumber': section['cna'],
+        'fusion': section['fusion'],
+        'burden': section['burden'],
+        'signature': section['signature'],
+        'microsatellite': section['microsatellite'],
+        'aneuploidy': section['aneuploidy']
+    }
 
 
 def create_metadata_dictionary(input_dictionary):
@@ -118,37 +78,40 @@ def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = Fal
     return efficacy_dictionary, efficacy_summary
 
 
-def main(patient, inputs, output_folder):
+def main(patient, inputs, output_folder, config, strings):
     metadata_dictionary = create_metadata_dictionary(patient)
 
-    dbs = datasources.Datasources.generate_db_dict(CONFIG)
     output_folder = format_output_directory(output_folder)
     if output_folder != "":
         execute_cmd(f"mkdir -p {output_folder}")
 
-    string_id = metadata_dictionary[patient_id]
+    string_id = metadata_dictionary['patient_id']
 
-    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, metadata_dictionary[tumor_type])
-    metadata_dictionary[ontology] = mapped_ontology[ontology]
-    metadata_dictionary[code] = mapped_ontology[code]
+    dbs = datasources.Datasources.generate_db_dict(config)
+    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, metadata_dictionary[strings['patient']['tumor_type']])
+    oncotree_term = mapped_ontology[strings['oncotree']['term']]
+    oncotree_code = mapped_ontology[strings['oncotree']['code']]
+    metadata_dictionary[strings['oncotree']['term']] = oncotree_term
+    metadata_dictionary[strings['oncotree']['code']] = oncotree_code
 
-    df_snv, df_snv_reject = features.MAFSomatic.import_feature(inputs[snv_handle])
-    df_indel, df_indel_reject = features.MAFSomatic.import_feature(inputs[indel_handle])
-    df_cnv, df_cnv_reject = features.CopyNumber.import_feature(inputs[called_cn_handle], inputs[cnv_handle])
-    df_fusion, df_fusion_reject = features.Fusion.import_feature(inputs[fusion_handle])
+    biomarker_type_dictionary = create_biomarker_type_dictionary(config)
+    df_snv, df_snv_reject = features.MAFSomatic.import_feature(inputs['snv_handle'])
+    df_indel, df_indel_reject = features.MAFSomatic.import_feature(inputs['indel_handle'])
+    df_cnv, df_cnv_reject = features.CopyNumber.import_feature(inputs['called_cn_handle'], inputs['cnv_handle'])
+    df_fusion, df_fusion_reject = features.Fusion.import_feature(inputs['fusion_handle'])
 
     accepted_variants = [df_snv, df_indel, df_cnv, df_fusion]
     filtered_variants = [df_snv_reject, df_indel_reject, df_cnv_reject, df_fusion_reject]
     somatic_variants = features.Features.concat_list_of_dataframes(accepted_variants)
     somatic_filtered = features.Features.concat_list_of_dataframes(filtered_variants)
 
-    germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
+    germline_variants, germline_reject = features.MAFGermline.import_feature(inputs['germline_handle'])
 
     if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, metadata_dictionary[code])
+        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, oncotree_code)
         evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
 
-        validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
+        validation_accept, validation_reject = features.MAFValidation.import_feature(inputs['validation_handle'])
         if not validation_accept.empty:
             evaluated_somatic = annotator.OverlapValidation.append_validation(evaluated_somatic, validation_accept)
             illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, string_id, output_folder)
@@ -156,23 +119,46 @@ def main(patient, inputs, output_folder):
         evaluated_somatic = features.Features.create_empty_dataframe()
 
     if not germline_variants.empty:
-        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, metadata_dictionary[code])
+        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, oncotree_code)
         evaluated_germline = evaluator.Evaluator.evaluate_germline(annotated_germline)
     else:
         evaluated_germline = features.Features.create_empty_dataframe()
 
     evaluated_somatic = annotator.OverlapSomaticGermline.append_germline_hits(evaluated_somatic, evaluated_germline)
-    integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, feature_types)
+    integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, biomarker_type_dictionary)
 
-    somatic_burden = features.BurdenReader.import_feature(inputs[bases_covered_handle], metadata_dictionary, somatic_variants, dbs)
+    somatic_burden = features.BurdenReader.import_feature(
+        handle=inputs['bases_covered_handle'],
+        patient=metadata_dictionary,
+        variants=somatic_variants,
+        dbs=dbs
+    )
 
-    patient_wgd = features.Aneuploidy.summarize(metadata_dictionary[wgd])
-    patient_ms_status = features.MicrosatelliteReader.summarize(metadata_dictionary[ms_status])
-    metadata_dictionary[ms_status] = features.MicrosatelliteReader.map_status(metadata_dictionary[ms_status])
+    patient_wgd = features.Aneuploidy.summarize(
+        boolean=metadata_dictionary[strings['patient']['wgd']]
+    )
+    patient_ms_status = features.MicrosatelliteReader.summarize(
+        status=metadata_dictionary[strings['patient']['ms_status']]
+    )
+    metadata_dictionary[strings['patient']['ms_status']] = features.MicrosatelliteReader.map_status(
+        status=metadata_dictionary[strings['patient']['ms_status']]
+    )
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, metadata_dictionary[code])
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, metadata_dictionary[code])
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, metadata_dictionary[code])
+    annotated_burden = annotator.Annotator.annotate_almanac(
+        somatic_burden,
+        dbs,
+        metadata_dictionary[strings['oncotree']['code']]
+    )
+    annotated_wgd = annotator.Annotator.annotate_almanac(
+        patient_wgd,
+        dbs,
+        metadata_dictionary[strings['oncotree']['code']]
+    )
+    annotated_ms_status = annotator.Annotator.annotate_almanac(
+        patient_ms_status,
+        dbs,
+        metadata_dictionary[strings['oncotree']['code']]
+    )
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
     evaluated_wgd = evaluator.Evaluator.evaluate_almanac(annotated_wgd)
@@ -180,9 +166,9 @@ def main(patient, inputs, output_folder):
     evaluated_ms_status = evaluator.Microsatellite.evaluate_status(annotated_ms_status, evaluated_ms_variants)
 
     evaluated_mutational_signatures = load_and_process_mutational_signatures(
-        input=inputs[mutational_signatures_path],
+        input=inputs['mutational_signatures_path'],
         dbs=dbs,
-        tumor_type=code
+        tumor_type=oncotree_code
     )
 
     actionable = evaluator.Actionable.evaluate(
@@ -197,13 +183,14 @@ def main(patient, inputs, output_folder):
 
     strategies = evaluator.Strategies.report_therapy_strategies(actionable)
 
+    function_toggle = config['function_toggle']
     efficacy_summary = investigator.SummaryDataFrame.create_empty_dataframe()
     efficacy_dictionary = {}
     cell_lines_dictionary = {}
-    preclinical_efficacy_on = TOGGLE_FEATURES.getboolean('calculate_preclinical_efficacy')
+    preclinical_efficacy_on = function_toggle.getboolean('calculate_preclinical_efficacy')
 
     # The input argument --disable_matchmaking will be removed in the next non-backwards compatible release
-    model_similarity_on = TOGGLE_FEATURES.getboolean('calculate_model_similarity') and not inputs[disable_matchmaking]
+    model_similarity_on = function_toggle.getboolean('calculate_model_similarity') and not inputs['disable_matchmaking']
     similarity_results = matchmaker.Matchmaker.create_empty_output()
     similarity_summary = {}
 
@@ -211,7 +198,7 @@ def main(patient, inputs, output_folder):
         dbs_preclinical = datasources.Preclinical.import_dbs()
         cell_lines_dictionary = dbs_preclinical['dictionary']
         if preclinical_efficacy_on:
-            plot_preclinical = TOGGLE_FEATURES.getboolean('plot_preclinical_efficacy')
+            plot_preclinical = function_toggle.getboolean('plot_preclinical_efficacy')
             efficacy_results = process_preclinical_efficacy(
                 dbs_preclinical,
                 actionable,
@@ -226,29 +213,34 @@ def main(patient, inputs, output_folder):
                 actionable,
                 efficacy_summary,
                 efficacy_dictionary,
-                append_lookup=TOGGLE_FEATURES.getboolean('include_preclinical_efficacy_in_actionability_report')
+                append_lookup=function_toggle.getboolean('include_preclinical_efficacy_in_actionability_report')
             )
         if model_similarity_on:
             similarity_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, string_id)
             similarity_summary = matchmaker.Report.create_report_dictionary(similarity_results, cell_lines_dictionary)
 
-    writer.Actionable.write(actionable, string_id, output_folder)
-    writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
-    writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
-    writer.GermlineHereditary.write(evaluated_germline, string_id, output_folder)
-    writer.Integrated.write(integrated, string_id, output_folder)
-    writer.MSI.write(evaluated_ms_variants, string_id, output_folder)
-    writer.MutationalBurden.write(evaluated_burden, string_id, output_folder)
-    writer.SomaticScored.write(evaluated_somatic, string_id, output_folder)
-    writer.SomaticFiltered.write(somatic_filtered, string_id, output_folder)
-    writer.Strategies.write(strategies, string_id, output_folder)
-    writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
-    writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
+    writers_and_dataframes = [
+        (writer.Actionable, actionable),
+        (writer.GermlineACMG, evaluated_germline),
+        (writer.GermlineCancer, evaluated_germline),
+        (writer.GermlineHereditary, evaluated_germline),
+        (writer.Integrated, integrated),
+        (writer.MSI, evaluated_ms_variants),
+        (writer.MutationalBurden, evaluated_burden),
+        (writer.SomaticScored, evaluated_somatic),
+        (writer.SomaticFiltered, somatic_filtered),
+        (writer.Strategies, strategies),
+        (writer.PreclinicalEfficacy, efficacy_summary),
+        (writer.PreclinicalMatchmaking, similarity_results)
+    ]
+    for writer_class, dataframe in writers_and_dataframes:
+        writer_instance = writer_class(strings=strings)
+        writer_instance.write(dataframe=dataframe, patient_label=string_id, folder=output_folder)
 
-    if TOGGLE_FEATURES.getboolean('generate_actionability_report'):
+    if function_toggle.getboolean('generate_actionability_report'):
         report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
 
-        include_similarity = TOGGLE_FEATURES.getboolean('include_model_similarity_in_actionability_report')
+        include_similarity = function_toggle.getboolean('include_model_similarity_in_actionability_report')
         reporter.Reporter.generate_actionability_report(
             actionable,
             report_dictionary,
@@ -320,35 +312,48 @@ if __name__ == "__main__":
     arg_parser.add_argument('--output_directory',
                             default=None,
                             help='Output directory for generated files')
+    arg_parser.add_argument('--config',
+                            help='Path to config.ini file')
+    arg_parser.add_argument('--strings',
+                            help='Path to strings.ini file')
     args = arg_parser.parse_args()
 
     patient_dict = {
-        patient_id: args.patient_id,
-        tumor_type: args.tumor_type,
-        stage: args.stage,
-        description: args.description,
-        purity: args.purity,
-        ploidy: args.ploidy,
-        ms_status: args.ms_status,
-        wgd: args.wgd
+        'patient_id': args.patient_id,
+        'tumor_type': args.tumor_type,
+        'stage': args.stage,
+        'description': args.description,
+        'purity': args.purity,
+        'ploidy': args.ploidy,
+        'ms_status': args.ms_status,
+        'wgd': args.wgd
     }
 
     inputs_dict = {
-        snv_handle: args.snv_handle,
-        indel_handle: args.indel_handle,
-        bases_covered_handle: args.bases_covered_handle,
-        cnv_handle: args.cnv_handle,
-        called_cn_handle: args.called_cn_handle,
-        fusion_handle: args.fusion_handle,
-        germline_handle: args.germline_handle,
-        mutational_signatures_path: args.mutational_signatures,
-        validation_handle: args.validation_handle,
-        disable_matchmaking: args.disable_matchmaking
+        'snv_handle': args.snv_handle,
+        'indel_handle': args.indel_handle,
+        'bases_covered_handle': args.bases_covered_handle,
+        'cnv_handle': args.cnv_handle,
+        'called_cn_handle': args.called_cn_handle,
+        'fusion_handle': args.fusion_handle,
+        'germline_handle': args.germline_handle,
+        'mutational_signatures_path': args.mutational_signatures,
+        'validation_handle': args.validation_handle,
+        'disable_matchmaking': args.disable_matchmaking
     }
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
 
-    main(patient_dict, inputs_dict, output_directory)
+    config_ini = Config.read(args.config, extended_interpolation=False, convert_to_dictionary=False)
+    strings_dictionary = Config.read(args.strings, extended_interpolation=True, convert_to_dictionary=True)
+
+    main(
+        patient=patient_dict,
+        inputs=inputs_dict,
+        output_folder=output_directory,
+        config=config_ini,
+        strings=strings_dictionary
+    )
 
     end_time = time.time()
     time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
