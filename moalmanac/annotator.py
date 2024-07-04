@@ -8,9 +8,6 @@ import datasources
 import features
 
 from config import COLNAMES
-from config import CONFIG
-
-EXAC_CONFIG = CONFIG['exac']
 
 
 class Annotator:
@@ -45,28 +42,28 @@ class Annotator:
         return df
 
     @classmethod
-    def annotate_almanac(cls, df, dbs, ontology):
+    def annotate_almanac(cls, df, dbs, ontology, config):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology)
+        df = Almanac.annotate(df, dbs, ontology, config)
         return df
 
     @classmethod
-    def annotate_germline(cls, df, dbs, ontology):
+    def annotate_germline(cls, df, dbs, ontology, config):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology)
+        df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
         df = ACMG.annotate(df, dbs)
         df = ClinVar.annotate(df, dbs)
         df = Hereditary.annotate(df, dbs)
-        df = ExACExtended.annotate(df, dbs)
+        df = ExACExtended.annotate(df, dbs, config)
         df = MSI.annotate(df)
         return df
 
     @classmethod
-    def annotate_simple(cls, df, dbs, ontology):
+    def annotate_simple(cls, df, dbs, ontology, config):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology)
+        df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
@@ -79,23 +76,23 @@ class Annotator:
         return df
 
     @classmethod
-    def annotate_somatic(cls, df, dbs, ontology):
+    def annotate_somatic(cls, df, dbs, ontology, config):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology)
+        df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
         df = Cosmic.annotate(df, dbs)
         df = GSEACancerPathways.annotate(df, dbs)
         df = GSEACancerModules.annotate(df, dbs)
-        df = ExAC.annotate(df, dbs)
+        df = ExAC.annotate(df, dbs, config)
         df = MSI.annotate(df)
         return df
 
     @classmethod
-    def annotate_somatic_no_exac(cls, df, dbs, ontology):
+    def annotate_somatic_no_exac(cls, df, dbs, ontology, config):
         df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology)
+        df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
@@ -381,32 +378,21 @@ class Almanac:
         }
     }
 
-    feature_types_section = 'feature_types'
-    feature_types_config = CONFIG[feature_types_section]
-    aneuploidy = feature_types_config['aneuploidy']
-    burden = feature_types_config['burden']
-    copynumber_variant = feature_types_config['cna']
-    fusion = feature_types_config['fusion']
-    germline_variant = feature_types_config['germline']
-    microsatellite_status = feature_types_config['microsatellite']
-    signature = feature_types_config['signature']
-    somatic_variant = feature_types_config['mut']
-
     @classmethod
-    def annotate(cls, df, dbs, ontology):
+    def annotate(cls, df, dbs, ontology, config):
         db = datasources.Almanac.import_ds(dbs)
         ds = db['content']
         list_genes = db['genes']
 
         annotation_function_dict = {
-            cls.aneuploidy: cls.annotate_aneuploidy,
-            cls.burden: cls.annotate_burden,
-            cls.copynumber_variant: cls.annotate_copy_number,
-            cls.fusion: cls.annotate_fusion,
-            cls.germline_variant: cls.annotate_variants,
-            cls.microsatellite_status: cls.annotate_microsatellite_stability,
-            cls.signature: cls.annotate_signatures,
-            cls.somatic_variant: cls.annotate_variants
+            config['feature_types']['aneuploidy']: cls.annotate_aneuploidy,
+            config['feature_types']['burden']: cls.annotate_burden,
+            config['feature_types']['cna']: cls.annotate_copy_number,
+            config['feature_types']['fusion']: cls.annotate_fusion,
+            config['feature_types']['germline']: cls.annotate_variants,
+            config['feature_types']['microsatellite']: cls.annotate_microsatellite_stability,
+            config['feature_types']['signature']: cls.annotate_signatures,
+            config['feature_types']['mut']: cls.annotate_variants
         }
 
         for feature_type, group in df.groupby(cls.feature_type):
@@ -422,7 +408,13 @@ class Almanac:
                     .astype(float)
                 )
 
-            if feature_type in [cls.somatic_variant, cls.germline_variant, cls.copynumber_variant, cls.fusion]:
+            simple_biomarkers = [
+                config['feature_types']['mut'],
+                config['feature_types']['germline'],
+                config['feature_types']['cna'],
+                config['feature_types']['fusion']
+            ]
+            if feature_type in simple_biomarkers:
                 idx = group[cls.feature].isin(list_genes)
                 df.loc[group[~idx].index, cls.bin_name] = 0
                 group = group[group[cls.feature].isin(list_genes)]
@@ -981,18 +973,15 @@ class ExAC:
     af = datasources.ExAC.af
 
     bin_name = Annotator.exac_common_bin
-    exac_common_threshold = EXAC_CONFIG['exac_common_af_threshold']
 
     str_columns = [chr, ref, alt]
     int_columns = [start]
 
-    somatic = CONFIG['feature_types']['mut']
-    germline = CONFIG['feature_types']['germline']
     feature_type = features.Features.feature_type
 
     @classmethod
-    def append_exac_af(cls, df, ds, ds_columns):
-        variants, not_variants = cls.subset_for_variants(df)
+    def append_exac_af(cls, df, ds, ds_columns, variant_biomarker_types):
+        variants, not_variants = cls.subset_for_variants(df, variant_biomarker_types)
         ds = ds.loc[:, ds_columns]
 
         for column, data_type in [(cls.str_columns, str), (cls.int_columns, float), (cls.int_columns, int)]:
@@ -1017,15 +1006,24 @@ class ExAC:
         return result
 
     @classmethod
-    def annotate(cls, df, dbs):
+    def annotate(cls, df, dbs, config):
         df_dropped = cls.drop_existing_columns(df)
         ds = datasources.ExAC.import_ds(dbs)
-        df_annotated = cls.append_exac_af(df_dropped, ds, [cls.chr, cls.start, cls.ref, cls.alt, cls.af])
-        df_annotated[cls.bin_name] = cls.annotate_common_af(df_annotated[cls.af])
+        df_annotated = cls.append_exac_af(
+            df=df_dropped,
+            ds=ds,
+            ds_columns=[cls.chr, cls.start, cls.ref, cls.alt, cls.af],
+            variant_biomarker_types=[config['feature_types']['mut'], config['feature_types']['germline']]
+        )
+        common_allele_frequency_threshold=config['exac']['exac_common_af_threshold']
+        df_annotated[cls.bin_name] = cls.annotate_common_af(
+            series_exac_af=df_annotated[cls.af],
+            threshold=common_allele_frequency_threshold
+        )
         return features.Features.preallocate_missing_columns(df_annotated)
 
     @classmethod
-    def annotate_common_af(cls, series_exac_af):
+    def annotate_common_af(cls, series_exac_af, threshold):
         if not series_exac_af.empty:
             series = pd.Series(float(0.0), index=series_exac_af.index.tolist())
             condition = (series_exac_af
@@ -1034,7 +1032,7 @@ class ExAC:
                          .astype(float).mean(axis=1)
                          .fillna(0.0)
                          )
-            idx = condition.astype(float) >= float(cls.exac_common_threshold)
+            idx = condition.astype(float) >= float(threshold)
             series[idx] = float(1.0)
             return series
         else:
@@ -1049,8 +1047,8 @@ class ExAC:
         return dataframe.loc[dataframe.index, column].astype(data_type)
 
     @classmethod
-    def subset_for_variants(cls, dataframe):
-        idx = dataframe[cls.feature_type].isin([cls.somatic, cls.germline])
+    def subset_for_variants(cls, dataframe, variant_biomarker_types):
+        idx = dataframe[cls.feature_type].isin(variant_biomarker_types)
         return dataframe[idx].copy(), dataframe[~idx].copy()
 
 
@@ -1083,11 +1081,20 @@ class ExACExtended:
                   an_afr, an_amr, an_eas, an_fin, an_nfe, an_sas, an_oth]
 
     @classmethod
-    def annotate(cls, df, dbs):
+    def annotate(cls, df, dbs, config):
         df_dropped = ExAC.drop_existing_columns(df)
         ds = datasources.ExACExtended.import_ds(dbs)
-        df_annotated = ExAC.append_exac_af(df_dropped, ds, cls.ds_columns)
-        df_annotated[ExAC.bin_name] = ExAC.annotate_common_af(df_annotated[ExAC.af])
+        df_annotated = ExAC.append_exac_af(
+            df=df_dropped,
+            ds=ds,
+            ds_columns=[cls.chr, cls.start, cls.ref, cls.alt, cls.af],
+            variant_biomarker_types=[config['feature_types']['mut'], config['feature_types']['germline']]
+        )
+        common_allele_frequency_threshold = config['exac']['exac_common_af_threshold']
+        df_annotated[ExAC.bin_name] = ExAC.annotate_common_af(
+            series_exac_af=df_annotated[ExAC.af],
+            threshold=common_allele_frequency_threshold
+        )
         return features.Features.preallocate_missing_columns(df_annotated)
 
 
@@ -1156,16 +1163,14 @@ class OverlapValidation:
     validation_coverage = COLNAMES[section]['validation_coverage']
     validation_detection_power = COLNAMES[section]['validation_detection_power']
 
-    somatic_variants = CONFIG['feature_types']['mut']
-
     merge_cols = [gene, alt_type, alt]
     fill_cols = [tumor_f, validation_tumor_f, validation_coverage]
 
     @classmethod
-    def append_validation(cls, primary, validation):
+    def append_validation(cls, primary, validation, biomarker_type):
         df = cls.drop_validation_columns(primary)
         df = cls.merge_data_frames(df, validation, cls.merge_cols)
-        idx = cls.get_mutation_index(df)
+        idx = cls.get_mutation_index(df, biomarker_type)
         for column in cls.fill_cols:
             df.loc[idx, column] = Annotator.fill_na(
                 dataframe=df.loc[idx, :],
@@ -1198,8 +1203,8 @@ class OverlapValidation:
         return df.drop([cls.validation_tumor_f, cls.validation_coverage], axis=1)
 
     @classmethod
-    def get_mutation_index(cls, df):
-        return df[df[cls.feature_type].eq(cls.somatic_variants)].index
+    def get_mutation_index(cls, df, biomarker_type):
+        return df[df[cls.feature_type].eq(biomarker_type)].index
 
     @classmethod
     def merge_data_frames(cls, df1, df2, columns):
@@ -1310,12 +1315,6 @@ class PreclinicalMatchmaking:
     feature_display = COLNAMES[section]['feature_display']
     predictive_implication = COLNAMES[section]['predictive_implication']
 
-    feature_types_section = 'feature_types'
-    feature_types_config = CONFIG[feature_types_section]
-    copy_number = feature_types_config['cna']
-    fusion = feature_types_config['fusion']
-    somatic_variant = feature_types_config['mut']
-
     evidence_map = {
         'FDA-Approved': 5, 'Guideline': 4, 'Clinical trial': 3,
         'Clinical evidence': 2, 'Preclinical': 1, 'Inferential': 0}
@@ -1328,14 +1327,18 @@ class PreclinicalMatchmaking:
     fusions_gene2 = 'fusions_gene2'
 
     @classmethod
-    def annotate(cls, input_dict, dbs):
-        input_variants = input_dict[cls.somatic_variant]
-        input_copy_number_alterations = input_dict[cls.copy_number]
-        input_fusions = input_dict[cls.fusion]
+    def annotate(cls, input_dict, dbs, config):
+        copy_number = config['feature_types']['cna']
+        fusion = config['feature_types']['fusion']
+        somatic_variant = config['feature_types']['mut']
 
-        variants = cls.annotate_somatic_variants(input_variants, dbs)
-        copy_number_alterations = cls.annotate_copy_numbers(input_copy_number_alterations, dbs)
-        fusions, fusions_gene1, fusions_gene2 = cls.annotate_fusions(input_fusions, dbs)
+        input_variants = input_dict[somatic_variant]
+        input_copy_number_alterations = input_dict[copy_number]
+        input_fusions = input_dict[fusion]
+
+        variants = cls.annotate_somatic_variants(input_variants, dbs, somatic_variant)
+        copy_number_alterations = cls.annotate_copy_numbers(input_copy_number_alterations, dbs, copy_number)
+        fusions, fusions_gene1, fusions_gene2 = cls.annotate_fusions(input_fusions, dbs, fusion)
         return {
             cls.variants: variants,
             cls.cnas: copy_number_alterations,
@@ -1345,12 +1348,12 @@ class PreclinicalMatchmaking:
         }
 
     @classmethod
-    def annotate_copy_numbers(cls, df, dbs):
+    def annotate_copy_numbers(cls, df, dbs, biomarker_type_string):
         almanac = datasources.Almanac.import_ds(dbs)
         almanac_genes = datasources.Almanac.import_genes(dbs)
 
-        df = df[df[cls.feature_type].eq(cls.copy_number)]
-        db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.copy_number)
+        df = df[df[cls.feature_type].eq(biomarker_type_string)]
+        db = Almanac.subset_records(almanac['content'], cls.feature_type, biomarker_type_string)
         db = pd.DataFrame(db)
 
         column_map = {cls.gene: cls.feature, cls.direction: cls.alteration_type}
@@ -1363,12 +1366,12 @@ class PreclinicalMatchmaking:
         return df
 
     @classmethod
-    def annotate_fusions(cls, df, dbs):
+    def annotate_fusions(cls, df, dbs, biomarker_type_string):
         almanac = datasources.Almanac.import_ds(dbs)
         almanac_genes = datasources.Almanac.import_genes(dbs)
 
-        df = df[df[cls.feature_type].eq(cls.fusion)]
-        db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.fusion)
+        df = df[df[cls.feature_type].eq(biomarker_type_string)]
+        db = Almanac.subset_records(almanac['content'], cls.feature_type, biomarker_type_string)
         db = pd.DataFrame(db)
 
         column_map = {cls.rearrangement_type: cls.alteration_type}
@@ -1503,12 +1506,12 @@ class PreclinicalMatchmaking:
         return df
 
     @classmethod
-    def annotate_somatic_variants(cls, df, dbs):
+    def annotate_somatic_variants(cls, df, dbs, biomarker_type_string):
         almanac = datasources.Almanac.import_ds(dbs)
         almanac_genes = datasources.Almanac.import_genes(dbs)
 
-        df = df[df[cls.feature_type].eq(cls.somatic_variant)]
-        db = Almanac.subset_records(almanac['content'], cls.feature_type, cls.somatic_variant)
+        df = df[df[cls.feature_type].eq(biomarker_type_string)]
+        db = Almanac.subset_records(almanac['content'], cls.feature_type, biomarker_type_string)
         db = pd.DataFrame(db)
 
         replacement_dictionary = {'Oncogenic Mutations': '', 'Activating mutation': ''}
