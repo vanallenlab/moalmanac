@@ -110,32 +110,32 @@ class UnitTestEvaluator(unittest.TestCase):
 
     def test_remove_low_allele_fraction_variants(self):
         feature_type = Evaluator.feature_type
-        mut_type = Evaluator.mut_type
-        germline_type = Evaluator.germline_type
+        mut_type = 'Somatic Variant'
+        germline_type = 'Germline Variant'
         tumor_f = Evaluator.tumor_f
-        min_af = Evaluator.min_af
+        min_af = 0.05
 
         low_af = float(min_af) - 0.01
         high_af = float(min_af) + 0.01
 
         df = pd.DataFrame({feature_type: [mut_type, mut_type, germline_type, germline_type, 'Aneuploidy'],
                            tumor_f: [low_af, high_af, low_af, high_af, np.nan]})
-        subsetted = Evaluator.remove_low_allele_fraction_variants(df)
+        subsetted = Evaluator.remove_low_allele_fraction_variants(df, minimum_allele_fraction=min_af)
         self.assertEqual([1, 3, 4], subsetted.index.tolist())
 
     def test_remove_low_coverage_variants(self):
         feature_type = Evaluator.feature_type
-        mut_type = Evaluator.mut_type
-        germline_type = Evaluator.germline_type
+        mut_type = 'Somatic Variant'
+        germline_type = 'Germline Variant'
         coverage = Evaluator.coverage
-        min_coverage = Evaluator.min_coverage
+        min_coverage = 15
 
         low_coverage = float(min_coverage) - 10
         high_coverage = float(min_coverage) + 10
 
         df = pd.DataFrame({feature_type: [mut_type, mut_type, germline_type, germline_type, 'Aneuploidy'],
                            coverage: [low_coverage, high_coverage, low_coverage, high_coverage, np.nan]})
-        subsetted = Evaluator.remove_low_coverage_variants(df)
+        subsetted = Evaluator.remove_low_coverage_variants(df, minimum_coverage=min_coverage)
         self.assertEqual([1, 3, 4], subsetted.index.tolist())
 
     def test_remove_benign_variants(self):
@@ -166,17 +166,17 @@ class UnitTestActionable(unittest.TestCase):
         self.assertEqual('the, quick, fox', Actionable.create_string_list(series))
 
     def test_display_aneuploidy(self):
-        feature = Evaluator.aneuploidy_type
+        feature = 'Aneuploidy'
         df = pd.DataFrame({feature: ['A', 'B', 'C']})
         idx = [0, 2]
-        series = Actionable.display_aneuploidy(df, idx, feature)
+        series = Actionable.display_aneuploidy(df, idx)
         self.assertEqual(['A', 'C'], series.tolist())
 
     def test_display_burden(self):
         alt = Evaluator.alt
         df = pd.DataFrame({alt: ["10 mutations per Mb", "20", "30 mutations per Mb"]})
         idx = [0, 2]
-        series = Actionable.display_burden(df, idx, alt)
+        series = Actionable.display_burden(df, idx)
         self.assertEqual(['10 mutations per Mb', '30 mutations per Mb'], series.tolist())
 
     def test_display_copynumber(self):
@@ -185,21 +185,21 @@ class UnitTestActionable(unittest.TestCase):
         df = pd.DataFrame({feature: ['Foo', 'Bar', 'FooBar'],
                            alt_type: ['Amp', 'Amp', 'Del']})
         idx = [0, 2]
-        series = Actionable.display_copynumber(df, idx, feature, alt_type)
+        series = Actionable.display_copynumber(df, idx)
         self.assertEqual(['Foo Amp', 'FooBar Del'], series.tolist())
 
     def test_display_fusion(self):
         alt = Evaluator.alt
         df = pd.DataFrame({alt: ['Foo--Bar', 'Bar--Foo', 'FooBar--Alpha']})
         idx = [0, 2]
-        series = Actionable.display_fusion(df, idx, alt)
+        series = Actionable.display_fusion(df, idx)
         self.assertEqual(['Foo--Bar Fusion', 'FooBar--Alpha Fusion'], series.tolist())
 
     def test_display_microsatellite_stability(self):
         feature = Evaluator.feature
         df = pd.DataFrame({feature: ['A', 'B', 'C']})
         idx = [0, 2]
-        series = Actionable.display_microsatellite_stability(df, idx, feature)
+        series = Actionable.display_microsatellite_stability(df, idx)
         self.assertEqual(['A', 'C'], series.tolist())
 
     def test_display_microsatellite_variants(self):
@@ -208,7 +208,7 @@ class UnitTestActionable(unittest.TestCase):
         df = pd.DataFrame({feature: ['Foo', '', 'Bar'],
                            alt: ['Amp', '', 'Del']})
         idx = [0, 2]
-        series = Actionable.display_microsatellite_variants(df, idx, feature, alt)
+        series = Actionable.display_microsatellite_variants(df, idx)
         self.assertEqual(['Foo: Amp', 'Bar: Del'], series.tolist())
 
     def test_display_signature(self):
@@ -216,7 +216,7 @@ class UnitTestActionable(unittest.TestCase):
         alt = Evaluator.alt
         df = pd.DataFrame({feature: ['Signature 1', '', 'Signature 2'], alt: [0.523, '', 0.0145]})
         idx = [0, 2]
-        series = Actionable.display_signature(df, idx, feature, alt)
+        series = Actionable.display_signature(df, idx)
         self.assertEqual(['Signature 1 (52%)', 'Signature 2 (1%)'],
                          series.tolist())
 
@@ -228,7 +228,7 @@ class UnitTestActionable(unittest.TestCase):
                            alt_type: ['Missense', 'Nonsense', 'Frameshift'],
                            alt: ['p.V600E', 'p.N500*', 'p.L151fs*']})
         idx = [0, 2]
-        series = Actionable.display_variant(df, idx, feature, alt_type, alt)
+        series = Actionable.display_variant(df, idx)
         self.assertEqual(['Foo p.V600E (Missense)', 'FooBar p.L151fs* (Frameshift)'], series.tolist())
 
     def test_format_variant_classification(self):

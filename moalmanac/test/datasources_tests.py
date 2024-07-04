@@ -28,7 +28,18 @@ class UnitTestPreclinical(unittest.TestCase):
         fusions = Preclinical.fusions
         gdsc = Preclinical.gdsc
         mappings = Preclinical.mappings
-        dbs = Preclinical.import_dbs()
+        dbs_dictionary = {
+            'almanac_gdsc_mappings': '../datasources/preclinical/formatted/almanac-gdsc-mappings.json',
+            'summary': '../datasources/preclinical/formatted/cell-lines-summary.txt',
+            'variants': '../datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt',
+            'copynumbers': '../datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt',
+            'fusions': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.txt',
+            'fusions1': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt',
+            'fusions2': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt',
+            'gdsc': '../datasources/preclinical/formatted/sanger.gdsc.txt',
+            'dictionary': '../datasources/preclinical/cell-lines.pkl'
+        }
+        dbs = Preclinical.import_dbs(dbs_dictionary)
 
         for label in [summary, variants, cnas, fusions, gdsc]:
             self.assertEqual(type(dbs[label]), type(pd.DataFrame()))

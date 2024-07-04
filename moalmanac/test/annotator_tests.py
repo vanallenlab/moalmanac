@@ -9,7 +9,8 @@ from datasources import Almanac as datasource_Almanac
 from datasources import Preclinical as datasources_Preclinical
 from features import Features
 from investigator import SensitivityDictionary
-from config import CONFIG
+# from reader import Ini
+# from config import CONFIG
 
 
 class UnitTestAnnotator(unittest.TestCase):
@@ -58,7 +59,9 @@ class UnitTestACMG(unittest.TestCase):
         gene = ACMG.gene
         bin_name = ACMG.bin_name
         df = pd.DataFrame({gene: ['TP53', 'FOO', 'PMS2', 'TSC1', 'AR']})
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'acmg_handle': '../datasources/acmg.secondaryfindings.v3.txt'
+        }
 
         annotated = ACMG.annotate(df, dbs)
         expected_result = pd.Series([1, 0, 1, 1, 0], name=bin_name)
@@ -327,7 +330,18 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
         'pvalue_mww': [2.322E-12, 7.627E-17, 0.835]
     }
     df2 = pd.DataFrame(data_dictionary, index=[0, 1, 2])
-    dbs_preclinical = datasources_Preclinical.import_dbs()
+    dbs_dictionary = {
+        'almanac_gdsc_mappings': '../datasources/preclinical/formatted/almanac-gdsc-mappings.json',
+        'summary': '../datasources/preclinical/formatted/cell-lines-summary.txt',
+        'variants': '../datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt',
+        'copynumbers': '../datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt',
+        'fusions': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.txt',
+        'fusions1': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt',
+        'fusions2': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt',
+        'gdsc': '../datasources/preclinical/formatted/sanger.gdsc.txt',
+        'dictionary': '../datasources/preclinical/cell-lines.pkl'
+    }
+    dbs_preclinical = datasources_Preclinical.import_dbs(dbs_dictionary)
     efficacy_dictionary = SensitivityDictionary.create(dbs_preclinical, df1)
 
     def test_annotate(self):
@@ -352,7 +366,21 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
 
 class UnitTestPreclinicalMatchmaking(unittest.TestCase):
     def test_annotate_copy_numbers(self):
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
         alteration_type = PreclinicalMatchmaking.alteration_type

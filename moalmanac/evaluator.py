@@ -209,8 +209,8 @@ class Actionable:
 
     @classmethod
     def display_signature(cls, df, idx):
-        #before_string = "COSMIC Signature"
-        #after_string = f"COSMIC Signature (version {version})"
+        # before_string = "COSMIC Signature"
+        # after_string = f"COSMIC Signature (version {version})"
         signature = df.loc[idx, Evaluator.feature]#.str.replace(before_string, after_string)
         contribution = df.loc[idx, Evaluator.alt].astype(float).multiply(100).round(0).astype(int).astype(str)
         # Signature: Cosmic Signature 7 (65%)
@@ -235,7 +235,7 @@ class Actionable:
         germline = Evaluator.remove_benign_variants(germline)
         germline = Evaluator.remove_common_variants(germline)
 
-        ms_variants_summary = cls.summarize_ms_variants(ms_variants)
+        ms_variants_summary = cls.summarize_ms_variants(ms_variants, config)
 
         if not burden.loc[0, Evaluator.high_burden_boolean]:
             burden = burden.drop(burden.index[0])
@@ -295,22 +295,15 @@ class Actionable:
         return series.str.replace('_Mutation', '')
 
     @classmethod
-    def summarize_ms_variants(cls, df):
+    def summarize_ms_variants(cls, df, config):
         df = cls.format_mutations(df)
         msi_summary = features.Features.create_empty_dataframe()
         if not df.empty:
             feature = Evaluator.supporting_variants
-            feature_displays = cls.format_feature_display(
-                df,
-                Evaluator.feature_display,
-                Evaluator.feature_type,
-                Evaluator.feature,
-                Evaluator.alt_type,
-                Evaluator.alt
-            )
+            feature_displays = cls.format_feature_display(df=df, config=config)
             feature_displays_list = cls.create_string_list(feature_displays)
 
-            msi_summary.loc[0, Evaluator.feature_type] = Evaluator.microsatellite_type
+            msi_summary.loc[0, Evaluator.feature_type] = config['feature_types']['microsatellite']
             msi_summary.loc[0, Evaluator.feature] = feature
             msi_summary.loc[0, Evaluator.alt] = feature_displays_list
             msi_summary.loc[0, Evaluator.almanac_bin] = 1
