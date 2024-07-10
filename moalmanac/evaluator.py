@@ -246,9 +246,6 @@ class Actionable:
         df = features.Features.concat_list_of_dataframes(list_of_dataframes=actionable_list)
 
         df[Evaluator.feature_display] = cls.format_feature_display(df=df, config=config)
-        #    df, Evaluator.feature_display,
-        #    Evaluator.feature_type, Evaluator.feature,
-        #    Evaluator.alt_type, Evaluator.alt)
         return df.sort_values(cls.sort_columns, ascending=False)
 
     @classmethod
@@ -256,9 +253,6 @@ class Actionable:
         display_column = Evaluator.feature_display
         feature_type_column = Evaluator.feature_type
         feature_column = Evaluator.feature
-        # alt_type_column = Evaluator.alt_type
-        # alt_column = Evaluator.alt
-        #sig_version = config['signatures']['version']
 
         biomarker_types = config['feature_types']
         idx_somatic = df[feature_type_column].isin([biomarker_types['mut']])
