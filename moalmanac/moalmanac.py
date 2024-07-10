@@ -213,8 +213,6 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     function_toggle = config['function_toggle']
 
     efficacy_summary = investigator.SummaryDataFrame.create_empty_dataframe()
-    # efficacy_dictionary = {}
-    # cell_lines_dictionary = {}
     preclinical_efficacy_on = function_toggle.getboolean('calculate_preclinical_efficacy')
 
     # The input argument --disable_matchmaking will be removed in the next non-backwards compatible release
@@ -247,7 +245,13 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
                 )
 
             if model_similarity_on:
-                similarity_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, string_id)
+                similarity_results = matchmaker.Matchmaker.compare(
+                    dbs=dbs,
+                    dbs_preclinical=dbs_preclinical,
+                    somatic=evaluated_somatic,
+                    case_sample_id=string_id,
+                    config=config
+                )
                 similarity_summary = matchmaker.Report.create_report_dictionary(
                     similarity_results,
                     cell_lines_dictionary
@@ -271,11 +275,11 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
 
         include_similarity = function_toggle.getboolean('include_model_similarity_in_actionability_report')
         reporter.Reporter.generate_actionability_report(
-            actionable = actionable,
-            report_dictionary = report_dictionary,
-            config = config,
-            similarity = similarity_summary if include_similarity else None,
-            output_directory = output_folder
+            actionable=actionable,
+            report_dictionary=report_dictionary,
+            config=config,
+            similarity=similarity_summary if include_similarity else None,
+            output_directory=output_folder
         )
 
 
