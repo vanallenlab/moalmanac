@@ -389,12 +389,12 @@ if __name__ == "__main__":
     arg_parser.add_argument(
         '--config', '-c',
         required=True,
-        help='ini file that contains configuration details '
+        help='ini file that contains configuration details'
     )
     arg_parser.add_argument(
         '--dbs',
         required=True,
-        help='ini file that contains database paths '
+        help='ini file that contains database paths'
     )
     arg_parser.add_argument(
         '--preclinical-dbs',
