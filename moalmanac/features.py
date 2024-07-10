@@ -230,11 +230,6 @@ class BurdenReader:
 
 
 class CopyNumber:
-    #config = CONFIG['seg']
-    #amplification = config['amp']
-    #deletion = config['del']
-    #feature_type = CONFIG['feature_types']['cna']
-
     @staticmethod
     def format_cn_gene(series):
         new_series = series.str.split(' ', expand=True).loc[:, 0]

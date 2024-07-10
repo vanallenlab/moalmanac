@@ -166,7 +166,7 @@ class UnitTestActionable(unittest.TestCase):
         self.assertEqual('the, quick, fox', Actionable.create_string_list(series))
 
     def test_display_aneuploidy(self):
-        feature = 'Aneuploidy'
+        feature = Evaluator.feature
         df = pd.DataFrame({feature: ['A', 'B', 'C']})
         idx = [0, 2]
         series = Actionable.display_aneuploidy(df, idx)

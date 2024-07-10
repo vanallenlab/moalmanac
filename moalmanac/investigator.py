@@ -129,7 +129,7 @@ class SensitivityDictionary(Investigator):
             feature_display = df_actionable.loc[index, cls.feature_display]
             index_dict = {}
             if mapped:
-                feature_dictionary = cls.split_samples_by_wt_mut(df_actionable.loc[index, :], dbs, samples)
+                feature_dictionary = cls.split_samples_by_wt_mut(df_actionable.loc[index, :], dbs, samples, config)
                 features = list(feature_dictionary)
                 for therapy in mapped:
                     therapy_dict = {}
