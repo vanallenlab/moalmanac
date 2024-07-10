@@ -1,7 +1,9 @@
 import moalmanac
 import os
-import time
 import subprocess
+import time
+
+from datetime import date
 
 from reader import Ini
 
@@ -47,15 +49,16 @@ dbs_ini_path = "annotation-databases.ini"
 dbs_preclinical_ini_path = "preclinical-databases.ini"
 
 config_ini = Ini.read(config_ini_path, extended_interpolation=False, convert_to_dictionary=False)
-db_paths = Ini.read(dbs_ini_path, extended_interpolation=False, convert_to_dictionary=True)
-preclinical_db_paths = Ini.read(dbs_preclinical_ini_path, extended_interpolation=False, convert_to_dictionary=True)
+db_paths = Ini.read(dbs_ini_path, extended_interpolation=True, convert_to_dictionary=True)
+preclinical_db_paths = Ini.read(dbs_preclinical_ini_path, extended_interpolation=True, convert_to_dictionary=True)
 
 
 def execute_cmd(command):
     subprocess.call(command, shell=True)
 
 
-output_directory = "2024-07-03-config-edits"
+today = date.today().isoformat()
+output_directory = f"{today}-example-outputs"
 if output_directory != "":
     cmd = f"mkdir -p {output_directory}"
     execute_cmd(cmd)

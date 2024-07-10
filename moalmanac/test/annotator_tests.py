@@ -60,7 +60,7 @@ class UnitTestACMG(unittest.TestCase):
         bin_name = ACMG.bin_name
         df = pd.DataFrame({gene: ['TP53', 'FOO', 'PMS2', 'TSC1', 'AR']})
         dbs = {
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt'
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt'
         }
 
         annotated = ACMG.annotate(df, dbs)
@@ -340,15 +340,15 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
     }
     df2 = pd.DataFrame(data_dictionary, index=[0, 1, 2])
     dbs_dictionary = {
-        'almanac_gdsc_mappings': 'datasources/preclinical/formatted/almanac-gdsc-mappings.json',
-        'summary': 'datasources/preclinical/formatted/cell-lines.summary.txt',
-        'variants': 'datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt',
-        'copynumbers': 'datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt',
-        'fusions': 'datasources/preclinical/annotated/cell-lines.fusions.annotated.txt',
-        'fusions1': 'datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt',
-        'fusions2': 'datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt',
-        'gdsc': 'datasources/preclinical/formatted/sanger.gdsc.txt',
-        'dictionary': 'datasources/preclinical/cell-lines.pkl'
+        'almanac_gdsc_mappings': '../datasources/preclinical/formatted/almanac-gdsc-mappings.json',
+        'summary': '../datasources/preclinical/formatted/cell-lines.summary.txt',
+        'variants': '../datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt',
+        'copynumbers': '../datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt',
+        'fusions': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.txt',
+        'fusions1': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt',
+        'fusions2': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt',
+        'gdsc': '../datasources/preclinical/formatted/sanger.gdsc.txt',
+        'dictionary': '../datasources/preclinical/cell-lines.pkl'
     }
     config = {
         'feature_types': {
@@ -383,19 +383,19 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
 class UnitTestPreclinicalMatchmaking(unittest.TestCase):
     def test_annotate_copy_numbers(self):
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
@@ -465,19 +465,19 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_annotate_fusions(self):
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
@@ -727,19 +727,19 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_annotate_fusions_matching(self):
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
 
         feature = PreclinicalMatchmaking.feature
@@ -789,19 +789,19 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_annotate_somatic_variants(self):
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
@@ -904,19 +904,19 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         match_2 = PreclinicalMatchmaking.match_2
 
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = 'Copy Number'
@@ -982,19 +982,19 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         match_3 = PreclinicalMatchmaking.match_3
 
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = 'Copy Number'
@@ -1069,19 +1069,19 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         match_4 = PreclinicalMatchmaking.match_4
 
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = 'Copy Number'
@@ -1133,19 +1133,19 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_format_db(self):
         dbs = {
-            'almanac_handle': 'datasources/moalmanac/molecular-oncology-almanac.json',
-            'cancerhotspots_handle': 'datasources/cancerhotspots/hotspots_v2.txt',
-            '3dcancerhotspots_handle': 'datasources/cancerhotspots/hotspots3d.txt',
-            'cgc_handle': 'datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
-            'cosmic_handle': 'datasources/cosmic/CosmicMutantExport_v97.lite.txt',
-            'gsea_pathways_handle': 'datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
-            'gsea_modules_handle': 'datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
-            'exac_handle': 'datasources/exac/exac.expanded.r1.txt',
-            'acmg_handle': 'datasources/acmg/acmg.secondaryfindings.v3.txt',
-            'clinvar_handle': 'datasources/clinvar/variant_summary.lite.txt',
-            'hereditary_handle': 'datasources/hereditary/hereditary.txt',
-            'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
-            'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = 'Copy Number'
