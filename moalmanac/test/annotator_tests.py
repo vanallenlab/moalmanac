@@ -741,11 +741,12 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             'oncotree_handle': 'datasources/oncotree/oncotree.2023-03-09.txt',
             'lawrence_handle': 'datasources/lawrence/lawrence_mapped_ontology.txt'
         }
+
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
         alteration_type = PreclinicalMatchmaking.alteration_type
         partner = PreclinicalMatchmaking.partner
-        fusion = 'Fusion'
+        fusion = 'Rearrangement'
         model_id = PreclinicalMatchmaking.model_id
         evidence_map_str = PreclinicalMatchmaking.evidence_map_str
         merged = PreclinicalMatchmaking.merged

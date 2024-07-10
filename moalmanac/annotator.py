@@ -1015,8 +1015,6 @@ class ExAC:
             ds_columns=[cls.chr, cls.start, cls.ref, cls.alt, cls.af],
             variant_biomarker_types=[config['feature_types']['mut'], config['feature_types']['germline']]
         )
-        print(df_annotated['exac_af'].head())
-        print(df_annotated['exac_af'].isnull().value_counts())
         common_allele_frequency_threshold=config['exac']['exac_common_af_threshold']
         df_annotated[cls.bin_name] = cls.annotate_common_af(
             series_exac_af=df_annotated[cls.af],
