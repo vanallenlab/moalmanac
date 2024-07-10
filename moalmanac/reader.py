@@ -5,6 +5,14 @@ import pickle
 
 
 class Ini:
+    @classmethod
+    def read(cls, path, extended_interpolation=False, convert_to_dictionary=False):
+        ini = cls.load(path, extended_interpolation=extended_interpolation)
+        if convert_to_dictionary:
+            return cls.convert_ini_to_dictionary(ini)
+        else:
+            return ini
+
     @staticmethod
     def convert_ini_to_dictionary(ini):
         dictionary = {}
