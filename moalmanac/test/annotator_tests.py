@@ -9,8 +9,6 @@ from datasources import Almanac as datasource_Almanac
 from datasources import Preclinical as datasources_Preclinical
 from features import Features
 from investigator import SensitivityDictionary
-# from reader import Ini
-# from config import CONFIG
 
 
 class UnitTestAnnotator(unittest.TestCase):

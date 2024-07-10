@@ -5,7 +5,6 @@ import pandas
 import os
 
 from config import COLNAMES
-#from config import CONFIG
 
 
 class Reporter:
