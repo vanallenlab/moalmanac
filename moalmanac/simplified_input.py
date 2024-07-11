@@ -295,7 +295,14 @@ if __name__ == "__main__":
     else:
         preclinical_db_paths = None
 
-    main(patient_dict, args.input, output_directory)
+    main(
+        patient=patient_dict,
+        input_file=args.input,
+        output_folder=output_directory,
+        config=config_ini,
+        dbs=db_paths,
+        dbs_preclinical=preclinical_db_paths
+    )
 
     end_time = time.time()
     time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
