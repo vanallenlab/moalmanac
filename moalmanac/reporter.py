@@ -5,7 +5,6 @@ import pandas
 import os
 
 from config import COLNAMES
-from config import CONFIG
 
 
 class Reporter:
@@ -23,23 +22,22 @@ class Reporter:
     ms_status = COLNAMES[report_section]['ms_status']
 
     @classmethod
-    def drop_double_fusion(cls, dataframe):
+    def drop_double_fusion(cls, dataframe, biomarker_type_string):
         feature_type = COLNAMES[cls.report_section]['feature_type']
         alt = COLNAMES[cls.report_section]['alteration']
-        rearrangement = CONFIG['feature_types']['fusion']
 
-        idx_rearrangement = dataframe[dataframe[feature_type].eq(rearrangement)].index
+        idx_rearrangement = dataframe[dataframe[feature_type].eq(biomarker_type_string)].index
         idx_rearrangement_keep = dataframe.loc[idx_rearrangement, :].drop_duplicates([alt], keep='first').index
         idx_rearrangement_drop = idx_rearrangement.difference(idx_rearrangement_keep)
         idx_keep = dataframe.index.difference(idx_rearrangement_drop)
         return dataframe.loc[idx_keep, :]
 
     @classmethod
-    def format_alterations(cls, dataframe):
+    def format_alterations(cls, dataframe, config):
         if dataframe.empty:
             return dataframe
 
-        dataframe = cls.drop_double_fusion(dataframe)
+        dataframe = cls.drop_double_fusion(dataframe, biomarker_type_string=config['feature_types']['fusion'])
 
         lookup = COLNAMES['datasources']
         columns = [lookup['sensitivity'], lookup['resistance'], lookup['prognosis']]
@@ -73,7 +71,7 @@ class Reporter:
             return series
 
     @classmethod
-    def generate_actionability_report(cls, actionable, report_dictionary, similarity=None, output_directory=None):
+    def generate_actionability_report(cls, actionable, report_dictionary, config, similarity=None, output_directory=None):
         report = ActionabilityReport()
         report.add_metadata(
             name=report_dictionary['patient_id'],
@@ -89,13 +87,13 @@ class Reporter:
             msi=report_dictionary['microsatellite_status']
         )
 
-        versions = cls.generate_version_dictionary()
+        versions = cls.generate_version_dictionary(config)
         report.add_versions(
             software=versions['software'],
             database=versions['database']
         )
 
-        actionable = cls.format_alterations(actionable)
+        actionable = cls.format_alterations(dataframe=actionable, config=config)
         report.add_alterations(actionable)
         report.add_similar_profiles(similarity)
 
@@ -120,10 +118,10 @@ class Reporter:
         return datetime.date.today().strftime("%b %d %Y")
 
     @classmethod
-    def generate_version_dictionary(cls):
+    def generate_version_dictionary(cls, config):
         version_section = 'versions'
-        software_version = CONFIG[version_section]['interpreter']
-        database_version = CONFIG[version_section]['database']
+        software_version = config[version_section]['interpreter']
+        database_version = config[version_section]['database']
         return {
             'software': software_version,
             'database': database_version

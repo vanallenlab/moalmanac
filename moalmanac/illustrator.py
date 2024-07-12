@@ -1,5 +1,4 @@
 from config import COLNAMES
-from config import CONFIG
 
 import io
 import base64
@@ -137,13 +136,6 @@ class PreclinicalEfficacy(Illustrator):
 
 
 class ValidationOverlap(Illustrator):
-    config_section = 'validation_sequencing'
-    min_af = float(CONFIG[config_section]['min_af_for_annotation'])
-    min_power = float(CONFIG[config_section]['min_power'])
-
-    feature_type_section = 'feature_types'
-    feature_type_mutation = CONFIG[feature_type_section]['mut']
-
     section = 'validation_sequencing'
     gene = COLNAMES[section]['gene']
     feature_type = COLNAMES[section]['feature_type']
@@ -164,8 +156,8 @@ class ValidationOverlap(Illustrator):
         return data[cls.gene].astype(str) + ' ' + data[cls.alt].astype(str)
 
     @classmethod
-    def format_data(cls, df):
-        idx = df[df[cls.feature_type] == cls.feature_type_mutation].index
+    def format_data(cls, df, biomarker_type_string):
+        idx = df[df[cls.feature_type] == biomarker_type_string].index
         data = df.loc[idx, cls.columns].fillna(0.0)
         data[cls.coverage] = pd.to_numeric(data[cls.coverage])
         data[cls.tumor_f] = pd.to_numeric(data[cls.tumor_f])
@@ -175,7 +167,7 @@ class ValidationOverlap(Illustrator):
         return data
 
     @classmethod
-    def plot_overlap_af(cls, data, title=''):
+    def plot_overlap_af(cls, data, title='', minimum_power=0.95, minimum_allele_fraction=0.05):
         fig = plt.figure(figsize=(7, 7))
 
         ax = plt.subplot()
@@ -190,22 +182,22 @@ class ValidationOverlap(Illustrator):
         plt.yticks(fontsize=14)
         plt.xticks(fontsize=14)
 
-        powered = data[data[cls.validation_detection_power].astype(float) >= cls.min_power]
-        lowpower = data[data[cls.validation_detection_power].astype(float) < cls.min_power]
+        powered = data[data[cls.validation_detection_power].astype(float) >= minimum_power]
+        lowpower = data[data[cls.validation_detection_power].astype(float) < minimum_power]
         labels = cls.create_gene_alt_string(data)
 
         for idx in data.index:
             primary_tumor_f = float(data.loc[idx, cls.tumor_f])
             validation_tumor_f = float(data.loc[idx, cls.validation_tumor_f])
-            if (primary_tumor_f >= cls.min_af) & (validation_tumor_f >= cls.min_af):
+            if (primary_tumor_f >= minimum_allele_fraction) & (validation_tumor_f >= minimum_allele_fraction):
                 ax.annotate(labels[idx], (primary_tumor_f, validation_tumor_f))
 
         plt.scatter(powered[cls.tumor_f].tolist(), powered[cls.validation_tumor_f].tolist(),
                     color=Illustrator.tableau10['blue'],
-                    label=''.join(['Detection power in validation sequencing >= {}'.format(cls.min_power)]))
+                    label=''.join(['Detection power in validation sequencing >= {}'.format(minimum_power)]))
         plt.scatter(lowpower[cls.tumor_f].tolist(), lowpower[cls.validation_tumor_f].tolist(),
                     color=Illustrator.tableau10['grey'],
-                    label=''.join(['Detection power in validation sequencing < {}'.format(cls.min_power)]))
+                    label=''.join(['Detection power in validation sequencing < {}'.format(minimum_power)]))
 
         plt.xlim(-0.01, 1.01)
         plt.ylim(-0.01, 1.01)
@@ -222,7 +214,16 @@ class ValidationOverlap(Illustrator):
         return fig
 
     @classmethod
-    def generate_dna_rna_plot(cls, df, patient_id, folder):
-        data = cls.format_data(df)
-        figure = cls.plot_overlap_af(data, title=patient_id)
+    def generate_dna_rna_plot(cls, df, patient_id, folder, config):
+        biomarker_type = config['feature_types']['mut']
+        minimum_power = float(config['validation_sequencing']['min_power'])
+        minimum_allele_fraction = float(config['validation_sequencing']['min_af_for_annotation'])
+
+        data = cls.format_data(df=df, biomarker_type_string=biomarker_type)
+        figure = cls.plot_overlap_af(
+            data=data,
+            title=patient_id,
+            minimum_power=minimum_power,
+            minimum_allele_fraction=minimum_allele_fraction
+        )
         Illustrator.save_fig(figure, folder, patient_id, 'validation_overlap.png')
