@@ -9,9 +9,6 @@ from datasources import Lawrence
 from reader import Reader
 
 from config import COLNAMES
-from config import CONFIG
-
-SIGNATURES_CONFIG = CONFIG['signatures']
 
 
 class Features:
@@ -120,28 +117,21 @@ class Features:
 
 class Aneuploidy:
     aneuploidy = 'aneuploidy'
-
-    feature_type_section = 'feature_types'
-    feature_type = CONFIG[feature_type_section][aneuploidy]
-
     aneuploidy_section = aneuploidy
     wgd = COLNAMES[aneuploidy]['wgd']
     wgd_string = COLNAMES[aneuploidy]['wgd_string']
 
     @classmethod
-    def summarize(cls, boolean):
+    def summarize(cls, boolean, config):
         df = Features.create_empty_dataframe()
+        feature_type = config['feature_types']['aneuploidy']
         if boolean:
-            df.loc[0, Features.feature_type] = cls.feature_type
+            df.loc[0, Features.feature_type] = feature_type
             df.loc[0, Features.feature] = cls.wgd_string
         return df
 
 
 class BurdenReader:
-    feature_type_section = 'feature_types'
-    feature_type = CONFIG[feature_type_section]['burden']
-    feature_type_mutations = CONFIG[feature_type_section]['mut']
-
     burden_section = 'burden'
     patient_id = COLNAMES[burden_section]['patient']
     tumor_type = COLNAMES[burden_section]['tumor_type']
@@ -212,15 +202,16 @@ class BurdenReader:
             return Features.not_high_burden
 
     @classmethod
-    def import_feature(cls, handle, patient, variants, dbs):
+    def import_feature(cls, handle, patient, variants, dbs, config):
         if os.path.exists(handle):
             bases_covered = float(Reader.read(handle, '\t', index_col=False).columns.tolist()[0])
         else:
             bases_covered = np.nan
         df = cls.create_burden_series(patient, bases_covered)
-        df[Features.feature_type] = cls.feature_type
 
-        mutations = variants[variants[Features.feature_type] == cls.feature_type_mutations].shape[0]
+        biomarker_type = config['feature_types']['burden']
+        df[Features.feature_type] = biomarker_type
+        mutations = variants[variants[Features.feature_type] == config['feature_types']['mut']].shape[0]
         mutational_burden = cls.calculate_burden(mutations, bases_covered)
 
         df[cls.n_nonsyn_mutations] = mutations
@@ -239,18 +230,13 @@ class BurdenReader:
 
 
 class CopyNumber:
-    config = CONFIG['seg']
-    amplification = config['amp']
-    deletion = config['del']
-    feature_type = CONFIG['feature_types']['cna']
-
     @staticmethod
     def format_cn_gene(series):
         new_series = series.str.split(' ', expand=True).loc[:, 0]
         return new_series
 
     @classmethod
-    def import_feature(cls, called_handle, not_called_handle):
+    def import_feature(cls, called_handle, not_called_handle, config):
         if called_handle:
             column_map = CopyNumberCalled.create_column_map()
             handle = called_handle
@@ -259,13 +245,17 @@ class CopyNumber:
             handle = not_called_handle
 
         df = Features.import_if_path_exists(handle, '\t', column_map, comment_character="#")
+
+        amplification_string = config['seg']['amp']
+        deletion_string = config['seg']['del']
         if not df.empty:
-            df[Features.feature_type] = Features.annotate_feature_type(cls.feature_type, df.index)
+            biomarker_type = config['feature_types']['cna']
+            df[Features.feature_type] = Features.annotate_feature_type(biomarker_type, df.index)
             df[Features.feature] = cls.format_cn_gene(df[Features.feature])
             if called_handle:
-                seg_accept, seg_reject = CopyNumberCalled.process_calls(df)
+                seg_accept, seg_reject = CopyNumberCalled.process_calls(df, amplification_string, deletion_string)
             else:
-                seg_accept, seg_reject = CopyNumberTotal.process_calls(df)
+                seg_accept, seg_reject = CopyNumberTotal.process_calls(df, config)
         else:
             seg_accept = Features.create_empty_dataframe()
             seg_reject = Features.create_empty_dataframe()
@@ -283,21 +273,21 @@ class CopyNumberCalled(CopyNumber):
         }
 
     @classmethod
-    def filter_calls(cls, series):
-        return series.fillna('').isin([cls.amplification, cls.deletion])
+    def filter_calls(cls, series, amp_string, del_string):
+        return series.fillna('').isin([amp_string, del_string])
 
     @classmethod
-    def process_calls(cls, dataframe):
-        idx = cls.filter_calls(dataframe[Features.alt_type])
+    def process_calls(cls, dataframe, amp_string, del_string):
+        idx = cls.filter_calls(dataframe[Features.alt_type], amp_string, del_string)
         return dataframe[idx], dataframe[~idx]
 
 
 class CopyNumberTotal(CopyNumber):
     @classmethod
-    def annotate_amp_del(cls, idx, idx_amp, idx_del):
+    def annotate_amp_del(cls, idx, idx_amp, idx_del, amp_string, del_string):
         series = pd.Series('', index=idx)
-        series[idx_amp] = cls.amplification
-        series[idx_del] = cls.deletion
+        series[idx_amp] = amp_string
+        series[idx_del] = del_string
         return series
 
     @staticmethod
@@ -323,7 +313,7 @@ class CopyNumberTotal(CopyNumber):
         )
 
     @classmethod
-    def filter_by_threshold(cls, df, percentile_amp, percentile_del):
+    def filter_by_threshold(cls, df, percentile_amp, percentile_del, amp_string, del_string):
         unique_segments = cls.get_unique_segments(df)
         threshold_amp = Features.calculate_percentile(unique_segments, percentile_amp)
         threshold_del = Features.calculate_percentile(unique_segments, percentile_del)
@@ -331,7 +321,7 @@ class CopyNumberTotal(CopyNumber):
         idx_amp = df[df[Features.segment_mean].astype(float) >= float(threshold_amp)].index
         idx_del = df[df[Features.segment_mean].astype(float) <= float(threshold_del)].index
 
-        df[Features.alt_type] = cls.annotate_amp_del(df.index, idx_amp, idx_del)
+        df[Features.alt_type] = cls.annotate_amp_del(df.index, idx_amp, idx_del, amp_string, del_string)
         idx_accept = df[df[Features.alt_type] != ''].index
         idx_unique = Features.drop_duplicate_genes(df.loc[idx_accept, :], Features.segment_mean)
 
@@ -346,10 +336,12 @@ class CopyNumberTotal(CopyNumber):
         return df.drop_duplicates([Features.chr, Features.start])[Features.segment_mean]
 
     @classmethod
-    def process_calls(cls, dataframe):
-        amp_percentile = cls.config['amp_percentile']
-        del_percentile = cls.config['del_percentile']
-        return cls.filter_by_threshold(dataframe, amp_percentile, del_percentile)
+    def process_calls(cls, dataframe, config):
+        amp_percentile = config['seg']['amp_percentile']
+        del_percentile = config['seg']['del_percentile']
+        amp_string = config['seg']['amp']
+        del_string = config['seg']['del']
+        return cls.filter_by_threshold(dataframe, amp_percentile, del_percentile, amp_string, del_string)
 
 
 class CoverageMetrics:
@@ -391,13 +383,8 @@ class CoverageMetrics:
 
 
 class CosmicSignatures:
-    feature_type_section = 'feature_types'
-    feature_type = CONFIG[feature_type_section]['signature']
-
     signature_section = 'signatures'
     patient_id = COLNAMES[signature_section]['patient']
-
-    min_contribution = SIGNATURES_CONFIG['min_contribution']
 
     input_section = 'mutational_signature_input'
     input_signature = COLNAMES[input_section]['signature']
@@ -413,21 +400,23 @@ class CosmicSignatures:
         }
 
     @classmethod
-    def import_feature(cls, path):
+    def import_feature(cls, path, config):
         """Loads and formats Cosmic Mutational Signatures based on provided file path."""
         column_map = cls.create_column_map()
         df = Features.import_if_path_exists(path, delimiter='\t', column_map=column_map)
         if not df.empty:
-            df[Features.feature_type] = cls.feature_type
+            biomarker_type = config['feature_types']['signature']
+            minimum_contribution = config['signatures']['min_contribution']
+            df[Features.feature_type] = biomarker_type
             df[Features.alt_type] = 'v3.4'
             df[Features.alt] = cls.round_contributions(df[Features.alt])
-            idx = cls.index_for_minimum_contribution(df[Features.alt])
+            idx = cls.index_for_minimum_contribution(series=df[Features.alt], minimum_value=minimum_contribution)
             return df[idx]
         else:
             return Features.create_empty_dataframe()
 
     @classmethod
-    def index_for_minimum_contribution(cls, series, minimum_value=min_contribution):
+    def index_for_minimum_contribution(cls, series, minimum_value=0.06):
         """Subsets the provided SBS signatures to those that pass the minimum contribution, specified in config.ini"""
         return series.astype(float) >= float(minimum_value)
 
@@ -438,41 +427,38 @@ class CosmicSignatures:
 
 
 class Fusion:
-    config = CONFIG['fusion']
-    alt_type = config['alt_type']
-    leftbreakpoint = config['leftbreakpoint']
-    rightbreakpoint = config['rightbreakpoint']
-    spanningfrags_min = config['spanningfrags_min']
-
-    feature_type = CONFIG['feature_types']['fusion']
-
     @classmethod
-    def create_colmap(cls):
+    def create_colmap(cls, config):
         section = 'fusion_input'
         column_names = COLNAMES[section]
+
+        leftbreakpoint = config['fusion']['leftbreakpoint']
+        rightbreakpoint = config['fusion']['rightbreakpoint']
         return {
             column_names['name']: Features.feature,
             column_names['spanningfrags']: Features.spanningfrags,
-            column_names[cls.leftbreakpoint]: cls.leftbreakpoint,
-            column_names[cls.rightbreakpoint]: cls.rightbreakpoint
+            column_names[leftbreakpoint]: leftbreakpoint,
+            column_names[rightbreakpoint]: rightbreakpoint
         }
 
     @staticmethod
-    def filter_by_spanning_fragment_count(series, minimum=spanningfrags_min):
+    def filter_by_spanning_fragment_count(series, minimum=5.0):
         minimum = int(float(minimum))
         return series[series.astype(int).ge(minimum)].index
 
     @classmethod
-    def import_feature(cls, handle):
-        column_map = cls.create_colmap()
+    def import_feature(cls, handle, config):
+        column_map = cls.create_colmap(config)
         df = Features.import_if_path_exists(handle, '\t', column_map, index_col=False)
         if not df.empty:
             split_genes = cls.split_genes(df[Features.feature])
             df[Features.left_gene] = split_genes[Features.left_gene]
             df[Features.right_gene] = split_genes[Features.right_gene]
 
-            left = cls.split_breakpoint(df[cls.leftbreakpoint])
-            right = cls.split_breakpoint(df[cls.rightbreakpoint])
+            leftbreakpoint = config['fusion']['leftbreakpoint']
+            rightbreakpoint = config['fusion']['rightbreakpoint']
+            left = cls.split_breakpoint(df[leftbreakpoint])
+            right = cls.split_breakpoint(df[rightbreakpoint])
 
             df[Features.chr] = left[Features.chr]
             df[Features.start] = left[Features.start]
@@ -480,13 +466,18 @@ class Fusion:
             df[Features.left_start] = left[Features.start]
             df[Features.right_chr] = right[Features.chr]
             df[Features.right_start] = right[Features.start]
-            df.drop([cls.leftbreakpoint, cls.rightbreakpoint], axis=1, inplace=True)
+            df.drop([leftbreakpoint, rightbreakpoint], axis=1, inplace=True)
 
-            df[Features.feature_type] = Features.annotate_feature_type(cls.feature_type, df.index)
-            df[Features.alt_type] = cls.alt_type
+            biomarker_type = config['feature_types']['fusion']
+            df[Features.feature_type] = Features.annotate_feature_type(biomarker_type, df.index)
+            df[Features.alt_type] = config['fusion']['alt_Type']
             df[Features.alt] = df[Features.feature]
 
-            idx_min_spanning_fragments = cls.filter_by_spanning_fragment_count(df[Features.spanningfrags])
+            min_fragments = config['fusion']['spanningfrags_min']
+            idx_min_spanning_fragments = cls.filter_by_spanning_fragment_count(
+                series=df[Features.spanningfrags],
+                minimum=min_fragments
+            )
             idx_unique = Features.drop_duplicate_genes(df.loc[idx_min_spanning_fragments, :], Features.feature)
             fusions_unique = df.loc[idx_unique, :]
 
@@ -521,11 +512,7 @@ class Fusion:
 
 
 class MicrosatelliteReader:
-    microsatellite = 'microsatellite'
-    feature_type_section = 'feature_types'
-    feature_type = CONFIG[feature_type_section][microsatellite]
-
-    microsatellite_section = microsatellite
+    microsatellite_section = 'microsatellite'
     msih = COLNAMES[microsatellite_section]['msih']
     msil = COLNAMES[microsatellite_section]['msil']
     mss = COLNAMES[microsatellite_section]['mss']
@@ -543,9 +530,10 @@ class MicrosatelliteReader:
         return cls.status_map[status]
 
     @classmethod
-    def summarize(cls, status):
+    def summarize(cls, status, config):
         df = Features.create_empty_dataframe()
-        df.loc[0, Features.feature_type] = cls.feature_type
+        biomarker_type = config['feature_types']['microsatellite']
+        df.loc[0, Features.feature_type] = biomarker_type
         df.loc[0, Features.feature] = cls.map_status(status)
         return df
 
@@ -636,13 +624,12 @@ class MAF(Features):
 
 
 class MAFGermline(MAF):
-    feature_type = CONFIG['feature_types']['germline']
-
     @classmethod
-    def import_feature(cls, handle):
+    def import_feature(cls, handle, config):
         df = cls.import_maf(handle)
+        biomarker_type = config['feature_types']['germline']
         if not df.empty:
-            df = cls.format_maf(df, cls.feature_type)
+            df = cls.format_maf(df, biomarker_type)
             coding_variants = cls.return_variants_coding(df)
         else:
             coding_variants = cls.create_empty_dataframe()
@@ -651,13 +638,12 @@ class MAFGermline(MAF):
 
 
 class MAFSomatic(MAF):
-    feature_type = CONFIG['feature_types']['mut']
-
     @classmethod
-    def import_feature(cls, handle):
+    def import_feature(cls, handle, config):
         df = cls.import_maf(handle)
+        biomarker_type = config['feature_types']['mut']
         if not df.empty:
-            df = cls.format_maf(df, cls.feature_type)
+            df = cls.format_maf(df, biomarker_type)
             coding_variants = cls.return_variants_coding(df)
             non_coding_variants = cls.return_variants_non_coding(df)
         else:
@@ -682,8 +668,8 @@ class MAFValidation(MAF):
     columns = [gene, alt, alt_type, validation_tumor_f, validation_coverage]
 
     @classmethod
-    def import_feature(cls, handle):
-        df, df_reject = MAFSomatic.import_feature(handle)
+    def import_feature(cls, handle, config):
+        df, df_reject = MAFSomatic.import_feature(handle, config)
         df = df.drop(df.columns[df.columns.str.contains('validation')], axis=1)
         df = df.rename(columns=cls.column_map).loc[:, cls.columns]
         return df, df_reject

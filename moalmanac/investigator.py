@@ -6,7 +6,6 @@ import scipy.stats as stats
 from datasources import Preclinical
 from illustrator import PreclinicalEfficacy
 
-from config import CONFIG
 from config import COLNAMES
 
 
@@ -58,26 +57,6 @@ class Investigator(object):
     ic50 = COLNAMES[preclinical_section]['ic50']
     tested_subfeature = COLNAMES[preclinical_section]['tested_subfeature']
 
-    feature_type_section = 'feature_types'
-    feature_type_mut = CONFIG[feature_type_section]['mut']
-    feature_type_germline = CONFIG[feature_type_section]['germline']
-    feature_type_cna = CONFIG[feature_type_section]['cna']
-    feature_type_fusion = CONFIG[feature_type_section]['fusion']
-    feature_type_burden = CONFIG[feature_type_section]['burden']
-    feature_type_signature = CONFIG[feature_type_section]['signature']
-    feature_types = {
-        'variant': feature_type_mut,
-        'germline': feature_type_germline,
-        'copy_number': feature_type_cna,
-        'fusion': feature_type_fusion,
-        'burden': feature_type_burden,
-        'signature': feature_type_signature
-    }
-
-    input_dtypes = [feature_types['variant'],
-                    feature_types['copy_number'],
-                    feature_types['fusion']]
-
     @staticmethod
     def list_feature_combinations(split_feature, feature_length):
         return ['.'.join(split_feature[:i]) for i in range(1, feature_length + 1)]
@@ -122,7 +101,7 @@ class SensitivityDictionary(Investigator):
             return stats.mannwhitneyu(series1, series2, alternative='two-sided')
 
     @classmethod
-    def create(cls, dbs, df_actionable):
+    def create(cls, dbs, df_actionable, config):
         summary = dbs[cls.summary]
         variants = dbs[cls.variants]
         cnas = dbs[cls.cnas]
@@ -131,8 +110,14 @@ class SensitivityDictionary(Investigator):
         genes = dbs[cls.gene]
         mappings = dbs[cls.mappings]
 
+        input_dtypes = [
+            config['feature_types']['mut'],
+            config['feature_types']['cna'],
+            config['feature_types']['fusion']
+        ]
+
         samples = Preclinical.generate_sample_list(summary, cls.use_column, cls.model_id)
-        idx_feature_type = df_actionable[cls.feature_type].isin(cls.input_dtypes)
+        idx_feature_type = df_actionable[cls.feature_type].isin(input_dtypes)
         idx_sensitive = ~(df_actionable[cls.sensitive_therapy].isnull() | df_actionable[cls.sensitive_therapy].eq(''))
 
         dictionary = {}
@@ -144,7 +129,7 @@ class SensitivityDictionary(Investigator):
             feature_display = df_actionable.loc[index, cls.feature_display]
             index_dict = {}
             if mapped:
-                feature_dictionary = cls.split_samples_by_wt_mut(df_actionable.loc[index, :], dbs, samples)
+                feature_dictionary = cls.split_samples_by_wt_mut(df_actionable.loc[index, :], dbs, samples, config)
                 features = list(feature_dictionary)
                 for therapy in mapped:
                     therapy_dict = {}
@@ -228,12 +213,12 @@ class SensitivityDictionary(Investigator):
         return dictionary
 
     @classmethod
-    def select_split_function(cls, feature_type):
-        if feature_type == cls.feature_types['variant']:
+    def select_split_function(cls, feature_type, variant_string, copy_number_string, fusion_string):
+        if feature_type == variant_string:
             return cls.split_samples_for_variants
-        elif feature_type == cls.feature_types['copy_number']:
+        elif feature_type == copy_number_string:
             return cls.split_samples_for_copy_numbers
-        elif feature_type == cls.feature_types['fusion']:
+        elif feature_type == fusion_string:
             return cls.split_samples_for_fusions
         else:
             return cls.split_exit
@@ -245,10 +230,19 @@ class SensitivityDictionary(Investigator):
         exit()
 
     @classmethod
-    def split_samples_by_wt_mut(cls, series, dbs, samples):
+    def split_samples_by_wt_mut(cls, series, dbs, samples, config):
         feature_type = series.loc[cls.feature_type]
-        split_function = cls.select_split_function(feature_type)
-        return split_function(dbs, series, samples)
+        split_function = cls.select_split_function(
+            feature_type=feature_type,
+            variant_string=config['feature_types']['mut'],
+            copy_number_string=config['feature_types']['cna'],
+            fusion_string=config['feature_types']['fusion']
+        )
+        return split_function(
+            dbs=dbs,
+            series=series,
+            all_samples=samples
+        )
 
     @classmethod
     def split_samples_for_copy_numbers(cls, dbs, series, all_samples):

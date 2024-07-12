@@ -2,8 +2,8 @@ import unittest
 import pandas as pd
 
 from moalmanac import features
-from config import CONFIG, COLNAMES
-
+from config import COLNAMES
+from reader import Ini
 
 class UnitTestFeatures(unittest.TestCase):
     def test_annotate_feature_type(self):
@@ -69,19 +69,30 @@ class UnitTestCopyNumberCalled(unittest.TestCase):
         self.assertEqual(column_map['call'], features.Features.alt_type)
 
     def test_filter_calls(self):
+        amp_string = 'Amplification'
+        del_string = 'Deletion'
         tmp = pd.Series(['Amplification', 'Deletion', '', 'Deletion'])
-        idx = features.CopyNumberCalled.filter_calls(tmp)
+        idx = features.CopyNumberCalled.filter_calls(series=tmp, amp_string=amp_string, del_string=del_string)
         self.assertEqual([0, 1, 3], idx[idx].index.tolist())
         self.assertEqual([2], idx[~idx].index.tolist())
 
 
 class UnitTestCopyNumberTotal(unittest.TestCase):
     def test_annotate_amp_del(self):
+        amp_string = 'Amplification'
+        del_string = 'Deletion'
         index = pd.Index([0, 1, 2])
         index_amp = pd.Index([0])
         index_del = pd.Index([2])
-        expected = [features.CopyNumberTotal.amplification, '', features.CopyNumberTotal.deletion]
-        self.assertEqual(expected, features.CopyNumberTotal.annotate_amp_del(index, index_amp, index_del).tolist())
+        expected = [amp_string, '', del_string]
+        result = features.CopyNumberTotal.annotate_amp_del(
+            idx=index,
+            idx_amp=index_amp,
+            idx_del=index_del,
+            amp_string=amp_string,
+            del_string=del_string
+        )
+        self.assertEqual(expected, result.tolist())
 
     def test_create_column_map(self):
         column_map = features.CopyNumberTotal.create_column_map()
@@ -102,12 +113,20 @@ class UnitTestCopyNumberTotal(unittest.TestCase):
             self.assertEqual(True, idx in features.CopyNumberTotal.drop_duplicate_genes(df))
 
     def test_filter_by_threshold(self):
+        amp_string = 'Amplification'
+        del_string = 'Deletion'
         values = pd.Series(range(1, 101))
         df = pd.DataFrame({features.Features.feature: values,
                            features.Features.chr: values,
                            features.Features.start: values,
                            features.Features.segment_mean: values})
-        accept, reject = features.CopyNumberTotal.filter_by_threshold(df, 97.5, 2.5)
+        accept, reject = features.CopyNumberTotal.filter_by_threshold(
+            df=df,
+            percentile_amp=97.5,
+            percentile_del=2.5,
+            amp_string=amp_string,
+            del_string=del_string
+        )
         expected = pd.Index([0, 1, 2, 97, 98, 99])
         for idx in expected:
             self.assertEqual(True, idx in accept.index)
@@ -157,13 +176,17 @@ class UnitTestCosmicSignatures(unittest.TestCase):
 
 class UnitTestFusion(unittest.TestCase):
     def test_create_column_map(self):
-        column_map = features.Fusion.create_colmap()
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        column_map = features.Fusion.create_colmap(config)
+        leftbreakpoint = 'leftbreakpoint'
+        rightbreakpoint = 'rightbreakpoint'
+
         values = list(column_map.values())
         self.assertEqual(4, len(column_map))
         self.assertEqual(features.Features.feature, values[0])
         self.assertEqual(features.Features.spanningfrags, values[1])
-        self.assertEqual(features.Fusion.leftbreakpoint, values[2])
-        self.assertEqual(features.Fusion.rightbreakpoint, values[3])
+        self.assertEqual(leftbreakpoint, values[2])
+        self.assertEqual(rightbreakpoint, values[3])
 
     def test_filter_by_spanning_fragment_count(self):
         series = pd.Series([4, 5, 6])

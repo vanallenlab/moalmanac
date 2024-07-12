@@ -17,7 +17,7 @@ import reporter
 import writer
 
 from config import COLNAMES
-from config import CONFIG
+from reader import Ini
 
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
@@ -84,34 +84,41 @@ def subset_by_feature_type(dataframe):
     return somatic, germline
 
 
-def main(patient, input_file, output_folder):
-    dbs = datasources.Datasources.generate_db_dict(CONFIG)
+def main(patient, input_file, output_folder, config, dbs, dbs_preclinical=None):
+    metadata_dictionary = moalmanac.create_metadata_dictionary(patient)
+
     output_folder = moalmanac.format_output_directory(output_folder)
     if output_folder != "":
         moalmanac.execute_cmd(f"mkdir -p {output_folder}")
 
-    string_id = patient[patient_id]
+    string_id = metadata_dictionary[patient_id]
 
-    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, patient[tumor_type])
-    patient[ontology] = mapped_ontology[ontology]
-    patient[code] = mapped_ontology[code]
+    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, metadata_dictionary[tumor_type])
+    metadata_dictionary[ontology] = mapped_ontology[ontology]
+    metadata_dictionary[code] = mapped_ontology[code]
 
     alterations = features.Simple.import_feature(input_file)
-    annotated_alterations = annotator.Annotator.annotate_simple(alterations, dbs, patient[code])
+    annotated_alterations = annotator.Annotator.annotate_simple(alterations, dbs, patient[code], config=config)
     evaluated_alterations = evaluator.Evaluator.evaluate_somatic(annotated_alterations)
 
     evaluated_somatic, evaluated_germline = subset_by_feature_type(evaluated_alterations)
     evaluated_somatic = annotator.OverlapSomaticGermline.append_germline_hits(evaluated_somatic, evaluated_germline)
     integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, feature_types)
 
-    somatic_burden = features.BurdenReader.import_feature('', patient, evaluated_somatic, dbs)
-    patient_wgd = features.Aneuploidy.summarize(patient[wgd])
-    patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
+    somatic_burden = features.BurdenReader.import_feature(
+        handle='',
+        patient=metadata_dictionary,
+        variants=evaluated_somatic,
+        dbs=dbs,
+        config=config
+    )
+    patient_wgd = features.Aneuploidy.summarize(patient[wgd], config=config)
+    patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status], config=config)
     patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
 
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code])
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code])
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code])
+    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code], config=config)
+    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code], config=config)
+    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code], config=config)
 
     evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
     evaluated_wgd = evaluator.Evaluator.evaluate_almanac(annotated_wgd)
@@ -125,14 +132,14 @@ def main(patient, input_file, output_folder):
         ms_status=evaluated_ms_status,
         burden=evaluated_burden,
         signatures=features.Features.create_empty_dataframe(),
-        wgd=evaluated_wgd
+        wgd=evaluated_wgd,
+        config=config
     )
 
     strategies = evaluator.Strategies.report_therapy_strategies(actionable)
 
+    function_toggle = config['function_toggle']
     efficacy_summary = investigator.SummaryDataFrame.create_empty_dataframe()
-    efficacy_dictionary = {}
-    cell_lines_dictionary = {}
     preclinical_efficacy_on = TOGGLE_FEATURES.getboolean('calculate_preclinical_efficacy')
 
     # The input argument --disable_matchmaking will be removed in the next non-backwards compatible release
@@ -146,10 +153,11 @@ def main(patient, input_file, output_folder):
         if preclinical_efficacy_on:
             plot_preclinical = TOGGLE_FEATURES.getboolean('plot_preclinical_efficacy')
             efficacy_results = moalmanac.process_preclinical_efficacy(
-                dbs_preclinical,
-                actionable,
-                output_folder,
-                string_id,
+                dbs=dbs_preclinical,
+                dataframe=actionable,
+                folder=output_folder,
+                label=string_id,
+                config=config,
                 plot=plot_preclinical
             )
             efficacy_dictionary = efficacy_results[0]
@@ -162,8 +170,17 @@ def main(patient, input_file, output_folder):
                 append_lookup=TOGGLE_FEATURES.getboolean('include_preclinical_efficacy_in_actionability_report')
             )
         if model_similarity_on:
-            similarity_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, string_id)
-            similarity_summary = matchmaker.Report.create_report_dictionary(similarity_results, cell_lines_dictionary)
+            similarity_results = matchmaker.Matchmaker.compare(
+                dbs=dbs,
+                dbs_preclinical=dbs_preclinical,
+                somatic=evaluated_somatic,
+                case_sample_id=string_id,
+                config=config
+            )
+            similarity_summary = matchmaker.Report.create_report_dictionary(
+                similarity_results,
+                cell_lines_dictionary
+            )
 
     writer.Actionable.write(actionable, string_id, output_folder)
     writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
@@ -177,13 +194,14 @@ def main(patient, input_file, output_folder):
     writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
     writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
 
-    if TOGGLE_FEATURES.getboolean('generate_actionability_report'):
-        report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
+    if function_toggle.getboolean('generate_actionability_report'):
+        report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
 
-        include_similarity = TOGGLE_FEATURES.getboolean('include_model_similarity_in_actionability_report')
+        include_similarity = function_toggle.getboolean('include_model_similarity_in_actionability_report')
         reporter.Reporter.generate_actionability_report(
-            actionable,
-            report_dictionary,
+            actionable=actionable,
+            report_dictionary=report_dictionary,
+            config=config,
             similarity=similarity_summary if include_similarity else None,
             output_directory=output_folder
         )
@@ -194,33 +212,66 @@ if __name__ == "__main__":
 
     arg_parser = argparse.ArgumentParser(prog='Molecular Oncology Almanac using simplified input',
                                          description='Annotates only using the Molecular Oncology Almanac database')
-    arg_parser.add_argument('--patient_id',
-                            help='patient id label',
-                            required=True)
-    arg_parser.add_argument('--stage',
-                            default='Unknown',
-                            help='disease stage')
-    arg_parser.add_argument('--tumor_type',
-                            default='Unknown',
-                            help='reported tumor type')
-    arg_parser.add_argument('--input',
-                            help='Tab delimited file of observed alterations')
-    arg_parser.add_argument('--ms_status',
-                            default='unk',
-                            choices=['msih', 'msil', 'mss', 'unk'],
-                            help='microsatellite instability status')
-    arg_parser.add_argument('--purity',
-                            default='Unknown',
-                            help='Tumor purity')
-    arg_parser.add_argument('--ploidy',
-                            default='Unknown',
-                            help='Tumor ploidy')
-    arg_parser.add_argument('--wgd',
-                            action='store_true',
-                            help='Specify the occurrence of whole genome duplication')
-    arg_parser.add_argument('--output_directory',
-                            default=None,
-                            help='Output directory for generated files')
+    arg_parser.add_argument(
+        '--patient_id',
+        help='patient id label',
+        required=True
+    )
+    arg_parser.add_argument(
+        '--stage',
+        default='Unknown',
+        help='disease stage'
+    )
+    arg_parser.add_argument(
+        '--tumor_type',
+        default='Unknown',
+        help='reported tumor type'
+    )
+    arg_parser.add_argument(
+        '--input',
+        help='Tab delimited file of observed alterations'
+    )
+    arg_parser.add_argument(
+        '--ms_status',
+        default='unk',
+        choices=['msih', 'msil', 'mss', 'unk'],
+        help='microsatellite instability status'
+    )
+    arg_parser.add_argument(
+        '--purity',
+        default='Unknown',
+        help='Tumor purity'
+    )
+    arg_parser.add_argument(
+        '--ploidy',
+        default='Unknown',
+        help='Tumor ploidy'
+    )
+    arg_parser.add_argument(
+        '--wgd',
+        action='store_true',
+        help='Specify the occurrence of whole genome duplication'
+    )
+    arg_parser.add_argument(
+        '--output_directory',
+        default=None,
+        help='Output directory for generated files'
+    )
+    arg_parser.add_argument(
+        '--config', '-c',
+        required=True,
+        help='ini file that contains configuration details'
+    )
+    arg_parser.add_argument(
+        '--dbs',
+        required=True,
+        help='ini file that contains database paths '
+    )
+    arg_parser.add_argument(
+        '--preclinical-dbs',
+        required=False,
+        help='ini file that contains preclinical file paths'
+    )
     args = arg_parser.parse_args()
 
     patient_dict = {
@@ -236,7 +287,22 @@ if __name__ == "__main__":
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
 
-    main(patient_dict, args.input, output_directory)
+    config_ini = Ini.read(args.config, extended_interpolation=False, convert_to_dictionary=False)
+
+    db_paths = Ini.read(args.dbs, extended_interpolation=True, convert_to_dictionary=True)
+    if args.preclinical_dbs:
+        preclinical_db_paths = Ini.read(args.preclinical_dbs, extended_interpolation=True, convert_to_dictionary=True)
+    else:
+        preclinical_db_paths = None
+
+    main(
+        patient=patient_dict,
+        input_file=args.input,
+        output_folder=output_directory,
+        config=config_ini,
+        dbs=db_paths,
+        dbs_preclinical=preclinical_db_paths
+    )
 
     end_time = time.time()
     time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)

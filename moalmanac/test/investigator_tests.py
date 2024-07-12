@@ -4,7 +4,7 @@ import math
 
 from datasources import Preclinical
 from investigator import Investigator, SensitivityDictionary
-
+from reader import Ini
 
 class UnitTestSensitivityDictionary(unittest.TestCase):
     def test_calculate_series_exp(self):
@@ -54,7 +54,18 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
         self.assertTrue(math.isnan(statistic))
 
     def test_create(self):
-        dbs = Preclinical.import_dbs()
+        dbs_paths = {
+            'almanac_gdsc_mappings': '../datasources/preclinical/formatted/almanac-gdsc-mappings.json',
+            'summary': '../datasources/preclinical/formatted/cell-lines.summary.txt',
+            'variants': '../datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt',
+            'copynumbers': '../datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt',
+            'fusions': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.txt',
+            'fusions1': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt',
+            'fusions2': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt',
+            'gdsc': '../datasources/preclinical/formatted/sanger.gdsc.txt',
+            'dictionary': '../datasources/preclinical/cell-lines.pkl'
+        }
+        dbs = Preclinical.import_dbs(dbs_paths)
         data_dictionary = {
             'feature_type': ['Somatic Variant'],
             'feature': ['BRAF'],
@@ -67,7 +78,8 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
         actionable = pd.DataFrame(data_dictionary, index=[0])
         expected_dabrafenib = '2.322e-12'
         expected_trametinib = '2.344e-09'
-        result = SensitivityDictionary.create(dbs, actionable)
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        result = SensitivityDictionary.create(dbs, actionable, config)
         self.assertEqual(result[0]['Dabrafenib']['BRAF']['comparison']['pvalue_mww'], expected_dabrafenib)
         self.assertEqual(result[0]['Trametinib']['BRAF']['comparison']['pvalue_mww'], expected_trametinib)
 
@@ -104,17 +116,27 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
         self.assertEqual(result, ['CDKN2A Copy Number Deletion', 'CDKN2A Copy Number', 'CDKN2A'])
 
     def test_select_split_function(self):
-        var = Investigator.feature_types['variant']
-        cn = Investigator.feature_types['copy_number']
-        fusion = Investigator.feature_types['fusion']
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        var_string = config['feature_types']['mut']
+        cn_string = config['feature_types']['cna']
+        fusion_string = config['feature_types']['fusion']
 
         var_function = SensitivityDictionary.split_samples_for_variants
         cn_function = SensitivityDictionary.split_samples_for_copy_numbers
         fusion_function = SensitivityDictionary.split_samples_for_fusions
 
-        self.assertEqual(SensitivityDictionary.select_split_function(var), var_function)
-        self.assertEqual(SensitivityDictionary.select_split_function(cn), cn_function)
-        self.assertEqual(SensitivityDictionary.select_split_function(fusion), fusion_function)
+        self.assertEqual(
+            SensitivityDictionary.select_split_function(var_string, var_string, cn_string, fusion_string),
+            var_function
+        )
+        self.assertEqual(
+            SensitivityDictionary.select_split_function(cn_string, var_string, cn_string, fusion_string),
+            cn_function
+        )
+        self.assertEqual(
+            SensitivityDictionary.select_split_function(fusion_string, var_string, cn_string, fusion_string),
+            fusion_function
+        )
 
     def test_split_samples_by_wt_mut(self):
         gene = SensitivityDictionary.gene
@@ -161,9 +183,11 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
             fusions: db_fusions
         }
 
-        results_variants = SensitivityDictionary.split_samples_by_wt_mut(data.loc[0, :], dbs, samples)
-        results_cnas = SensitivityDictionary.split_samples_by_wt_mut(data.loc[1, :], dbs, samples)
-        results_fusions = SensitivityDictionary.split_samples_by_wt_mut(data.loc[2, :], dbs, samples)
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+
+        results_variants = SensitivityDictionary.split_samples_by_wt_mut(data.loc[0, :], dbs, samples, config)
+        results_cnas = SensitivityDictionary.split_samples_by_wt_mut(data.loc[1, :], dbs, samples, config)
+        results_fusions = SensitivityDictionary.split_samples_by_wt_mut(data.loc[2, :], dbs, samples, config)
         self.assertEqual(results_variants['BRAF']['samples'][0], ['B', 'C', 'D'])
         self.assertEqual(results_variants['BRAF']['samples'][1], ['A', 'E'])
         self.assertEqual(results_variants['BRAF Somatic Variant']['samples'][0], ['E'])
@@ -217,7 +241,8 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
             cnas: db_cnas,
         }
 
-        results_cnas = SensitivityDictionary.split_samples_by_wt_mut(data.loc[1, :], dbs, samples)
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        results_cnas = SensitivityDictionary.split_samples_by_wt_mut(data.loc[1, :], dbs, samples, config)
         self.assertEqual(results_cnas['CDKN2A']['samples'][0], ['A', 'C', 'D', 'E'])
         self.assertEqual(results_cnas['CDKN2A']['samples'][1], ['B'])
         self.assertEqual(results_cnas['CDKN2A Copy Number']['samples'][0], ['A', 'D', 'E'])
@@ -253,7 +278,8 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
             fusions: db_fusions
         }
 
-        results_fusions = SensitivityDictionary.split_samples_by_wt_mut(data.loc[2, :], dbs, samples)
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        results_fusions = SensitivityDictionary.split_samples_by_wt_mut(data.loc[2, :], dbs, samples, config)
         self.assertEqual(results_fusions['TMPRSS2']['samples'][0], ['A', 'B', 'E'])
         self.assertEqual(results_fusions['TMPRSS2']['samples'][1], ['C', 'D'])
         self.assertEqual(results_fusions['ERG']['samples'][0], ['A', 'B', 'D', 'E'])
@@ -294,7 +320,8 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
             variants: db_variants
         }
 
-        results_variants = SensitivityDictionary.split_samples_by_wt_mut(data.loc[0, :], dbs, samples)
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        results_variants = SensitivityDictionary.split_samples_by_wt_mut(data.loc[0, :], dbs, samples, config)
         self.assertEqual(results_variants['BRAF']['samples'][0], ['B', 'C', 'D'])
         self.assertEqual(results_variants['BRAF']['samples'][1], ['A', 'E'])
         self.assertEqual(results_variants['BRAF Somatic Variant']['samples'][0], ['E'])

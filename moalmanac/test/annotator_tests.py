@@ -9,7 +9,6 @@ from datasources import Almanac as datasource_Almanac
 from datasources import Preclinical as datasources_Preclinical
 from features import Features
 from investigator import SensitivityDictionary
-from config import CONFIG
 
 
 class UnitTestAnnotator(unittest.TestCase):
@@ -58,7 +57,9 @@ class UnitTestACMG(unittest.TestCase):
         gene = ACMG.gene
         bin_name = ACMG.bin_name
         df = pd.DataFrame({gene: ['TP53', 'FOO', 'PMS2', 'TSC1', 'AR']})
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt'
+        }
 
         annotated = ACMG.annotate(df, dbs)
         expected_result = pd.Series([1, 0, 1, 1, 0], name=bin_name)
@@ -161,7 +162,7 @@ class UnitTestAlmanac(unittest.TestCase):
                     "doi": "10.1126/science.1062538", "pmid": "11423618", "nct": '',
                     "last_updated": "6/13/19",
                     "feature_display": "ABL1 p.T315I (Missense)", "predictive_implication_map": 1.0}, {}]
-        somatic_variant = Almanac.somatic_variant
+        somatic_variant = 'Somatic Variant'
         series = pd.Series(dtype=object)
 
         for columns in [Almanac.column_map_sensitive, Almanac.column_map_resistance, Almanac.column_map_prognostic]:
@@ -194,9 +195,9 @@ class UnitTestExAC(unittest.TestCase):
         alt = ExAC.alt
         af = ExAC.af
         feature_type = Features.feature_type
-        somatic = CONFIG['feature_types']['mut']
-        germline = CONFIG['feature_types']['germline']
-        cn = CONFIG['feature_types']['cna']
+        somatic = 'Somatic Variant'
+        germline = 'Germline Variant'
+        cn = 'Copy Number'
 
         df = pd.DataFrame({chr: [1, 2, 3, 1],
                            start: [100, 101, 103, 100],
@@ -209,13 +210,18 @@ class UnitTestExAC(unittest.TestCase):
                              ref: ["C", "A", "T"],
                              alt: ["G", "G", "G"],
                              af: [1, 0.5, 0.001]})
-        result = ExAC.append_exac_af(df, exac, [chr, start, ref, alt, af])
+        biomarker_types = [somatic, germline]
+        result = ExAC.append_exac_af(
+            df=df,
+            ds=exac,
+            ds_columns=[chr, start, ref, alt, af],
+            variant_biomarker_types=biomarker_types)
         self.assertEqual([1, 0, 0, 0], result[af].tolist())
 
     def test_annotate_common_af(self):
-        exac_common_threshold = ExAC.exac_common_threshold
+        exac_common_threshold = 0.001
         series = pd.Series([float(exac_common_threshold) - 0.01, float(exac_common_threshold) + 0.01])
-        result = ExAC.annotate_common_af(series)
+        result = ExAC.annotate_common_af(series, threshold=exac_common_threshold)
         self.assertEqual(0.0, result.loc[0])
         self.assertEqual(1.0, result.loc[1])
 
@@ -245,7 +251,11 @@ class UnitTestValidation(unittest.TestCase):
     })
 
     def test_append_validation(self):
-        result = OverlapValidation.append_validation(UnitTestValidation.dataframe1, UnitTestValidation.dataframe2)
+        result = OverlapValidation.append_validation(
+            UnitTestValidation.dataframe1,
+            UnitTestValidation.dataframe2,
+            biomarker_type='Somatic Variant'
+        )
         result = result.fillna('')
         self.assertEqual(UnitTestValidation.dataframe1['feature'].tolist(), result['feature'].tolist())
         self.assertEqual([0.20, '', 0.66, 0.0], result['validation_tumor_f'].tolist())
@@ -284,7 +294,7 @@ class UnitTestValidation(unittest.TestCase):
         dataframe = pd.DataFrame(['Somatic Variant', 'bar', 'foo'], columns=[OverlapValidation.feature_type])
         solution = ['Somatic Variant']
         solution_index = pd.Index([0])
-        result = OverlapValidation.get_mutation_index(dataframe)
+        result = OverlapValidation.get_mutation_index(dataframe, biomarker_type='Somatic Variant')
         self.assertEqual(solution[0], dataframe.loc[result[0], OverlapValidation.feature_type])
         self.assertEqual(solution_index[0], result[0])
 
@@ -327,8 +337,26 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
         'pvalue_mww': [2.322E-12, 7.627E-17, 0.835]
     }
     df2 = pd.DataFrame(data_dictionary, index=[0, 1, 2])
-    dbs_preclinical = datasources_Preclinical.import_dbs()
-    efficacy_dictionary = SensitivityDictionary.create(dbs_preclinical, df1)
+    dbs_dictionary = {
+        'almanac_gdsc_mappings': '../datasources/preclinical/formatted/almanac-gdsc-mappings.json',
+        'summary': '../datasources/preclinical/formatted/cell-lines.summary.txt',
+        'variants': '../datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt',
+        'copynumbers': '../datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt',
+        'fusions': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.txt',
+        'fusions1': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt',
+        'fusions2': '../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt',
+        'gdsc': '../datasources/preclinical/formatted/sanger.gdsc.txt',
+        'dictionary': '../datasources/preclinical/cell-lines.pkl'
+    }
+    config = {
+        'feature_types': {
+            'mut': 'Somatic Variant',
+            'cna': 'Copy Number',
+            'fusion': 'Rearrangement'
+        }
+    }
+    dbs_preclinical = datasources_Preclinical.import_dbs(dbs_dictionary)
+    efficacy_dictionary = SensitivityDictionary.create(dbs_preclinical, df1, config=config)
 
     def test_annotate(self):
         result = PreclinicalEfficacy.annotate(
@@ -352,13 +380,27 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
 
 class UnitTestPreclinicalMatchmaking(unittest.TestCase):
     def test_annotate_copy_numbers(self):
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
         alteration_type = PreclinicalMatchmaking.alteration_type
         alteration = PreclinicalMatchmaking.alteration
 
-        copy_number = PreclinicalMatchmaking.copy_number
+        copy_number = 'Copy Number'
 
         df = pd.DataFrame({
             feature: ['CDKN2A', 'CDKN2A', 'KRAS'],
@@ -366,7 +408,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         })
         df[feature_type] = copy_number
         df[alteration] = pd.NA
-        result = PreclinicalMatchmaking.annotate_copy_numbers(df, dbs)
+        result = PreclinicalMatchmaking.annotate_copy_numbers(df, dbs, biomarker_type_string=copy_number)
 
         expected_cdkn2a_del = {
             'feature_match_1': 1,
@@ -420,12 +462,26 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             self.assertEqual(result.loc[2, key], expected_kras_amp[key])
 
     def test_annotate_fusions(self):
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
         alteration_type = PreclinicalMatchmaking.alteration_type
         partner = PreclinicalMatchmaking.partner
-        fusion = PreclinicalMatchmaking.fusion
+        fusion = 'Rearrangement'
         model_id = PreclinicalMatchmaking.model_id
 
         df = pd.DataFrame({
@@ -435,7 +491,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         df[alteration_type] = 'Fusion'
         df[model_id] = 'case'
 
-        result, group1, group2 = PreclinicalMatchmaking.annotate_fusions(df, dbs)
+        result, group1, group2 = PreclinicalMatchmaking.annotate_fusions(df, dbs, biomarker_type_string=fusion)
 
         expected_index_0 = {
             'feature_match_1': 1,
@@ -668,12 +724,27 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(group2.loc[1, 'gsea_modules_bin'], expected_index_1_group2['gsea_modules_bin'])
 
     def test_annotate_fusions_matching(self):
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
+
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
         alteration_type = PreclinicalMatchmaking.alteration_type
         partner = PreclinicalMatchmaking.partner
-        fusion = PreclinicalMatchmaking.fusion
+        fusion = 'Rearrangement'
         model_id = PreclinicalMatchmaking.model_id
         evidence_map_str = PreclinicalMatchmaking.evidence_map_str
         merged = PreclinicalMatchmaking.merged
@@ -715,13 +786,27 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 self.assertEqual(result.loc[index, key], value)
 
     def test_annotate_somatic_variants(self):
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
         alteration_type = PreclinicalMatchmaking.alteration_type
         alteration = PreclinicalMatchmaking.alteration
 
-        somatic_variant = PreclinicalMatchmaking.somatic_variant
+        somatic_variant = 'Somatic Variant'
 
         df = pd.DataFrame({
             feature: ['BRAF', 'BRAF', 'IDH1', 'CDKN2A'],
@@ -730,7 +815,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         })
         df[feature_type] = somatic_variant
 
-        result = PreclinicalMatchmaking.annotate_somatic_variants(df, dbs)
+        result = PreclinicalMatchmaking.annotate_somatic_variants(df, dbs, biomarker_type_string=somatic_variant)
 
         expected_braf_1 = {
             'feature_match_1': 1,
@@ -816,11 +901,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
     def test_annotate_match_2(self):
         match_2 = PreclinicalMatchmaking.match_2
 
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         almanac = datasource_Almanac.import_ds(dbs)
-        copy_number = PreclinicalMatchmaking.copy_number
-        fusion = PreclinicalMatchmaking.fusion
-        somatic_variant = PreclinicalMatchmaking.somatic_variant
+        copy_number = 'Copy Number'
+        fusion = 'Rearrangement'
+        somatic_variant = 'Somatic Variant'
         
         feature = PreclinicalMatchmaking.feature
         alteration_type = PreclinicalMatchmaking.alteration_type
@@ -880,11 +979,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
     def test_annotate_match_3(self):
         match_3 = PreclinicalMatchmaking.match_3
 
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         almanac = datasource_Almanac.import_ds(dbs)
-        copy_number = PreclinicalMatchmaking.copy_number
-        fusion = PreclinicalMatchmaking.fusion
-        somatic_variant = PreclinicalMatchmaking.somatic_variant
+        copy_number = 'Copy Number'
+        fusion = 'Rearrangement'
+        somatic_variant = 'Somatic Variant'
 
         feature = PreclinicalMatchmaking.feature
         alteration_type = PreclinicalMatchmaking.alteration_type
@@ -953,10 +1066,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
     def test_annotate_match_4(self):
         match_4 = PreclinicalMatchmaking.match_4
 
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         almanac = datasource_Almanac.import_ds(dbs)
-        fusion = PreclinicalMatchmaking.fusion
-        somatic_variant = PreclinicalMatchmaking.somatic_variant
+        copy_number = 'Copy Number'
+        fusion = 'Rearrangement'
+        somatic_variant = 'Somatic Variant'
 
         feature = PreclinicalMatchmaking.feature
         alteration_type = PreclinicalMatchmaking.alteration_type
@@ -1002,11 +1130,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(result.loc[3, match_4], result.loc[3, 'expectation1'])
 
     def test_format_db(self):
-        dbs = Datasources.generate_db_dict(CONFIG)
+        dbs = {
+            'almanac_handle': '../datasources/moalmanac/molecular-oncology-almanac.json',
+            'cancerhotspots_handle': '../datasources/cancerhotspots/hotspots_v2.txt',
+            '3dcancerhotspots_handle': '../datasources/cancerhotspots/hotspots3d.txt',
+            'cgc_handle': '../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv',
+            'cosmic_handle': '../datasources/cosmic/CosmicMutantExport_v97.lite.txt',
+            'gsea_pathways_handle': '../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt',
+            'gsea_modules_handle': '../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt',
+            'exac_handle': '../datasources/exac/exac.expanded.r1.txt',
+            'acmg_handle': '../datasources/acmg/acmg.secondaryfindings.v3.txt',
+            'clinvar_handle': '../datasources/clinvar/variant_summary.lite.txt',
+            'hereditary_handle': '../datasources/hereditary/hereditary.txt',
+            'oncotree_handle': '../datasources/oncotree/oncotree.2023-03-09.txt',
+            'lawrence_handle': '../datasources/lawrence/lawrence_mapped_ontology.txt'
+        }
         almanac = datasource_Almanac.import_ds(dbs)
-        copy_number = PreclinicalMatchmaking.copy_number
-        fusion = PreclinicalMatchmaking.fusion
-        somatic_variant = PreclinicalMatchmaking.somatic_variant
+        copy_number = 'Copy Number'
+        fusion = 'Rearrangement'
+        somatic_variant = 'Somatic Variant'
 
         feature = PreclinicalMatchmaking.feature
         alteration_type = PreclinicalMatchmaking.alteration_type
