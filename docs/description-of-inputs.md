@@ -5,6 +5,8 @@ Example inputs can be found in the [`example_data/`](/example_data/) folder, fou
 # Table of Contents
 * [Required arguments](#required-arguments)  
     - [Patient id](#patient-id)
+    - [Config](#config)
+    - [Databases](#databases)
 * [Optional arguments](#optional-arguments)
     - [Tumor type](#tumor-type)
     - [Stage](#stage)
@@ -30,6 +32,23 @@ The following arguments are required to run Molecular Oncology Almanac.
 
 ## Patient id
 `--patient_id` expects a single string value which is used for labeling outputs. 
+
+## Config
+`--config` expects a file path to the [config.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/config.ini) file. 
+
+This config file contains the following sections,
+- `function_toggle` - allows several features of the MOAlmanac algorithm to be enabled or disabled
+- `versions` - specifies the versions of the [MOAlmanac algorithm (interpreter)](https://github.com/vanallenlab/moalmanac/releases) and [database](https://github.com/vanallenlab/moalmanac-db/releases).    
+- `exac` - specifies the allele frequency threshold used with [ExAC](https://github.com/vanallenlab/moalmanac/tree/main/datasources/exac) to specify if a variant is a common variant or not
+- `fusion` - 
+- `mutations` -
+- `seg` -
+- `signatures` - 
+- `validation_sequencing` - Thresholds for minimum power to detect variants and minimum allelic fraction for annotation from validation sequencing. This is further described in the [Methods section](https://www.nature.com/articles/s43018-021-00243-3#Sec8) of our paper.
+- `feature_types` - String labels for each biomarker type passed to the algorithm. These values will be included in `feature_type` column of outputs.
+
+## Databases
+`--dbs` expects a single string 
 
 # Optional arguments
 Molecular Oncology Almanac will run successfully given any combination of the following arguments: 
