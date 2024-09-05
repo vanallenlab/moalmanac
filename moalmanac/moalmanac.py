@@ -136,6 +136,18 @@ def load_and_process_mutational_signatures(input, dbs, tumor_type, config):
     return evaluated
 
 
+def manage_output_directory(folder):
+    if folder != "":
+        logger.Messages.general(message=f"{folder} specified as output directory, creating...")
+        execute_cmd(f"mkdir -p {folder}")
+        logger.Messages.general(message=f"{folder} created.", add_line_break=True)
+    else:
+        logger.Messages.general(
+            message=f"No output directory specified. Writing to current working directory: {os.getcwd()}",
+            add_line_break=True
+        )
+
+
 def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
     logger.Logger.setup(
         output_folder=output_folder,
@@ -143,6 +155,7 @@ def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
         config=config
     )
     logger.Messages.start()
+    logger.Messages.general(message=f"Current working directory: {os.getcwd()}")
     logger.Messages.header(label="Inputs")
     input_dictonaries = [
         ("Patient metadata", patient),
@@ -161,6 +174,8 @@ def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
     for section in config.sections():
         section_dictionary = dict(config.items(section))
         logger.Messages.inputs(label=f"Config section: {section}", dictionary=section_dictionary)
+
+    logger.Messages.general(message="Logging for inputs provided complete.", add_line_break=True)
 
 
 def plot_preclinical_efficacy(dictionary, folder, label):
@@ -191,20 +206,10 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     )
 
     metadata_dictionary = create_metadata_dictionary(patient)
+    string_id = metadata_dictionary[patient_id]
 
     logger.Messages.header(label="Output directory")
-    output_folder = format_output_directory(output_folder)
-    if output_folder != "":
-        logger.Messages.general(message=f"{output_folder} does not yet exist.")
-        execute_cmd(f"mkdir -p {output_folder}")
-        logger.Messages.general(message=f"{output_folder} created.")
-    else:
-        logger.Messages.general(
-            message=f"{output_folder} exists, will overwrite output files in this directory.",
-            add_line_break=True
-        )
-
-    string_id = metadata_dictionary[patient_id]
+    manage_output_directory(folder=output_folder)
 
     logger.Messages.header(label="Mapping provided disease to Oncotree")
     mapped_ontology = ontologymapper.OntologyMapper.map(dbs, metadata_dictionary[tumor_type])
