@@ -9,6 +9,7 @@ import features
 import evaluator
 import illustrator
 import investigator
+import logger
 import matchmaker
 import ontologymapper
 import reporter
@@ -52,6 +53,61 @@ code = COLNAMES[oncotree_section]['code']
 generate_illustrations = 'generate_illustrations'
 
 
+class Load:
+    @staticmethod
+    def copy_number(path_called, path_seg, config):
+        logger.Messages.general(message="Somatic copy number")
+        if path_called != "":
+            logger.Messages.general(message=f"Path for called copy number provided: {path_called}")
+        elif path_seg != "":
+            logger.Messages.general(message=f"Path for segmented copy number provided: {path_seg}")
+        else:
+            logger.Messages.general(message=f"No path provided for either called or segmented copy number")
+        accept, reject = features.CopyNumber.import_feature(path_called, path_seg, config)
+        logger.Messages.dataframe_size(label="Copy number alterations, passed", dataframe=accept)
+        logger.Messages.dataframe_size(label="Copy number alterations, rejected", dataframe=reject)
+        return accept, reject
+
+    @staticmethod
+    def fusions(path, config):
+        logger.Messages.general(message=f"Fusions from {path}" if path else "No input file for fusions provided")
+        accept, reject = features.Fusion.import_feature(path, config)
+        logger.Messages.dataframe_size(label="Fusions, passed", dataframe=accept)
+        logger.Messages.dataframe_size(label="Fusions, rejected", dataframe=reject)
+        return accept, reject
+
+    @staticmethod
+    def germline(path, config):
+        message = f"Germline variants from {path}" if path != "" else "No input file for germline provided"
+        logger.Messages.general(message=message)
+        accept, reject = features.MAFGermline.import_feature(path, config)
+        logger.Messages.dataframe_size(label="Germline variants, passed", dataframe=accept)
+        logger.Messages.dataframe_size(label="Germline variants, rejected", dataframe=reject, add_line_break=True)
+        return accept, reject
+
+    @staticmethod
+    def somatic_indels(path, config):
+        message = f"Somatic indel variants from {path}" if path != "" else "No input file for somatic indels provided"
+        logger.Messages.general(message=message)
+        accept, reject = features.MAFSomatic.import_feature(path, config)
+        logger.Messages.dataframe_size(label="Somatic indel variants, passed", dataframe=accept)
+        logger.Messages.dataframe_size(label="Somatic indel variants, rejected", dataframe=reject)
+        return accept, reject
+
+    @staticmethod
+    def somatic_summary(passed, rejected):
+        logger.Messages.dataframe_size(label="Overall somatic events, passed", dataframe=passed)
+        logger.Messages.dataframe_size(label="Overall somatic events, rejected", dataframe=rejected, add_line_break=True)
+
+    @staticmethod
+    def somatic_variants(path, config):
+        message = f"Somatic variants from {path}" if path != "" else "No input file for somatic indels provided"
+        logger.Messages.general(message=message)
+        accept, reject = features.MAFSomatic.import_feature(path, config)
+        logger.Messages.dataframe_size(label="Somatic variants, passed", dataframe=accept)
+        logger.Messages.dataframe_size(label="Somatic variants, rejected", dataframe=reject)
+        return accept, reject
+
 def create_metadata_dictionary(input_dictionary):
     dictionary = {}
     for key, value in input_dictionary.items():
@@ -80,6 +136,33 @@ def load_and_process_mutational_signatures(input, dbs, tumor_type, config):
     return evaluated
 
 
+def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
+    logger.Logger.setup(
+        output_folder=output_folder,
+        file_prefix=patient[patient_id],
+        config=config
+    )
+    logger.Messages.start()
+    logger.Messages.header(label="Inputs")
+    input_dictonaries = [
+        ("Patient metadata", patient),
+        ("Input files", inputs),
+        ("Datasources", dbs)
+    ]
+    for label, dictionary in input_dictonaries:
+        logger.Messages.inputs(label=label, dictionary=dictionary)
+
+    if dbs_preclinical:
+        logger.Messages.inputs(label="Datasources for preclinical modules", dictionary=dbs_preclinical)
+    else:
+        logger.Messages.general(message="Datasources for preclinical modules not detected")
+
+    logger.Messages.header(label="Configuration settings from config.ini")
+    for section in config.sections():
+        section_dictionary = dict(config.items(section))
+        logger.Messages.inputs(label=f"Config section: {section}", dictionary=section_dictionary)
+
+
 def plot_preclinical_efficacy(dictionary, folder, label):
     for index_value, nested_dictionary in dictionary.items():
         for therapy_name, therapy_dictionary in nested_dictionary.items():
@@ -97,29 +180,55 @@ def process_preclinical_efficacy(dbs, dataframe, folder, label, config, plot: bo
 
 
 def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
+    start_time = time.time()
+    start_logging(
+        patient=patient,
+        inputs=inputs,
+        output_folder=output_folder,
+        config=config,
+        dbs=dbs,
+        dbs_preclinical=dbs_preclinical
+    )
+
     metadata_dictionary = create_metadata_dictionary(patient)
 
+    logger.Messages.header(label="Output directory")
     output_folder = format_output_directory(output_folder)
     if output_folder != "":
+        logger.Messages.general(message=f"{output_folder} does not yet exist.")
         execute_cmd(f"mkdir -p {output_folder}")
+        logger.Messages.general(message=f"{output_folder} created.")
+    else:
+        logger.Messages.general(
+            message=f"{output_folder} exists, will overwrite output files in this directory.",
+            add_line_break=True
+        )
 
     string_id = metadata_dictionary[patient_id]
 
+    logger.Messages.header(label="Mapping provided disease to Oncotree")
     mapped_ontology = ontologymapper.OntologyMapper.map(dbs, metadata_dictionary[tumor_type])
     metadata_dictionary[ontology] = mapped_ontology[ontology]
     metadata_dictionary[code] = mapped_ontology[code]
+    logger.Messages.general(
+        message=f"{metadata_dictionary[tumor_type]} mapped to {mapped_ontology[ontology]} ({mapped_ontology[code]})",
+        add_line_break=True
+    )
 
-    df_snv, df_snv_reject = features.MAFSomatic.import_feature(inputs[snv_handle], config)
-    df_indel, df_indel_reject = features.MAFSomatic.import_feature(inputs[indel_handle], config)
-    df_cnv, df_cnv_reject = features.CopyNumber.import_feature(inputs[called_cn_handle], inputs[cnv_handle], config)
-    df_fusion, df_fusion_reject = features.Fusion.import_feature(inputs[fusion_handle], config)
+    logger.Messages.header(label="Importing somatic genomic data")
+    df_snv, df_snv_reject = Load.somatic_variants(path=inputs[snv_handle], config=config)
+    df_indel, df_indel_reject = Load.somatic_indels(path=inputs[indel_handle], config=config)
+    df_cnv, df_cnv_reject = Load.copy_number(path_called=inputs[called_cn_handle], path_seg=inputs[cnv_handle], config=config)
+    df_fusion, df_fusion_reject = Load.fusions(path=inputs[fusion_handle], config=config)
 
     accepted_variants = [df_snv, df_indel, df_cnv, df_fusion]
     filtered_variants = [df_snv_reject, df_indel_reject, df_cnv_reject, df_fusion_reject]
     somatic_variants = features.Features.concat_list_of_dataframes(accepted_variants)
     somatic_filtered = features.Features.concat_list_of_dataframes(filtered_variants)
+    Load.somatic_summary(passed=somatic_variants, rejected=somatic_filtered)
 
-    germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle], config)
+    logger.Messages.header(label="Importing germline genomic data")
+    germline_variants, germline_reject = Load.germline(path=inputs[germline_handle], config=config)
 
     if not somatic_variants.empty:
         annotated_somatic = annotator.Annotator.annotate_somatic(
@@ -257,6 +366,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
                     cell_lines_dictionary
                 )
 
+    logger.Messages.header(label="Writing outputs")
     writer.Actionable.write(actionable, string_id, output_folder)
     writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
     writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
@@ -270,6 +380,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
     writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
 
+    logger.Messages.header(label="Report generation")
     if function_toggle.getboolean('generate_actionability_report'):
         report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
 
@@ -282,6 +393,9 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
             output_directory=output_folder
         )
 
+    end_time = time.time()
+    elapsed_time = round((end_time - start_time), 4)
+    logger.Messages.general("Molecular Oncology Almanac process complete. Runtime: %s seconds" % elapsed_time)
 
 if __name__ == "__main__":
     start_time = time.time()
