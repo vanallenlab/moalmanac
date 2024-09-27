@@ -56,42 +56,47 @@ generate_illustrations = 'generate_illustrations'
 class Load:
     @staticmethod
     def copy_number(path_called, path_seg, config):
-        logger.Messages.general(message="Somatic copy number")
         if path_called != "":
-            logger.Messages.general(message=f"Path for called copy number provided: {path_called}")
+            logger.Messages.general(message=f"Called copy number from {path_called}")
         elif path_seg != "":
-            logger.Messages.general(message=f"Path for segmented copy number provided: {path_seg}")
+            logger.Messages.general(message=f"Segmented copy number from {path_seg}")
         else:
             logger.Messages.general(message=f"No path provided for either called or segmented copy number")
         accept, reject = features.CopyNumber.import_feature(path_called, path_seg, config)
-        logger.Messages.dataframe_size(label="Copy number alterations, passed", dataframe=accept)
-        logger.Messages.dataframe_size(label="Copy number alterations, rejected", dataframe=reject)
+        if path_called or path_seg:
+            logger.Messages.dataframe_size(label="...Copy number alterations, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...Copy number alterations, rejected", dataframe=reject)
         return accept, reject
 
     @staticmethod
     def fusions(path, config):
         logger.Messages.general(message=f"Fusions from {path}" if path else "No input file for fusions provided")
         accept, reject = features.Fusion.import_feature(path, config)
-        logger.Messages.dataframe_size(label="Fusions, passed", dataframe=accept)
-        logger.Messages.dataframe_size(label="Fusions, rejected", dataframe=reject)
+        if path:
+            logger.Messages.dataframe_size(label="...Fusions, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...Fusions, rejected", dataframe=reject)
         return accept, reject
 
     @staticmethod
     def germline(path, config):
-        message = f"Germline variants from {path}" if path != "" else "No input file for germline provided"
+        if path:
+            message = f"Germline variants from {path}"
+        message = f"Germline variants from {path}" if path else "No input file for germline provided"
         logger.Messages.general(message=message)
         accept, reject = features.MAFGermline.import_feature(path, config)
-        logger.Messages.dataframe_size(label="Germline variants, passed", dataframe=accept)
-        logger.Messages.dataframe_size(label="Germline variants, rejected", dataframe=reject, add_line_break=True)
+        if path:
+            logger.Messages.dataframe_size(label="...Germline variants, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...Germline variants, rejected", dataframe=reject, add_line_break=True)
         return accept, reject
 
     @staticmethod
     def somatic_indels(path, config):
-        message = f"Somatic indel variants from {path}" if path != "" else "No input file for somatic indels provided"
+        message = f"Somatic indel variants from {path}" if path else "No input file for somatic indels provided"
         logger.Messages.general(message=message)
         accept, reject = features.MAFSomatic.import_feature(path, config)
-        logger.Messages.dataframe_size(label="Somatic indel variants, passed", dataframe=accept)
-        logger.Messages.dataframe_size(label="Somatic indel variants, rejected", dataframe=reject)
+        if path:
+            logger.Messages.dataframe_size(label="...Somatic indel variants, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...Somatic indel variants, rejected", dataframe=reject)
         return accept, reject
 
     @staticmethod
@@ -101,12 +106,47 @@ class Load:
 
     @staticmethod
     def somatic_variants(path, config):
-        message = f"Somatic variants from {path}" if path != "" else "No input file for somatic indels provided"
+        message = f"Somatic variants from {path}" if path else "No input file for somatic indels provided"
         logger.Messages.general(message=message)
         accept, reject = features.MAFSomatic.import_feature(path, config)
-        logger.Messages.dataframe_size(label="Somatic variants, passed", dataframe=accept)
-        logger.Messages.dataframe_size(label="Somatic variants, rejected", dataframe=reject)
+        if path:
+            logger.Messages.dataframe_size(label="...Somatic variants, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...Somatic variants, rejected", dataframe=reject)
         return accept, reject
+
+class Process:
+    @staticmethod
+    def somatic_variants(df, dbs, ontology, config):
+        if not df.empty:
+            logger.Messages.general(message="Annotating somatic variants")
+            annotated_somatic = annotator.Annotator.annotate_somatic(
+                df=df,
+                dbs=dbs,
+                ontology=ontology,
+                config=config
+            )
+            #logger.Messages.header(label="Evaluating annotated somatic variants")
+            evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
+
+            # logger.Messages.header(label="Evaluating annotated somatic variants")
+            #validation_accept, validation_reject = features.MAFValidation.import_feature(path_validation, config)
+            #if not validation_accept.empty:
+                #evaluated_somatic = annotator.OverlapValidation.append_validation(
+                #    primary=evaluated_somatic,
+                #    validation=validation_accept,
+                #    biomarker_type=config['feature_types']['mut'])
+                #illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, string_id, output_folder, config)
+        else:
+            logger.Messages.header(label="No somatic variants detected. Skipping annotation and evaluation.")
+            evaluated_somatic = features.Features.create_empty_dataframe()
+
+        #message = f"Somatic variants from {path}" if path != "" else "No input file for somatic indels provided"
+        #logger.Messages.general(message=message)
+        #accept, reject = features.MAFSomatic.import_feature(path, config)
+        #logger.Messages.dataframe_size(label="Somatic variants, passed", dataframe=accept)
+        #logger.Messages.dataframe_size(label="Somatic variants, rejected", dataframe=reject)
+        #return accept, reject
+        return evaluated_somatic
 
 def create_metadata_dictionary(input_dictionary):
     dictionary = {}
@@ -235,24 +275,15 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     logger.Messages.header(label="Importing germline genomic data")
     germline_variants, germline_reject = Load.germline(path=inputs[germline_handle], config=config)
 
-    if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(
-            df=somatic_variants,
-            dbs=dbs,
-            ontology=metadata_dictionary[code],
-            config=config
-        )
-        evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
-
-        validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle], config)
-        if not validation_accept.empty:
-            evaluated_somatic = annotator.OverlapValidation.append_validation(
-                primary=evaluated_somatic,
-                validation=validation_accept,
-                biomarker_type=config['feature_types']['mut'])
-            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, string_id, output_folder, config)
-    else:
-        evaluated_somatic = features.Features.create_empty_dataframe()
+    logger.Messages.header(label="Annotating and evaluating somatic variants")
+    evaluated_somatic = Process.somatic_variants(
+        df=somatic_variants,
+        dbs=dbs,
+        ontology=metadata_dictionary[code],
+        config=config
+    )
+    #if not evaluated_somatic.empty:
+    #    validation_accept, validation_reject = Load.validation_variants(path=inputs[''])
 
     if not germline_variants.empty:
         annotated_germline = annotator.Annotator.annotate_germline(
