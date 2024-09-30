@@ -406,7 +406,7 @@ class Almanac:
         }
 
         for feature_type, group in df.groupby(cls.feature_type):
-            logger.Messages.general(message=f"...annotating input {feature_type}s with MOAlmanac's database")
+            logger.Messages.general(message=f"...annotating inputs of type {feature_type} with MOAlmanac's database")
             feature_type_records = cls.subset_records(ds, cls.feature_type, feature_type)
             table = pd.DataFrame(feature_type_records)
             logger.Messages.general(message=f"...records of {feature_type} in the database: {table.shape[0]}")
