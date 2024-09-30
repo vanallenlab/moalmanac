@@ -587,7 +587,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
                 logger.Messages.general(
                     message="Calculate preclinical efficacy of clinically relevant relationships enabled, processing..."
                 )
-                plot_preclinical = function_toggle.getboolean('plot_preclinical_efficacy')
+                plot_preclinical = function_toggle.getboolean('generate_figures')
                 efficacy_results = process_preclinical_efficacy(
                     dbs=dbs_preclinical,
                     dataframe=actionable,
@@ -656,26 +656,39 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
         logger.Messages.general(message="No preclinical databases provided, skipping", add_line_break=True)
 
     logger.Messages.header(label="Writing outputs")
-    #writer.Actionable.write(actionable, string_id, output_folder)
-    #writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
-    #writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
-    #writer.GermlineHereditary.write(evaluated_germline, string_id, output_folder)
-    #writer.Integrated.write(integrated, string_id, output_folder)
-    #writer.MSI.write(evaluated_ms_variants, string_id, output_folder)
-    #writer.MutationalBurden.write(evaluated_burden, string_id, output_folder)
-    #writer.SomaticScored.write(evaluated_somatic, string_id, output_folder)
-    #writer.SomaticFiltered.write(somatic_filtered, string_id, output_folder)
-    #writer.Strategies.write(strategies, string_id, output_folder)
-    #writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
-    #writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
+    writer.Actionable.write(actionable, string_id, output_folder)
+    writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
+    writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
+    writer.GermlineHereditary.write(evaluated_germline, string_id, output_folder)
+    writer.Integrated.write(integrated, string_id, output_folder)
+    writer.MSI.write(evaluated_microsatellite_status_variants, string_id, output_folder)
+    writer.MutationalBurden.write(evaluated_tumor_mutational_burden, string_id, output_folder)
+    writer.SomaticScored.write(evaluated_somatic, string_id, output_folder)
+    writer.SomaticFiltered.write(somatic_filtered, string_id, output_folder)
+    writer.Strategies.write(strategies, string_id, output_folder)
+    writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
+    writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
 
-    # illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, string_id, output_folder, config)
+    logger.Messages.header(label="Generating and writing figures")
+    if function_toggle.getboolean('generate_figures'):
+        logger.Messages.general(message="Plotting DNA and RNA somatic variant overlap")
+        illustrator.ValidationOverlap.generate_dna_rna_plot(
+            df=evaluated_somatic,
+            patient_id=string_id,
+            folder=output_folder,
+            config=config
+        )
+        logger.Messages.general(message="Figure generation completed", add_line_break=True)
+    else:
+        logger.Messages.general(message="Generating figures disabled, skipping", add_line_break=True)
 
-    logger.Messages.header(label="Report generation")
+    logger.Messages.header(label="Generating actionability report")
     if function_toggle.getboolean('generate_actionability_report'):
+        logger.Messages.general(message="Generating metadata dictionary for report")
         report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
 
         include_similarity = function_toggle.getboolean('include_model_similarity_in_actionability_report')
+        logger.Messages.general(message="Generating report")
         reporter.Reporter.generate_actionability_report(
             actionable=actionable,
             report_dictionary=report_dictionary,
@@ -683,6 +696,9 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
             similarity=similarity_summary if include_similarity else None,
             output_directory=output_folder
         )
+        logger.Messages.general(message="Report generation completed", add_line_break=True)
+    else:
+        logger.Messages.general(message="Generating report disabled, skipping", add_line_break=True)
 
     end_time = time.time()
     elapsed_time = round((end_time - start_time), 4)
