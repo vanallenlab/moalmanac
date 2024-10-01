@@ -1,6 +1,7 @@
+import datetime
 import flask
 import flask_frozen
-import datetime
+import logger
 import pandas
 import os
 
@@ -99,7 +100,9 @@ class Reporter:
 
         app = flask.Flask(__name__, static_folder=None)
 
-        @app.route(f"/{report.metadata['patient_id']}.report.html")
+        output_path = f"/{report.metadata['patient_id']}.report.html"
+        logger.Messages.general(message=f"Rendering report to: {output_path}")
+        @app.route(output_path)
         def index():
             return flask.render_template('index.html', report=report)
 

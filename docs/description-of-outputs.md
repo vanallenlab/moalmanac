@@ -20,6 +20,7 @@ All outputs will be produced by Molecular Oncology Almanac, though some may not 
       * [Therapeutic resistance](#therapeutic-resistance)
       * [Disease prognosis](#disease-prognosis)
 * [Produced outputs](#produced-outputs)
+  * [Log](#log)
   * [Actionable](#actionable)
   * [Germline](#germline)
     * [American College of Medical Genetics](#american-college-of-medical-genetics)
@@ -224,6 +225,11 @@ Based on the score of a moleculear feature in `almanac_bin`, Molecular Oncology 
 
 # Produced outputs
 The following outputs are produced by the Molecular Oncology Almanac. Each section lists the filename suffix and then a details the contents of the output.
+
+## Log
+Filename suffix: `.log`
+
+A timestamped log of inputs provided, configuration variables set, and what happens step-by-step as moalmanac.py is running.
 
 ## Actionable
 Filename suffix: `.actionable.txt`
