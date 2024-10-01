@@ -437,8 +437,7 @@ class Almanac:
                 new_series = annotation_function(sliced_series=df.loc[index, :], ontology=ontology, table=table)
                 df.loc[index, new_series.index] = new_series
             message = f"...annotating input {feature_type}s with MOAlmanac's database complete"
-            logger.Messages.general(message=message)
-            logger.Messages.general(message="")
+            logger.Messages.general(message=message, add_line_break=True)
 
         return df
 

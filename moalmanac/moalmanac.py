@@ -7,7 +7,6 @@ import annotator
 import datasources
 import features
 import evaluator
-import illustrator
 import investigator
 import logger
 import matchmaker
@@ -672,6 +671,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     logger.Messages.header(label="Generating and writing figures")
     if function_toggle.getboolean('generate_figures'):
         logger.Messages.general(message="Plotting DNA and RNA somatic variant overlap")
+        import illustrator
         illustrator.ValidationOverlap.generate_dna_rna_plot(
             df=evaluated_somatic,
             patient_id=string_id,
@@ -703,6 +703,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     end_time = time.time()
     elapsed_time = round((end_time - start_time), 4)
     logger.Messages.general("Molecular Oncology Almanac process complete. Runtime: %s seconds" % elapsed_time)
+
 
 if __name__ == "__main__":
     start_time = time.time()
