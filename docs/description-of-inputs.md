@@ -316,7 +316,9 @@ The required fields for this file can be changed from their default expectations
 `--output-directory` allows users to specify an output directory to write outputs to, the current working directory will be used if unspecified. 
 
 ## Preclinical databases
-`--preclinical-dbs` expects a file path to the [preclinical-databases.ini](../moalmanac/preclinical-databases.ini) file.
+`--preclinical-dbs` expects a file path to the [preclinical-databases.ini](../moalmanac/preclinical-databases.ini) file. This argument and ini file are required to run either module that either:
+- Looks at the efficacy of relationships in cancer cell lines
+- Performs genomic similarity to cancer cell lines
 
 This config file contains a single section `preclinical` that lists the following:
 - `root` - path to `datasources/preclinical/` directory
