@@ -295,7 +295,7 @@ class Integrated:
         output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.log(label="Integrated summary", filename=output_name, dataframe=output_dataframe)
-        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
+        Writer.export_dataframe_indexed(df=output_dataframe, output_name=output_name, index_label=Writer.feature)
 
 
 class MSI:
