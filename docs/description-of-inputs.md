@@ -42,6 +42,7 @@ The following arguments are required to run Molecular Oncology Almanac.
 
 This config file contains the following sections,
 - `function_toggle` - allows several features of the MOAlmanac algorithm to be enabled or disabled
+- `logging` - specifies the [level](https://docs.python.org/3/library/logging.html#levels) that the logger should be configured to use
 - `versions` - specifies the versions of the [MOAlmanac algorithm (interpreter)](https://github.com/vanallenlab/moalmanac/releases) and [database](https://github.com/vanallenlab/moalmanac-db/releases).    
 - `exac` - specifies the allele frequency threshold used with [ExAC](https://github.com/vanallenlab/moalmanac/tree/main/datasources/exac) to specify if a variant is a common variant or not
 - `fusion` - specifies minimum spanning fragments required for review by MOAlmanac, column names expected from inputs, and how "Fusion" should be written from input
