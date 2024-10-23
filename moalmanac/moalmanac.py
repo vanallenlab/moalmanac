@@ -333,7 +333,7 @@ class Process:
                 logger.Messages.general(message="No passed validation sequencing variants to annotate with")
         else:
             logger.Messages.general(message="No somatic variants detected. Skipping annotation and evaluation.")
-            evaluated= features.Features.create_empty_dataframe()
+            evaluated = features.Features.create_empty_dataframe()
         logger.Messages.general(message="Annotation and evaluation of somatic variants complete", add_line_break=True)
         return evaluated
 
@@ -706,8 +706,6 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
 
 
 if __name__ == "__main__":
-    start_time = time.time()
-
     arg_parser = argparse.ArgumentParser(
         prog='Molecular Oncology Almanac',
         description='A clinical interpretation algorithm for cancer genomics.'
@@ -871,7 +869,3 @@ if __name__ == "__main__":
         dbs=db_paths,
         dbs_preclinical=preclinical_db_paths
     )
-
-    end_time = time.time()
-    time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
-    print(time_statement)
