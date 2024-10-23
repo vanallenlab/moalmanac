@@ -866,7 +866,7 @@ if __name__ == "__main__":
         output_folder=output_directory,
         config=config_ini,
         dbs=db_paths['databases'],
-        dbs_preclinical=preclinical_db_paths['preclinical']
+        dbs_preclinical=preclinical_db_paths['preclinical'] if preclinical_db_paths else None
     )
 
     end_time = time.time()
