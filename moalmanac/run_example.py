@@ -45,13 +45,15 @@ input_dictionary = {
 }
 
 config_ini_path = "config.ini"
-dbs_ini_path = "annotation-databases.ini"
-dbs_preclinical_ini_path = "preclinical-databases.ini"
-
 config_ini = Ini.read(config_ini_path, extended_interpolation=False, convert_to_dictionary=False)
-db_paths = Ini.read(dbs_ini_path, extended_interpolation=True, convert_to_dictionary=True)
-preclinical_db_paths = Ini.read(dbs_preclinical_ini_path, extended_interpolation=True, convert_to_dictionary=True)
 
+dbs_ini_path = "annotation-databases.ini"
+db_paths = Ini.read(dbs_ini_path, extended_interpolation=True, convert_to_dictionary=True)
+db_paths = db_paths['paths']
+
+dbs_preclinical_ini_path = "preclinical-databases.ini"
+preclinical_db_paths = Ini.read(dbs_preclinical_ini_path, extended_interpolation=True, convert_to_dictionary=True)
+preclinical_db_paths = preclinical_db_paths['paths']
 
 def execute_cmd(command):
     subprocess.call(command, shell=True)
@@ -71,8 +73,8 @@ moalmanac.main(
     inputs=input_dictionary,
     output_folder=output_directory,
     config=config_ini,
-    dbs=db_paths['databases'],
-    dbs_preclinical=preclinical_db_paths['preclinical']
+    dbs=db_paths,
+    dbs_preclinical=preclinical_db_paths
 )
 end_time = time.time()
 
