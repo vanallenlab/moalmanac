@@ -1,6 +1,7 @@
 import json
 import logging
 
+
 class Logger:
     @staticmethod
     def generate_filename(folder, label):
@@ -15,6 +16,7 @@ class Logger:
             format="%(asctime)s - %(levelname)s - %(message)s",
             level=config['logging']['level']
         )
+
 
 class Messages:
     @staticmethod
