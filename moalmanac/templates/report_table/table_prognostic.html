@@ -7,31 +7,33 @@
         <table class="table table-hover table-striped table-condensed">
             {% include 'report_table/columns_prognosis.html' %}
             <tbody>
-                {% for index in report.alterations[report.alterations['prognostic_predictive_implication'].notnull()].sort_values(['prognostic_predictive_implication_map', 'prognostic_score_bin_map'], ascending=[False, False]).index.tolist() %}
-                <tr>
-                    <td>{{ report.alterations.loc[index, 'prognostic_predictive_implication'] }}
-                        <br>
-                        {{ report.alterations.loc[index, 'prognostic_score_bin'] }}
-                        <br>
-                        {% include 'modals/evidence_prognosis.html' %}
-                    <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
-                    <td>{{ report.alterations.loc[index, 'feature_display'] }}</td>
-                    <td>
-                        {% if report.alterations.loc[index, 'favorable_prognosis'] == 1.0 %}
-                            Favorable
-                        {% else %}
-                            Not favorable
-                        {% endif %}
-                        <br>
-                        {{ report.alterations.loc[index, 'prognostic_description'] }}
-                        {% if report.alterations.loc[index, 'prognostic_url'] != "" %}
-                            <a href="{{ report.alterations.loc[index, 'prognostic_url'] }}" target="_blank">
-                                [source]
-                            </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
+                {% if not report.alterations.empty %}
+                    {% for index in report.alterations[report.alterations['prognostic_predictive_implication'].notnull()].sort_values(['prognostic_predictive_implication_map', 'prognostic_score_bin_map'], ascending=[False, False]).index.tolist() %}
+                    <tr>
+                        <td>{{ report.alterations.loc[index, 'prognostic_predictive_implication'] }}
+                            <br>
+                            {{ report.alterations.loc[index, 'prognostic_score_bin'] }}
+                            <br>
+                            {% include 'modals/evidence_prognosis.html' %}
+                        <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
+                        <td>{{ report.alterations.loc[index, 'feature_display'] }}</td>
+                        <td>
+                            {% if report.alterations.loc[index, 'favorable_prognosis'] == 1.0 %}
+                                Favorable
+                            {% else %}
+                                Not favorable
+                            {% endif %}
+                            <br>
+                            {{ report.alterations.loc[index, 'prognostic_description'] }}
+                            {% if report.alterations.loc[index, 'prognostic_url'] != "" %}
+                                <a href="{{ report.alterations.loc[index, 'prognostic_url'] }}" target="_blank">
+                                    [source]
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
