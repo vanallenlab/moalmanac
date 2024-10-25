@@ -1,0 +1,903 @@
+2024-10-24 17:02:09,761 - INFO - Starting to execution of Molecular Oncology Almanac
+2024-10-24 17:02:09,761 - INFO - Current working directory: /Users/brendan/GitHub/moalmanac/moalmanac
+2024-10-24 17:02:09,761 - INFO - --- Inputs ---
+2024-10-24 17:02:09,762 - INFO - Input data, Patient metadata:
+{
+    "patient_id": "example",
+    "reported_tumor_type": "MEL",
+    "stage": "Metastatic",
+    "description": "Test patient for development runs",
+    "purity": 0.85,
+    "ploidy": 4.02,
+    "WGD": true,
+    "microsatellite_status": "msih"
+}
+2024-10-24 17:02:09,763 - INFO - Input data, Input files:
+{
+    "snv_handle": "../example_data/example_patient.capture.somatic.snvs.maf",
+    "indel_handle": "../example_data/example_patient.capture.somatic.indels.maf",
+    "bases_covered_handle": "../example_data/example_patient.capture.somatic.coverage.txt",
+    "called_cn_handle": "../example_data/example_patient.capture.somatic.called.cna.txt",
+    "cnv_handle": "../example_data/example_patient.capture.somatic.seg.annotated",
+    "fusion_handle": "../example_data/example_patient.rna.star.fusions.txt",
+    "germline_handle": "../example_data/example_patient.capture.germline.maf",
+    "validation_handle": "../example_data/example_patient.rna.somatic.snvs.maf",
+    "mutational_signatures_path": "../example_data/example_patient.capture.sbs_contributions.txt",
+    "disable_matchmaking": false
+}
+2024-10-24 17:02:09,763 - INFO - Input data, Datasources:
+{
+    "root": "../datasources",
+    "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
+    "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
+    "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
+    "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
+    "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
+    "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
+    "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
+    "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
+    "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
+    "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
+    "hereditary_handle": "../datasources/hereditary/hereditary.txt",
+    "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
+    "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt"
+}
+2024-10-24 17:02:09,763 - INFO - Input data, Datasources for preclinical modules:
+{
+    "root": "../datasources",
+    "almanac_gdsc_mappings": "../datasources/preclinical/formatted/almanac-gdsc-mappings.json",
+    "summary": "../datasources/preclinical/formatted/cell-lines.summary.txt",
+    "variants": "../datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt",
+    "copynumbers": "../datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt",
+    "fusions": "../datasources/preclinical/annotated/cell-lines.fusions.annotated.txt",
+    "fusions1": "../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt",
+    "fusions2": "../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt",
+    "gdsc": "../datasources/preclinical/formatted/sanger.gdsc.txt",
+    "dictionary": "../datasources/preclinical/cell-lines.pkl"
+}
+2024-10-24 17:02:09,763 - INFO - --- Configuration settings from config.ini ---
+2024-10-24 17:02:09,763 - INFO - Input data, Config section: function_toggle:
+{
+    "calculate_model_similarity": "on",
+    "calculate_preclinical_efficacy": "on",
+    "generate_figures": "on",
+    "generate_actionability_report": "on",
+    "include_model_similarity_in_actionability_report": "on",
+    "include_preclinical_efficacy_in_actionability_report": "on"
+}
+2024-10-24 17:02:09,763 - INFO - Input data, Config section: logging:
+{
+    "level": "INFO"
+}
+2024-10-24 17:02:09,763 - INFO - Input data, Config section: versions:
+{
+    "interpreter": "0.7.2",
+    "database": "v.2024-04-11"
+}
+2024-10-24 17:02:09,763 - INFO - Input data, Config section: exac:
+{
+    "exac_common_af_threshold": "0.001"
+}
+2024-10-24 17:02:09,763 - INFO - Input data, Config section: fusion:
+{
+    "spanningfrags_min": "5.0",
+    "alt_type": "Fusion",
+    "leftbreakpoint": "leftbreakpoint",
+    "rightbreakpoint": "rightbreakpoint"
+}
+2024-10-24 17:02:09,764 - INFO - Input data, Config section: mutations:
+{
+    "min_coverage": "15",
+    "min_af": "0.05"
+}
+2024-10-24 17:02:09,764 - INFO - Input data, Config section: seg:
+{
+    "amp_percentile": "97.5",
+    "del_percentile": "2.5",
+    "amp": "Amplification",
+    "del": "Deletion"
+}
+2024-10-24 17:02:09,764 - INFO - Input data, Config section: signatures:
+{
+    "min_contribution": "0.06"
+}
+2024-10-24 17:02:09,764 - INFO - Input data, Config section: validation_sequencing:
+{
+    "min_power": "0.95",
+    "min_af_for_annotation": "0.10"
+}
+2024-10-24 17:02:09,764 - INFO - Input data, Config section: feature_types:
+{
+    "mut": "Somatic Variant",
+    "germline": "Germline Variant",
+    "cna": "Copy Number",
+    "fusion": "Rearrangement",
+    "microsatellite": "Microsatellite Stability",
+    "burden": "Mutational Burden",
+    "signature": "Mutational Signature",
+    "aneuploidy": "Aneuploidy",
+    "knockdown": "Knockdown"
+}
+2024-10-24 17:02:09,764 - INFO - Logging for inputs provided complete.
+
+2024-10-24 17:02:09,764 - INFO - --- Output directory ---
+2024-10-24 17:02:09,764 - INFO - 2024-10-24-example-outputs-all-enabled specified as output directory, creating...
+2024-10-24 17:02:09,803 - INFO - 2024-10-24-example-outputs-all-enabled created.
+
+2024-10-24 17:02:09,803 - INFO - --- Mapping provided disease to Oncotree ---
+2024-10-24 17:02:09,819 - INFO - MEL mapped to Melanoma (MEL)
+
+2024-10-24 17:02:09,819 - INFO - --- Importing somatic genomic data ---
+2024-10-24 17:02:09,819 - INFO - Somatic variants from ../example_data/example_patient.capture.somatic.snvs.maf
+2024-10-24 17:02:09,866 - INFO - ...Somatic variants, passed: 203 rows and 253 columns
+2024-10-24 17:02:09,866 - INFO - ...Somatic variants, rejected: 96 rows and 253 columns
+2024-10-24 17:02:09,866 - INFO - Somatic indel variants from ../example_data/example_patient.capture.somatic.indels.maf
+2024-10-24 17:02:09,901 - INFO - ...somatic indel variants, passed: 1 rows and 253 columns
+2024-10-24 17:02:09,901 - INFO - ...somatic indel variants, rejected: 1 rows and 253 columns
+2024-10-24 17:02:09,901 - INFO - Called copy number from ../example_data/example_patient.capture.somatic.called.cna.txt
+2024-10-24 17:02:09,919 - INFO - ...Copy number alterations, passed: 5 rows and 253 columns
+2024-10-24 17:02:09,919 - INFO - ...Copy number alterations, rejected: 1 rows and 253 columns
+2024-10-24 17:02:09,919 - INFO - Fusions from ../example_data/example_patient.rna.star.fusions.txt
+2024-10-24 17:02:09,958 - INFO - ...fusions, passed: 56 rows and 253 columns
+2024-10-24 17:02:09,958 - INFO - ...fusions, rejected: 122 rows and 253 columns
+2024-10-24 17:02:10,018 - INFO - Overall somatic events, passed: 265 rows and 253 columns
+2024-10-24 17:02:10,018 - INFO - Overall somatic events, rejected: 220 rows and 253 columns
+
+2024-10-24 17:02:10,018 - INFO - --- Importing germline genomic data ---
+2024-10-24 17:02:10,018 - INFO - Germline variants from ../example_data/example_patient.capture.germline.maf
+2024-10-24 17:02:10,063 - INFO - ...germline variants, passed: 10 rows and 253 columns
+2024-10-24 17:02:10,063 - INFO - ...germline variants, rejected: 0 rows and 253 columns
+
+2024-10-24 17:02:10,063 - INFO - --- Annotating and evaluating somatic variants ---
+2024-10-24 17:02:10,063 - INFO - Annotating somatic variants
+2024-10-24 17:02:10,064 - INFO - ...with MOAlmanac's database
+2024-10-24 17:02:10,090 - INFO - ...annotating inputs of type Copy Number with MOAlmanac's database
+2024-10-24 17:02:10,093 - INFO - ...records of Copy Number in the database: 115
+2024-10-24 17:02:10,096 - INFO - ...records of Copy Number provided: 5
+2024-10-24 17:02:10,097 - INFO - ...annotating TP53 Deletion for therapy_sensitivity...
+2024-10-24 17:02:10,098 - INFO - ......was able to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,107 - INFO - ......1 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:02:10,107 - INFO - ...annotating TP53 Deletion for therapy_resistance...
+2024-10-24 17:02:10,108 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,108 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,108 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,108 - INFO - ...annotating TP53 Deletion for favorable_prognosis...
+2024-10-24 17:02:10,109 - INFO - ......was able to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,114 - INFO - ......1 matches for favorable_prognosis within the database using this criteria
+2024-10-24 17:02:10,163 - INFO - ...annotating CDKN2A Deletion for therapy_sensitivity...
+2024-10-24 17:02:10,164 - INFO - ......was able to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,172 - INFO - ......1 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:02:10,172 - INFO - ...annotating CDKN2A Deletion for therapy_resistance...
+2024-10-24 17:02:10,173 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,173 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,173 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,173 - INFO - ...annotating CDKN2A Deletion for favorable_prognosis...
+2024-10-24 17:02:10,174 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,174 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,174 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,221 - INFO - ...annotating BRAF Amplification for therapy_sensitivity...
+2024-10-24 17:02:10,221 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,221 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,221 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,221 - INFO - ...annotating BRAF Amplification for therapy_resistance...
+2024-10-24 17:02:10,222 - INFO - ......was able to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,231 - INFO - ......1 matches for therapy_resistance within the database using this criteria
+2024-10-24 17:02:10,231 - INFO - ...annotating BRAF Amplification for favorable_prognosis...
+2024-10-24 17:02:10,231 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,232 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,232 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,281 - INFO - ...annotating CDK4 Amplification for therapy_sensitivity...
+2024-10-24 17:02:10,282 - INFO - ......was able to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,287 - INFO - ......2 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:02:10,288 - INFO - ...annotating CDK4 Amplification for therapy_resistance...
+2024-10-24 17:02:10,288 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,288 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,288 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,288 - INFO - ...annotating CDK4 Amplification for favorable_prognosis...
+2024-10-24 17:02:10,289 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,289 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,289 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,336 - INFO - ...annotating FGFR2 Deletion for therapy_sensitivity...
+2024-10-24 17:02:10,337 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,337 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:02:10,343 - INFO - ......4 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:02:10,343 - INFO - ...annotating FGFR2 Deletion for therapy_resistance...
+2024-10-24 17:02:10,343 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,343 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,343 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,343 - INFO - ...annotating FGFR2 Deletion for favorable_prognosis...
+2024-10-24 17:02:10,344 - INFO - ......was unable to match on gene, biomarker type, and direction
+2024-10-24 17:02:10,344 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,344 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,391 - INFO - ...annotating input Copy Numbers with MOAlmanac's database complete
+
+2024-10-24 17:02:10,391 - INFO - ...annotating inputs of type Rearrangement with MOAlmanac's database
+2024-10-24 17:02:10,393 - INFO - ...records of Rearrangement in the database: 77
+2024-10-24 17:02:10,396 - INFO - ...records of Rearrangement provided: 1
+2024-10-24 17:02:10,397 - INFO - ...annotating COL1A1 Fusion COL1A1--CITED4 for therapy_sensitivity...
+2024-10-24 17:02:10,398 - INFO - ......processing as COL1A1::CITED4...
+2024-10-24 17:02:10,399 - INFO - ......was unable to match on first gene, second gene, biomarker type, and rearrangement type
+2024-10-24 17:02:10,399 - INFO - ......was able to match on first gene, biomarker type, and rearrangement type
+2024-10-24 17:02:10,399 - INFO - ......processing as CITED4::COL1A1...
+2024-10-24 17:02:10,401 - INFO - ......was unable to match on second gene, first gene, biomarker type, and rearrangement type
+2024-10-24 17:02:10,401 - INFO - ......was able to match on second gene, biomarker type, and rearrangement type
+2024-10-24 17:02:10,407 - INFO - ......1 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:02:10,407 - INFO - ...annotating COL1A1 Fusion COL1A1--CITED4 for therapy_resistance...
+2024-10-24 17:02:10,407 - INFO - ......processing as COL1A1::CITED4...
+2024-10-24 17:02:10,409 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,409 - INFO - ......processing as CITED4::COL1A1...
+2024-10-24 17:02:10,410 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,410 - INFO - ...annotating COL1A1 Fusion COL1A1--CITED4 for favorable_prognosis...
+2024-10-24 17:02:10,410 - INFO - ......processing as COL1A1::CITED4...
+2024-10-24 17:02:10,412 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,412 - INFO - ......processing as CITED4::COL1A1...
+2024-10-24 17:02:10,413 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,460 - INFO - ...annotating input Rearrangements with MOAlmanac's database complete
+
+2024-10-24 17:02:10,460 - INFO - ...annotating inputs of type Somatic Variant with MOAlmanac's database
+2024-10-24 17:02:10,464 - INFO - ...records of Somatic Variant in the database: 608
+2024-10-24 17:02:10,469 - INFO - ...records of Somatic Variant provided: 6
+2024-10-24 17:02:10,471 - INFO - ...annotating BRAF Missense p.V600E for therapy_sensitivity...
+2024-10-24 17:02:10,472 - INFO - ......was able to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,483 - INFO - ......12 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:02:10,483 - INFO - ...annotating BRAF Missense p.V600E for therapy_resistance...
+2024-10-24 17:02:10,484 - INFO - ......was able to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,490 - INFO - ......2 matches for therapy_resistance within the database using this criteria
+2024-10-24 17:02:10,490 - INFO - ...annotating BRAF Missense p.V600E for favorable_prognosis...
+2024-10-24 17:02:10,491 - INFO - ......was able to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,496 - INFO - ......2 matches for favorable_prognosis within the database using this criteria
+2024-10-24 17:02:10,545 - INFO - ...annotating MSH2 Missense p.D887N for therapy_sensitivity...
+2024-10-24 17:02:10,546 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,546 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,546 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:02:10,552 - INFO - ......1 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:02:10,552 - INFO - ...annotating MSH2 Missense p.D887N for therapy_resistance...
+2024-10-24 17:02:10,552 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,552 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,553 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,553 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,553 - INFO - ...annotating MSH2 Missense p.D887N for favorable_prognosis...
+2024-10-24 17:02:10,553 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,554 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,554 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,554 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,607 - INFO - ...annotating NTRK2 Missense p.H300Y for therapy_sensitivity...
+2024-10-24 17:02:10,608 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,608 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,608 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,608 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,608 - INFO - ...annotating NTRK2 Missense p.H300Y for therapy_resistance...
+2024-10-24 17:02:10,608 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,608 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,608 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,609 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,609 - INFO - ...annotating NTRK2 Missense p.H300Y for favorable_prognosis...
+2024-10-24 17:02:10,609 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,609 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,609 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,609 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,658 - INFO - ...annotating PDGFRB Missense p.G674E for therapy_sensitivity...
+2024-10-24 17:02:10,659 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,659 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,659 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,659 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,659 - INFO - ...annotating PDGFRB Missense p.G674E for therapy_resistance...
+2024-10-24 17:02:10,660 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,660 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,660 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,660 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,660 - INFO - ...annotating PDGFRB Missense p.G674E for favorable_prognosis...
+2024-10-24 17:02:10,660 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,660 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,661 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,661 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,710 - INFO - ...annotating STAG2 Missense p.F467I for therapy_sensitivity...
+2024-10-24 17:02:10,711 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,711 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,711 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,711 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,711 - INFO - ...annotating STAG2 Missense p.F467I for therapy_resistance...
+2024-10-24 17:02:10,712 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,712 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,712 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,712 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,712 - INFO - ...annotating STAG2 Missense p.F467I for favorable_prognosis...
+2024-10-24 17:02:10,713 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,713 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,713 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:02:10,719 - INFO - ......3 matches for favorable_prognosis within the database using this criteria
+2024-10-24 17:02:10,773 - INFO - ...annotating ZRSR2 Missense p.N261I for therapy_sensitivity...
+2024-10-24 17:02:10,774 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,774 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,774 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,774 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,774 - INFO - ...annotating ZRSR2 Missense p.N261I for therapy_resistance...
+2024-10-24 17:02:10,775 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,775 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,775 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:02:10,775 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:02:10,775 - INFO - ...annotating ZRSR2 Missense p.N261I for favorable_prognosis...
+2024-10-24 17:02:10,776 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:02:10,776 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:02:10,776 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:02:10,782 - INFO - ......2 matches for favorable_prognosis within the database using this criteria
+2024-10-24 17:02:10,836 - INFO - ...annotating input Somatic Variants with MOAlmanac's database complete
+
+2024-10-24 17:02:10,838 - INFO - ...with Cancer Hotspots
+2024-10-24 17:02:10,980 - INFO - ...datasource size: 3004 rows and 5 columns
+2024-10-24 17:02:10,987 - INFO - ...annotation complete, 265 records annotated
+2024-10-24 17:02:10,989 - INFO - ...cancerhotspots_bin == 0 for 253 records
+2024-10-24 17:02:10,989 - INFO - ...cancerhotspots_bin == 1 for 11 records
+2024-10-24 17:02:10,989 - INFO - ...cancerhotspots_bin == 2 for 1 records
+2024-10-24 17:02:10,989 - INFO - 
+2024-10-24 17:02:10,989 - INFO - ...with Cancer Hotspots 3D
+2024-10-24 17:02:11,007 - INFO - ...datasource size: 9521 rows and 2 columns
+2024-10-24 17:02:11,020 - INFO - ...annotation complete, 265 records annotated
+2024-10-24 17:02:11,022 - INFO - ...cancerhotspots3D_bin == 0 for 247 records
+2024-10-24 17:02:11,022 - INFO - ...cancerhotspots3D_bin == 1 for 16 records
+2024-10-24 17:02:11,022 - INFO - ...cancerhotspots3D_bin == 2 for 2 records
+2024-10-24 17:02:11,022 - INFO - 
+2024-10-24 17:02:11,023 - INFO - ...with Cancer Gene Census
+2024-10-24 17:02:11,028 - INFO - ...datasource size: 736 rows and 1 columns
+2024-10-24 17:02:11,031 - INFO - ...annotation complete, 265 records annotated
+2024-10-24 17:02:11,033 - INFO - ...cgc_bin == 0 for 242 records
+2024-10-24 17:02:11,033 - INFO - ...cgc_bin == 1 for 23 records
+2024-10-24 17:02:11,033 - INFO - 
+2024-10-24 17:02:11,033 - INFO - ...with COSMIC
+2024-10-24 17:02:26,256 - INFO - ...datasource size: 13147512 rows and 2 columns
+2024-10-24 17:02:46,317 - INFO - ...annotation complete, 265 records annotated
+2024-10-24 17:02:46,335 - INFO - ...cosmic_bin == 0 for 16 records
+2024-10-24 17:02:46,336 - INFO - ...cosmic_bin == 1 for 176 records
+2024-10-24 17:02:46,336 - INFO - ...cosmic_bin == 2 for 73 records
+2024-10-24 17:02:46,336 - INFO - 
+2024-10-24 17:02:47,155 - INFO - ...with GSEA Cancer Pathways
+2024-10-24 17:02:47,428 - INFO - ...datasource size: 1537 rows and 1 columns
+2024-10-24 17:02:47,430 - INFO - ...annotation complete, 265 records annotated
+2024-10-24 17:02:47,433 - INFO - ...gsea_pathways_bin == 0 for 248 records
+2024-10-24 17:02:47,433 - INFO - ...gsea_pathways_bin == 1 for 17 records
+2024-10-24 17:02:47,433 - INFO - 
+2024-10-24 17:02:47,434 - INFO - ...with GSEA Cancer Modules
+2024-10-24 17:02:47,493 - INFO - ...datasource size: 8405 rows and 1 columns
+2024-10-24 17:02:47,497 - INFO - ...annotation complete, 265 records annotated
+2024-10-24 17:02:47,499 - INFO - ...gsea_modules_bin == 0 for 115 records
+2024-10-24 17:02:47,499 - INFO - ...gsea_modules_bin == 1 for 150 records
+2024-10-24 17:02:47,499 - INFO - 
+2024-10-24 17:02:47,502 - INFO - ...with ExAC
+2024-10-24 17:03:16,568 - INFO - ...datasource size: 9035134 rows and 5 columns
+2024-10-24 17:03:30,103 - INFO - ...exac_common == 0.0 for 265 records
+2024-10-24 17:03:30,104 - INFO - 
+2024-10-24 17:03:30,625 - INFO - ...with gene list with containing genes related to microsatellite instability
+2024-10-24 17:03:30,626 - INFO - ...genes: MSH2,MSH6,MLH1,PMS2,POLE,POLE2,ACVR2A,RNF43,JAK1,MSH3,ESRP1,PRDM2,DOCK3
+2024-10-24 17:03:30,630 - INFO - ...msi_bin == 0 for 264 records
+2024-10-24 17:03:30,630 - INFO - ...msi_bin == 1 for 1 records
+2024-10-24 17:03:30,631 - INFO - Annotation of somatic variants complete
+
+2024-10-24 17:03:30,631 - INFO - Evaluating annotated somatic variants
+2024-10-24 17:03:30,647 - INFO - Evaluation of somatic variants complete
+
+2024-10-24 17:03:30,647 - INFO - Importing validation sequencing variants for somatic variant annotation
+2024-10-24 17:03:30,720 - INFO - Annotating somatic variants with validation sequencing variants
+2024-10-24 17:03:30,722 - INFO - ...merging dataframes
+2024-10-24 17:03:30,739 - INFO - ...141 of 204 variants were observed in validation sequencing
+2024-10-24 17:03:30,739 - INFO - ...calculating power to detect variants in validation sequencing
+2024-10-24 17:03:30,756 - INFO - Annotation and evaluation of somatic variants complete
+
+2024-10-24 17:03:30,757 - INFO - --- Annotating and evaluating germline variants ---
+2024-10-24 17:03:30,758 - INFO - Annotating germline variants
+2024-10-24 17:03:30,759 - INFO - ...with MOAlmanac's database
+2024-10-24 17:03:30,787 - INFO - ...annotating inputs of type Germline Variant with MOAlmanac's database
+2024-10-24 17:03:30,789 - INFO - ...records of Germline Variant in the database: 113
+2024-10-24 17:03:30,792 - INFO - ...records of Germline Variant provided: 7
+2024-10-24 17:03:30,794 - INFO - ...annotating ALK Missense p.I1461V for therapy_sensitivity...
+2024-10-24 17:03:30,795 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,795 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,795 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,795 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,795 - INFO - ...annotating ALK Missense p.I1461V for therapy_resistance...
+2024-10-24 17:03:30,796 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,796 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,796 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,796 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,796 - INFO - ...annotating ALK Missense p.I1461V for favorable_prognosis...
+2024-10-24 17:03:30,797 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,797 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,797 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,797 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,844 - INFO - ...annotating MSH6 Missense p.G39E for therapy_sensitivity...
+2024-10-24 17:03:30,845 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,845 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,845 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:03:30,852 - INFO - ......1 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:03:30,852 - INFO - ...annotating MSH6 Missense p.G39E for therapy_resistance...
+2024-10-24 17:03:30,853 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,853 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,853 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,853 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,853 - INFO - ...annotating MSH6 Missense p.G39E for favorable_prognosis...
+2024-10-24 17:03:30,854 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,854 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,854 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:03:30,859 - INFO - ......1 matches for favorable_prognosis within the database using this criteria
+2024-10-24 17:03:30,909 - INFO - ...annotating BRAF Nonsense p.R509* for therapy_sensitivity...
+2024-10-24 17:03:30,910 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,910 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,910 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,910 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,910 - INFO - ...annotating BRAF Nonsense p.R509* for therapy_resistance...
+2024-10-24 17:03:30,911 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,911 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,911 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,911 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,911 - INFO - ...annotating BRAF Nonsense p.R509* for favorable_prognosis...
+2024-10-24 17:03:30,912 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,912 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,912 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,912 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,962 - INFO - ...annotating TP53 Missense p.P72R for therapy_sensitivity...
+2024-10-24 17:03:30,964 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,964 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,964 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,964 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,964 - INFO - ...annotating TP53 Missense p.P72R for therapy_resistance...
+2024-10-24 17:03:30,965 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,965 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,965 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,965 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:30,965 - INFO - ...annotating TP53 Missense p.P72R for favorable_prognosis...
+2024-10-24 17:03:30,966 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:30,966 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:30,966 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:30,966 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,016 - INFO - ...annotating BRCA2 Missense p.N372H for therapy_sensitivity...
+2024-10-24 17:03:31,017 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,017 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,017 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:03:31,025 - INFO - ......13 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:03:31,025 - INFO - ...annotating BRCA2 Missense p.N372H for therapy_resistance...
+2024-10-24 17:03:31,026 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,026 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,026 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:31,026 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,026 - INFO - ...annotating BRCA2 Missense p.N372H for favorable_prognosis...
+2024-10-24 17:03:31,027 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,027 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,027 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:31,027 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,079 - INFO - ...annotating BRCA2 Frameshift p.S1982fs for therapy_sensitivity...
+2024-10-24 17:03:31,080 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,080 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,081 - INFO - ......was able to match on gene and biomarker type
+2024-10-24 17:03:31,087 - INFO - ......13 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:03:31,087 - INFO - ...annotating BRCA2 Frameshift p.S1982fs for therapy_resistance...
+2024-10-24 17:03:31,088 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,088 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,088 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:31,088 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,088 - INFO - ...annotating BRCA2 Frameshift p.S1982fs for favorable_prognosis...
+2024-10-24 17:03:31,088 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,089 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,089 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:31,089 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,138 - INFO - ...annotating BCR Missense p.N796S for therapy_sensitivity...
+2024-10-24 17:03:31,139 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,139 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,139 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:31,139 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,139 - INFO - ...annotating BCR Missense p.N796S for therapy_resistance...
+2024-10-24 17:03:31,140 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,140 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,140 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:31,140 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,140 - INFO - ...annotating BCR Missense p.N796S for favorable_prognosis...
+2024-10-24 17:03:31,140 - INFO - ......was unable to match on gene, biomarker type, variant classification, and protein change
+2024-10-24 17:03:31,141 - INFO - ......was unable to match on gene, biomarker type, and variant classification
+2024-10-24 17:03:31,141 - INFO - ......was unable to match on gene and biomarker type
+2024-10-24 17:03:31,141 - INFO - ......was only able to match on gene, no specific database records matched
+2024-10-24 17:03:31,186 - INFO - ...annotating input Germline Variants with MOAlmanac's database complete
+
+2024-10-24 17:03:31,188 - INFO - ...with Cancer Hotspots
+2024-10-24 17:03:31,245 - INFO - ...datasource size: 3004 rows and 5 columns
+2024-10-24 17:03:31,250 - INFO - ...annotation complete, 10 records annotated
+2024-10-24 17:03:31,251 - INFO - ...cancerhotspots_bin == 0 for 4 records
+2024-10-24 17:03:31,251 - INFO - ...cancerhotspots_bin == 1 for 6 records
+2024-10-24 17:03:31,251 - INFO - 
+2024-10-24 17:03:31,251 - INFO - ...with Cancer Gene Census
+2024-10-24 17:03:31,256 - INFO - ...datasource size: 736 rows and 1 columns
+2024-10-24 17:03:31,258 - INFO - ...annotation complete, 10 records annotated
+2024-10-24 17:03:31,259 - INFO - ...cgc_bin == 1 for 10 records
+2024-10-24 17:03:31,259 - INFO - 
+2024-10-24 17:03:31,267 - INFO - ...datasource size: 82 rows and 1 columns
+2024-10-24 17:03:31,269 - INFO - ...annotation complete, 10 records annotated
+2024-10-24 17:03:31,270 - INFO - ...acmg_bin == 0 for 6 records
+2024-10-24 17:03:31,270 - INFO - ...acmg_bin == 1 for 4 records
+2024-10-24 17:03:31,270 - INFO - 
+2024-10-24 17:03:31,271 - INFO - ...with ClinVar
+2024-10-24 17:03:34,127 - INFO - ...datasource size: 930150 rows and 8 columns
+2024-10-24 17:03:37,981 - INFO - ...clinvar_bin == 0 for 4 records
+2024-10-24 17:03:37,981 - INFO - ...clinvar_bin == 1 for 2 records
+2024-10-24 17:03:37,981 - INFO - 
+2024-10-24 17:03:38,040 - INFO - ...with gene list containing genes related to hereditary cancers
+2024-10-24 17:03:38,046 - INFO - ...datasource size: 84 rows and 1 columns
+2024-10-24 17:03:38,048 - INFO - ...annotation complete, 10 records annotated
+2024-10-24 17:03:38,049 - INFO - ...hereditary_bin == 0 for 5 records
+2024-10-24 17:03:38,049 - INFO - ...hereditary_bin == 1 for 5 records
+2024-10-24 17:03:38,049 - INFO - 
+2024-10-24 17:03:38,049 - INFO - ...with ExAC, Extended
+2024-10-24 17:04:51,549 - INFO - ...datasource size: 9035134 rows and 21 columns
+2024-10-24 17:05:09,670 - INFO - ...exac_common == 0.0 for 3 records
+2024-10-24 17:05:09,689 - INFO - ...exac_common == 1.0 for 7 records
+2024-10-24 17:05:09,690 - INFO - 
+2024-10-24 17:05:10,789 - INFO - ...with gene list with containing genes related to microsatellite instability
+2024-10-24 17:05:10,789 - INFO - ...genes: MSH2,MSH6,MLH1,PMS2,POLE,POLE2,ACVR2A,RNF43,JAK1,MSH3,ESRP1,PRDM2,DOCK3
+2024-10-24 17:05:10,793 - INFO - ...msi_bin == 0 for 8 records
+2024-10-24 17:05:10,794 - INFO - ...msi_bin == 1 for 2 records
+2024-10-24 17:05:10,794 - INFO - Annotation of germline variants complete
+
+2024-10-24 17:05:10,796 - INFO - Evaluating annotated germline variants
+2024-10-24 17:05:10,803 - INFO - Evaluation of germline variants complete
+
+2024-10-24 17:05:10,804 - INFO - Annotation and evaluation of germline variants complete
+
+2024-10-24 17:05:10,804 - INFO - --- Investigating somatic and germline overlap ---
+2024-10-24 17:05:10,804 - INFO - Annoating somatic variants for germline variants in the same gene
+2024-10-24 17:05:10,859 - INFO - ...3 of 265 somatic variants had germline variants in the same gene
+2024-10-24 17:05:10,859 - INFO - Summarizing somatic, germline, copy number, and fusion variants per gene
+2024-10-24 17:05:12,295 - INFO - Investigating somatic and germline overlap complete
+
+2024-10-24 17:05:12,295 - INFO - --- Importing second-order genomic features ---
+2024-10-24 17:05:12,297 - INFO - COSMIC mutational signatures from ../example_data/example_patient.capture.sbs_contributions.txt
+2024-10-24 17:05:12,324 - INFO - ...imported dataframe shape:: 4 rows and 253 columns
+2024-10-24 17:05:12,325 - INFO - Somatic bases covered from ../example_data/example_patient.capture.somatic.coverage.txt
+2024-10-24 17:05:12,362 - INFO - Somatic coding tumor mutational burden calculated
+2024-10-24 17:05:12,363 - INFO - ...bases_covered: 29908096.0
+2024-10-24 17:05:12,363 - INFO - ...n_nonsyn_mutations: 204
+2024-10-24 17:05:12,363 - INFO - ...coding_mutational_burden_per_megabase: 6.821
+2024-10-24 17:05:12,363 - INFO - ...percentile_tcga: 83.75
+2024-10-24 17:05:12,363 - INFO - ...percentile_tcga_tissuetype: nan
+2024-10-24 17:05:12,363 - INFO - ...high_burden?: False
+
+2024-10-24 17:05:12,364 - INFO - Whole-genome doubling specified
+2024-10-24 17:05:12,375 - INFO - Microsatellite status specified as: msih
+2024-10-24 17:05:12,389 - INFO - Importing of second-order genomic features complete
+
+2024-10-24 17:05:12,390 - INFO - --- Annotating and evaluating second-order genomic features ---
+2024-10-24 17:05:12,390 - INFO - Annotating COSMIC mutational signatures
+2024-10-24 17:05:12,391 - INFO - ...with MOAlmanac's database
+2024-10-24 17:05:12,419 - INFO - ...annotating inputs of type Mutational Signature with MOAlmanac's database
+2024-10-24 17:05:12,420 - INFO - ...records of Mutational Signature in the database: 20
+2024-10-24 17:05:12,422 - INFO - ...records of Mutational Signature provided: 4
+2024-10-24 17:05:12,424 - INFO - ...annotating SBS5 therapy_sensitivity...
+2024-10-24 17:05:12,425 - INFO - ......was able to match on biomarker
+2024-10-24 17:05:12,431 - INFO - ......1 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:05:12,431 - INFO - ...annotating SBS5 therapy_resistance...
+2024-10-24 17:05:12,432 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,432 - INFO - ...annotating SBS5 favorable_prognosis...
+2024-10-24 17:05:12,433 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,484 - INFO - ...annotating SBS7a therapy_sensitivity...
+2024-10-24 17:05:12,485 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,485 - INFO - ...annotating SBS7a therapy_resistance...
+2024-10-24 17:05:12,485 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,485 - INFO - ...annotating SBS7a favorable_prognosis...
+2024-10-24 17:05:12,486 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,534 - INFO - ...annotating SBS10b therapy_sensitivity...
+2024-10-24 17:05:12,535 - INFO - ......was able to match on biomarker
+2024-10-24 17:05:12,540 - INFO - ......3 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:05:12,541 - INFO - ...annotating SBS10b therapy_resistance...
+2024-10-24 17:05:12,541 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,541 - INFO - ...annotating SBS10b favorable_prognosis...
+2024-10-24 17:05:12,541 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,590 - INFO - ...annotating SBS30 therapy_sensitivity...
+2024-10-24 17:05:12,591 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,591 - INFO - ...annotating SBS30 therapy_resistance...
+2024-10-24 17:05:12,591 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,591 - INFO - ...annotating SBS30 favorable_prognosis...
+2024-10-24 17:05:12,592 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,638 - INFO - ...annotating input Mutational Signatures with MOAlmanac's database complete
+
+2024-10-24 17:05:12,639 - INFO - Annotation of COSMIC mutational signatures complete
+
+2024-10-24 17:05:12,639 - INFO - Evaluating annotated COSMIC mutational signatures
+2024-10-24 17:05:12,644 - INFO - Evaluation of COSMIC mutational signatures complete
+
+2024-10-24 17:05:12,644 - INFO - Annotation and evaluation of COSMIC mutational signatures complete
+
+2024-10-24 17:05:12,644 - INFO - Annotating tumor mutational burden
+2024-10-24 17:05:12,645 - INFO - ...with MOAlmanac's database
+2024-10-24 17:05:12,668 - INFO - ...annotating inputs of type Mutational Burden with MOAlmanac's database
+2024-10-24 17:05:12,700 - INFO - ...records of Mutational Burden in the database: 6
+2024-10-24 17:05:12,702 - INFO - ...records of Mutational Burden provided: 1
+2024-10-24 17:05:12,703 - INFO - ...annotating Not therapy_sensitivity...
+2024-10-24 17:05:12,703 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,703 - INFO - ...annotating Not therapy_resistance...
+2024-10-24 17:05:12,704 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,704 - INFO - ...annotating Not favorable_prognosis...
+2024-10-24 17:05:12,704 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,748 - INFO - ...annotating input Mutational Burdens with MOAlmanac's database complete
+
+2024-10-24 17:05:12,749 - INFO - Annotation of tumor mutational burden complete
+
+2024-10-24 17:05:12,749 - INFO - Evaluating tumor mutational burden
+2024-10-24 17:05:12,760 - INFO - Evaluation of tumor mutational burden complete
+
+2024-10-24 17:05:12,760 - INFO - Annotation and evaluation of tumor mutational burden complete
+
+2024-10-24 17:05:12,761 - INFO - Annotating whole-genome doubling
+2024-10-24 17:05:12,761 - INFO - ...with MOAlmanac's database
+2024-10-24 17:05:12,782 - INFO - ...annotating inputs of type Aneuploidy with MOAlmanac's database
+2024-10-24 17:05:12,784 - INFO - ...records of Aneuploidy in the database: 1
+2024-10-24 17:05:12,786 - INFO - ...records of Aneuploidy provided: 1
+2024-10-24 17:05:12,787 - INFO - ...annotating Whole genome doubling therapy_sensitivity...
+2024-10-24 17:05:12,787 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,787 - INFO - ...annotating Whole genome doubling therapy_resistance...
+2024-10-24 17:05:12,788 - INFO - ......was unable to match on biomarker, no specific database records matched
+2024-10-24 17:05:12,788 - INFO - ...annotating Whole genome doubling favorable_prognosis...
+2024-10-24 17:05:12,789 - INFO - ......was able to match on biomarker
+2024-10-24 17:05:12,794 - INFO - ......1 matches for favorable_prognosis within the database using this criteria
+2024-10-24 17:05:12,836 - INFO - ...annotating input Aneuploidys with MOAlmanac's database complete
+
+2024-10-24 17:05:12,837 - INFO - Annotation of whole-genome doubling complete
+
+2024-10-24 17:05:12,838 - INFO - Evaluating whole-genome doubling
+2024-10-24 17:05:12,848 - INFO - Evaluation of whole-genome doubling complete
+
+2024-10-24 17:05:12,848 - INFO - Annotation and evaluation of whole-genome doubling complete
+
+2024-10-24 17:05:12,848 - INFO - Evaluating somatic and germline variants for those related to microsatellite instability
+2024-10-24 17:05:12,856 - INFO - ...variants related to microsatellite instability identified: 1
+2024-10-24 17:05:12,856 - INFO - Evaluation of microsatellite instability variants complete
+
+2024-10-24 17:05:12,856 - INFO - Annotating and evaluating microsatellite status
+2024-10-24 17:05:12,856 - INFO - Annotating microsatellite status
+2024-10-24 17:05:12,857 - INFO - ...with MOAlmanac's database
+2024-10-24 17:05:12,876 - INFO - ...annotating inputs of type Microsatellite Stability with MOAlmanac's database
+2024-10-24 17:05:12,878 - INFO - ...records of Microsatellite Stability in the database: 9
+2024-10-24 17:05:12,879 - INFO - ...records of Microsatellite Stability provided: 1
+2024-10-24 17:05:12,880 - INFO - ...annotating MSI-High therapy_sensitivity...
+2024-10-24 17:05:12,881 - INFO - ......was able to match on biomarker
+2024-10-24 17:05:12,885 - INFO - ......4 matches for therapy_sensitivity within the database using this criteria
+2024-10-24 17:05:12,886 - INFO - ...annotating MSI-High therapy_resistance...
+2024-10-24 17:05:12,886 - INFO - ......was able to match on biomarker
+2024-10-24 17:05:12,892 - INFO - ......1 matches for therapy_resistance within the database using this criteria
+2024-10-24 17:05:12,892 - INFO - ...annotating MSI-High favorable_prognosis...
+2024-10-24 17:05:12,892 - INFO - ......was able to match on biomarker
+2024-10-24 17:05:12,898 - INFO - ......1 matches for favorable_prognosis within the database using this criteria
+2024-10-24 17:05:12,941 - INFO - ...annotating input Microsatellite Stabilitys with MOAlmanac's database complete
+
+2024-10-24 17:05:12,942 - INFO - Annotation of microsatellite status complete
+
+2024-10-24 17:05:12,942 - INFO - Evaluating microsatellite status
+2024-10-24 17:05:12,953 - INFO - Evaluation of microsatellite status complete
+
+2024-10-24 17:05:12,953 - INFO - Annotation and evaluation of microsatellite status complete
+
+2024-10-24 17:05:12,953 - INFO - Annotation and evaluation of second-order genomic features complete
+
+2024-10-24 17:05:12,954 - INFO - --- Summarizing clinically relevant biomarkers ---
+2024-10-24 17:05:13,053 - INFO - Summary of clinically relevant biomarkers complete
+
+2024-10-24 17:05:13,054 - INFO - --- Summarizing highlighted therapeutic strategies from clinically relevant hits ---
+2024-10-24 17:05:13,064 - INFO - Summary of highlighted therapeutic strategies complete
+
+2024-10-24 17:05:13,070 - INFO - --- Performing comparisons to preclinical models ---
+2024-10-24 17:05:13,070 - INFO - Importing preclinical databases
+2024-10-24 17:05:53,285 - INFO - Importing preclinical databases complete
+2024-10-24 17:05:53,285 - INFO - Calculate preclinical efficacy of clinically relevant relationships enabled, processing...
+2024-10-24 17:06:00,959 - INFO - ...complete. Successfully calculated: 18 relationships
+2024-10-24 17:06:00,959 - INFO - Annotating clinically relevant findings with preclinical efficacy calculations...
+2024-10-24 17:06:00,967 - INFO - ...annotation complete.
+2024-10-24 17:06:00,967 - INFO - Calculating preclinical efficacy of clinically relevant relationships complete.
+
+2024-10-24 17:06:00,967 - INFO - Performing genomic similarity to cancer cell lines enabled, processing...
+2024-10-24 17:06:01,226 - INFO - ...with Cancer Hotspots
+2024-10-24 17:06:01,280 - INFO - ...datasource size: 3004 rows and 5 columns
+2024-10-24 17:06:01,319 - INFO - ...annotation complete, 58928 records annotated
+2024-10-24 17:06:01,329 - INFO - ...cancerhotspots_bin == 0 for 37894 records
+2024-10-24 17:06:01,329 - INFO - ...cancerhotspots_bin == 1 for 18920 records
+2024-10-24 17:06:01,329 - INFO - ...cancerhotspots_bin == 2 for 2114 records
+2024-10-24 17:06:01,330 - INFO - 
+2024-10-24 17:06:01,331 - INFO - ...with Cancer Hotspots 3D
+2024-10-24 17:06:01,348 - INFO - ...datasource size: 9521 rows and 2 columns
+2024-10-24 17:06:01,384 - INFO - ...annotation complete, 58928 records annotated
+2024-10-24 17:06:01,392 - INFO - ...cancerhotspots3D_bin == 0 for 50054 records
+2024-10-24 17:06:01,393 - INFO - ...cancerhotspots3D_bin == 1 for 7641 records
+2024-10-24 17:06:01,393 - INFO - ...cancerhotspots3D_bin == 2 for 1233 records
+2024-10-24 17:06:01,393 - INFO - 
+2024-10-24 17:06:01,394 - INFO - ...with Cancer Gene Census
+2024-10-24 17:06:01,398 - INFO - ...datasource size: 736 rows and 1 columns
+2024-10-24 17:06:01,412 - INFO - ...annotation complete, 58928 records annotated
+2024-10-24 17:06:01,420 - INFO - ...cgc_bin == 0 for 4912 records
+2024-10-24 17:06:01,420 - INFO - ...cgc_bin == 1 for 54016 records
+2024-10-24 17:06:01,420 - INFO - 
+2024-10-24 17:06:01,422 - INFO - ...with COSMIC
+2024-10-24 17:06:10,063 - INFO - ...datasource size: 13147512 rows and 2 columns
+2024-10-24 17:06:26,216 - INFO - ...annotation complete, 58928 records annotated
+2024-10-24 17:06:26,251 - INFO - ...cosmic_bin == 0 for 775 records
+2024-10-24 17:06:26,251 - INFO - ...cosmic_bin == 1 for 37876 records
+2024-10-24 17:06:26,251 - INFO - ...cosmic_bin == 2 for 20277 records
+2024-10-24 17:06:26,263 - INFO - 
+2024-10-24 17:06:26,664 - INFO - ...with GSEA Cancer Pathways
+2024-10-24 17:06:26,722 - INFO - ...datasource size: 1537 rows and 1 columns
+2024-10-24 17:06:26,733 - INFO - ...annotation complete, 58928 records annotated
+2024-10-24 17:06:26,743 - INFO - ...gsea_pathways_bin == 0 for 45129 records
+2024-10-24 17:06:26,743 - INFO - ...gsea_pathways_bin == 1 for 13799 records
+2024-10-24 17:06:26,743 - INFO - 
+2024-10-24 17:06:26,754 - INFO - ...with GSEA Cancer Modules
+2024-10-24 17:06:26,780 - INFO - ...datasource size: 8405 rows and 1 columns
+2024-10-24 17:06:26,795 - INFO - ...annotation complete, 58928 records annotated
+2024-10-24 17:06:26,810 - INFO - ...gsea_modules_bin == 0 for 18475 records
+2024-10-24 17:06:26,810 - INFO - ...gsea_modules_bin == 1 for 40453 records
+2024-10-24 17:06:26,810 - INFO - 
+2024-10-24 17:06:26,939 - INFO - ...with Cancer Hotspots
+2024-10-24 17:06:26,993 - INFO - ...datasource size: 3004 rows and 5 columns
+2024-10-24 17:06:27,044 - INFO - ...annotation complete, 57556 records annotated
+2024-10-24 17:06:27,053 - INFO - ...cancerhotspots_bin == 0 for 39332 records
+2024-10-24 17:06:27,053 - INFO - ...cancerhotspots_bin == 1 for 18224 records
+2024-10-24 17:06:27,053 - INFO - 
+2024-10-24 17:06:27,055 - INFO - ...with Cancer Hotspots 3D
+2024-10-24 17:06:27,074 - INFO - ...datasource size: 9521 rows and 2 columns
+2024-10-24 17:06:27,121 - INFO - ...annotation complete, 57556 records annotated
+2024-10-24 17:06:27,130 - INFO - ...cancerhotspots3D_bin == 0 for 50818 records
+2024-10-24 17:06:27,130 - INFO - ...cancerhotspots3D_bin == 1 for 6365 records
+2024-10-24 17:06:27,130 - INFO - ...cancerhotspots3D_bin == 2 for 373 records
+2024-10-24 17:06:27,130 - INFO - 
+2024-10-24 17:06:27,131 - INFO - ...with Cancer Gene Census
+2024-10-24 17:06:27,138 - INFO - ...datasource size: 736 rows and 1 columns
+2024-10-24 17:06:27,151 - INFO - ...annotation complete, 57556 records annotated
+2024-10-24 17:06:27,159 - INFO - ...cgc_bin == 0 for 5902 records
+2024-10-24 17:06:27,159 - INFO - ...cgc_bin == 1 for 51654 records
+2024-10-24 17:06:27,160 - INFO - 
+2024-10-24 17:06:27,161 - INFO - ...with COSMIC
+2024-10-24 17:06:37,051 - INFO - ...datasource size: 13147512 rows and 2 columns
+2024-10-24 17:06:53,895 - INFO - ...annotation complete, 57556 records annotated
+2024-10-24 17:06:53,907 - INFO - ...cosmic_bin == 0 for 1155 records
+2024-10-24 17:06:53,907 - INFO - ...cosmic_bin == 1 for 56401 records
+2024-10-24 17:06:53,909 - INFO - 
+2024-10-24 17:06:54,347 - INFO - ...with GSEA Cancer Pathways
+2024-10-24 17:06:54,409 - INFO - ...datasource size: 1537 rows and 1 columns
+2024-10-24 17:06:54,420 - INFO - ...annotation complete, 57556 records annotated
+2024-10-24 17:06:54,431 - INFO - ...gsea_pathways_bin == 0 for 43007 records
+2024-10-24 17:06:54,431 - INFO - ...gsea_pathways_bin == 1 for 14549 records
+2024-10-24 17:06:54,432 - INFO - 
+2024-10-24 17:06:54,443 - INFO - ...with GSEA Cancer Modules
+2024-10-24 17:06:54,468 - INFO - ...datasource size: 8405 rows and 1 columns
+2024-10-24 17:06:54,487 - INFO - ...annotation complete, 57556 records annotated
+2024-10-24 17:06:54,501 - INFO - ...gsea_modules_bin == 0 for 18532 records
+2024-10-24 17:06:54,501 - INFO - ...gsea_modules_bin == 1 for 39024 records
+2024-10-24 17:06:54,501 - INFO - 
+2024-10-24 17:07:09,933 - INFO - ...with Cancer Hotspots
+2024-10-24 17:07:09,986 - INFO - ...datasource size: 3004 rows and 5 columns
+2024-10-24 17:07:09,995 - INFO - ...annotation complete, 7097 records annotated
+2024-10-24 17:07:09,998 - INFO - ...cancerhotspots_bin == 0 for 6802 records
+2024-10-24 17:07:09,998 - INFO - ...cancerhotspots_bin == 1 for 295 records
+2024-10-24 17:07:09,998 - INFO - 
+2024-10-24 17:07:09,999 - INFO - ...with Cancer Hotspots 3D
+2024-10-24 17:07:10,014 - INFO - ...datasource size: 9521 rows and 2 columns
+2024-10-24 17:07:10,025 - INFO - ...annotation complete, 7097 records annotated
+2024-10-24 17:07:10,027 - INFO - ...cancerhotspots3D_bin == 0 for 6829 records
+2024-10-24 17:07:10,027 - INFO - ...cancerhotspots3D_bin == 1 for 268 records
+2024-10-24 17:07:10,028 - INFO - 
+2024-10-24 17:07:10,028 - INFO - ...with Cancer Gene Census
+2024-10-24 17:07:10,033 - INFO - ...datasource size: 736 rows and 1 columns
+2024-10-24 17:07:10,037 - INFO - ...annotation complete, 7097 records annotated
+2024-10-24 17:07:10,039 - INFO - ...cgc_bin == 0 for 6348 records
+2024-10-24 17:07:10,039 - INFO - ...cgc_bin == 1 for 749 records
+2024-10-24 17:07:10,039 - INFO - 
+2024-10-24 17:07:10,039 - INFO - ...with COSMIC
+2024-10-24 17:07:19,271 - INFO - ...datasource size: 13147512 rows and 2 columns
+2024-10-24 17:07:36,113 - INFO - ...annotation complete, 7097 records annotated
+2024-10-24 17:07:36,117 - INFO - ...cosmic_bin == 0 for 475 records
+2024-10-24 17:07:36,118 - INFO - ...cosmic_bin == 1 for 6622 records
+2024-10-24 17:07:36,118 - INFO - 
+2024-10-24 17:07:36,727 - INFO - ...with GSEA Cancer Pathways
+2024-10-24 17:07:36,814 - INFO - ...datasource size: 1537 rows and 1 columns
+2024-10-24 17:07:36,820 - INFO - ...annotation complete, 7097 records annotated
+2024-10-24 17:07:36,823 - INFO - ...gsea_pathways_bin == 0 for 6639 records
+2024-10-24 17:07:36,823 - INFO - ...gsea_pathways_bin == 1 for 458 records
+2024-10-24 17:07:36,823 - INFO - 
+2024-10-24 17:07:36,824 - INFO - ...with GSEA Cancer Modules
+2024-10-24 17:07:36,850 - INFO - ...datasource size: 8405 rows and 1 columns
+2024-10-24 17:07:36,856 - INFO - ...annotation complete, 7097 records annotated
+2024-10-24 17:07:36,860 - INFO - ...gsea_modules_bin == 0 for 3674 records
+2024-10-24 17:07:36,860 - INFO - ...gsea_modules_bin == 1 for 3423 records
+2024-10-24 17:07:36,860 - INFO - 
+2024-10-24 17:07:36,861 - INFO - ...with Cancer Hotspots
+2024-10-24 17:07:36,930 - INFO - ...datasource size: 3004 rows and 5 columns
+2024-10-24 17:07:36,939 - INFO - ...annotation complete, 6864 records annotated
+2024-10-24 17:07:36,941 - INFO - ...cancerhotspots_bin == 0 for 6591 records
+2024-10-24 17:07:36,942 - INFO - ...cancerhotspots_bin == 1 for 273 records
+2024-10-24 17:07:36,942 - INFO - 
+2024-10-24 17:07:36,942 - INFO - ...with Cancer Hotspots 3D
+2024-10-24 17:07:36,959 - INFO - ...datasource size: 9521 rows and 2 columns
+2024-10-24 17:07:36,971 - INFO - ...annotation complete, 6864 records annotated
+2024-10-24 17:07:36,973 - INFO - ...cancerhotspots3D_bin == 0 for 6602 records
+2024-10-24 17:07:36,973 - INFO - ...cancerhotspots3D_bin == 1 for 262 records
+2024-10-24 17:07:36,973 - INFO - 
+2024-10-24 17:07:36,974 - INFO - ...with Cancer Gene Census
+2024-10-24 17:07:36,979 - INFO - ...datasource size: 736 rows and 1 columns
+2024-10-24 17:07:36,983 - INFO - ...annotation complete, 6864 records annotated
+2024-10-24 17:07:36,985 - INFO - ...cgc_bin == 0 for 6147 records
+2024-10-24 17:07:36,985 - INFO - ...cgc_bin == 1 for 717 records
+2024-10-24 17:07:36,985 - INFO - 
+2024-10-24 17:07:36,985 - INFO - ...with COSMIC
+2024-10-24 17:07:46,129 - INFO - ...datasource size: 13147512 rows and 2 columns
+2024-10-24 17:08:02,976 - INFO - ...annotation complete, 6864 records annotated
+2024-10-24 17:08:02,980 - INFO - ...cosmic_bin == 0 for 445 records
+2024-10-24 17:08:02,981 - INFO - ...cosmic_bin == 1 for 6419 records
+2024-10-24 17:08:02,981 - INFO - 
+2024-10-24 17:08:03,392 - INFO - ...with GSEA Cancer Pathways
+2024-10-24 17:08:03,460 - INFO - ...datasource size: 1537 rows and 1 columns
+2024-10-24 17:08:03,463 - INFO - ...annotation complete, 6864 records annotated
+2024-10-24 17:08:03,466 - INFO - ...gsea_pathways_bin == 0 for 6431 records
+2024-10-24 17:08:03,466 - INFO - ...gsea_pathways_bin == 1 for 433 records
+2024-10-24 17:08:03,466 - INFO - 
+2024-10-24 17:08:03,466 - INFO - ...with GSEA Cancer Modules
+2024-10-24 17:08:03,492 - INFO - ...datasource size: 8405 rows and 1 columns
+2024-10-24 17:08:03,498 - INFO - ...annotation complete, 6864 records annotated
+2024-10-24 17:08:03,501 - INFO - ...gsea_modules_bin == 0 for 3557 records
+2024-10-24 17:08:03,501 - INFO - ...gsea_modules_bin == 1 for 3307 records
+2024-10-24 17:08:03,501 - INFO - 
+2024-10-24 17:08:03,502 - INFO - ...with Cancer Hotspots
+2024-10-24 17:08:03,555 - INFO - ...datasource size: 3004 rows and 5 columns
+2024-10-24 17:08:03,564 - INFO - ...annotation complete, 6859 records annotated
+2024-10-24 17:08:03,567 - INFO - ...cancerhotspots_bin == 0 for 6644 records
+2024-10-24 17:08:03,567 - INFO - ...cancerhotspots_bin == 1 for 215 records
+2024-10-24 17:08:03,567 - INFO - 
+2024-10-24 17:08:03,568 - INFO - ...with Cancer Hotspots 3D
+2024-10-24 17:08:03,586 - INFO - ...datasource size: 9521 rows and 2 columns
+2024-10-24 17:08:03,598 - INFO - ...annotation complete, 6859 records annotated
+2024-10-24 17:08:03,600 - INFO - ...cancerhotspots3D_bin == 0 for 6618 records
+2024-10-24 17:08:03,600 - INFO - ...cancerhotspots3D_bin == 1 for 241 records
+2024-10-24 17:08:03,601 - INFO - 
+2024-10-24 17:08:03,602 - INFO - ...with Cancer Gene Census
+2024-10-24 17:08:03,606 - INFO - ...datasource size: 736 rows and 1 columns
+2024-10-24 17:08:03,609 - INFO - ...annotation complete, 6859 records annotated
+2024-10-24 17:08:03,611 - INFO - ...cgc_bin == 0 for 6300 records
+2024-10-24 17:08:03,611 - INFO - ...cgc_bin == 1 for 559 records
+2024-10-24 17:08:03,612 - INFO - 
+2024-10-24 17:08:03,612 - INFO - ...with COSMIC
+2024-10-24 17:08:12,340 - INFO - ...datasource size: 13147512 rows and 2 columns
+2024-10-24 17:08:28,512 - INFO - ...annotation complete, 6859 records annotated
+2024-10-24 17:08:28,515 - INFO - ...cosmic_bin == 0 for 424 records
+2024-10-24 17:08:28,516 - INFO - ...cosmic_bin == 1 for 6435 records
+2024-10-24 17:08:28,516 - INFO - 
+2024-10-24 17:08:28,908 - INFO - ...with GSEA Cancer Pathways
+2024-10-24 17:08:28,978 - INFO - ...datasource size: 1537 rows and 1 columns
+2024-10-24 17:08:28,983 - INFO - ...annotation complete, 6859 records annotated
+2024-10-24 17:08:28,985 - INFO - ...gsea_pathways_bin == 0 for 6467 records
+2024-10-24 17:08:28,985 - INFO - ...gsea_pathways_bin == 1 for 392 records
+2024-10-24 17:08:28,985 - INFO - 
+2024-10-24 17:08:28,986 - INFO - ...with GSEA Cancer Modules
+2024-10-24 17:08:29,010 - INFO - ...datasource size: 8405 rows and 1 columns
+2024-10-24 17:08:29,017 - INFO - ...annotation complete, 6859 records annotated
+2024-10-24 17:08:29,021 - INFO - ...gsea_modules_bin == 0 for 3741 records
+2024-10-24 17:08:29,021 - INFO - ...gsea_modules_bin == 1 for 3118 records
+2024-10-24 17:08:29,021 - INFO - 
+2024-10-24 17:08:35,412 - INFO - ...genomic similarity to cancer cell lines complete. Summarizing...
+2024-10-24 17:08:35,413 - INFO - ...genomic similarity to cancer cell lines summarized
+2024-10-24 17:08:35,414 - INFO - Genomic similarity to cancer cell lines complete
+
+2024-10-24 17:08:35,414 - INFO - --- Writing outputs ---
+2024-10-24 17:08:35,419 - INFO - Writing Clinically relevant observations to 2024-10-24-example-outputs-all-enabled/example.actionable.txt: 21 rows and 44 columns
+2024-10-24 17:08:35,429 - INFO - Writing Germline variants in ACMG genes to 2024-10-24-example-outputs-all-enabled/example.germline.acmg.txt: 4 rows and 34 columns
+2024-10-24 17:08:35,437 - INFO - Writing Germline variants in cancer related genes to 2024-10-24-example-outputs-all-enabled/example.germline.cancer_related.txt: 10 rows and 38 columns
+2024-10-24 17:08:35,443 - INFO - Writing Germline variants in genes related to hereditary cancers to 2024-10-24-example-outputs-all-enabled/example.germline.hereditary_cancers.txt: 5 rows and 34 columns
+2024-10-24 17:08:35,446 - INFO - Writing Integrated summary to 2024-10-24-example-outputs-all-enabled/example.integrated.summary.txt: 20 rows and 4 columns
+2024-10-24 17:08:35,452 - INFO - Writing Variants in genes related to microsatellite instability to 2024-10-24-example-outputs-all-enabled/example.msi_variants.txt: 1 rows and 38 columns
+2024-10-24 17:08:35,454 - INFO - Writing Tumor mutational burden to 2024-10-24-example-outputs-all-enabled/example.mutational_burden.txt: 1 rows and 10 columns
+2024-10-24 17:08:35,463 - INFO - Writing Somatic variants that were scored to 2024-10-24-example-outputs-all-enabled/example.somatic.scored.txt: 265 rows and 41 columns
+2024-10-24 17:08:35,475 - INFO - Writing Somatic variants that were filtered to 2024-10-24-example-outputs-all-enabled/example.somatic.filtered.txt: 220 rows and 23 columns
+2024-10-24 17:08:35,478 - INFO - Writing Therapeutic strategies that were highlighted to 2024-10-24-example-outputs-all-enabled/example.therapeutic_strategies.txt: 2 rows and 11 columns
+2024-10-24 17:08:35,479 - INFO - Writing Preclinical efficacy of clinically relevant relationships to 2024-10-24-example-outputs-all-enabled/example.preclinical.efficacy.txt: 18 rows and 16 columns
+2024-10-24 17:08:35,481 - INFO - Writing Genomic similarity to cancer cell lines to 2024-10-24-example-outputs-all-enabled/example.matchmaker.txt: 453 rows and 3 columns
+
+2024-10-24 17:08:35,484 - INFO - --- Generating and writing figures ---
+2024-10-24 17:08:35,485 - INFO - Plotting DNA and RNA somatic variant overlap
+2024-10-24 17:08:36,003 - INFO - Figure generation completed
+
+2024-10-24 17:08:36,003 - INFO - --- Generating actionability report ---
+2024-10-24 17:08:36,003 - INFO - Generating metadata dictionary for report
+2024-10-24 17:08:36,005 - INFO - Generating report
+2024-10-24 17:08:36,022 - INFO - Rendering report to: /example.report.html
+2024-10-24 17:08:36,355 - INFO - Report generation completed
+
+2024-10-24 17:08:36,355 - INFO - Molecular Oncology Almanac process complete. Runtime: 386.5951 seconds
