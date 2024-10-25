@@ -7,34 +7,35 @@
         <table class="table table-hover table-striped table-condensed">
             {% include 'report_table/columns_therapies.html' %}
             <tbody>
-                {% for index in report.alterations[report.alterations['sensitive_predictive_implication'].notnull()].sort_values(['sensitive_predictive_implication_map', 'sensitive_score_bin_map'], ascending=[False, False]).index.tolist() %}
-
-                <tr>
-                    <td>{{ report.alterations.loc[index, 'sensitive_predictive_implication'] }}
-                        <br>
-                        {{ report.alterations.loc[index, 'sensitive_score_bin'] }}
-                        <br>
-                        {% include 'modals/evidence_sensitive.html' %}
-                    </td>
-                    <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
-                    <td>{{ report.alterations.loc[index, 'feature_display'] }}
-                    <td>
-                        {% if report.alterations.loc[index, 'sensitive_therapy_name'] != '' %}
-                            {{ report.alterations.loc[index, 'sensitive_therapy_name'] }}
-                        {% else %}
-                            {{ report.alterations.loc[index, 'sensitive_therapy_type'] }}
-                        {% endif %}
-                        <br>
-                        {{ report.alterations.loc[index, 'sensitive_description'] }}
-                        {% if report.alterations.loc[index, 'sensitive_url'] != "" %}
-                            <a href="{{ report.alterations.loc[index, 'sensitive_url'] }}" target="_blank">
-                                [source]
-                            </a>
-                        {% endif %}
-                        {% include 'modals/efficacy.html' %}
-                    </td>
-                </tr>
-                {% endfor %}
+                {% if not report.alterations.empty %}
+                    {% for index in report.alterations[report.alterations['sensitive_predictive_implication'].notnull()].sort_values(['sensitive_predictive_implication_map', 'sensitive_score_bin_map'], ascending=[False, False]).index.tolist() %}
+                    <tr>
+                        <td>{{ report.alterations.loc[index, 'sensitive_predictive_implication'] }}
+                            <br>
+                            {{ report.alterations.loc[index, 'sensitive_score_bin'] }}
+                            <br>
+                            {% include 'modals/evidence_sensitive.html' %}
+                        </td>
+                        <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
+                        <td>{{ report.alterations.loc[index, 'feature_display'] }}
+                        <td>
+                            {% if report.alterations.loc[index, 'sensitive_therapy_name'] != '' %}
+                                {{ report.alterations.loc[index, 'sensitive_therapy_name'] }}
+                            {% else %}
+                                {{ report.alterations.loc[index, 'sensitive_therapy_type'] }}
+                            {% endif %}
+                            <br>
+                            {{ report.alterations.loc[index, 'sensitive_description'] }}
+                            {% if report.alterations.loc[index, 'sensitive_url'] != "" %}
+                                <a href="{{ report.alterations.loc[index, 'sensitive_url'] }}" target="_blank">
+                                    [source]
+                                </a>
+                            {% endif %}
+                            {% include 'modals/efficacy.html' %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>

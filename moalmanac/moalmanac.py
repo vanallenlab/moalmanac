@@ -333,7 +333,7 @@ class Process:
                 logger.Messages.general(message="No passed validation sequencing variants to annotate with")
         else:
             logger.Messages.general(message="No somatic variants detected. Skipping annotation and evaluation.")
-            evaluated= features.Features.create_empty_dataframe()
+            evaluated = features.Features.create_empty_dataframe()
         logger.Messages.general(message="Annotation and evaluation of somatic variants complete", add_line_break=True)
         return evaluated
 
@@ -706,8 +706,6 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
 
 
 if __name__ == "__main__":
-    start_time = time.time()
-
     arg_parser = argparse.ArgumentParser(
         prog='Molecular Oncology Almanac',
         description='A clinical interpretation algorithm for cancer genomics.'
@@ -854,21 +852,19 @@ if __name__ == "__main__":
     config_ini = Ini.read(args.config, extended_interpolation=False, convert_to_dictionary=False)
 
     db_paths = Ini.read(args.dbs, extended_interpolation=True, convert_to_dictionary=True)
+    db_paths = db_paths['paths']
+
     if args.preclinical_dbs:
         preclinical_db_paths = Ini.read(args.preclinical_dbs, extended_interpolation=True, convert_to_dictionary=True)
+        preclinical_db_paths = preclinical_db_paths['paths']
     else:
         preclinical_db_paths = None
 
-    print(db_paths)
     main(
         patient=patient_dict,
         inputs=inputs_dict,
         output_folder=output_directory,
         config=config_ini,
-        dbs=db_paths['databases'],
-        dbs_preclinical=preclinical_db_paths['preclinical']
+        dbs=db_paths,
+        dbs_preclinical=preclinical_db_paths
     )
-
-    end_time = time.time()
-    time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
-    print(time_statement)
