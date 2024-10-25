@@ -7,12 +7,14 @@
         <table class="table table-hover table-striped table-condensed">
             {% include 'report_table/columns_biological.html' %}
             <tbody>
-                {% for label, group in report.alterations[report.alterations['score_bin'] == 'Biologically Relevant'].groupby('feature_type') %}
-                <tr>
-                    <td>{{ label }}</td>
-                    <td>{{ ', '.join(group['feature_display'].sort_values().tolist()) }}</td>
-                </tr>
-                {% endfor %}
+                {% if not report.alterations.empty %}
+                    {% for label, group in report.alterations[report.alterations['score_bin'] == 'Biologically Relevant'].groupby('feature_type') %}
+                    <tr>
+                        <td>{{ label }}</td>
+                        <td>{{ ', '.join(group['feature_display'].sort_values().tolist()) }}</td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>

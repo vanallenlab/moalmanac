@@ -7,31 +7,33 @@
         <table class="table table-hover table-striped table-condensed">
             {% include 'report_table/columns_therapies.html' %}
             <tbody>
-                {% for index in report.alterations[report.alterations['resistance_predictive_implication'].notnull()].sort_values(['resistance_predictive_implication_map', 'resistance_score_bin_map'], ascending=[False, False]).index.tolist() %}
-                <tr>
-                    <td>{{ report.alterations.loc[index, 'resistance_predictive_implication'] }}
-                        <br>
-                        {{ report.alterations.loc[index, 'resistance_score_bin'] }}
-                        <br>
-                        {% include 'modals/evidence_resistance.html' %}
-                    <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
-                    <td>{{ report.alterations.loc[index, 'feature_display'] }}</td>
-                    <td>
-                        {% if report.alterations.loc[index, 'resistance_therapy_name'] != '' %}
-                            {{ report.alterations.loc[index, 'resistance_therapy_name'] }}
-                        {% else %}
-                            {{ report.alterations.loc[index, 'resistance_therapy_type'] }}
-                        {% endif %}
-                        <br>
-                        {{ report.alterations.loc[index, 'resistance_description'] }}
-                        {% if report.alterations.loc[index, 'resistance_url'] != "" %}
-                            <a href="{{ report.alterations.loc[index, 'resistance_url'] }}" target="_blank">
-                                [source]
-                            </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
+                {% if not report.alterations.empty %}
+                    {% for index in report.alterations[report.alterations['resistance_predictive_implication'].notnull()].sort_values(['resistance_predictive_implication_map', 'resistance_score_bin_map'], ascending=[False, False]).index.tolist() %}
+                    <tr>
+                        <td>{{ report.alterations.loc[index, 'resistance_predictive_implication'] }}
+                            <br>
+                            {{ report.alterations.loc[index, 'resistance_score_bin'] }}
+                            <br>
+                            {% include 'modals/evidence_resistance.html' %}
+                        <td>{{ report.alterations.loc[index, 'feature_type'] }}</td>
+                        <td>{{ report.alterations.loc[index, 'feature_display'] }}</td>
+                        <td>
+                            {% if report.alterations.loc[index, 'resistance_therapy_name'] != '' %}
+                                {{ report.alterations.loc[index, 'resistance_therapy_name'] }}
+                            {% else %}
+                                {{ report.alterations.loc[index, 'resistance_therapy_type'] }}
+                            {% endif %}
+                            <br>
+                            {{ report.alterations.loc[index, 'resistance_description'] }}
+                            {% if report.alterations.loc[index, 'resistance_url'] != "" %}
+                                <a href="{{ report.alterations.loc[index, 'resistance_url'] }}" target="_blank">
+                                    [source]
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
