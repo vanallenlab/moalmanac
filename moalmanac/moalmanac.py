@@ -860,7 +860,6 @@ if __name__ == "__main__":
     else:
         preclinical_db_paths = None
 
-    print(db_paths)
     main(
         patient=patient_dict,
         inputs=inputs_dict,
