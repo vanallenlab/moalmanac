@@ -10,7 +10,6 @@ from datasources import CancerGeneCensus as DatasourceCGC
 from datasources import Preclinical as DatasourcePreclinical
 
 from config import COLNAMES
-from config import CONFIG
 
 
 class Matchmaker:
@@ -27,20 +26,14 @@ class Matchmaker:
     feature_columns = [feature_type, feature, alt_type, alt]
 
     cgc_bin = 'cgc_bin'
-
-    feature_types_section = 'feature_types'
-    feature_types_config = CONFIG[feature_types_section]
-    cn = feature_types_config['cna']
-    rearrangement = feature_types_config['fusion']
-    variant = feature_types_config['mut']
     fusion = 'Fusion'
 
     @classmethod
-    def concat_case_comparisons(cls, somatic, dbs):
+    def concat_case_comparisons(cls, somatic, dbs, variant_string, copy_number_string, rearrangement_string):
         somatic[cls.model_id] = cls.case_profile
-        case_variants = cls.subset_dataframe_eq(somatic, cls.feature_type, cls.variant)
-        case_cns = cls.subset_dataframe_eq(somatic, cls.feature_type, cls.cn)
-        case_fusions = cls.subset_dataframe_eq(somatic, cls.feature_type, cls.rearrangement)
+        case_variants = cls.subset_dataframe_eq(somatic, cls.feature_type, variant_string)
+        case_cns = cls.subset_dataframe_eq(somatic, cls.feature_type, copy_number_string)
+        case_fusions = cls.subset_dataframe_eq(somatic, cls.feature_type, rearrangement_string)
         if case_fusions.shape[0] > 0:
             case_fusions = cls.format_fusions(case_fusions)
 
@@ -54,31 +47,41 @@ class Matchmaker:
         fusion_columns = [cls.feature, cls.partner, cls.model_id]
         fusions = cls.concat_dataframes(case_fusions, comparison_fusions, fusion_columns)
 
-        variants[cls.feature_type] = cls.variant
-        copy_numbers[cls.feature_type] = cls.cn
-        fusions[cls.feature_type] = cls.rearrangement
+        variants[cls.feature_type] = variant_string
+        copy_numbers[cls.feature_type] = copy_number_string
+        fusions[cls.feature_type] = rearrangement_string
         fusions[cls.alt_type] = cls.fusion
 
         return {
-            cls.variant: variants,
-            cls.cn: copy_numbers,
-            cls.rearrangement: fusions
+            variant_string: variants,
+            copy_number_string: copy_numbers,
+            rearrangement_string: fusions
         }
 
     @classmethod
-    def compare(cls, dbs, dbs_preclinical, somatic, case_sample_id):
+    def compare(cls, dbs, dbs_preclinical, somatic, case_sample_id, config):
         cgc = DatasourceCGC.import_ds(dbs)
         almanac = DatasourceAlmanac.import_ds(dbs)
 
-        merged = cls.concat_case_comparisons(somatic, dbs_preclinical)
-        annotated = AnnotatorPreclinicalMatchmaking.annotate(merged, dbs)
+        somatic_variant_biomarker_type_string = config['feature_types']['mut']
+        copy_number_variant_biomarker_type_string = config['feature_types']['cna']
+        fusion_biomarker_type_string = config['feature_types']['fusion']
+
+        merged = cls.concat_case_comparisons(
+            somatic = somatic,
+            dbs = dbs_preclinical,
+            variant_string = somatic_variant_biomarker_type_string,
+            copy_number_string = copy_number_variant_biomarker_type_string,
+            rearrangement_string = fusion_biomarker_type_string
+        )
+        annotated = AnnotatorPreclinicalMatchmaking.annotate(merged, dbs, config)
         samples_to_use = cls.subset_samples(dbs_preclinical)
 
         calculated = SNFTypesCGCwithEvidence.calculate(annotated, samples_to_use, cgc, almanac)
         case = cls.subset_dataframe_eq(calculated, 'case', cls.case_profile)
         case = case.reset_index(drop=True)
         case = case.sort_values(by=SNFTypesCGCwithEvidence.label, ascending=True)
-        case['case'].replace(cls.case_profile, case_sample_id, inplace=True)
+        case['case'] = case['case'].replace(cls.case_profile, case_sample_id)
         return case
 
     @classmethod
@@ -109,12 +112,16 @@ class Matchmaker:
     @classmethod
     def subset_samples(cls, dbs):
         summary = dbs[cls.summary]
-        idx_samples_to_use = (summary['use']
-                              .astype(str)
-                              .replace('True', 1)
-                              .replace('False', 0)
-                              .astype(int)
-                              .eq(1))
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            idx_samples_to_use = (
+                summary['use']
+                .astype(str)
+                .replace('True', 1)
+                .replace('False', 0)
+                .astype(int)
+                .eq(1)
+            )
         return summary[idx_samples_to_use]['broad'].tolist() + [cls.case_profile]
 
 

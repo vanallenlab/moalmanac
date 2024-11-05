@@ -3,8 +3,11 @@
 Example inputs can be found in the [`example_data/`](/example_data/) folder, found in the root directory of this repository. 
 
 # Table of Contents
+The following describes required and optional arguments to run `moalmanac/moalmanac.py`.
 * [Required arguments](#required-arguments)  
     - [Patient id](#patient-id)
+    - [Config](#config)
+    - [Databases](#databases)
 * [Optional arguments](#optional-arguments)
     - [Tumor type](#tumor-type)
     - [Stage](#stage)
@@ -16,19 +19,59 @@ Example inputs can be found in the [`example_data/`](/example_data/) folder, fou
     - [Germline variants](#germline-variants)
     - [Somatic variants from validation sequencing](#somatic-variants-from-validation-sequencing)
     - [Microsatellite status](#microsatellite-status)
+    - [Mutational signatures](#mutational-signatures)
     - [Purity](#purity)
     - [Ploidy](#ploidy)
     - [Whole genome doubling](#whole-genome-doubling)
     - [Disable matchmaking](#disable-matchmaking)
     - [Description](#description)
     - [Output directory](#output-directory)
-    - [Simplified input](#simplified-input)
+    - [Preclinical databases](#preclinical-databases)
+
+Alternatively, a simplified version of the interpretation algorithm can be run by using `moalmanac/simplified_input.py`. 
+- [Simplified input arguments](#simplified-input)
     
 # Required arguments
 The following arguments are required to run Molecular Oncology Almanac.
 
 ## Patient id
 `--patient_id` expects a single string value which is used for labeling outputs. 
+
+## Config
+`--config` expects a file path to the [config.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/config.ini) file. 
+
+This config file contains the following sections,
+- `function_toggle` - allows several features of the MOAlmanac algorithm to be enabled or disabled
+- `logging` - specifies the [level](https://docs.python.org/3/library/logging.html#levels) that the logger should be configured to use
+- `versions` - specifies the versions of the [MOAlmanac algorithm (interpreter)](https://github.com/vanallenlab/moalmanac/releases) and [database](https://github.com/vanallenlab/moalmanac-db/releases).    
+- `exac` - specifies the allele frequency threshold used with [ExAC](https://github.com/vanallenlab/moalmanac/tree/main/datasources/exac) to specify if a variant is a common variant or not
+- `fusion` - specifies minimum spanning fragments required for review by MOAlmanac, column names expected from inputs, and how "Fusion" should be written from input
+- `mutations` - specifies the minimum coverage and allelic fraction that a variant needs for review by MOAlmanac
+- `seg` - specifies the percentile to evaluate copy gain and loss variants from segmented copy number input files, as well as how amplification and deletion should be written as strings
+- `signatures` - specifies the minimum contribution required to review COSMIC mutational signatures by mMOAlmanac
+- `validation_sequencing` - Thresholds for minimum power to detect variants and minimum allelic fraction for annotation from validation sequencing. This is further described in the [Methods section](https://www.nature.com/articles/s43018-021-00243-3#Sec8) of our paper.
+- `feature_types` - String labels for each biomarker type passed to the algorithm. These values will be included in `feature_type` column of outputs.
+
+## Databases
+`--dbs` expects a file path to the [annotation-databases.ini](../moalmanac/annotation-databases.ini) file.
+
+This config file contains a single section `databases` that lists the following:
+- `root` - path to `datasources/` directory
+- `almanac_handle` - path within `root` that points to the `molecular-oncology-almanac.json` datasource file
+- `cancerhotspots_handle` - path within `root` that points to the Cancer Hotspots datasource file
+- `3dcancerhotspots_handle` - path within `root` that points to the Cancer Hotspots 3D datasource file
+- `cgc_handle` - path within `root` that points to the Cancer Gene Census file
+- `cosmic_handle` - path within `root` that points to the COSMIC datasource file
+- `gsea_pathways_handle` - path within `root` that points to the GSEA pathways datasource file
+- `gsea_modules_handle` - path within `root` that points to the GSEA modules datasource file
+- `exac_handle` - path within `root` that points to the ExAC datasource file
+- `acmg_handle` - path within `root` that points to the ACMG datasource file
+- `clinvar_handle` - path within `root` that points to the ClinVar datasource file
+- `hereditary_handle` - path within `root` that points to the genes related to hereditary cancers datasource file
+- `oncotree_handle` - path within `root` that points to the Oncotree datasource file
+- `lawrence_handle` - path within `root` that points to the Lawrence et al. TCGA mutational burden datasource file
+
+For more information about each datasource, view the [datasources directory](../datasources/README.md)
 
 # Optional arguments
 Molecular Oncology Almanac will run successfully given any combination of the following arguments: 
@@ -124,7 +167,7 @@ This input is looking for an integer value.
 
 The rows associated with _TP53_, _CDKN2A_, and _EGFR_ will be interpreted and scored by Molecular Oncology Almanac while _BRAF_ will be filtered.
 
-### Required files
+### Required fields
 Required fields can be changed from their default expectations by editing the appropriate section of [colnames.ini](https://github.com/vanallenlab/moalmanac/blob/main/moalmanac/colnames.ini). Column names are **not** case-sensitive. 
 - `gene`, gene symbol associated with the copy number alteration
 - `call`, copy number event of the gene. `Amplification` and `Deletion` are accepted and all other values will be filtered.
@@ -238,6 +281,23 @@ At least one of the following also must be included:
 
 Microsatellite status is reported in the clinical actionability report. 
 
+## Mutational signatures
+`--mutational_signatures` anticipates a tab delimited file which contains contributions to Single Base Substitution (SBS) Mutational Signatures from [COSMIC version 3.4](https://cancer.sanger.ac.uk/signatures/sbs/). The file should only contain signature contributions for the tumor sample being studied. We recommend generating SBS mutational signatures with [SigProfilerAssignment](https://github.com/AlexandrovLab/SigProfilerAssignment), and have prepared [a wrapper GitHub repository](https://github.com/vanallenlab/SigProfilerAssignment-wrapper) to run SigProfilerAssignment and format signature contributions as expected.  
+
+### Example
+| signature | contribution | 
+|---|--------------|
+| SBS1 | 0.03846154   |
+| SBS2 | 0            |
+| SBS3 | 0.8525641    |
+| ... | ...          |
+| SBS95 | 0            |
+
+### Required fields,
+The required fields for this file can be changed from their default expectations by editing the appropriate section of `colnames.ini`. Column names are **not** case sensitive.
+- `signature`, labels for each of the 79 SBS mutational signatures included in COSMIC mutational signatures [version 3.4](https://cancer.sanger.ac.uk/signatures/sbs/) 
+- `contribution`, a float value between 0 and 1 for the row's associated signature weight. This column's values should sum to 1. 
+
 ## Purity
 `--purity` anticipates a float value between 0.0 and 1.0 for the reported tumor purity. This is just used for reporting in the clinical actionability report.
 
@@ -256,7 +316,26 @@ Microsatellite status is reported in the clinical actionability report.
 ## Output directory
 `--output-directory` allows users to specify an output directory to write outputs to, the current working directory will be used if unspecified. 
 
-## Simplified input
+## Preclinical databases
+`--preclinical-dbs` expects a file path to the [preclinical-databases.ini](../moalmanac/preclinical-databases.ini) file. This argument and ini file are required to run either module that either:
+- Looks at the efficacy of relationships in cancer cell lines
+- Performs genomic similarity to cancer cell lines
+
+This config file contains a single section `preclinical` that lists the following:
+- `root` - path to `datasources/preclinical/` directory
+- `almanac_gdsc_mappings` - path within `root` that points to the `formatted/almanac-gdsc-mappings.json` datasource file
+- `summary` - path within `root` that points to the `formatted/cell-lines.summary.txt` datasource file
+- `variants` - path within `root` that points to the `annotated/cell-lines.somatic-variants.annotated.txt` datasource file
+- `copynumbers` - path within `root` that points to the `annotated/cell-lines.copy-numbers.annotated.txt` file
+- `fusions` - path within `root` that points to the `annotated/cell-lines.fusions.annotated.txt` datasource file
+- `fusions1` - path within `root` that points to the `annotated/cell-lines.fusions.annotated.gene1.txt` datasource file
+- `fusions2` - path within `root` that points to the `annotated/cell-lines.fusions.annotated.gene2.txt` datasource file
+- `gdsc` - path within `root` that points to the `formatted/sanger.gdsc.txt` datasource file
+- `dictionarey` - path within `root` that points to the `cell-lines.pkl` datasource file
+
+For more information about each datasource, view the [datasources/preclinical/ directory](../datasources/preclinical/README.md)
+
+# Simplified input
 `--input` is an argument only used with `simplified_input.py`. It accepts a tab delimited file with one genomic alteration per row based on MOAlmanac's [standardized feature columns](../docs/description-of-outputs.md#standardized-feature-columns). In short the following columns are expected,
 1. `feature_type`, the data type of the molecular features and accepts `Somatic Variant`, `Germline Variant`, `Copy Number`, or `Rearrangement`. These strings can be customized in the `feature_types` section of [config.ini](config.ini).
 2. `gene` or `feature`, the gene name of the genomic alteration.

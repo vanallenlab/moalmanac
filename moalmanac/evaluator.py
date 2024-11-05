@@ -4,11 +4,10 @@ import re
 
 import datasources
 import features
-from config import CONFIG
 from config import COLNAMES
 
 
-class Evaluator(object):
+class Evaluator:
     """
     Evaluate based on annotated bins
     """
@@ -81,20 +80,6 @@ class Evaluator(object):
     microsatellite_section = 'microsatellite'
     supporting_variants = COLNAMES[microsatellite_section]['supporting_variants']
 
-    feature_type_section = 'feature_types'
-    mut_type = CONFIG[feature_type_section]['mut']
-    copynumber_type = CONFIG[feature_type_section]['cna']
-    germline_type = CONFIG[feature_type_section]['germline']
-    fusion_type = CONFIG[feature_type_section]['fusion']
-    burden_type = CONFIG[feature_type_section]['burden']
-    microsatellite_type = CONFIG[feature_type_section]['microsatellite']
-    signature_type = CONFIG[feature_type_section]['signature']
-    aneuploidy_type = CONFIG[feature_type_section]['aneuploidy']
-
-    mutations_section = 'mutations'
-    min_coverage = CONFIG[mutations_section]['min_coverage']
-    min_af = CONFIG[mutations_section]['min_af']
-
     @classmethod
     def assign_bin(cls, df, bin_column, bin_label):
         series_score_bin = df.loc[:, cls.score_bin]
@@ -141,21 +126,22 @@ class Evaluator(object):
         return series.map(cls.almanac_bin_map)
 
     @staticmethod
-    def remap_almanac_bins(series, old_values, new_values):
-        return series.astype(int).replace(to_replace=old_values, value=new_values)
+    def remap_almanac_bins(series, old_value, new_value):
+        return series.astype(int).replace(to_replace=old_value, value=new_value)
 
     @classmethod
-    def remove_low_allele_fraction_variants(cls, df):
-        idx_mut = df[df[cls.feature_type].isin([cls.mut_type, cls.germline_type])].index
-        idx_low_quality = df[df[cls.tumor_f].astype(float).lt(float(cls.min_af))].index
+    def remove_low_allele_fraction_variants(cls, df, minimum_allele_fraction=0.05):
+        # hard coding somatic and germline variant strings until future refactor
+        idx_mut = df[df[cls.feature_type].isin(['Somatic Variant', 'Germline Variant'])].index
+        idx_low_quality = df[df[cls.tumor_f].astype(float).lt(float(minimum_allele_fraction))].index
         idx_low_quality_muts = idx_mut.intersection(idx_low_quality)
         idx = df.index.difference(idx_low_quality_muts)
         return df.loc[idx, :]
 
     @classmethod
-    def remove_low_coverage_variants(cls, df):
-        idx_mut = df[df[cls.feature_type].isin([cls.mut_type, cls.germline_type])].index
-        idx_low_quality = df[df[cls.coverage].astype(float).le(float(cls.min_coverage))].index
+    def remove_low_coverage_variants(cls, df, minimum_coverage=15):
+        idx_mut = df[df[cls.feature_type].isin(['Somatic Variant', 'Germline Variant'])].index
+        idx_low_quality = df[df[cls.coverage].astype(float).le(float(minimum_coverage))].index
         idx_low_quality_muts = idx_mut.intersection(idx_low_quality)
         idx = df.index.difference(idx_low_quality_muts)
         return df.loc[idx, :]
@@ -177,7 +163,7 @@ class Evaluator(object):
 
     @classmethod
     def subset_almanac_bin(cls, df):
-        return df[df[cls.almanac_bin].fillna(0.0).astype(float) != 0.0]
+        return df[df[cls.almanac_bin].astype(float).fillna(0.0) != 0.0]
 
 
 class Actionable:
@@ -193,46 +179,48 @@ class Actionable:
         return ', '.join(map(str, series.unique()))
 
     @classmethod
-    def display_aneuploidy(cls, df, idx, feature):
-        return df.loc[idx, feature]
+    def display_aneuploidy(cls, df, idx):
+        return df.loc[idx, Evaluator.feature]
 
     @classmethod
-    def display_burden(cls, df, idx, alt):
-        return df.loc[idx, alt].astype(str)
+    def display_burden(cls, df, idx):
+        return df.loc[idx, Evaluator.alt].astype(str)
 
     @classmethod
-    def display_copynumber(cls, df, idx, feature, alt_type):
-        gene = df.loc[idx, feature]
-        direction = df.loc[idx, alt_type]
+    def display_copynumber(cls, df, idx):
+        gene = df.loc[idx, Evaluator.feature]
+        direction = df.loc[idx, Evaluator.alt_type]
         # Copy Number: CDKN2A Deletion
         return gene + ' ' + direction
 
     @classmethod
-    def display_fusion(cls, df, idx, alt):
-        fusion = df.loc[idx, alt]
+    def display_fusion(cls, df, idx):
+        fusion = df.loc[idx, Evaluator.alt]
         # Rearrangement: BCR--ABL1 Fusion
         return fusion + ' Fusion'
 
     @classmethod
-    def display_microsatellite_stability(cls, df, idx, feature):
-        return df.loc[idx, feature]
+    def display_microsatellite_stability(cls, df, idx):
+        return df.loc[idx, Evaluator.feature]
 
     @classmethod
-    def display_microsatellite_variants(cls, df, idx, feature, alt):
-        return df.loc[idx, feature] + ': ' + df.loc[idx, alt]
+    def display_microsatellite_variants(cls, df, idx):
+        return df.loc[idx, Evaluator.feature] + ': ' + df.loc[idx, Evaluator.alt]
 
     @classmethod
-    def display_signature(cls, df, idx, feature, alt):
-        signature = df.loc[idx, feature].str.replace('COSMIC Signature', 'COSMIC Signature (version 2)')
-        contribution = df.loc[idx, alt].astype(float).multiply(100).round(0).astype(int).astype(str)
+    def display_signature(cls, df, idx):
+        # before_string = "COSMIC Signature"
+        # after_string = f"COSMIC Signature (version {version})"
+        signature = df.loc[idx, Evaluator.feature]#.str.replace(before_string, after_string)
+        contribution = df.loc[idx, Evaluator.alt].astype(float).multiply(100).round(0).astype(int).astype(str)
         # Signature: Cosmic Signature 7 (65%)
         return signature + ' (' + contribution + '%)'
 
     @classmethod
-    def display_variant(cls, df, idx, feature, alt_type, alt):
-        gene = df.loc[idx, feature]
-        protein_change = df.loc[idx, alt]
-        variant_class = df.loc[idx, alt_type]
+    def display_variant(cls, df, idx):
+        gene = df.loc[idx, Evaluator.feature]
+        protein_change = df.loc[idx, Evaluator.alt]
+        variant_class = df.loc[idx, Evaluator.alt_type]
         # exon, pathogenic, cDNA, linebreaks
         # Gene p.Foo (c.DNA)
         # Exon 12 Missense
@@ -240,14 +228,14 @@ class Actionable:
         return gene + ' ' + protein_change + ' (' + variant_class + ')'
 
     @classmethod
-    def evaluate(cls, somatic, germline, ms_variants, ms_status, burden, signatures, wgd):
+    def evaluate(cls, somatic, germline, ms_variants, ms_status, burden, signatures, wgd, config):
         somatic = cls.format_mutations(somatic)
         germline = cls.format_mutations(germline)
 
         germline = Evaluator.remove_benign_variants(germline)
         germline = Evaluator.remove_common_variants(germline)
 
-        ms_variants_summary = cls.summarize_ms_variants(ms_variants)
+        ms_variants_summary = cls.summarize_ms_variants(ms_variants, config)
 
         if not burden.loc[0, Evaluator.high_burden_boolean]:
             burden = burden.drop(burden.index[0])
@@ -255,50 +243,39 @@ class Actionable:
         actionable_list = []
         for dataframe in [somatic, germline, ms_variants_summary, ms_status, burden, signatures, wgd]:
             actionable_list.append(Evaluator.subset_almanac_bin(dataframe))
-        df = pd.concat(actionable_list, ignore_index=True)
+        df = features.Features.concat_list_of_dataframes(list_of_dataframes=actionable_list)
 
-        df[Evaluator.feature_display] = cls.format_feature_display(
-            df.fillna(''), Evaluator.feature_display,
-            Evaluator.feature_type, Evaluator.feature,
-            Evaluator.alt_type, Evaluator.alt)
+        df[Evaluator.feature_display] = cls.format_feature_display(df=df, config=config)
         return df.sort_values(cls.sort_columns, ascending=False)
 
     @classmethod
-    def format_feature_display(cls, df, feature_display_column,
-                               feature_type_column, feature_column,
-                               alt_type_column, alt_column):
-        idx_somatic = df[feature_type_column].isin([Evaluator.mut_type])
-        idx_germline = df[feature_type_column].isin([Evaluator.germline_type])
-        idx_cn = df[feature_type_column].isin([Evaluator.copynumber_type])
-        idx_fusion = df[feature_type_column].isin([Evaluator.fusion_type])
-        idx_msi = df[feature_type_column].isin([Evaluator.microsatellite_type])
+    def format_feature_display(cls, df, config):
+        display_column = Evaluator.feature_display
+        feature_type_column = Evaluator.feature_type
+        feature_column = Evaluator.feature
+
+        biomarker_types = config['feature_types']
+        idx_somatic = df[feature_type_column].isin([biomarker_types['mut']])
+        idx_germline = df[feature_type_column].isin([biomarker_types['germline']])
+        idx_cn = df[feature_type_column].isin([biomarker_types['cna']])
+        idx_fusion = df[feature_type_column].isin([biomarker_types['fusion']])
+        idx_msi = df[feature_type_column].isin([biomarker_types['microsatellite']])
         idx_msi_variants = df[feature_column].isin([Evaluator.supporting_variants])
         idx_msi = idx_msi & ~idx_msi_variants
-        idx_burden = df[feature_type_column].isin([Evaluator.burden_type])
-        idx_signature = df[feature_type_column].isin([Evaluator.signature_type])
-        idx_wgd = df[feature_column].isin([Evaluator.aneuploidy_type])
+        idx_burden = df[feature_type_column].isin([biomarker_types['burden']])
+        idx_signature = df[feature_type_column].isin([biomarker_types['signature']])
+        idx_wgd = df[feature_column].isin([biomarker_types['aneuploidy']])
 
-        df.loc[idx_wgd, feature_display_column] = cls.display_aneuploidy(
-            df, idx_wgd, feature_column)
-        df.loc[idx_somatic, feature_display_column] = cls.display_variant(
-            df, idx_somatic, feature_column, alt_type_column, alt_column)
-        df.loc[idx_germline, feature_display_column] = cls.display_variant(
-            df, idx_germline, feature_column, alt_type_column, alt_column)
-        df.loc[idx_cn, feature_display_column] = cls.display_copynumber(
-            df, idx_cn, feature_column, alt_type_column)
-        df.loc[idx_fusion, feature_display_column] = cls.display_fusion(
-            df, idx_fusion, alt_column)
-        df.loc[idx_msi, feature_display_column] = cls.display_microsatellite_stability(
-            df, idx_msi, feature_column)
-        df.loc[idx_msi_variants, feature_display_column] = cls.display_microsatellite_variants(
-            df, idx_msi_variants, feature_column, alt_column)
-        df.loc[idx_burden, feature_display_column] = cls.display_burden(
-            df, idx_burden, alt_column)
-        df.loc[idx_signature, feature_display_column] = cls.display_signature(
-            df, idx_signature, feature_column, alt_column)
-        df.loc[idx_wgd, feature_display_column] = cls.display_aneuploidy(
-            df, idx_wgd, feature_column)
-        return df.loc[:, feature_display_column]
+        df.loc[idx_somatic, display_column] = cls.display_variant(df=df, idx=idx_somatic)
+        df.loc[idx_germline, display_column] = cls.display_variant(df=df, idx=idx_germline)
+        df.loc[idx_cn, display_column] = cls.display_copynumber(df=df, idx=idx_cn)
+        df.loc[idx_fusion, display_column] = cls.display_fusion(df=df, idx=idx_fusion)
+        df.loc[idx_msi, display_column] = cls.display_microsatellite_stability(df=df, idx=idx_msi)
+        df.loc[idx_msi_variants, display_column] = cls.display_microsatellite_variants(df=df, idx=idx_msi_variants)
+        df.loc[idx_burden, display_column] = cls.display_burden(df=df, idx=idx_burden)
+        df.loc[idx_signature, display_column] = cls.display_signature(df=df, idx=idx_signature)
+        df.loc[idx_wgd, display_column] = cls.display_aneuploidy(df=df, idx=idx_wgd)
+        return df.loc[:, display_column]
 
     @classmethod
     def format_mutations(cls, df):
@@ -312,22 +289,15 @@ class Actionable:
         return series.str.replace('_Mutation', '')
 
     @classmethod
-    def summarize_ms_variants(cls, df):
+    def summarize_ms_variants(cls, df, config):
         df = cls.format_mutations(df)
         msi_summary = features.Features.create_empty_dataframe()
         if not df.empty:
             feature = Evaluator.supporting_variants
-            feature_displays = cls.format_feature_display(
-                df,
-                Evaluator.feature_display,
-                Evaluator.feature_type,
-                Evaluator.feature,
-                Evaluator.alt_type,
-                Evaluator.alt
-            )
+            feature_displays = cls.format_feature_display(df=df, config=config)
             feature_displays_list = cls.create_string_list(feature_displays)
 
-            msi_summary.loc[0, Evaluator.feature_type] = Evaluator.microsatellite_type
+            msi_summary.loc[0, Evaluator.feature_type] = config['feature_types']['microsatellite']
             msi_summary.loc[0, Evaluator.feature] = feature
             msi_summary.loc[0, Evaluator.alt] = feature_displays_list
             msi_summary.loc[0, Evaluator.almanac_bin] = 1
@@ -336,7 +306,7 @@ class Actionable:
         return msi_summary
 
 
-class Integrative(object):
+class Integrative:
     feature = datasources.Datasources.feature
     feature_type = datasources.Datasources.feature_type
     alt_type = datasources.Datasources.alt_type
@@ -357,13 +327,13 @@ class Integrative(object):
         return pd.DataFrame(None, columns=cls.columns, index=genes)
 
     @classmethod
-    def evaluate(cls, somatic, germline, dbs, feature_types):
+    def evaluate(cls, somatic, germline, dbs, config):
         genes = cls.return_datasource_genes(dbs)
         df = cls.create_integrated_df(genes)
 
-        somatic_mutations = cls.extract_feature_type(somatic, feature_types['mutation'])
-        somatic_copynumbers = cls.extract_feature_type(somatic, feature_types['copynumber'])
-        somatic_fusions = cls.extract_feature_type(somatic, feature_types['fusion'])
+        somatic_mutations = cls.extract_feature_type(somatic, config['feature_types']['mut'])
+        somatic_copynumbers = cls.extract_feature_type(somatic, config['feature_types']['cna'])
+        somatic_fusions = cls.extract_feature_type(somatic, config['feature_types']['fusion'])
 
         for gene in df.index:
             gene_muts = somatic_mutations[somatic_mutations[cls.feature].astype(str) == gene]
@@ -434,7 +404,7 @@ class Microsatellite(object):
         columns = [Evaluator.almanac_bin, Evaluator.sensitive_bin, Evaluator.resistance_bin, Evaluator.prognostic_bin]
         if variants.empty:
             for bin_column in columns:
-                df[bin_column] = Evaluator.remap_almanac_bins(df[bin_column].fillna(0), [3], [2])
+                df[bin_column] = Evaluator.remap_almanac_bins(series=df[bin_column], old_value=3, new_value=2)
         return Evaluator.evaluate_almanac(df)
 
     @classmethod
@@ -449,7 +419,8 @@ class Microsatellite(object):
 
         msi_somatic = cls.return_msi_variants(somatic)
         msi_germline = cls.return_msi_variants(germline)
-        return pd.concat([msi_somatic, msi_germline], axis=0, ignore_index=True)
+        msi_variants = [msi_somatic, msi_germline]
+        return features.Features.concat_list_of_dataframes(list_of_dataframes=msi_variants)
 
 
 class Strategies:

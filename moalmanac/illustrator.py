@@ -1,5 +1,4 @@
 from config import COLNAMES
-from config import CONFIG
 
 import io
 import base64
@@ -136,84 +135,7 @@ class PreclinicalEfficacy(Illustrator):
         return fig
 
 
-class Signatures(Illustrator):
-    colors = [Illustrator.tableau10['blue'], Illustrator.tableau10['orange'], Illustrator.tableau10['red'],
-              Illustrator.tableau10['grey'], Illustrator.tableau10['cyan'], Illustrator.tableau10['pink']]
-
-    @classmethod
-    def plot_context(cls, data, title='', ylabel='', grid=False, hline=0.0):
-        fig = plt.figure(figsize=(20, 4))
-
-        ax = plt.subplot()
-        ax.spines["top"].set_visible(False)
-        ax.spines["bottom"].set_visible(False)
-        ax.spines["right"].set_visible(False)
-        ax.spines["left"].set_visible(False)
-        plt.tick_params(axis="both", which="both", bottom=False, top=False,
-                        labelbottom=True, left=False, right=False, labelleft=True)
-
-        plt.bar(range(0, 16), data[0:16], color=cls.colors[0])       # C > A
-        plt.bar(range(16, 32), data[16:32], color=cls.colors[1])     # C > G
-        plt.bar(range(32, 48), data[32:48], color=cls.colors[2])     # C > T
-        plt.bar(range(48, 64), data[48:64], color=cls.colors[3])     # T > A
-        plt.bar(range(64, 80), data[64:80], color=cls.colors[4])     # T > C
-        plt.bar(range(80, 95), data[80:95], color=cls.colors[5])     # T > G
-
-        if float(hline) != 0.0:
-            plt.axhline(hline, linewidth=2, color='k', alpha=0.4, linestyle='dashed')
-
-        label_height = ax.get_ylim()[1] * 1.10
-        labels = ['C > A', 'C > G', 'C > T', 'T > A', 'T > C', 'T > G']
-        for i in range(0, len(labels)):
-            label_ = labels[i]
-            plt.text(6.05 + 16 * i, label_height, label_,  fontsize=15,
-                     bbox={'facecolor': cls.colors[i], 'alpha': 0.4, 'pad': 3})
-
-        plt.xlim(0, 96)
-        xlabels = data.index.str[0] + data.index.str[4] + data.index.str[6]
-        plt.xticks(range(0, 96), xlabels, rotation=90, fontsize=10)
-
-        plt.ylabel(ylabel,  fontsize=14)
-        plt.title(title,  fontsize=16, y=1.30)
-        plt.grid(grid)
-        plt.tight_layout()
-
-        return fig
-
-    @staticmethod
-    def create_title(suffix):
-        base = 'Trinucleotide contexts of somatic mutations'
-        return ', '.join([base, suffix])
-
-    @staticmethod
-    def create_ylabel(suffix):
-        base = 'Mutation Type'
-        return '\n'.join([base, suffix])
-
-    @classmethod
-    def generate_context_plot(cls, contexts):
-        title = cls.create_title('counts')
-        ylabel = cls.create_ylabel('Counts')
-        figure = cls.plot_context(contexts.astype(float), title, ylabel)
-        return figure
-
-    @classmethod
-    def generate_context_plot_normalized(cls, contexts):
-        title = cls.create_title('normalized')
-        ylabel = cls.create_ylabel('Probability')
-        data = contexts.astype(float) / contexts.astype(float).max()
-        figure = cls.plot_context(data.astype(float), title, ylabel)
-        return figure
-
-
 class ValidationOverlap(Illustrator):
-    config_section = 'validation_sequencing'
-    min_af = float(CONFIG[config_section]['min_af_for_annotation'])
-    min_power = float(CONFIG[config_section]['min_power'])
-
-    feature_type_section = 'feature_types'
-    feature_type_mutation = CONFIG[feature_type_section]['mut']
-
     section = 'validation_sequencing'
     gene = COLNAMES[section]['gene']
     feature_type = COLNAMES[section]['feature_type']
@@ -234,8 +156,8 @@ class ValidationOverlap(Illustrator):
         return data[cls.gene].astype(str) + ' ' + data[cls.alt].astype(str)
 
     @classmethod
-    def format_data(cls, df):
-        idx = df[df[cls.feature_type] == cls.feature_type_mutation].index
+    def format_data(cls, df, biomarker_type_string):
+        idx = df[df[cls.feature_type] == biomarker_type_string].index
         data = df.loc[idx, cls.columns].fillna(0.0)
         data[cls.coverage] = pd.to_numeric(data[cls.coverage])
         data[cls.tumor_f] = pd.to_numeric(data[cls.tumor_f])
@@ -245,7 +167,7 @@ class ValidationOverlap(Illustrator):
         return data
 
     @classmethod
-    def plot_overlap_af(cls, data, title=''):
+    def plot_overlap_af(cls, data, title='', minimum_power=0.95, minimum_allele_fraction=0.05):
         fig = plt.figure(figsize=(7, 7))
 
         ax = plt.subplot()
@@ -260,22 +182,22 @@ class ValidationOverlap(Illustrator):
         plt.yticks(fontsize=14)
         plt.xticks(fontsize=14)
 
-        powered = data[data[cls.validation_detection_power].astype(float) >= cls.min_power]
-        lowpower = data[data[cls.validation_detection_power].astype(float) < cls.min_power]
+        powered = data[data[cls.validation_detection_power].astype(float) >= minimum_power]
+        lowpower = data[data[cls.validation_detection_power].astype(float) < minimum_power]
         labels = cls.create_gene_alt_string(data)
 
         for idx in data.index:
             primary_tumor_f = float(data.loc[idx, cls.tumor_f])
             validation_tumor_f = float(data.loc[idx, cls.validation_tumor_f])
-            if (primary_tumor_f >= cls.min_af) & (validation_tumor_f >= cls.min_af):
+            if (primary_tumor_f >= minimum_allele_fraction) & (validation_tumor_f >= minimum_allele_fraction):
                 ax.annotate(labels[idx], (primary_tumor_f, validation_tumor_f))
 
         plt.scatter(powered[cls.tumor_f].tolist(), powered[cls.validation_tumor_f].tolist(),
                     color=Illustrator.tableau10['blue'],
-                    label=''.join(['Detection power in validation sequencing >= {}'.format(cls.min_power)]))
+                    label=''.join(['Detection power in validation sequencing >= {}'.format(minimum_power)]))
         plt.scatter(lowpower[cls.tumor_f].tolist(), lowpower[cls.validation_tumor_f].tolist(),
                     color=Illustrator.tableau10['grey'],
-                    label=''.join(['Detection power in validation sequencing < {}'.format(cls.min_power)]))
+                    label=''.join(['Detection power in validation sequencing < {}'.format(minimum_power)]))
 
         plt.xlim(-0.01, 1.01)
         plt.ylim(-0.01, 1.01)
@@ -292,7 +214,16 @@ class ValidationOverlap(Illustrator):
         return fig
 
     @classmethod
-    def generate_dna_rna_plot(cls, df, patient_id, folder):
-        data = cls.format_data(df)
-        figure = cls.plot_overlap_af(data, title=patient_id)
+    def generate_dna_rna_plot(cls, df, patient_id, folder, config):
+        biomarker_type = config['feature_types']['mut']
+        minimum_power = float(config['validation_sequencing']['min_power'])
+        minimum_allele_fraction = float(config['validation_sequencing']['min_af_for_annotation'])
+
+        data = cls.format_data(df=df, biomarker_type_string=biomarker_type)
+        figure = cls.plot_overlap_af(
+            data=data,
+            title=patient_id,
+            minimum_power=minimum_power,
+            minimum_allele_fraction=minimum_allele_fraction
+        )
         Illustrator.save_fig(figure, folder, patient_id, 'validation_overlap.png')

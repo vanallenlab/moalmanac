@@ -1,3 +1,4 @@
+import logger
 from config import COLNAMES
 import json
 
@@ -117,6 +118,14 @@ class Writer:
         df.to_csv(output_name, sep='\t', index_label=index_label)
 
     @staticmethod
+    def log(label, filename, dataframe, add_line_break=False):
+        logger.Messages.dataframe_size(
+            label=f"Writing {label} to {filename}",
+            dataframe=dataframe,
+            add_line_break=add_line_break
+        )
+
+    @staticmethod
     def save_figure(figure, output_name):
         figure.savefig(output_name, bbox_inches='tight')
 
@@ -156,9 +165,11 @@ class Actionable:
     @classmethod
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
+        df_sorted = Writer.sort_columns(df=df, columns=cls.sort_columns, ascending_boolean=False)
+        output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].fillna(''), output_name)
+        Writer.log(label="Clinically relevant observations", filename=output_name, dataframe=output_dataframe)
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
         return df_sorted
 
 
@@ -181,10 +192,12 @@ class GermlineACMG:
     @classmethod
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
+        df_sorted = Writer.sort_columns(df=df, columns=cls.sort_columns, ascending_boolean=False)
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
+        output_dataframe = df_sorted.loc[idx, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.log(label="Germline variants in ACMG genes", filename=output_name, dataframe=output_dataframe)
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
 
 
 class GermlineCancer:
@@ -219,10 +232,12 @@ class GermlineCancer:
     @classmethod
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
+        df_sorted = Writer.sort_columns(df=df, columns=cls.sort_columns, ascending_boolean=cls.sort_ascending)
         idx = cls.get_cancer_idx(df)
+        output_dataframe = df_sorted.loc[idx, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.log(label="Germline variants in cancer related genes", filename=output_name, dataframe=output_dataframe)
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
 
 
 class GermlineHereditary:
@@ -244,10 +259,16 @@ class GermlineHereditary:
     @classmethod
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
+        df_sorted = Writer.sort_columns(df=df, columns=cls.sort_columns, ascending_boolean=False)
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
+        output_dataframe = df_sorted.loc[idx, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[idx, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.log(
+            label="Germline variants in genes related to hereditary cancers",
+            filename=output_name,
+            dataframe=output_dataframe
+        )
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
 
 
 class Illustrations:
@@ -271,8 +292,10 @@ class Integrated:
     @classmethod
     def write(cls, df, patient_id, folder):
         df_sorted = df.sort_index()
+        output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe_indexed(df_sorted.loc[:, cls.output_columns].fillna(''), output_name, Writer.feature)
+        Writer.log(label="Integrated summary", filename=output_name, dataframe=output_dataframe)
+        Writer.export_dataframe_indexed(df=output_dataframe, output_name=output_name, index_label=Writer.feature)
 
 
 class MSI:
@@ -288,7 +311,6 @@ class MSI:
                       Writer.spanningfrags,
                       Writer.left_gene, Writer.left_chr, Writer.left_start,
                       Writer.right_gene, Writer.right_chr, Writer.right_start,
-                      # validation_total_coverage, validation_tumor_f, validation_power, dnarna_concordance,
                       Writer.rationale, Writer.patient_id, Writer.tumor, Writer.normal,
                       Writer.almanac_bin, Writer.cancerhotspots_bin, Writer.cancerhotspots3D_bin,
                       Writer.cgc_bin, Writer.gsea_pathways_bin, Writer.gsea_cm_bin, Writer.cosmic_bin]
@@ -301,8 +323,14 @@ class MSI:
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
+        output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.log(
+            label="Variants in genes related to microsatellite instability",
+            filename=output_name,
+            dataframe=output_dataframe
+        )
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
 
 
 class MutationalBurden:
@@ -327,8 +355,10 @@ class MutationalBurden:
     @classmethod
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
+        output_dataframe = df.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df.loc[:, cls.output_columns].fillna(''), output_name)
+        Writer.log(label="Tumor mutational burden", filename=output_name, dataframe=output_dataframe)
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
 
 
 class PreclinicalEfficacy:
@@ -337,7 +367,12 @@ class PreclinicalEfficacy:
     @classmethod
     def write(cls, df, patient_id, folder):
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df.fillna(''), output_name)
+        Writer.log(
+            label="Preclinical efficacy of clinically relevant relationships",
+            filename=output_name,
+            dataframe=df
+        )
+        Writer.export_dataframe(df=df, output_name=output_name)
 
 
 class PreclinicalMatchmaking:
@@ -346,7 +381,13 @@ class PreclinicalMatchmaking:
     @classmethod
     def write(cls, df, patient_id, folder):
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df.fillna(''), output_name)
+        Writer.log(
+            label="Genomic similarity to cancer cell lines",
+            filename=output_name,
+            dataframe=df,
+            add_line_break=True
+        )
+        Writer.export_dataframe(df=df, output_name=output_name)
 
 
 class SomaticFiltered:
@@ -364,9 +405,11 @@ class SomaticFiltered:
     @classmethod
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, False)
+        df_sorted = Writer.sort_columns(df=df, columns=cls.sort_columns, ascending_boolean=False)
+        output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.log(label="Somatic variants that were filtered", filename=output_name, dataframe=output_dataframe)
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
 
 
 class SomaticScored:
@@ -393,9 +436,11 @@ class SomaticScored:
     @classmethod
     def write(cls, df, patient_id, folder):
         df[Writer.patient_id] = patient_id
-        df_sorted = Writer.sort_columns(df, cls.sort_columns, cls.sort_ascending)
+        df_sorted = Writer.sort_columns(df=df, columns=cls.sort_columns, ascending_boolean=cls.sort_ascending)
+        output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe(df_sorted.loc[:, cls.output_columns].replace('nan', '').fillna(''), output_name)
+        Writer.log(label="Somatic variants that were scored", filename=output_name, dataframe=output_dataframe)
+        Writer.export_dataframe(df=output_dataframe, output_name=output_name)
 
 
 class Strategies:
@@ -404,7 +449,8 @@ class Strategies:
     @classmethod
     def write(cls, df, patient_id, folder):
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
-        Writer.export_dataframe_indexed(df, output_name, 'Assertion / Strategy')
+        Writer.log(label="Therapeutic strategies that were highlighted", filename=output_name, dataframe=df)
+        Writer.export_dataframe_indexed(df=df, output_name=output_name, index_label="Assertion / Strategy")
 
 
 class Json:

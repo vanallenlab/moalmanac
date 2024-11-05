@@ -2,8 +2,8 @@ import unittest
 import pandas as pd
 
 from moalmanac import features
-from config import CONFIG, COLNAMES
-
+from config import COLNAMES
+from reader import Ini
 
 class UnitTestFeatures(unittest.TestCase):
     def test_annotate_feature_type(self):
@@ -69,19 +69,30 @@ class UnitTestCopyNumberCalled(unittest.TestCase):
         self.assertEqual(column_map['call'], features.Features.alt_type)
 
     def test_filter_calls(self):
+        amp_string = 'Amplification'
+        del_string = 'Deletion'
         tmp = pd.Series(['Amplification', 'Deletion', '', 'Deletion'])
-        idx = features.CopyNumberCalled.filter_calls(tmp)
+        idx = features.CopyNumberCalled.filter_calls(series=tmp, amp_string=amp_string, del_string=del_string)
         self.assertEqual([0, 1, 3], idx[idx].index.tolist())
         self.assertEqual([2], idx[~idx].index.tolist())
 
 
 class UnitTestCopyNumberTotal(unittest.TestCase):
     def test_annotate_amp_del(self):
+        amp_string = 'Amplification'
+        del_string = 'Deletion'
         index = pd.Index([0, 1, 2])
         index_amp = pd.Index([0])
         index_del = pd.Index([2])
-        expected = [features.CopyNumberTotal.amplification, '', features.CopyNumberTotal.deletion]
-        self.assertEqual(expected, features.CopyNumberTotal.annotate_amp_del(index, index_amp, index_del).tolist())
+        expected = [amp_string, '', del_string]
+        result = features.CopyNumberTotal.annotate_amp_del(
+            idx=index,
+            idx_amp=index_amp,
+            idx_del=index_del,
+            amp_string=amp_string,
+            del_string=del_string
+        )
+        self.assertEqual(expected, result.tolist())
 
     def test_create_column_map(self):
         column_map = features.CopyNumberTotal.create_column_map()
@@ -102,12 +113,20 @@ class UnitTestCopyNumberTotal(unittest.TestCase):
             self.assertEqual(True, idx in features.CopyNumberTotal.drop_duplicate_genes(df))
 
     def test_filter_by_threshold(self):
+        amp_string = 'Amplification'
+        del_string = 'Deletion'
         values = pd.Series(range(1, 101))
         df = pd.DataFrame({features.Features.feature: values,
                            features.Features.chr: values,
                            features.Features.start: values,
                            features.Features.segment_mean: values})
-        accept, reject = features.CopyNumberTotal.filter_by_threshold(df, 97.5, 2.5)
+        accept, reject = features.CopyNumberTotal.filter_by_threshold(
+            df=df,
+            percentile_amp=97.5,
+            percentile_del=2.5,
+            amp_string=amp_string,
+            del_string=del_string
+        )
         expected = pd.Index([0, 1, 2, 97, 98, 99])
         for idx in expected:
             self.assertEqual(True, idx in accept.index)
@@ -121,52 +140,34 @@ class UnitTestCopyNumberTotal(unittest.TestCase):
 
 
 class UnitTestCosmicSignatures(unittest.TestCase):
-    def test_create_feature_dataframe(self):
-        string = {features.CosmicSignatures.patient_id: "Example"}
-        weights = {
-            'COSMIC signature 1': 0,
-            'COSMIC signature 3': 0.5,
-            'COSMIC signature 7': 1.0
+    def test_round_contributions(self):
+        contributions = {
+            'COSMIC signature 1': 0.0000,
+            'COSMIC signature 3': 0.5001,
+            'COSMIC signature 7': 0.9999,
+            'COSMIC signature 10': 0.2456,
+            'COSMIC signature 11': 0.1985,
         }
-        series = pd.Series(weights)
-        result = features.CosmicSignatures.create_feature_dataframe(string, series)
-        self.assertEqual(True, isinstance(result, pd.DataFrame))
-        self.assertEqual(3, result.shape[0])
-        self.assertEqual('COSMIC signature 1', result.loc[0, features.Features.feature])
-        self.assertEqual('COSMIC signature 3', result.loc[1, features.Features.feature])
-        self.assertEqual('COSMIC signature 7', result.loc[2, features.Features.feature])
-        self.assertEqual(0, result.loc[0, features.Features.alt])
-        self.assertEqual(0.5, result.loc[1, features.Features.alt])
-        self.assertEqual(1.0, result.loc[2, features.Features.alt])
-
-    def test_create_handle(self):
-        string1 = '.'
-        string2 = 'Foo'
-        string3 = 'Bar'
-        self.assertEqual('./Foo.Bar', features.CosmicSignatures.create_handle(string1, string2, string3))
-
-    def test_format_weights(self):
-        weights = {
-            'weights.signature.1': 0,
-            'weights.signature.3': 0.5,
-            'weights.signature 7': 1.0
-        }
-        series = pd.Series(weights)
-        result = features.CosmicSignatures.format_weights(series)
-        self.assertEqual(2, result.shape[0])
-        self.assertEqual('COSMIC signature 3', result.index[0])
-        self.assertEqual('COSMIC signature 7', result.index[1])
+        series = pd.Series(contributions)
+        result = features.CosmicSignatures.round_contributions(series)
+        self.assertEqual(5, result.shape[0])
+        self.assertEqual(result.loc['COSMIC signature 1'], 0.000)
+        self.assertEqual(result.loc['COSMIC signature 3'], 0.500)
+        self.assertEqual(result.loc['COSMIC signature 7'], 1.000)
+        self.assertEqual(result.loc['COSMIC signature 10'], 0.246)
+        self.assertEqual(result.loc['COSMIC signature 11'], 0.198)
 
     def test_subset_significant_signatures(self):
-        weights = {
+        contributions = {
             'COSMIC signature 1': 0,
             'COSMIC signature 3': 0.5,
             'COSMIC signature 7': 1.0,
             'COSMIC signature 10': 0.2,
             'COSMIC signature 11': 0.19,
         }
-        series = pd.Series(weights)
-        result = features.CosmicSignatures.subset_significant_signatures(series)
+        series = pd.Series(contributions)
+        idx = features.CosmicSignatures.index_for_minimum_contribution(series, minimum_value=0.20)
+        result = series[idx]
         self.assertEqual(3, result.shape[0])
         self.assertEqual('COSMIC signature 3', result.index[0])
         self.assertEqual('COSMIC signature 7', result.index[1])
@@ -175,13 +176,17 @@ class UnitTestCosmicSignatures(unittest.TestCase):
 
 class UnitTestFusion(unittest.TestCase):
     def test_create_column_map(self):
-        column_map = features.Fusion.create_colmap()
+        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        column_map = features.Fusion.create_colmap(config)
+        leftbreakpoint = 'leftbreakpoint'
+        rightbreakpoint = 'rightbreakpoint'
+
         values = list(column_map.values())
         self.assertEqual(4, len(column_map))
         self.assertEqual(features.Features.feature, values[0])
         self.assertEqual(features.Features.spanningfrags, values[1])
-        self.assertEqual(features.Fusion.leftbreakpoint, values[2])
-        self.assertEqual(features.Fusion.rightbreakpoint, values[3])
+        self.assertEqual(leftbreakpoint, values[2])
+        self.assertEqual(rightbreakpoint, values[3])
 
     def test_filter_by_spanning_fragment_count(self):
         series = pd.Series([4, 5, 6])
@@ -236,7 +241,12 @@ class UnitTestMAF(unittest.TestCase):
         self.assertEqual(False, gdc_unexpected_key)
 
     def test_format_maf(self):
-        initial = pd.DataFrame({features.MAF.alt_type: ['Missense_Mutation', 'Nonsense_Mutation', 'A']})
+        data = {
+            features.MAF.alt_type: ['Missense_Mutation', 'Nonsense_Mutation', 'A'],
+            features.MAF.alt_count: [0, 0, 0],
+            features.MAF.ref_count: [1, 1, 1]
+        }
+        initial = pd.DataFrame(data)
         result = features.MAF.format_maf(initial, 'Somatic Variant')
         self.assertEqual('Missense', result.loc[0, features.MAF.alt_type])
         self.assertEqual('Nonsense', result.loc[1, features.MAF.alt_type])

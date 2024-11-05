@@ -1,22 +1,21 @@
 import time
 import argparse
 import os
-import pandas as pd
 import subprocess
 
 import annotator
 import datasources
 import features
 import evaluator
-import illustrator
 import investigator
+import logger
 import matchmaker
 import ontologymapper
 import reporter
 import writer
 
 from config import COLNAMES
-from config import CONFIG
+from reader import Ini
 
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
@@ -25,6 +24,7 @@ cnv_handle = 'cnv_handle'
 called_cn_handle = 'called_cn_handle'
 fusion_handle = 'fusion_handle'
 germline_handle = 'germline_handle'
+mutational_signatures_path = 'mutational_signatures_path'
 validation_handle = 'validation_handle'
 disable_matchmaking = 'disable_matchmaking'
 
@@ -49,28 +49,316 @@ oncotree_section = 'oncotree'
 ontology = COLNAMES[oncotree_section]['ontology']
 code = COLNAMES[oncotree_section]['code']
 
-feature_type_section = 'feature_types'
-feature_type_mut = CONFIG[feature_type_section]['mut']
-feature_type_germline = CONFIG[feature_type_section]['germline']
-feature_type_cna = CONFIG[feature_type_section]['cna']
-feature_type_fusion = CONFIG[feature_type_section]['fusion']
-feature_type_burden = CONFIG[feature_type_section]['burden']
-feature_type_signature = CONFIG[feature_type_section]['signature']
-feature_type_microsatellite = CONFIG[feature_type_section]['microsatellite']
-feature_type_aneuploidy = CONFIG[feature_type_section]['aneuploidy']
-feature_types = {
-    'mutation': feature_type_mut,
-    'germline': feature_type_germline,
-    'copynumber': feature_type_cna,
-    'fusion': feature_type_fusion,
-    'burden': feature_type_burden,
-    'signature': feature_type_signature,
-    'microsatellite': feature_type_microsatellite,
-    'aneuploidy': feature_type_aneuploidy
-}
-
 generate_illustrations = 'generate_illustrations'
-TOGGLE_FEATURES = CONFIG['function_toggle']
+
+
+class Load:
+    @staticmethod
+    def aneuploidy(boolean, config):
+        if boolean:
+            logger.Messages.general(message=f"Whole-genome doubling specified")
+        else:
+            logger.Messages.general(message=f"Whole-genome doubling not specified, assuming no whole-genome doubling.")
+        return features.Aneuploidy.summarize(boolean=boolean, config=config)
+
+    @staticmethod
+    def copy_number(path_called, path_seg, config):
+        if path_called != "":
+            logger.Messages.general(message=f"Called copy number from {path_called}")
+        elif path_seg != "":
+            logger.Messages.general(message=f"Segmented copy number from {path_seg}")
+        else:
+            logger.Messages.general(message=f"No path provided for either called or segmented copy number")
+        accept, reject = features.CopyNumber.import_feature(path_called, path_seg, config)
+        if path_called or path_seg:
+            logger.Messages.dataframe_size(label="...Copy number alterations, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...Copy number alterations, rejected", dataframe=reject)
+        else:
+            logger.Messages.general(message="...no input file provided to load")
+        return accept, reject
+
+    @staticmethod
+    def cosmic_mutational_signatures(path, config):
+        if path:
+            logger.Messages.general(message=f"COSMIC mutational signatures from {path}")
+            signatures = features.CosmicSignatures.import_feature(path=path, config=config)
+            logger.Messages.dataframe_size(label="...imported dataframe shape:", dataframe=signatures)
+        else:
+            logger.Messages.general(message="No input file for COSMIC mutational signatures provided")
+            logger.Messages.general(message="...no input file provided to load")
+            signatures = features.CosmicSignatures.import_feature(path=path, config=config)
+        return signatures
+
+    @staticmethod
+    def fusions(path, config):
+        if path:
+            logger.Messages.general(message=f"Fusions from {path}")
+            accept, reject = features.Fusion.import_feature(handle=path, config=config)
+            logger.Messages.dataframe_size(label="...fusions, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...fusions, rejected", dataframe=reject)
+        else:
+            logger.Messages.general(message="No input file for Fusions provided")
+            logger.Messages.general(message="...no input file provided to load")
+            accept, reject = features.Fusion.import_feature(handle=path, config=config)
+        return accept, reject
+
+    @staticmethod
+    def germline(path, config):
+        if path:
+            logger.Messages.general(message=f"Germline variants from {path}")
+            accept, reject = features.MAFGermline.import_feature(handle=path, config=config)
+            logger.Messages.dataframe_size(label="...germline variants, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...germline variants, rejected", dataframe=reject, add_line_break=True)
+        else:
+            logger.Messages.general(message="No input file for germline variants provided")
+            logger.Messages.general(message="...no input file provided to load", add_line_break=True)
+            accept, reject = features.MAFGermline.import_feature(handle=path, config=config)
+        return accept, reject
+
+    @staticmethod
+    def microsatellite_stability(boolean, config):
+        if boolean:
+            logger.Messages.general(message=f"Microsatellite status specified as: {boolean}")
+        else:
+            logger.Messages.general(message=f"Microsatellite status not specified.")
+        return features.MicrosatelliteReader.summarize(status=boolean, config=config)
+
+    @staticmethod
+    def somatic_indels(path, config):
+        if path:
+            logger.Messages.general(message=f"Somatic indel variants from {path}")
+            accept, reject = features.MAFSomatic.import_feature(handle=path, config=config)
+            logger.Messages.dataframe_size(label="...somatic indel variants, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...somatic indel variants, rejected", dataframe=reject)
+        else:
+            logger.Messages.general(message="No input file for somatic indel variants provided")
+            logger.Messages.general(message="...no input file provided to load")
+            accept, reject = features.MAFSomatic.import_feature(handle=path, config=config)
+        return accept, reject
+
+    @staticmethod
+    def somatic_summary(passed, rejected):
+        logger.Messages.dataframe_size(label="Overall somatic events, passed", dataframe=passed)
+        logger.Messages.dataframe_size(label="Overall somatic events, rejected", dataframe=rejected, add_line_break=True)
+
+    @staticmethod
+    def somatic_variants(path, config):
+        if path:
+            logger.Messages.general(message=f"Somatic variants from {path}")
+            accept, reject = features.MAFSomatic.import_feature(handle=path, config=config)
+            logger.Messages.dataframe_size(label="...Somatic variants, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...Somatic variants, rejected", dataframe=reject)
+        else:
+            logger.Messages.general(message="No input file for somatic variants provided")
+            logger.Messages.general(message="...no input file provided to load")
+            accept, reject = features.MAFSomatic.import_feature(handle=path, config=config)
+        return accept, reject
+
+    @staticmethod
+    def tumor_mutational_burden(path, patient_dictionary, variants, dbs, config):
+        columns = [
+            features.BurdenReader.bases_covered,
+            features.BurdenReader.n_nonsyn_mutations,
+            features.BurdenReader.mutational_burden,
+            features.BurdenReader.percentile_tcga,
+            features.BurdenReader.percentile_tcga_tissue,
+            features.BurdenReader.high_burden_boolean
+        ]
+
+        if path:
+            logger.Messages.general(message=f"Somatic bases covered from {path}")
+            somatic_burden = features.BurdenReader.import_feature(
+                handle=path,
+                patient=patient_dictionary,
+                variants=variants,
+                dbs=dbs,
+                config=config
+            )
+            logger.Messages.general(message=f"Somatic coding tumor mutational burden calculated")
+            for column in columns:
+                linebreak = True if column == columns[-1] else False
+                logger.Messages.general(message=f"...{column}: {somatic_burden.loc[0, column]}", add_line_break=linebreak)
+        else:
+            logger.Messages.general(message="No input file for somatic bases covered provided")
+            logger.Messages.general(message="...no input file provided to load", add_line_break=True)
+            somatic_burden = features.BurdenReader.import_feature(
+                handle=path,
+                patient=patient_dictionary,
+                variants=variants,
+                dbs=dbs,
+                config=config
+            )
+        return somatic_burden
+
+    @staticmethod
+    def validation_sequencing_variants(path, config):
+        if path:
+            logger.Messages.general(message=f"Validation sequencing variants from {path}")
+            accept, reject = features.MAFValidation.import_feature(handle=path, config=config)
+            logger.Messages.dataframe_size(label="...validation sequencing variants, passed", dataframe=accept)
+            logger.Messages.dataframe_size(label="...validation sequencing variants, rejected", dataframe=reject)
+        else:
+            logger.Messages.general(message="No input file for validation sequencing variants provided")
+            logger.Messages.general(message="...no input file provided to load")
+            accept, reject = features.MAFValidation.import_feature(handle=path, config=config)
+        return accept, reject
+
+
+class Process:
+    @staticmethod
+    def aneuploidy(df, dbs, cancer_type, config):
+        if not df.empty:
+            logger.Messages.general(message="Annotating whole-genome doubling")
+            annotated = annotator.Annotator.annotate_almanac(df=df, dbs=dbs, ontology=cancer_type, config=config)
+            logger.Messages.general(message="Annotation of whole-genome doubling complete", add_line_break=True)
+
+            logger.Messages.general(message="Evaluating whole-genome doubling")
+            evaluated = evaluator.Evaluator.evaluate_somatic(annotated)
+            logger.Messages.general(message="Evaluation of whole-genome doubling complete", add_line_break=True)
+        else:
+            logger.Messages.general(message="No whole-genome doubling provided. Skipping annotation and evaluation.")
+            evaluated = features.Features.create_empty_dataframe()
+        logger.Messages.general(message="Annotation and evaluation of whole-genome doubling complete", add_line_break=True)
+        return evaluated
+
+    @staticmethod
+    def cosmic_mutational_signatures(df, dbs, cancer_type, config):
+        if not df.empty:
+            logger.Messages.general(message="Annotating COSMIC mutational signatures")
+            annotated = annotator.Annotator.annotate_almanac(
+                df=df,
+                dbs=dbs,
+                ontology=cancer_type,
+                config=config
+            )
+            logger.Messages.general(message="Annotation of COSMIC mutational signatures complete", add_line_break=True)
+
+            logger.Messages.general(message="Evaluating annotated COSMIC mutational signatures")
+            evaluated = evaluator.Evaluator.evaluate_almanac(annotated)
+            logger.Messages.general(message="Evaluation of COSMIC mutational signatures complete", add_line_break=True)
+        else:
+            logger.Messages.general(message="No mutational signatures provided. Skipping annotation and evaluation.")
+            evaluated = features.Features.create_empty_dataframe()
+        message = "Annotation and evaluation of COSMIC mutational signatures complete"
+        logger.Messages.general(message=message, add_line_break=True)
+        return evaluated
+
+    @staticmethod
+    def integrated(somatic, germline, dbs, config):
+        logger.Messages.general(message="Annoating somatic variants for germline variants in the same gene")
+        annotated = annotator.OverlapSomaticGermline.append_germline_hits(somatic, germline)
+
+        logger.Messages.general(message="Summarizing somatic, germline, copy number, and fusion variants per gene")
+        integrated = evaluator.Integrative.evaluate(somatic, germline, dbs, config)
+
+        logger.Messages.general(message="Investigating somatic and germline overlap complete", add_line_break=True)
+        return annotated, integrated
+
+    @staticmethod
+    def germline_variants(df, dbs, ontology, config):
+        if not df.empty:
+            logger.Messages.general(message="Annotating germline variants")
+            annotated = annotator.Annotator.annotate_germline(
+                df=df,
+                dbs=dbs,
+                ontology=ontology,
+                config=config
+            )
+            logger.Messages.general(message="Annotation of germline variants complete", add_line_break=True)
+
+            logger.Messages.general(message="Evaluating annotated germline variants")
+            evaluated = evaluator.Evaluator.evaluate_germline(annotated)
+            logger.Messages.general(message="Evaluation of germline variants complete", add_line_break=True)
+        else:
+            logger.Messages.general(message="No germline variants detected. Skipping annotation and evaluation.")
+            evaluated = features.Features.create_empty_dataframe()
+        logger.Messages.general(message="Annotation and evaluation of germline variants complete", add_line_break=True)
+        return evaluated
+
+    @staticmethod
+    def microsatellite_status(somatic_variants, germline_variants, status, dbs, cancer_type, config):
+        message = "Evaluating somatic and germline variants for those related to microsatellite instability"
+        logger.Messages.general(message=message)
+        variants = evaluator.Microsatellite.evaluate_variants(somatic=somatic_variants, germline=germline_variants)
+        if not variants.empty:
+            message = f"...variants related to microsatellite instability identified: {variants.shape[0]}"
+            logger.Messages.general(message=message)
+        else:
+            logger.Messages.general(message="...no variants related to microsatellite instability observed.")
+        message = "Evaluation of microsatellite instability variants complete"
+        logger.Messages.general(message=message, add_line_break=True)
+
+        logger.Messages.general(message="Annotating and evaluating microsatellite status")
+        if not status.empty:
+            logger.Messages.general(message="Annotating microsatellite status")
+            annotated = annotator.Annotator.annotate_almanac(df=status, dbs=dbs, ontology=cancer_type, config=config)
+            logger.Messages.general(message="Annotation of microsatellite status complete", add_line_break=True)
+
+            logger.Messages.general(message="Evaluating microsatellite status")
+            evaluated = evaluator.Evaluator.evaluate_somatic(annotated)
+            logger.Messages.general(message="Evaluation of microsatellite status complete", add_line_break=True)
+        else:
+            logger.Messages.general(message="No microsatellite status provided. Skipping annotation and evaluation.")
+            evaluated = features.Features.create_empty_dataframe()
+        message = "Annotation and evaluation of microsatellite status complete"
+        logger.Messages.general(message=message, add_line_break=True)
+        return evaluated, variants
+
+    @staticmethod
+    def somatic_variants(df, dbs, ontology, config, path_validation):
+        if not df.empty:
+            logger.Messages.general(message="Annotating somatic variants")
+            annotated = annotator.Annotator.annotate_somatic(
+                df=df,
+                dbs=dbs,
+                ontology=ontology,
+                config=config
+            )
+            logger.Messages.general(message="Annotation of somatic variants complete", add_line_break=True)
+
+            logger.Messages.general(message="Evaluating annotated somatic variants")
+            evaluated = evaluator.Evaluator.evaluate_somatic(annotated)
+            logger.Messages.general(message="Evaluation of somatic variants complete", add_line_break=True)
+
+            logger.Messages.general(message="Importing validation sequencing variants for somatic variant annotation")
+            validation_accept, validation_reject = features.MAFValidation.import_feature(path_validation, config)
+            if not validation_accept.empty:
+                logger.Messages.general(message="Annotating somatic variants with validation sequencing variants")
+                evaluated = annotator.OverlapValidation.append_validation(
+                    primary=evaluated,
+                    validation=validation_accept,
+                    biomarker_type=config['feature_types']['mut']
+                )
+            else:
+                logger.Messages.general(message="No passed validation sequencing variants to annotate with")
+        else:
+            logger.Messages.general(message="No somatic variants detected. Skipping annotation and evaluation.")
+            evaluated = features.Features.create_empty_dataframe()
+        logger.Messages.general(message="Annotation and evaluation of somatic variants complete", add_line_break=True)
+        return evaluated
+
+    @staticmethod
+    def tumor_mutational_burden(df, dbs, cancer_type, config):
+        if not df.empty:
+            logger.Messages.general(message="Annotating tumor mutational burden")
+            annotated = annotator.Annotator.annotate_almanac(df=df, dbs=dbs, ontology=cancer_type, config=config)
+            logger.Messages.general(message="Annotation of tumor mutational burden complete", add_line_break=True)
+
+            logger.Messages.general(message="Evaluating tumor mutational burden")
+            evaluated = evaluator.Evaluator.evaluate_somatic(annotated)
+            logger.Messages.general(message="Evaluation of tumor mutational burden complete", add_line_break=True)
+        else:
+            logger.Messages.general(message="No tumor mutational burden provided. Skipping annotation and evaluation.")
+            evaluated = features.Features.create_empty_dataframe()
+        logger.Messages.general(message="Annotation and evaluation of tumor mutational burden complete", add_line_break=True)
+        return evaluated
+
+
+def create_metadata_dictionary(input_dictionary):
+    dictionary = {}
+    for key, value in input_dictionary.items():
+        dictionary[key] = value
+    return dictionary
 
 
 def execute_cmd(command):
@@ -87,21 +375,46 @@ def format_output_directory(directory):
         return directory
 
 
-def load_and_process_mutational_signatures(handle, folder, label, dbs, tumor_type, calculate: bool = False, plot: bool = False):
-    if calculate:
-        features.CosmicSignatures.calculate_contributions(handle, folder, label)
-    contexts = features.CosmicSignatures.import_context(folder, label)
-    signatures = features.CosmicSignatures.import_feature(folder, label)
-    return process_mutational_signatures(contexts, signatures, folder, label, dbs, tumor_type, plot)
+def manage_output_directory(folder):
+    if folder != "":
+        logger.Messages.general(message=f"{folder} specified as output directory, creating...")
+        execute_cmd(f"mkdir -p {folder}")
+        logger.Messages.general(message=f"{folder} created.", add_line_break=True)
+    else:
+        logger.Messages.general(
+            message=f"No output directory specified. Writing to current working directory: {os.getcwd()}",
+            add_line_break=True
+        )
 
 
-def plot_mutational_signatures(series, folder, label):
-    for drawing_function, output_name in [
-        (illustrator.Signatures.generate_context_plot, 'counts'),
-        (illustrator.Signatures.generate_context_plot_normalized, 'normalized'),
-    ]:
-        figure = drawing_function(series)
-        writer.Illustrations.write(figure, folder, label, f"sigs.tricontext.{output_name}.png")
+def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
+    logger.Logger.setup(
+        output_folder=output_folder,
+        file_prefix=patient[patient_id],
+        config=config
+    )
+    logger.Messages.start()
+    logger.Messages.general(message=f"Current working directory: {os.getcwd()}")
+    logger.Messages.header(label="Inputs")
+    input_dictonaries = [
+        ("Patient metadata", patient),
+        ("Input files", inputs),
+        ("Datasources", dbs)
+    ]
+    for label, dictionary in input_dictonaries:
+        logger.Messages.inputs(label=label, dictionary=dictionary)
+
+    if dbs_preclinical:
+        logger.Messages.inputs(label="Datasources for preclinical modules", dictionary=dbs_preclinical)
+    else:
+        logger.Messages.general(message="Datasources for preclinical modules not detected")
+
+    logger.Messages.header(label="Configuration settings from config.ini")
+    for section in config.sections():
+        section_dictionary = dict(config.items(section))
+        logger.Messages.inputs(label=f"Config section: {section}", dictionary=section_dictionary)
+
+    logger.Messages.general(message="Logging for inputs provided complete.", add_line_break=True)
 
 
 def plot_preclinical_efficacy(dictionary, folder, label):
@@ -112,221 +425,402 @@ def plot_preclinical_efficacy(dictionary, folder, label):
             writer.Illustrations.write(figure, folder, label, f"{figure_name}.png")
 
 
-def process_mutational_signatures(contexts, signatures, folder, label, dbs, ontology_code, plot: bool = False):
-    if contexts is not None and plot:
-        plot_mutational_signatures(contexts, folder, label)
-    annotated = annotator.Annotator.annotate_almanac(signatures, dbs, ontology_code)
-    evaluated = evaluator.Evaluator.evaluate_almanac(annotated)
-    return evaluated
-
-
-def process_preclinical_efficacy(dbs, dataframe, folder, label, plot: bool = False):
-    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs, dataframe)
+def process_preclinical_efficacy(dbs, dataframe, folder, label, config, plot: bool = False):
+    efficacy_dictionary = investigator.SensitivityDictionary.create(dbs, dataframe, config)
     if plot:
         plot_preclinical_efficacy(efficacy_dictionary, folder, label)
     efficacy_summary = investigator.SummaryDataFrame.create(efficacy_dictionary, dataframe, label)
     return efficacy_dictionary, efficacy_summary
 
 
-def main(patient, inputs, output_folder):
-    dbs = datasources.Datasources.generate_db_dict(CONFIG)
-    output_folder = format_output_directory(output_folder)
-    if output_folder != "":
-        execute_cmd(f"mkdir -p {output_folder}")
-
-    string_id = patient[patient_id]
-
-    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, patient[tumor_type])
-    patient[ontology] = mapped_ontology[ontology]
-    patient[code] = mapped_ontology[code]
-
-    df_snv, df_snv_reject = features.MAFSomatic.import_feature(inputs[snv_handle])
-    df_indel, df_indel_reject = features.MAFSomatic.import_feature(inputs[indel_handle])
-    df_cnv, df_cnv_reject = features.CopyNumber.import_feature(inputs[called_cn_handle], inputs[cnv_handle])
-    df_fusion, df_fusion_reject = features.Fusion.import_feature(inputs[fusion_handle])
-
-    somatic_variants = pd.concat([df_snv, df_indel, df_cnv, df_fusion], ignore_index=True)
-    somatic_filtered = pd.concat([df_snv_reject, df_indel_reject, df_cnv_reject, df_fusion_reject], ignore_index=True)
-
-    germline_variants, germline_reject = features.MAFGermline.import_feature(inputs[germline_handle])
-
-    if not somatic_variants.empty:
-        annotated_somatic = annotator.Annotator.annotate_somatic(somatic_variants, dbs, patient[code])
-        evaluated_somatic = evaluator.Evaluator.evaluate_somatic(annotated_somatic)
-
-        validation_accept, validation_reject = features.MAFValidation.import_feature(inputs[validation_handle])
-        if not validation_accept.empty:
-            evaluated_somatic = annotator.OverlapValidation.append_validation(evaluated_somatic, validation_accept)
-            illustrator.ValidationOverlap.generate_dna_rna_plot(evaluated_somatic, string_id, output_folder)
-    else:
-        evaluated_somatic = features.Features.create_empty_dataframe()
-
-    if not germline_variants.empty:
-        annotated_germline = annotator.Annotator.annotate_germline(germline_variants, dbs, patient[code])
-        evaluated_germline = evaluator.Evaluator.evaluate_germline(annotated_germline)
-    else:
-        evaluated_germline = features.Features.create_empty_dataframe()
-
-    evaluated_somatic = annotator.OverlapSomaticGermline.append_germline_hits(evaluated_somatic, evaluated_germline)
-    integrated = evaluator.Integrative.evaluate(evaluated_somatic, evaluated_germline, dbs, feature_types)
-
-    somatic_burden = features.BurdenReader.import_feature(inputs[bases_covered_handle], patient, somatic_variants, dbs)
-
-    patient_wgd = features.Aneuploidy.summarize(patient[wgd])
-    patient_ms_status = features.MicrosatelliteReader.summarize(patient[ms_status])
-    patient[ms_status] = features.MicrosatelliteReader.map_status(patient[ms_status])
-
-    annotated_burden = annotator.Annotator.annotate_almanac(somatic_burden, dbs, patient[code])
-    annotated_wgd = annotator.Annotator.annotate_almanac(patient_wgd, dbs, patient[code])
-    annotated_ms_status = annotator.Annotator.annotate_almanac(patient_ms_status, dbs, patient[code])
-
-    evaluated_burden = evaluator.Evaluator.evaluate_almanac(annotated_burden)
-    evaluated_wgd = evaluator.Evaluator.evaluate_almanac(annotated_wgd)
-    evaluated_ms_variants = evaluator.Microsatellite.evaluate_variants(evaluated_somatic, evaluated_germline)
-    evaluated_ms_status = evaluator.Microsatellite.evaluate_status(annotated_ms_status, evaluated_ms_variants)
-
-    evaluated_mutational_signatures = load_and_process_mutational_signatures(
-        handle=inputs[snv_handle],
-        folder=output_folder,
-        label=string_id,
+def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
+    start_time = time.time()
+    start_logging(
+        patient=patient,
+        inputs=inputs,
+        output_folder=output_folder,
+        config=config,
         dbs=dbs,
-        tumor_type=code,
-        calculate=TOGGLE_FEATURES.get('calculate_mutational_signatures'),
-        plot=TOGGLE_FEATURES.get('plot_mutational_signatures')
+        dbs_preclinical=dbs_preclinical
     )
 
+    metadata_dictionary = create_metadata_dictionary(patient)
+    string_id = metadata_dictionary[patient_id]
+
+    logger.Messages.header(label="Output directory")
+    manage_output_directory(folder=output_folder)
+
+    logger.Messages.header(label="Mapping provided disease to Oncotree")
+    mapped_ontology = ontologymapper.OntologyMapper.map(dbs, metadata_dictionary[tumor_type])
+    metadata_dictionary[ontology] = mapped_ontology[ontology]
+    metadata_dictionary[code] = mapped_ontology[code]
+    logger.Messages.general(
+        message=f"{metadata_dictionary[tumor_type]} mapped to {mapped_ontology[ontology]} ({mapped_ontology[code]})",
+        add_line_break=True
+    )
+
+    logger.Messages.header(label="Importing somatic genomic data")
+    df_snv, df_snv_reject = Load.somatic_variants(path=inputs[snv_handle], config=config)
+    df_indel, df_indel_reject = Load.somatic_indels(path=inputs[indel_handle], config=config)
+    df_cnv, df_cnv_reject = Load.copy_number(path_called=inputs[called_cn_handle], path_seg=inputs[cnv_handle], config=config)
+    df_fusion, df_fusion_reject = Load.fusions(path=inputs[fusion_handle], config=config)
+
+    accepted_variants = [df_snv, df_indel, df_cnv, df_fusion]
+    filtered_variants = [df_snv_reject, df_indel_reject, df_cnv_reject, df_fusion_reject]
+    somatic_variants = features.Features.concat_list_of_dataframes(accepted_variants)
+    somatic_filtered = features.Features.concat_list_of_dataframes(filtered_variants)
+    Load.somatic_summary(passed=somatic_variants, rejected=somatic_filtered)
+
+    logger.Messages.header(label="Importing germline genomic data")
+    germline_variants, germline_reject = Load.germline(path=inputs[germline_handle], config=config)
+
+    logger.Messages.header(label="Annotating and evaluating somatic variants")
+    evaluated_somatic = Process.somatic_variants(
+        df=somatic_variants,
+        dbs=dbs,
+        ontology=metadata_dictionary[code],
+        config=config,
+        path_validation=inputs[validation_handle]
+    )
+
+    logger.Messages.header(label="Annotating and evaluating germline variants")
+    evaluated_germline = Process.germline_variants(
+        df=germline_variants,
+        dbs=dbs,
+        ontology=metadata_dictionary[code],
+        config=config,
+    )
+
+    logger.Messages.header(label="Investigating somatic and germline overlap")
+    evaluated_somatic, integrated = Process.integrated(
+        somatic=evaluated_somatic,
+        germline=evaluated_germline,
+        dbs=dbs,
+        config=config
+    )
+
+    logger.Messages.header(label="Importing second-order genomic features")
+    cosmic_mutational_signatures = Load.cosmic_mutational_signatures(
+        path=inputs[mutational_signatures_path],
+        config=config
+    )
+    tumor_mutational_burden = Load.tumor_mutational_burden(
+        path=inputs[bases_covered_handle],
+        patient_dictionary=metadata_dictionary,
+        variants=somatic_variants,
+        dbs=dbs,
+        config=config
+    )
+    tumor_whole_genome_doubling = Load.aneuploidy(boolean=metadata_dictionary[wgd], config=config)
+    tumor_microsatellite_status = Load.microsatellite_stability(boolean=metadata_dictionary[ms_status], config=config)
+    metadata_dictionary[ms_status] = features.MicrosatelliteReader.map_status(metadata_dictionary[ms_status])
+    logger.Messages.general(message="Importing of second-order genomic features complete", add_line_break=True)
+
+    logger.Messages.header(label="Annotating and evaluating second-order genomic features")
+    evaluated_cosmic_mutational_signatures = Process.cosmic_mutational_signatures(
+        df=cosmic_mutational_signatures,
+        dbs=dbs,
+        cancer_type=metadata_dictionary[code],
+        config=config
+    )
+    evaluated_tumor_mutational_burden = Process.tumor_mutational_burden(
+        df=tumor_mutational_burden,
+        dbs=dbs,
+        cancer_type=metadata_dictionary[code],
+        config=config
+    )
+    evaluated_whole_genome_doubling = Process.aneuploidy(
+        df=tumor_whole_genome_doubling,
+        dbs=dbs,
+        cancer_type=metadata_dictionary[code],
+        config=config
+    )
+    evaluated_microsatellite_status, evaluated_microsatellite_status_variants = Process.microsatellite_status(
+        somatic_variants=evaluated_somatic,
+        germline_variants=evaluated_germline,
+        status=tumor_microsatellite_status,
+        dbs=dbs,
+        cancer_type=metadata_dictionary[code],
+        config=config
+    )
+    logger.Messages.general(
+        message="Annotation and evaluation of second-order genomic features complete",
+        add_line_break=True
+    )
+
+    logger.Messages.header(label="Summarizing clinically relevant biomarkers")
     actionable = evaluator.Actionable.evaluate(
-        evaluated_somatic,
-        evaluated_germline,
-        evaluated_ms_variants,
-        evaluated_ms_status,
-        evaluated_burden,
-        evaluated_mutational_signatures,
-        evaluated_wgd
+        somatic=evaluated_somatic,
+        germline=evaluated_germline,
+        ms_variants=evaluated_microsatellite_status_variants,
+        ms_status=evaluated_microsatellite_status,
+        burden=evaluated_tumor_mutational_burden,
+        signatures=evaluated_cosmic_mutational_signatures,
+        wgd=evaluated_whole_genome_doubling,
+        config=config
     )
+    logger.Messages.general(message="Summary of clinically relevant biomarkers complete", add_line_break=True)
 
+    logger.Messages.header(label="Summarizing highlighted therapeutic strategies from clinically relevant hits")
     strategies = evaluator.Strategies.report_therapy_strategies(actionable)
+    logger.Messages.general(message="Summary of highlighted therapeutic strategies complete", add_line_break=True)
+
+    function_toggle = config['function_toggle']
 
     efficacy_summary = investigator.SummaryDataFrame.create_empty_dataframe()
-    efficacy_dictionary = {}
-    cell_lines_dictionary = {}
-    preclinical_efficacy_on = TOGGLE_FEATURES.getboolean('calculate_preclinical_efficacy')
+    preclinical_efficacy_on = function_toggle.getboolean('calculate_preclinical_efficacy')
 
     # The input argument --disable_matchmaking will be removed in the next non-backwards compatible release
-    model_similarity_on = TOGGLE_FEATURES.getboolean('calculate_model_similarity') and not inputs[disable_matchmaking]
+    model_similarity_on = function_toggle.getboolean('calculate_model_similarity') and not inputs[disable_matchmaking]
     similarity_results = matchmaker.Matchmaker.create_empty_output()
     similarity_summary = {}
 
-    if preclinical_efficacy_on or model_similarity_on:
-        dbs_preclinical = datasources.Preclinical.import_dbs()
-        cell_lines_dictionary = dbs_preclinical['dictionary']
-        if preclinical_efficacy_on:
-            plot_preclinical = TOGGLE_FEATURES.getboolean('plot_preclinical_efficacy')
-            efficacy_results = process_preclinical_efficacy(
-                dbs_preclinical,
-                actionable,
-                output_folder,
-                string_id,
-                plot=plot_preclinical
-            )
-            efficacy_dictionary = efficacy_results[0]
-            efficacy_summary = efficacy_results[1]
+    logger.Messages.header(label="Performing comparisons to preclinical models")
+    if dbs_preclinical is not None:
+        if preclinical_efficacy_on or model_similarity_on:
+            logger.Messages.general(message="Importing preclinical databases")
+            dbs_preclinical = datasources.Preclinical.import_dbs(dbs_preclinical)
+            logger.Messages.general(message="Importing preclinical databases complete")
+            cell_lines_dictionary = dbs_preclinical['dictionary']
+            if preclinical_efficacy_on:
+                logger.Messages.general(
+                    message="Calculate preclinical efficacy of clinically relevant relationships enabled, processing..."
+                )
+                plot_preclinical = function_toggle.getboolean('generate_figures')
+                efficacy_results = process_preclinical_efficacy(
+                    dbs=dbs_preclinical,
+                    dataframe=actionable,
+                    folder=output_folder,
+                    label=string_id,
+                    config=config,
+                    plot=plot_preclinical
+                )
+                efficacy_dictionary = efficacy_results[0]
+                efficacy_summary = efficacy_results[1]
+                logger.Messages.general(
+                    message=f"...complete. Successfully calculated: {efficacy_summary.shape[0]} relationships"
+                )
 
-            actionable = annotator.PreclinicalEfficacy.annotate(
-                actionable,
-                efficacy_summary,
-                efficacy_dictionary,
-                append_lookup=TOGGLE_FEATURES.getboolean('include_preclinical_efficacy_in_actionability_report')
-            )
-        if model_similarity_on:
-            similarity_results = matchmaker.Matchmaker.compare(dbs, dbs_preclinical, evaluated_somatic, string_id)
-            similarity_summary = matchmaker.Report.create_report_dictionary(similarity_results, cell_lines_dictionary)
+                logger.Messages.general(
+                    message=f"Annotating clinically relevant findings with preclinical efficacy calculations..."
+                )
+                actionable = annotator.PreclinicalEfficacy.annotate(
+                    actionable,
+                    efficacy_summary,
+                    efficacy_dictionary,
+                    append_lookup=function_toggle.getboolean('include_preclinical_efficacy_in_actionability_report')
+                )
+                logger.Messages.general(
+                    message=f"...annotation complete."
+                )
+                logger.Messages.general(
+                    message="Calculating preclinical efficacy of clinically relevant relationships complete.",
+                    add_line_break=True
+                )
+            else:
+                logger.Messages.general(
+                    "Calculate preclinical efficacy of clinically relevant relationships disabled, skipping...",
+                    add_line_break=True
+                )
 
+            if model_similarity_on:
+                logger.Messages.general(
+                    message="Performing genomic similarity to cancer cell lines enabled, processing..."
+                )
+                similarity_results = matchmaker.Matchmaker.compare(
+                    dbs=dbs,
+                    dbs_preclinical=dbs_preclinical,
+                    somatic=evaluated_somatic,
+                    case_sample_id=string_id,
+                    config=config
+                )
+                logger.Messages.general(message="...genomic similarity to cancer cell lines complete. Summarizing...")
+                similarity_summary = matchmaker.Report.create_report_dictionary(
+                    similarity_results,
+                    cell_lines_dictionary
+                )
+                logger.Messages.general(message="...genomic similarity to cancer cell lines summarized")
+                logger.Messages.general(message="Genomic similarity to cancer cell lines complete", add_line_break=True)
+            else:
+                logger.Messages.general(
+                    message="Genomic similarity to cancer cell lines disabled, skipping...",
+                    add_line_break=True
+                )
+        else:
+            logger.Messages.general(
+                message="Both preclinical efficacy calculations and genomic similarity to cancer cell lines disabled.",
+                add_line_break=True
+            )
+    else:
+        logger.Messages.general(message="No preclinical databases provided, skipping", add_line_break=True)
+
+    logger.Messages.header(label="Writing outputs")
     writer.Actionable.write(actionable, string_id, output_folder)
     writer.GermlineACMG.write(evaluated_germline, string_id, output_folder)
     writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
     writer.GermlineHereditary.write(evaluated_germline, string_id, output_folder)
     writer.Integrated.write(integrated, string_id, output_folder)
-    writer.MSI.write(evaluated_ms_variants, string_id, output_folder)
-    writer.MutationalBurden.write(evaluated_burden, string_id, output_folder)
+    writer.MSI.write(evaluated_microsatellite_status_variants, string_id, output_folder)
+    writer.MutationalBurden.write(evaluated_tumor_mutational_burden, string_id, output_folder)
     writer.SomaticScored.write(evaluated_somatic, string_id, output_folder)
     writer.SomaticFiltered.write(somatic_filtered, string_id, output_folder)
     writer.Strategies.write(strategies, string_id, output_folder)
     writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
     writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
 
-    if TOGGLE_FEATURES.getboolean('generate_actionability_report'):
-        report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, patient)
+    logger.Messages.header(label="Generating and writing figures")
+    if function_toggle.getboolean('generate_figures'):
+        logger.Messages.general(message="Plotting DNA and RNA somatic variant overlap")
+        import illustrator
+        illustrator.ValidationOverlap.generate_dna_rna_plot(
+            df=evaluated_somatic,
+            patient_id=string_id,
+            folder=output_folder,
+            config=config
+        )
+        logger.Messages.general(message="Figure generation completed", add_line_break=True)
+    else:
+        logger.Messages.general(message="Generating figures disabled, skipping", add_line_break=True)
 
-        include_similarity = TOGGLE_FEATURES.getboolean('include_model_similarity_in_actionability_report')
+    logger.Messages.header(label="Generating actionability report")
+    if function_toggle.getboolean('generate_actionability_report'):
+        logger.Messages.general(message="Generating metadata dictionary for report")
+        report_dictionary = reporter.Reporter.generate_dictionary(evaluated_somatic, metadata_dictionary)
+
+        include_similarity = function_toggle.getboolean('include_model_similarity_in_actionability_report')
+        logger.Messages.general(message="Generating report")
         reporter.Reporter.generate_actionability_report(
-            actionable,
-            report_dictionary,
+            actionable=actionable,
+            report_dictionary=report_dictionary,
+            config=config,
             similarity=similarity_summary if include_similarity else None,
             output_directory=output_folder
         )
+        logger.Messages.general(message="Report generation completed", add_line_break=True)
+    else:
+        logger.Messages.general(message="Generating report disabled, skipping", add_line_break=True)
+
+    end_time = time.time()
+    elapsed_time = round((end_time - start_time), 4)
+    logger.Messages.general("Molecular Oncology Almanac process complete. Runtime: %s seconds" % elapsed_time)
 
 
 if __name__ == "__main__":
-    start_time = time.time()
-
-    arg_parser = argparse.ArgumentParser(prog='Molecular Oncology Almanac',
-                                         description='A clinical interpretation algorithm for cancer genomics.')
-    arg_parser.add_argument('--patient_id',
-                            help='patient id label',
-                            required=True)
-    arg_parser.add_argument('--tumor_type',
-                            default='Unknown',
-                            help='reported tumor type')
-    arg_parser.add_argument('--stage',
-                            default='Unknown',
-                            help='disease stage')
-    arg_parser.add_argument('--snv_handle',
-                            default='',
-                            help='handle for SNV MAF')
-    arg_parser.add_argument('--indel_handle',
-                            default='',
-                            help='handle for InDel MAF')
-    arg_parser.add_argument('--bases_covered_handle',
-                            default='',
-                            help='handle for a text file which contains the numeric number of somatic bases')
-    arg_parser.add_argument('--called_cn_handle',
-                            default='',
-                            help='handle for called copy number alterations file, used over --cnv_handle')
-    arg_parser.add_argument('--cnv_handle',
-                            default='',
-                            help='handle for annotated seg file')
-    arg_parser.add_argument('--fusion_handle',
-                            default='',
-                            help='handle for STAR Fusion output, .final.abridged')
-    arg_parser.add_argument('--germline_handle',
-                            default='',
-                            help='handle for Germline MAF')
-    arg_parser.add_argument('--validation_handle',
-                            default='',
-                            help='handle for SNV MAF called from validation sequencing')
-    arg_parser.add_argument('--description',
-                            default='',
-                            help='description of patient')
-    arg_parser.add_argument('--ms_status',
-                            default='unk',
-                            choices=['msih', 'msil', 'mss', 'unk'],
-                            help='microsatellite instability status')
-    arg_parser.add_argument('--purity',
-                            default='Unknown',
-                            help='Tumor purity')
-    arg_parser.add_argument('--ploidy',
-                            default='Unknown',
-                            help='Tumor ploidy')
-    arg_parser.add_argument('--wgd',
-                            action='store_true',
-                            help='Specify the occurrence of whole genome duplication')
-    arg_parser.add_argument('--disable_matchmaking',
-                            action='store_true',
-                            help='Disable matchmaking in report')
-    arg_parser.add_argument('--output_directory',
-                            default=None,
-                            help='Output directory for generated files')
+    arg_parser = argparse.ArgumentParser(
+        prog='Molecular Oncology Almanac',
+        description='A clinical interpretation algorithm for cancer genomics.'
+    )
+    arg_parser.add_argument(
+        '--patient_id',
+        help='patient id label',
+        required=True
+    )
+    arg_parser.add_argument(
+        '--description',
+        default='',
+        help='description of patient'
+    )
+    arg_parser.add_argument(
+        '--tumor_type',
+        default='Unknown',
+        help='reported tumor type'
+    )
+    arg_parser.add_argument(
+        '--stage',
+        default='Unknown',
+        help='disease stage'
+    )
+    arg_parser.add_argument(
+        '--snv_handle',
+        default='',
+        help='handle for SNV MAF'
+    )
+    arg_parser.add_argument(
+        '--indel_handle',
+        default='',
+        help='handle for InDel MAF'
+    )
+    arg_parser.add_argument(
+        '--bases_covered_handle',
+        default='',
+        help='handle for a text file which contains the numeric number of somatic bases'
+    )
+    arg_parser.add_argument(
+        '--called_cn_handle',
+        default='',
+        help='handle for called copy number alterations file, used over --cnv_handle'
+    )
+    arg_parser.add_argument(
+        '--cnv_handle',
+        default='',
+        help='handle for annotated seg file'
+    )
+    arg_parser.add_argument(
+        '--fusion_handle',
+        default='',
+        help='handle for STAR Fusion output, .final.abridged'
+    )
+    arg_parser.add_argument(
+        '--germline_handle',
+        default='',
+        help='handle for Germline MAF'
+    )
+    arg_parser.add_argument(
+        '--validation_handle',
+        default='',
+        help='handle for SNV MAF called from validation sequencing'
+    )
+    arg_parser.add_argument(
+        '--ms_status',
+        default='unk',
+        choices=['msih', 'msil', 'mss', 'unk'],
+        help='microsatellite instability status'
+    )
+    arg_parser.add_argument(
+        '--mutational_signatures',
+        default='',
+        help='file for SBS signature contributions, version 3.4'
+    )
+    arg_parser.add_argument(
+        '--purity',
+        default='Unknown',
+        help='Tumor purity'
+    )
+    arg_parser.add_argument(
+        '--ploidy',
+        default='Unknown',
+        help='Tumor ploidy'
+    )
+    arg_parser.add_argument(
+        '--wgd',
+        action='store_true',
+        help='Specify the occurrence of whole genome duplication'
+    )
+    arg_parser.add_argument(
+        '--disable_matchmaking',
+        action='store_true',
+        help='Disable matchmaking in report'
+    )
+    arg_parser.add_argument(
+        '--output_directory',
+        default=None,
+        help='Output directory for generated files'
+    )
+    arg_parser.add_argument(
+        '--config', '-c',
+        required=True,
+        help='ini file that contains configuration details'
+    )
+    arg_parser.add_argument(
+        '--dbs',
+        required=True,
+        help='ini file that contains database paths'
+    )
+    arg_parser.add_argument(
+        '--preclinical-dbs',
+        required=False,
+        help='ini file that contains preclinical file paths'
+    )
     args = arg_parser.parse_args()
 
     patient_dict = {
@@ -348,14 +842,29 @@ if __name__ == "__main__":
         called_cn_handle: args.called_cn_handle,
         fusion_handle: args.fusion_handle,
         germline_handle: args.germline_handle,
+        mutational_signatures_path: args.mutational_signatures,
         validation_handle: args.validation_handle,
         disable_matchmaking: args.disable_matchmaking
     }
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
 
-    main(patient_dict, inputs_dict, output_directory)
+    config_ini = Ini.read(args.config, extended_interpolation=False, convert_to_dictionary=False)
 
-    end_time = time.time()
-    time_statement = "Molecular Oncology Almanac runtime: %s seconds" % round((end_time - start_time), 4)
-    print(time_statement)
+    db_paths = Ini.read(args.dbs, extended_interpolation=True, convert_to_dictionary=True)
+    db_paths = db_paths['paths']
+
+    if args.preclinical_dbs:
+        preclinical_db_paths = Ini.read(args.preclinical_dbs, extended_interpolation=True, convert_to_dictionary=True)
+        preclinical_db_paths = preclinical_db_paths['paths']
+    else:
+        preclinical_db_paths = None
+
+    main(
+        patient=patient_dict,
+        inputs=inputs_dict,
+        output_folder=output_directory,
+        config=config_ini,
+        dbs=db_paths,
+        dbs_preclinical=preclinical_db_paths
+    )

@@ -2,7 +2,6 @@ import pandas as pd
 
 from reader import Reader
 from config import COLNAMES
-from config import CONFIG
 
 
 class Datasources:
@@ -37,7 +36,6 @@ class Datasources:
     implication_map = COLNAMES[datasources_section]['implication_map']
     connections = COLNAMES[datasources_section]['connections']
     description = COLNAMES[datasources_section]['description']
-    preferred_assertion = COLNAMES[datasources_section]['preferred_assertion']
 
     source_type = COLNAMES[datasources_section]['source_type']
     citation = COLNAMES[datasources_section]['citation']
@@ -45,6 +43,8 @@ class Datasources:
     doi = COLNAMES[datasources_section]['doi']
     pmid = COLNAMES[datasources_section]['pmid']
     nct = COLNAMES[datasources_section]['nct']
+    publication_date = COLNAMES[datasources_section]['publication_date']
+    last_updated = COLNAMES[datasources_section]['last_updated']
 
     sensitivity_matches = COLNAMES[datasources_section]['sensitivity_matches']
     resistance_matches = COLNAMES[datasources_section]['resistance_matches']
@@ -71,24 +71,6 @@ class Datasources:
     an_nfe = COLNAMES[datasources_section]['exac_nfe_an']
     an_sas = COLNAMES[datasources_section]['exac_sas_an']
     an_oth = COLNAMES[datasources_section]['exac_oth_an']
-
-    @classmethod
-    def generate_db_dict(cls, config):
-        return {
-            'almanac_handle': config.get('databases', 'almanac_handle'),
-            'hotspots_handle': config.get('databases', 'cancerhotspots_handle'),
-            '3dhotspots_handle': config.get('databases', '3dcancerhotspots_handle'),
-            'clinvar_handle': config.get('databases', 'clinvar_handle'),
-            'cgc_handle': config.get('databases', 'cgc_handle'),
-            'cosmic_handle': config.get('databases', 'cosmic_handle'),
-            'gsea_pathways_handle': config.get('databases', 'gsea_pathways_handle'),
-            'gsea_modules_handle': config.get('databases', 'gsea_modules_handle'),
-            'exac_handle': config.get('databases', 'exac_handle'),
-            'acmg_handle': config.get('databases', 'acmg_handle'),
-            'hereditary_handle': config.get('databases', 'hereditary_handle'),
-            'oncotree_handle': config.get('databases', 'oncotree_handle'),
-            'lawrence_handle': config.get('databases', 'lawrence_handle')
-        }
 
 
 class ACMG:
@@ -122,7 +104,6 @@ class Almanac:
     implication = Datasources.implication
     implication_map = Datasources.implication_map
     description = Datasources.description
-    preferred_assertion = Datasources.preferred_assertion
 
     source_type = Datasources.source_type
     citation = Datasources.citation
@@ -130,6 +111,8 @@ class Almanac:
     doi = Datasources.doi
     pmid = Datasources.pmid
     nct = Datasources.nct
+    publication_date = Datasources.publication_date
+    last_updated = Datasources.last_updated
 
     sensitivity_matches = Datasources.sensitivity_matches
     resistance_matches = Datasources.resistance_matches
@@ -194,7 +177,7 @@ class CancerHotspots:
 
     @classmethod
     def import_ds(cls, dbs):
-        df = Reader.safe_read(dbs['hotspots_handle'], '\t', cls.column_map)
+        df = Reader.safe_read(dbs['cancerhotspots_handle'], '\t', cls.column_map)
         return cls.format_cancerhotspots(df)
 
 
@@ -209,7 +192,7 @@ class CancerHotspots3D:
 
     @classmethod
     def import_ds(cls, dbs):
-        return Reader.safe_read(dbs['3dhotspots_handle'], '\t', cls.column_map)
+        return Reader.safe_read(dbs['3dcancerhotspots_handle'], '\t', cls.column_map)
 
 
 class ClinVar:
@@ -406,16 +389,6 @@ class Oncotree:
 
 class Preclinical:
     section = 'preclinical'
-    summary_handle = CONFIG[section]['summary']
-    variants_handle = CONFIG[section]['variants']
-    cnas_handle = CONFIG[section]['copynumbers']
-    fusions_handle = CONFIG[section]['fusions']
-    fusions_gene1_handle = CONFIG[section]['fusions1']
-    fusions_gene2_handle = CONFIG[section]['fusions2']
-    gdsc_handle = CONFIG[section]['gdsc']
-    mappings_handle = CONFIG[section]['almanac_gdsc_mappings']
-    dictionary_handle = CONFIG[section]['dictionary']
-
     feature = COLNAMES[section]['feature']
     partner = COLNAMES[section]['partner']
     gene = COLNAMES[section]['gene']
@@ -435,12 +408,6 @@ class Preclinical:
     mappings = 'mappings'
     dictionary = 'dictionary'
 
-    feature_type = Datasources.feature_type
-    feature_types_section = 'feature_types'
-    variant_type = CONFIG[feature_types_section]['mut']
-    copy_number_type = CONFIG[feature_types_section]['cna']
-    fusion_type = CONFIG[feature_types_section]['fusion']
-
     @classmethod
     def create_convert_names_dict(cls, dataframe, map_from, map_to):
         return dataframe.loc[:, [map_from, map_to]].dropna().set_index(map_from)[map_to].to_dict()
@@ -450,16 +417,16 @@ class Preclinical:
         return dataframe[dataframe[use_column].astype(bool).astype(int).eq(1)][sample_column].sort_values().tolist()
 
     @classmethod
-    def import_dbs(cls):
-        summary = Reader.read(cls.summary_handle, delimiter='\t')
-        variants = Reader.read(cls.variants_handle, delimiter='\t', low_memory=False)
-        cnas = Reader.read(cls.cnas_handle, delimiter='\t', low_memory=False)
-        fusions = Reader.read(cls.fusions_handle, delimiter='\t', low_memory=False)
-        fusions1 = Reader.read(cls.fusions_gene1_handle, delimiter='\t', low_memory=False)
-        fusions2 = Reader.read(cls.fusions_gene2_handle, delimiter='\t', low_memory=False)
-        gdsc = Reader.read(cls.gdsc_handle, delimiter='\t', low_memory=False)
-        mappings = Reader.read_json(cls.mappings_handle)
-        dictionary = Reader.read_pickle(cls.dictionary_handle)
+    def import_dbs(cls, paths_dictionary):
+        summary = Reader.read(paths_dictionary['summary'], delimiter='\t')
+        variants = Reader.read(paths_dictionary['variants'], delimiter='\t', low_memory=False)
+        cnas = Reader.read(paths_dictionary['copynumbers'], delimiter='\t', low_memory=False)
+        fusions = Reader.read(paths_dictionary['fusions'], delimiter='\t', low_memory=False)
+        fusions1 = Reader.read(paths_dictionary['fusions1'], delimiter='\t', low_memory=False)
+        fusions2 = Reader.read(paths_dictionary['fusions2'], delimiter='\t', low_memory=False)
+        gdsc = Reader.read(paths_dictionary['gdsc'], delimiter='\t', low_memory=False)
+        mappings = Reader.read_json(paths_dictionary['almanac_gdsc_mappings'])
+        dictionary = Reader.read_pickle(paths_dictionary['dictionary'])
 
         ccle_map = cls.create_convert_names_dict(summary, cls.ccle_name, cls.broad)
         sanger_map = cls.create_convert_names_dict(summary, cls.sanger, cls.broad)

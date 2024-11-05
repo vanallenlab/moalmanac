@@ -2,11 +2,13 @@
 Molecular Oncology Almanac can be run by executing either `moalmanac.py` with [standard input formats](#standard-usage) or `simplified_input.py` with [simplified inputs](#simplified-input). Please follow the [installation instructions](../README.md#installation) before use.
 
 ## Standard usage
-Molecular Oncology Almanac may be executed on any combination of input data but does require a patient_id to label output files. Additional settings can be set by modifying the [config.ini](#configini) file and column names may be modified by editing the [colnames.ini](#colnamesini) file.
+Molecular Oncology Almanac may be executed on any combination of input data but does require a patient_id to label output files. Additional settings can be set by modifying the [config.ini](#configini) file and column names may be modified by editing the [colnames.ini](#colnamesini) file. The [config.ini](config.ini) and [annotation-databases.ini](annotation-databases.ini) must be passed as arguments to moalmanac.py.
 
 Required arguments:
 ```
     --patient_id            <string>    patient identifier
+    --config                <string>    ini file that contains configuration details, config.ini
+    --dbs                   <string>    ini file that contains database paths for annotation, annotation-databases.ini
 ```
 
 Optional arguments:
@@ -28,6 +30,7 @@ Optional arguments:
     --disable_matchmaking   <boolean>   remove patient-to-cell line matchmaking from report
     --description           <string>    description of patient
     --output-directory      <string>    specify location of produced outputs
+    --preclinical-dbs       <string>    path to preclinical-databases.ini file
 ```
 
 Example:
@@ -46,8 +49,11 @@ python moalmanac.py \
     --validation_handle "../example_data/example_patient.rna.somatic.snvs.maf" \
     --purity 0.85 \
     --ploidy 4.02 \
-    --ms_status "msih"
-    --wgd
+    --ms_status "msih" \
+    --wgd \
+    --config config.ini \
+    --dbs annotation-databases.ini \
+    --preclinical-dbs preclinical-databases.ini
 ```
 
 These example inputs may also be processed by executing `run_example.py`. 
@@ -85,6 +91,8 @@ This is also described in the [description of inputs](../docs/description-of-inp
 Required arguments:
 ```
     --patient_id            <string>    patient identifier
+    --config                <string>    ini file that contains configuration details, config.ini
+    --dbs                   <string>    ini file that contains database paths for annotation, annotation-databases.ini
 ```
 
 Optional arguments:
@@ -98,6 +106,7 @@ Optional arguments:
     --wgd                   <boolean>   specify the occurence of whole genome duplication
     --description           <string>    description of patient
     --output-directory      <string>    specify location of produced outputs
+    --preclinical-dbs       <string>    path to preclinical-databases.ini file
 ```
 
 Example:
@@ -110,8 +119,11 @@ python simplified_input.py \
     --input "../example_data/example_patient.simplified_input.txt" \
     --purity 0.85 \
     --ploidy 4.02 \
-    --ms_status "msih"
-    --wgd
+    --ms_status "msih" \
+    --wgd \
+    --config config.ini \
+    --dbs annotation-databases.ini \
+    --preclinical-dbs preclinical-databases.ini
 ```
 
 ## Configuration
@@ -128,14 +140,18 @@ The configuration file [config.ini](config.ini) lets users change settings, thre
 - `signatures` allows users to specify the minimum required contribution to consider mutational signatures
 - `validation_sequencing` allows users to specify minimum power and allelic fraction to consider for variants from validation sequencing
 - `feature_types` allows users to specify strings for considered feature types
-- `databases` specifies file paths for databases used for annotation, found in the `moalmanac/databases/` folder
-- `preclinical` specifies file paths for datasources used for preclinical functions, [model_similarity](../docs/description-of-outputs.md#profile-to-cell-line-matchmaking) and [preclinical efficacy](../docs/description-of-outputs.md#preclinical-efficacy)
 
 ### colnames.ini
 The configuration file [colnames.ini](colnames.ini) lets users change strings associated with column names for input and output files. The file contains the following relevant sections,
 - `input_data`, allows users to change column names for input data
 
 Other sections in this configuration file are used internally to MOAlmanac for processing.
+
+### annotation-databases.ini
+The configuration file [annotation-databases.ini](annotation-databases.ini) lets users change paths to datasources being used to annotate genomic variants within the algorithm. This file contains a single `databases` section, with either a relative or absolute path being set to the `root` variable. By default, this points to the [datasources/](../datasources/) folder in the root directory of this repository.
+
+### preclinical-databases.ini
+Similar to `annotation-databases.ini`, the configuration file [preclinical-databases.ini](preclinical-databases.ini) lets users change paths to datasources being used to for preclinical comparison functions,  [model_similarity](../docs/description-of-outputs.md#profile-to-cell-line-matchmaking) and [preclinical efficacy](../docs/description-of-outputs.md#preclinical-efficacy).
 
 ## Citation
 If you find this tool or any code herein useful, please cite:  

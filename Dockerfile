@@ -1,4 +1,4 @@
-FROM vanallenlab/almanac:base
+FROM vanallenlab/miniconda:3.11
 
 WORKDIR /
 
