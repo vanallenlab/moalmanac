@@ -126,7 +126,7 @@ The following columns are included to inspect the relationship between somatic v
 * `validation_detection_power` (float) - power calculation for likelihood of observing variant in validation sequencing, if it existed. See Methods from the publication for more information.
 
 ## Datasource bins
-Molecular Oncology Almanac will match molecular features to [several datasources](/moalmanac/datasources) based on how closely a given molecular feature matches a catalogued feature. 
+Molecular Oncology Almanac will match molecular features to [several datasources](/datasources) based on how closely a given molecular feature matches a catalogued feature. 
 
 ### Sorting somatic molecular features
 The following datasources are used to sort somatic molecular features. Specifically, we assign a numeric value to each somatic variant, germline variants, copy number alteration, and fusion for each appropriate datasource. 
@@ -243,12 +243,12 @@ All molecular features associated with clinical or biological relevance will app
 - [Identifiers](#identifiers)
 
 ## Germline
-Three germline-specific outputs are produced and populated if a germline MAF is passed (through `--germline_handle`) for a given molecular profile. These three outputs are based on genes present in the [American College of Medical Genetics v2](/moalmanac/datasources/acmg), cancer-related genes (appearing in [Molecular Oncology Almanac](/moalmanac/datasources/almanac), Cancer Hotspots [Molecular Oncology Almanac](/moalmanac/datasources/cancerhotspots), or [Cancer Gene Census](/moalmanac/datasources/cancergenecensus)), or [genes related to heritable cancers](/moalmanac/datasources/hereditary). 
+Three germline-specific outputs are produced and populated if a germline MAF is passed (through `--germline_handle`) for a given molecular profile. These three outputs are based on genes present in the [American College of Medical Genetics v2](/datasources/acmg), cancer-related genes (appearing in [Molecular Oncology Almanac](/datasources/almanac), Cancer Hotspots [Molecular Oncology Almanac](/datasources/cancerhotspots), or [Cancer Gene Census](/datasources/cancergenecensus)), or [genes related to heritable cancers](/datasources/hereditary). 
 
 ### American College of Medical Genetics
 Filename suffix: `.germline.acmg.txt`
 
-Germline variants whose gene appears in the gene list from the [American College of Medical Genetics (v2)](/moalmanac/datasources/acmg) will appear in this output. Columns included are:
+Germline variants whose gene appears in the gene list from the [American College of Medical Genetics (v2)](/datasources/acmg) will appear in this output. Columns included are:
 - [Standardized features](#standardized-feature-columns)
 - [Somatic and germline variants](#somatic-and-germline-variants)
 - [Germline variants](#germline-variants)
@@ -257,7 +257,7 @@ Germline variants whose gene appears in the gene list from the [American College
 ### Somatic cancers
 Filename suffix: `.germline.cancer_related.txt`
 
-Germline variants whose gene appears in appearing in [Molecular Oncology Almanac](/moalmanac/datasources/almanac), [Cancer Hotspots](/moalmanac/datasources/cancerhotspots), or [Cancer Gene Census](/moalmanac/datasources/cancergenecensus) will appear in this output. Columns included are:
+Germline variants whose gene appears in appearing in [Molecular Oncology Almanac](/datasources/almanac), [Cancer Hotspots](/datasources/cancerhotspots), or [Cancer Gene Census](/datasources/cancergenecensus) will appear in this output. Columns included are:
 - [Standardized features](#standardized-feature-columns)
 - [Somatic and germline variants](#somatic-and-germline-variants)
 - [Germline variants](#germline-variants)
@@ -268,7 +268,7 @@ Germline variants whose gene appears in appearing in [Molecular Oncology Almanac
 ### Hereditary cancers
 Filename suffix: `.germline.hereditary_cancers.txt`
 
-Germline variants whose gene appears in a curated list of genes [related to hereditary cancer risk](/moalmanac/datasources/hereditary) will appear in this output. Columns included are:
+Germline variants whose gene appears in a curated list of genes [related to hereditary cancer risk](/datasources/hereditary) will appear in this output. Columns included are:
 - [Standardized features](#standardized-feature-columns)
 - [Somatic and germline variants](#somatic-and-germline-variants)
 - [Germline variants](#germline-variants)
@@ -312,7 +312,7 @@ Molecular Oncology Almanac will attempt to map the provided tumor type (`--tumor
 - `bases_covered` (int) - number of somatic bases considered for variant calling (`--bases_covered_handle`)
 - `n_nonsyn_mutations` (int) - number of somatic coding variants (from `--snv_handle` and `--indel_handle`)
 - `coding_mutational_burden_per_megabase` (float) - calculated by dividing `n_nonsyn_mutations` by `bases_covered` and converting the denominator from bases to megabases
-- `percentile_tcga` (float, 0-100) - the percentile of `coding_mutational_burden_per_megabase` relative to TCGA from [Lawrence et al. 2013](/moalmanac/datasources/lawrence)
+- `percentile_tcga` (float, 0-100) - the percentile of `coding_mutational_burden_per_megabase` relative to TCGA from [Lawrence et al. 2013](/datasources/lawrence)
 - `percentile_tcga_tissuetype` (float, 0-100) - the percentile of `coding_mutational_burden_per_megabase` relative to a matched TCGA tissue type, if the tumor type matched
 - `high_burden?` (boolean, True or False) - boolean value for evaluated mutational burden
 

@@ -12,38 +12,38 @@ COPY example_data/ /example_data/
 COPY example_output/ /example_output/
 
 RUN mkdir /moalmanac/
-RUN mkdir /moalmanac/datasources/
+RUN mkdir /datasources
 RUN mkdir /docs/
 
 COPY moalmanac/test/ moalmanac/test/
-COPY moalmanac/datasources/acmg/ /moalmanac/datasources/acmg/
-COPY moalmanac/datasources/cancergenecensus/ /moalmanac/datasources/cancergenecensus/
-COPY moalmanac/datasources/cancerhotspots/ /moalmanac/datasources/cancerhotspots/
-COPY moalmanac/datasources/clinvar/ /moalmanac/datasources/clinvar/
-COPY moalmanac/datasources/cosmic/ /moalmanac/datasources/cosmic/
-COPY moalmanac/datasources/exac/ /moalmanac/datasources/exac/
-COPY moalmanac/datasources/gsea_gene_sets/ /moalmanac/datasources/gsea_gene_sets/
-COPY moalmanac/datasources/hereditary/ /moalmanac/datasources/hereditary/
-COPY moalmanac/datasources/lawrence/ /moalmanac/datasources/lawrence/
-COPY moalmanac/datasources/oncotree/ /moalmanac/datasources/oncotree/
+COPY datasourcesacmg/ /datasourcesacmg/
+COPY datasourcescancergenecensus/ /datasourcescancergenecensus/
+COPY datasourcescancerhotspots/ /datasourcescancerhotspots/
+COPY datasourcesclinvar/ /datasourcesclinvar/
+COPY datasourcescosmic/ /datasourcescosmic/
+COPY datasourcesexac/ /datasourcesexac/
+COPY datasourcesgsea_gene_sets/ /datasourcesgsea_gene_sets/
+COPY datasourceshereditary/ /datasourceshereditary/
+COPY datasourceslawrence/ /datasourceslawrence/
+COPY datasourcesoncotree/ /datasourcesoncotree/
 
 COPY moalmanac/templates/ /moalmanac/templates/
 COPY moalmanac/wrapper_deconstructsigs.sh moalmanac/run_deconstructsigs.R /moalmanac/
 COPY moalmanac/*.py moalmanac/*.ini /moalmanac/
 
-COPY moalmanac/datasources/moalmanac/ /moalmanac/datasources/moalmanac/
+COPY datasourcesmoalmanac/ /datasourcesmoalmanac/
 
-COPY moalmanac/datasources/preclinical/README.md /moalmanac/datasources/preclinical/README.md
-COPY moalmanac/datasources/preclinical/generate-dictionary.ipynb /moalmanac/datasources/preclinical/generate-dictionary.ipynb
-COPY moalmanac/datasources/preclinical/cell-lines.pkl /moalmanac/datasources/preclinical/cell-lines.pkl
-COPY moalmanac/datasources/preclinical/formatted/almanac-gdsc-mappings.json /moalmanac/datasources/preclinical/formatted/almanac-gdsc-mappings.json
-COPY moalmanac/datasources/preclinical/formatted/cell-lines.summary.txt /moalmanac/datasources/preclinical/formatted/cell-lines.summary.txt
-COPY moalmanac/datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt /moalmanac/datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt
-COPY moalmanac/datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt  /moalmanac/datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt
-COPY moalmanac/datasources/preclinical/annotated/cell-lines.fusions.annotated.txt  /moalmanac/datasources/preclinical/annotated/cell-lines.fusions.annotated.txt
-COPY moalmanac/datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt /moalmanac/datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt
-COPY moalmanac/datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt /moalmanac/datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt
-COPY moalmanac/datasources/preclinical/formatted/sanger.gdsc.txt /moalmanac/datasources/preclinical/formatted/sanger.gdsc.txt
+COPY datasourcespreclinical/README.md /datasourcespreclinical/README.md
+COPY datasourcespreclinical/generate-dictionary.ipynb /datasourcespreclinical/generate-dictionary.ipynb
+COPY datasourcespreclinical/cell-lines.pkl /datasourcespreclinical/cell-lines.pkl
+COPY datasourcespreclinical/formatted/almanac-gdsc-mappings.json /datasourcespreclinical/formatted/almanac-gdsc-mappings.json
+COPY datasourcespreclinical/formatted/cell-lines.summary.txt /datasourcespreclinical/formatted/cell-lines.summary.txt
+COPY datasourcespreclinical/annotated/cell-lines.somatic-variants.annotated.txt /datasourcespreclinical/annotated/cell-lines.somatic-variants.annotated.txt
+COPY datasourcespreclinical/annotated/cell-lines.copy-numbers.annotated.txt  /datasourcespreclinical/annotated/cell-lines.copy-numbers.annotated.txt
+COPY datasourcespreclinical/annotated/cell-lines.fusions.annotated.txt  /datasourcespreclinical/annotated/cell-lines.fusions.annotated.txt
+COPY datasourcespreclinical/annotated/cell-lines.fusions.annotated.gene1.txt /datasourcespreclinical/annotated/cell-lines.fusions.annotated.gene1.txt
+COPY datasourcespreclinical/annotated/cell-lines.fusions.annotated.gene2.txt /datasourcespreclinical/annotated/cell-lines.fusions.annotated.gene2.txt
+COPY datasourcespreclinical/formatted/sanger.gdsc.txt /datasourcespreclinical/formatted/sanger.gdsc.txt
 
 COPY docs/* /docs/
 COPY README.md /

@@ -77,7 +77,7 @@ For more information about each datasource, view the [datasources directory](../
 Molecular Oncology Almanac will run successfully given any combination of the following arguments: 
 
 ## Tumor type
-`--tumor_type` expects a string representing the report tumor type. MOAlmanac will attempt to map this string to either an [Oncotree term or code](https://github.com/vanallenlab/moalmanac/tree/main/moalmanac/datasources/oncotree). MOAlmanac will consider clinically relevant matches of the same tumor type prior to considering matches of another tumor type. 
+`--tumor_type` expects a string representing the report tumor type. MOAlmanac will attempt to map this string to either an [Oncotree term or code](https://github.com/vanallenlab/moalmanac/tree/main/datasources/oncotree). MOAlmanac will consider clinically relevant matches of the same tumor type prior to considering matches of another tumor type. 
 
 ## Stage
 `--stage` also expects a string and is intended for use to input disease stage. This is not functionally used within the method and only is outputted for display in the produced actionability report.

@@ -15,7 +15,7 @@ Molecular Oncology Almanac is a clinical interpretation algorithm for cancer gen
 You can view additional documentation, including [descriptions of inputs](docs/description-of-inputs.md) and [outputs](docs/description-of-outputs.md), within the [docs](docs/) folder of this repository.
 
 ## Getting Molecular Oncology Almanac
-The codebase is available for download through this GitHub repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). The method can also be run on Terra, without having to use Terra, by using [our portal](https://portal.moalmanac.org/). **Accessing Molecular Oncology Almanac through GitHub will require building some of the [datasources](moalmanac/datasources/) but they are also contained in the Docker container**.
+The codebase is available for download through this GitHub repository, [Dockerhub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). The method can also be run on Terra, without having to use Terra, by using [our portal](https://portal.moalmanac.org/). **Accessing Molecular Oncology Almanac through GitHub will require building some of the [datasources](datasources/) but they are also contained in the Docker container**.
 
 ### Installation
 Molecular Oncology Almanac is a Python application using Python 3.12. This application, datasources, and all dependencies are packaged on Docker and can be downloaded with the command
