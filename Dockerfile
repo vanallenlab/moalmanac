@@ -17,7 +17,7 @@ RUN mkdir /docs/
 
 COPY moalmanac/test/ moalmanac/test/
 
-COPY datasources/acmg/ /datasourcesacmg/
+COPY datasources/acmg/ /datasources/acmg/
 COPY datasources/cancergenecensus/ /datasources/cancergenecensus/
 COPY datasources/cancerhotspots/ /datasources/cancerhotspots/
 COPY datasources/clinvar/ /datasources/clinvar/
@@ -43,7 +43,7 @@ COPY datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt  /d
 COPY datasources/preclinical/annotated/cell-lines.fusions.annotated.txt  /datasources/preclinical/annotated/cell-lines.fusions.annotated.txt
 COPY datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt /datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt
 COPY datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt /datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt
-COPY datasources/preclinical/formatted/sanger.gdsc.txt /datasourcespreclinical/formatted/sanger.gdsc.txt
+COPY datasources/preclinical/formatted/sanger.gdsc.txt /datasources/preclinical/formatted/sanger.gdsc.txt
 
 COPY docs/* /docs/
 COPY README.md /
