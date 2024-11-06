@@ -1,4 +1,4 @@
-# RUN THIS FROM moalmanac/moalmanac, instead of moalmanac/moalmanac/datasources/gdsc
+# RUN THIS FROM moalmanac/moalmanac, instead of moalmanac/datasources/gdsc
 # Comment line 687 to not add addito
 
 import time
