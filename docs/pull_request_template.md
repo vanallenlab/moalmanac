@@ -1,4 +1,3 @@
-# Pull request template
 Plain language description of pull request.
 
 Additions:
