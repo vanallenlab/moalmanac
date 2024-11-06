@@ -14,6 +14,7 @@ The following describes required and optional arguments to run `moalmanac/moalma
     - [Somatic single nucleotide variants](#somatic-single-nucleotide-variants)
     - [Somatic insertion and deletion variants](#somatic-insertion-and-deletion-variants)
     - [Bases covered](#bases-covered)
+    - [Copy number alterations, called](#called-copy-number-alterations)
     - [Copy number alterations](#copy-number-alterations)
     - [Fusions](#fusions)
     - [Germline variants](#germline-variants)
