@@ -355,27 +355,60 @@ class CoverageMetrics:
 
     @staticmethod
     def calculate_coverage(series_alt_count, series_ref_count):
-        return series_alt_count.astype(int).add(series_ref_count.astype(int))
+        series_alt_count = pd.to_numeric(series_alt_count).fillna(0)
+        series_ref_count = pd.to_numeric(series_ref_count).fillna(0)
+        return series_alt_count.add(series_ref_count).dropna().astype(int)
 
     @staticmethod
     def calculate_tumor_f(series_alt_count, series_total_coverage):
-        return series_alt_count.astype(float).divide(series_total_coverage.astype(float)).round(4)
+        series_alt_count = pd.to_numeric(series_alt_count)
+        series_total_coverage = pd.to_numeric(series_total_coverage)
+        return series_alt_count.divide(series_total_coverage).dropna().astype(float).round(4)
+
+    @classmethod
+    def convert_to_pandas_int64(cls, series):
+        return (
+            series
+            .apply(cls.safe_cast)
+            .astype("Int64")
+        )
 
     @classmethod
     def format_coverage_col(cls, series):
         # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
         with pd.option_context("future.no_silent_downcasting", True):
-            formatted_series = series.replace('__UNKNOWN__', pd.NA).astype(object).fillna(pd.NA)
+            formatted_series = (
+                series
+                .replace('__UNKNOWN__', pd.NA)
+                .replace('', pd.NA)
+                .astype(object)
+                .fillna(pd.NA)
+            )
         formatted_series = cls.apply_min_coverage_for_onps(formatted_series)
+        formatted_series = cls.convert_to_pandas_int64(formatted_series)
         return formatted_series
 
     @staticmethod
     def get_minimum_values_dataframe(dataframe, axis=1):
-        return dataframe.min(axis=axis)
+        return (
+            dataframe
+            .replace('', pd.NA)
+            .fillna(pd.NA)
+            .dropna(how='all')
+            .apply(lambda x: x.dropna().min(), axis=axis)
+            .astype(int)
+        )
 
     @staticmethod
     def get_onp_boolean(series):
         return series.astype(str).str.contains('|', regex=False)
+
+    @staticmethod
+    def safe_cast(value):
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            return pd.NA
 
     @staticmethod
     def split_counts(series):

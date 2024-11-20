@@ -1,6 +1,7 @@
 import unittest
 import pandas as pd
 
+from features import CoverageMetrics
 from moalmanac import features
 from config import COLNAMES
 from reader import Ini
@@ -174,9 +175,147 @@ class UnitTestCosmicSignatures(unittest.TestCase):
         self.assertEqual('COSMIC signature 10', result.index[2])
 
 
+class UnitTestCoverageMetrics(unittest.TestCase):
+    def test_apply_min_coverage_for_onps(self):
+        """
+        This function is called by features.CoverageMetrics.format_coverage_col
+        after it replaces '__UNKNOWN__' and '' with pd.NA
+        """
+        series = pd.Series([3, pd.NA, '4|5', '4|', '5'])
+        result = CoverageMetrics.apply_min_coverage_for_onps(series)
+        print(result)
+        self.assertEqual(first=3, second=result.loc[0])
+        self.assertEqual(first=4, second=result.loc[2])
+        self.assertEqual(first=4, second=result.loc[3])
+        self.assertEqual(first='5', second=result.loc[4])
+        self.assertTrue(isinstance(result.loc[1], type(pd.NA)))
+
+    def test_calculate_coverage(self):
+        """
+        This function is called after features.CoverageMetrics.format_coverage_col
+        so values should be pd.NA or integers
+        """
+        series_alt_counts = pd.Series([0, 1, pd.NA, 3])
+        series_ref_counts = pd.Series([pd.NA, 0, 1, 2])
+        result = (
+            CoverageMetrics
+            .calculate_coverage(
+                series_alt_count=series_alt_counts,
+                series_ref_count=series_ref_counts
+            )
+        )
+        self.assertEqual(first=0, second=result.loc[0])
+        self.assertEqual(first=1, second=result.loc[1])
+        self.assertEqual(first=1, second=result.loc[2])
+        self.assertEqual(first=5, second=result.loc[3])
+
+    def test_calculate_tumor_f(self):
+        series_alt_count = pd.Series([0, 1, pd.NA, 3])
+        series_total_coverage = pd.Series([0, 6, 1, 6])
+        result = (
+            CoverageMetrics
+            .calculate_tumor_f(
+                series_alt_count=series_alt_count,
+                series_total_coverage=series_total_coverage
+            )
+        )
+        self.assertEqual(first=0.1667, second=result.loc[1])
+        self.assertEqual(first=0.5000, second=result.loc[3])
+        self.assertTrue(0 not in result.index)
+        self.assertTrue(2 not in result.index)
+
+    def test_convert_to_pandas_int64(self):
+        series = pd.Series([3, None, pd.NA, '4', '5'])
+        result = CoverageMetrics.convert_to_pandas_int64(series)
+        self.assertEqual(first=3, second=result.loc[0])
+        self.assertEqual(first=4, second=result.loc[3])
+        self.assertEqual(first=5, second=result.loc[4])
+        self.assertTrue(isinstance(result.loc[1], type(pd.NA)))
+        self.assertTrue(isinstance(result.loc[2], type(pd.NA)))
+
+    def test_format_coverage_col(self):
+        series = pd.Series([3, '', None, pd.NA, '4|5', '4|', '5', '__UNKNOWN__'])
+        result = CoverageMetrics.format_coverage_col(series)
+        self.assertEqual(first=3, second=result.loc[0])
+        self.assertTrue(isinstance(result.loc[1], type(pd.NA)))
+        self.assertTrue(isinstance(result.loc[2], type(pd.NA)))
+        self.assertTrue(isinstance(result.loc[3], type(pd.NA)))
+        self.assertEqual(first=4, second=result.loc[4])
+        self.assertEqual(first=4, second=result.loc[5])
+        self.assertEqual(first=5, second=result.loc[6])
+        self.assertTrue(isinstance(result.loc[7], type(pd.NA)))
+
+    def test_get_minimum_values_dataframe(self):
+        """
+        This function is run after format_coverage_col, apply_min_coverage_for_onps, get_onp_boolean, split_counts.
+        It is also only run on the index values that contain an ONP boolean.
+        """
+        series = pd.Series([3, '', None, pd.NA, '4|5', '4|', '5'])
+        dataframe = features.CoverageMetrics.split_counts(series)
+        result = features.CoverageMetrics.get_minimum_values_dataframe(dataframe, axis=1)
+        self.assertEqual(first=3, second=result.loc[0])
+        self.assertEqual(first=4, second=result.loc[4])
+        self.assertEqual(first=4, second=result.loc[5])
+        self.assertEqual(first=5, second=result.loc[6])
+        self.assertTrue(0 in result.index)
+        self.assertTrue(1 not in result.index)
+        self.assertTrue(2 not in result.index)
+        self.assertTrue(3 not in result.index)
+        self.assertTrue(4 in result.index)
+        self.assertTrue(5 in result.index)
+        self.assertTrue(6 in result.index)
+
+    def test_get_onp_boolean(self):
+        series = pd.Series([3, '', None, pd.NA, '4|5', '4|', '|5'])
+        result = features.CoverageMetrics.get_onp_boolean(series)
+        self.assertEqual(first=False, second=result.loc[0])
+        self.assertEqual(first=False, second=result.loc[1])
+        self.assertEqual(first=False, second=result.loc[2])
+        self.assertEqual(first=False, second=result.loc[3])
+        self.assertEqual(first=True, second=result.loc[4])
+        self.assertEqual(first=True, second=result.loc[5])
+        self.assertEqual(first=True, second=result.loc[6])
+
+    def test_safe_cast(self):
+        series = pd.Series([3, '', None, pd.NA, '4|5', '4|', '5', '__UNKNOWN__'])
+        result = features.CoverageMetrics.safe_cast(series.loc[0])
+        self.assertEqual(first=3, second=result)
+        result = features.CoverageMetrics.safe_cast(series.loc[6])
+        self.assertEqual(first=5, second=result)
+        result = features.CoverageMetrics.safe_cast(series.loc[1])
+        self.assertTrue(isinstance(result, type(pd.NA)))
+        result = features.CoverageMetrics.safe_cast(series.loc[2])
+        self.assertTrue(isinstance(result, type(pd.NA)))
+        result = features.CoverageMetrics.safe_cast(series.loc[3])
+        self.assertTrue(isinstance(result, type(pd.NA)))
+        result = features.CoverageMetrics.safe_cast(series.loc[4])
+        self.assertTrue(isinstance(result, type(pd.NA)))
+        result = features.CoverageMetrics.safe_cast(series.loc[5])
+        self.assertTrue(isinstance(result, type(pd.NA)))
+        result = features.CoverageMetrics.safe_cast(series.loc[7])
+        self.assertTrue(isinstance(result, type(pd.NA)))
+
+    def test_split_counts(self):
+        series = pd.Series([3, '', None, pd.NA, '4|5'])
+        result = features.CoverageMetrics.split_counts(series)
+        self.assertEqual(first=series.shape[0], second=result.shape[0])
+        self.assertEqual(first=2, second=result.shape[1])
+        self.assertEqual(first='3', second=result.loc[0, 0])
+        self.assertEqual(first='4', second=result.loc[4, 0])
+        self.assertEqual(first='5', second=result.loc[4, 1])
+
+        self.assertEqual(first='', second=result.loc[1, 0])
+        self.assertEqual(first='', second=result.loc[2, 0])
+        self.assertEqual(first='', second=result.loc[3, 0])
+        self.assertEqual(first=None, second=result.loc[0, 1])
+        self.assertEqual(first=None, second=result.loc[1, 1])
+        self.assertEqual(first=None, second=result.loc[2, 1])
+        self.assertEqual(first=None, second=result.loc[3, 1])
+
+
 class UnitTestFusion(unittest.TestCase):
     def test_create_column_map(self):
-        config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
+        config = Ini.read(path='config.ini', extended_interpolation=False, convert_to_dictionary=False)
         column_map = features.Fusion.create_colmap(config)
         leftbreakpoint = 'leftbreakpoint'
         rightbreakpoint = 'rightbreakpoint'
