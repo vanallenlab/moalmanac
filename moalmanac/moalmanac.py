@@ -365,6 +365,17 @@ def execute_cmd(command):
     subprocess.call(command, shell=True)
 
 
+def format_metadata_dictionary(dictionary):
+    dictionary[tumor_type] = 'Unknown' if not isinstance(dictionary[tumor_type], str) else dictionary[tumor_type]
+    dictionary[stage] = '' if not isinstance(dictionary[stage], str) else dictionary[stage]
+    dictionary[wgd] = False if not isinstance(dictionary[wgd], bool) else dictionary[wgd]
+    if isinstance(dictionary[ms_status], str):
+        dictionary[ms_status] = 'unk' if dictionary[ms_status] not in ['msih', 'msil', 'mss'] else dictionary[ms_status]
+    else:
+        dictionary[ms_status] = 'unk'
+    return dictionary
+
+
 def format_output_directory(directory):
     if not directory:
         return os.getcwd()
@@ -445,6 +456,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     )
 
     metadata_dictionary = create_metadata_dictionary(patient)
+    metadata_dictionary = format_metadata_dictionary(metadata_dictionary)
     string_id = metadata_dictionary[patient_id]
 
     logger.Messages.header(label="Output directory")
