@@ -1170,7 +1170,11 @@ class ClinVar:
         if remaining_variants.empty:
             result = subset.loc[idx_result]
         else:
-            result = pd.concat([subset, remaining_variants]).loc[idx_result, :]
+            subset = features.Features.preallocate_missing_columns(subset)
+            remaining_variants = features.Features.preallocate_missing_columns(remaining_variants)
+            list_dataframes = [subset, remaining_variants]
+            result = features.Features.concat_list_of_dataframes(list_of_dataframes=list_dataframes, ignore_index=False)
+            result = result.loc[idx_result]
         return features.Features.preallocate_missing_columns(result)
 
 
@@ -1270,7 +1274,6 @@ class ExAC:
             list_dataframes = [subset, remaining_variants]
             result = features.Features.concat_list_of_dataframes(list_of_dataframes=list_dataframes, ignore_index=False)
             result = result.loc[idx_result]
-            result
         return features.Features.preallocate_missing_columns(result)
 
     @classmethod
