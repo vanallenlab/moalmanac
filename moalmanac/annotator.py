@@ -132,11 +132,28 @@ class Annotator:
                 idx += '_' + str(series[col])
         return idx
 
+    @staticmethod
+    def dataframe_drop_na(dataframe, columns, how='any', axis=0):
+        return dataframe.loc[:, columns].dropna(how=how, axis=axis)
+
     @classmethod
     def fill_na(cls, dataframe, column, fill_value, fill_data_type):
         if column not in dataframe.columns:
             dataframe = cls.preallocate_empty_columns(dataframe, [column])
         return dataframe.loc[dataframe.index, column].astype(fill_data_type).fillna(fill_value)
+
+    @classmethod
+    def get_idx_without_na(cls, dataframe, columns, datasource_label):
+        subset = cls.dataframe_drop_na(dataframe, columns, how='any', axis=0)
+        idx = subset.index
+        removed_rows = dataframe.index.difference(idx).shape[0]
+        message = (f"...{removed_rows} of {dataframe.shape[0]} rows have null values in "
+                   f"one or more required columns: {', '.join(columns)}")
+        logger.Messages.general(message=message)
+        if removed_rows != 0:
+            message = f"...these rows will not be annotated with {datasource_label}"
+            logger.Messages.general(message=message)
+        return idx
 
     @classmethod
     def match_ds(cls, df, ds, bin_column, compare_columns):
@@ -1124,21 +1141,41 @@ class ClinVar:
         df[cls.chr] = df[cls.chr].astype(str)
         ds[cls.chr] = ds[cls.chr].astype(str)
 
-        return df.merge(ds, how='left')
+        return df.reset_index().merge(ds, how='left').set_index('index')
 
     @classmethod
     def annotate(cls, df, dbs):
         logger.Messages.general(message="...with ClinVar")
-        df.drop(df.columns[df.columns.str.contains('clinvar')], axis=1, inplace=True)
+        columns = [cls.chr, cls.start, cls.end]
+        idx = Annotator.get_idx_without_na(dataframe=df, columns=columns, datasource_label='ClinVar')
+        idx_result = df.index.copy(deep=True)
+
+        if df.index.difference(idx).empty:
+            remaining_variants = features.Features.create_empty_dataframe()
+        else:
+            remaining_variants = df.loc[df.index.difference(idx), :].copy(deep=True)
+            df = df.loc[idx, :].copy(deep=True)
+
+        subset = df.drop(df.columns[df.columns.str.contains('clinvar')], axis=1)
+        subset = subset.loc[idx, :]
         ds = datasources.ClinVar.import_ds(dbs)
         logger.Messages.dataframe_size(label="...datasource size", dataframe=ds)
 
-        df = cls.append_clinvar(df, ds)
-        for value, group in df.groupby(cls.bin_name):
+        subset = cls.append_clinvar(subset, ds)
+        for value, group in subset.groupby(cls.bin_name):
             message = f"...{cls.bin_name} == {value} for {group.shape[0]} records"
             logger.Messages.general(message=message)
         logger.Messages.general("")
-        return features.Features.preallocate_missing_columns(df)
+
+        if remaining_variants.empty:
+            result = subset.loc[idx_result]
+        else:
+            subset = features.Features.preallocate_missing_columns(subset)
+            remaining_variants = features.Features.preallocate_missing_columns(remaining_variants)
+            list_dataframes = [subset, remaining_variants]
+            result = features.Features.concat_list_of_dataframes(list_of_dataframes=list_dataframes, ignore_index=False)
+            result = result.loc[idx_result]
+        return features.Features.preallocate_missing_columns(result)
 
 
 class Cosmic:
@@ -1177,7 +1214,7 @@ class ExAC:
             variants[column] = variants[column].astype(data_type)
             ds[column] = ds[column].astype(data_type)
 
-        merged = variants.merge(ds, how='left')
+        merged = variants.reset_index().merge(ds, how='left').set_index('index')
         merged.loc[merged.index, cls.af] = Annotator.fill_na(
             dataframe=merged,
             column=cls.af,
@@ -1197,27 +1234,47 @@ class ExAC:
     @classmethod
     def annotate(cls, df, dbs, config):
         logger.Messages.general(message="...with ExAC")
-        df_dropped = cls.drop_existing_columns(df)
+        columns = [cls.chr, cls.start, cls.ref, cls.alt]
+        idx = Annotator.get_idx_without_na(dataframe=df, columns=columns, datasource_label='ExAC')
+        idx_result = df.index.copy(deep=True)
+
+        if df.index.difference(idx).empty:
+            remaining_variants = features.Features.create_empty_dataframe()
+        else:
+            remaining_variants = df.loc[df.index.difference(idx), :].copy(deep=True)
+            df = df.loc[idx, :].copy(deep=True)
+
+        subset = cls.drop_existing_columns(df)
+        subset = subset.loc[idx, :]
         ds = datasources.ExAC.import_ds(dbs)
         logger.Messages.dataframe_size(label="...datasource size", dataframe=ds)
 
-        df_annotated = cls.append_exac_af(
-            df=df_dropped,
+        subset = cls.append_exac_af(
+            df=subset,
             ds=ds,
             ds_columns=[cls.chr, cls.start, cls.ref, cls.alt, cls.af],
             variant_biomarker_types=[config['feature_types']['mut'], config['feature_types']['germline']]
         )
-        common_allele_frequency_threshold=config['exac']['exac_common_af_threshold']
-        df_annotated[cls.bin_name] = cls.annotate_common_af(
-            series_exac_af=df_annotated[cls.af],
+        common_allele_frequency_threshold = config['exac']['exac_common_af_threshold']
+        subset[cls.bin_name] = cls.annotate_common_af(
+            series_exac_af=subset[cls.af],
             threshold=common_allele_frequency_threshold
         )
 
-        for value, group in df_annotated.groupby(cls.bin_name):
+        for value, group in subset.groupby(cls.bin_name):
             message = f"...{cls.bin_name} == {value} for {group.shape[0]} records"
             logger.Messages.general(message=message)
         logger.Messages.general("")
-        return features.Features.preallocate_missing_columns(df_annotated)
+
+        if remaining_variants.empty:
+            result = subset.loc[idx_result]
+        else:
+            subset = features.Features.preallocate_missing_columns(subset)
+            remaining_variants = features.Features.preallocate_missing_columns(remaining_variants)
+            list_dataframes = [subset, remaining_variants]
+            result = features.Features.concat_list_of_dataframes(list_of_dataframes=list_dataframes, ignore_index=False)
+            result = result.loc[idx_result]
+        return features.Features.preallocate_missing_columns(result)
 
     @classmethod
     def annotate_common_af(cls, series_exac_af, threshold):
@@ -1280,26 +1337,49 @@ class ExACExtended:
     @classmethod
     def annotate(cls, df, dbs, config):
         logger.Messages.general(message="...with ExAC, Extended")
-        df_dropped = ExAC.drop_existing_columns(df)
+        columns = [cls.chr, cls.start, cls.ref, cls.alt]
+        idx = Annotator.get_idx_without_na(dataframe=df, columns=columns, datasource_label='ExAC')
+        idx_result = df.index.copy(deep=True)
+
+        if df.index.difference(idx).empty:
+            remaining_variants = features.Features.create_empty_dataframe()
+        else:
+            remaining_variants = df.loc[df.index.difference(idx), :].copy(deep=True)
+            df = df.loc[idx, :].copy(deep=True)
+
+        subset = ExAC.drop_existing_columns(df)
+        subset = subset.loc[idx, :]
         ds = datasources.ExACExtended.import_ds(dbs)
         logger.Messages.dataframe_size(label="...datasource size", dataframe=ds)
 
-        df_annotated = ExAC.append_exac_af(
-            df=df_dropped,
+        subset = ExAC.append_exac_af(
+            df=subset,
             ds=ds,
             ds_columns=cls.ds_columns,
             variant_biomarker_types=[config['feature_types']['mut'], config['feature_types']['germline']]
         )
+
         common_allele_frequency_threshold = config['exac']['exac_common_af_threshold']
-        df_annotated[ExAC.bin_name] = ExAC.annotate_common_af(
-            series_exac_af=df_annotated[ExAC.af],
+        subset[ExAC.bin_name] = ExAC.annotate_common_af(
+            series_exac_af=subset[ExAC.af],
             threshold=common_allele_frequency_threshold
         )
-        for value, group in df_annotated.groupby(ExAC.bin_name):
+
+        for value, group in subset.groupby(ExAC.bin_name):
             message = f"...{ExAC.bin_name} == {value} for {group.shape[0]} records"
             logger.Messages.general(message=message)
         logger.Messages.general("")
-        return features.Features.preallocate_missing_columns(df_annotated)
+
+        if remaining_variants.empty:
+            result = subset.loc[idx_result]
+        else:
+            subset = features.Features.preallocate_missing_columns(subset)
+            remaining_variants = features.Features.preallocate_missing_columns(remaining_variants)
+            list_dataframes = [subset, remaining_variants]
+            result = features.Features.concat_list_of_dataframes(list_of_dataframes=list_dataframes, ignore_index=False)
+            result = result.loc[idx_result]
+            #result = pd.concat([subset, remaining_variants]).loc[idx_result, :]
+        return features.Features.preallocate_missing_columns(result)
 
 
 class GSEACancerModules:

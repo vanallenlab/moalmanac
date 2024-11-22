@@ -1,6 +1,6 @@
+import json
 import logger
 from config import COLNAMES
-import json
 
 
 class Writer:

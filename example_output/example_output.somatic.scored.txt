@@ -1,106 +1,110 @@
 score_bin	sensitive_score_bin	resistance_score_bin	prognostic_score_bin	feature_type	feature	alteration_type	alteration	chromosome	start_position	end_position	reference_allele	observed_allele1	observed_allele2	tumor_f	total_coverage	exac_af	exac_common	clinvar	number_germline_mutations_in_gene	spanningfrags	left_gene	left_chr	left_position	right_gene	right_chr	right_position	validation_total_coverage	validation_tumor_f	validation_detection_power	rationale	patient_id	tumor_sample_barcode	normal_sample_barcode	almanac_bin	cancerhotspots_bin	cancerhotspots3D_bin	cgc_bin	gsea_pathways_bin	gsea_modules_bin	cosmic_bin
 Putatively Actionable	Putatively Actionable	Putatively Actionable	Putatively Actionable	Somatic Variant	BRAF	Missense	p.V600E	7	140453136	140453136	A	A	T	0.6316	152.0	1.6e-05	0.0		1.0								4.0	0.0	0.161		example	example_tumor_profile	example_normal_profile	4	2	2	1	1	1	2
-Putatively Actionable	Putatively Actionable			Copy Number	CDK4	Amplification										0.0	0.0														example			4	1	2	1	1	1	1
-Putatively Actionable			Putatively Actionable	Copy Number	TP53	Deletion										0.0	0.0		1.0												example			4	1	1	1	1	1	1
-Putatively Actionable		Putatively Actionable		Copy Number	BRAF	Amplification										0.0	0.0		1.0												example			4	1	1	1	1	1	1
-Putatively Actionable	Putatively Actionable			Copy Number	CDKN2A	Deletion										0.0	0.0														example			4	1	0	1	1	1	1
-Investigate Actionability	Investigate Actionability			Rearrangement	COL1A1	Fusion	COL1A1--CITED4	17	48273298							0.0	0.0			6	COL1A1	17	48273298	CITED4	1	41327916					example			3	0	0	1	0	1	1
+Putatively Actionable	Putatively Actionable			Copy Number	CDK4	Amplification																									example			4	1	2	1	1	1	1
+Putatively Actionable	Putatively Actionable		Putatively Actionable	Copy Number	TP53	Deletion													1.0												example			4	1	1	1	1	1	1
+Putatively Actionable		Putatively Actionable		Copy Number	BRAF	Amplification													1.0												example			4	1	1	1	1	1	1
+Putatively Actionable	Putatively Actionable			Copy Number	CDKN2A	Deletion																									example			4	1	0	1	1	1	1
+Investigate Actionability	Investigate Actionability			Rearrangement	COL1A1	Fusion	COL1A1--CITED4	17	48273298											6	COL1A1	17	48273298	CITED4	1	41327916					example			3	0	0	1	0	1	1
 Investigate Actionability	Investigate Actionability			Somatic Variant	MSH2	Missense	p.D887N	2	47739466	47739466	G	G	A	0.8039	51.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	2	1	0	1	1	1	1
-Investigate Actionability	Investigate Actionability			Copy Number	FGFR2	Deletion										0.0	0.0														example			2	1	0	1	1	1	1
+Investigate Actionability	Investigate Actionability			Copy Number	FGFR2	Deletion																									example			2	1	0	1	1	1	1
 Investigate Actionability			Investigate Actionability	Somatic Variant	STAG2	Missense	p.F467I	X	123191810	123191810	T	T	A	0.3571	56.0	0.0	0.0										27.0	0.0	0.9881		example	example_tumor_profile	example_normal_profile	2	1	0	1	0	1	1
 Investigate Actionability			Investigate Actionability	Somatic Variant	ZRSR2	Missense	p.N261I	X	15836720	15836720	A	A	T	0.4019	107.0	0.0	0.0										29.0	0.0	0.9987		example	example_tumor_profile	example_normal_profile	2	0	0	1	0	0	1
-Biologically Relevant				Somatic Variant	PDGFRB	Missense	p.G674E	5	149503815	149503815	C	C	T	0.4	40.0	0.0	0.0										222.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	1	0	0	1	1	1	1
+Biologically Relevant				Somatic Variant	PDGFRB	Missense	p.G674E	5	149503815	149503815	C	C	T	0.4	40.0	0.0	0.0										222.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	1	0	0	1	1	1	2
 Biologically Relevant				Somatic Variant	NTRK2	Missense	p.H300Y	9	87342613	87342613	C	C	T	0.6136	44.0	0.0	0.0										17.0	0.0	0.9982		example	example_tumor_profile	example_normal_profile	1	0	0	0	0	1	1
 Cancer Hotspot				Somatic Variant	MAP3K13	Missense	p.A912V	3	185198253	185198253	C	C	T	0.0597	67.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	1	0	1	0	1	1
-Cancer Hotspot				Rearrangement	TGFBR1	Fusion	TGFBR1--FTL	9	101891297							0.0	0.0			6	TGFBR1	9	101891297	FTL	19	49469905					example			0	1	0	0	1	1	1
-Cancer Hotspot				Rearrangement	HLA-B	Fusion	COL4A1--HLA-B	13	110853828							0.0	0.0			5	COL4A1	13	110853828	HLA-B	6	31323220					example			0	1	0	0	1	1	1
-Cancer Hotspot				Rearrangement	DNMT1	Fusion	DNMT1--MLST8	19	10244925							0.0	0.0			5	DNMT1	19	10244925	MLST8	16	2258536					example			0	1	0	0	0	1	1
-Cancer Hotspot 3D				Rearrangement	ITGB2	Fusion	RMRP--ITGB2	9	35657873							0.0	0.0			6	RMRP	9	35657873	ITGB2	21	46320255					example			0	0	1	0	1	1	1
+Cancer Hotspot				Rearrangement	TGFBR1	Fusion	TGFBR1--FTL	9	101891297											6	TGFBR1	9	101891297	FTL	19	49469905					example			0	1	0	0	1	1	1
+Cancer Hotspot				Rearrangement	HLA-B	Fusion	COL4A1--HLA-B	13	110853828											5	COL4A1	13	110853828	HLA-B	6	31323220					example			0	1	0	0	1	1	1
+Cancer Hotspot				Rearrangement	DNMT1	Fusion	DNMT1--MLST8	19	10244925											5	DNMT1	19	10244925	MLST8	16	2258536					example			0	1	0	0	0	1	1
+Cancer Hotspot 3D				Rearrangement	ITGB2	Fusion	RMRP--ITGB2	9	35657873											6	RMRP	9	35657873	ITGB2	21	46320255					example			0	0	1	0	1	1	1
 Cancer Hotspot 3D				Somatic Variant	KIFC1	Missense	p.P123S	6	33371517	33371517	C	C	T	0.44	75.0	0.0	0.0										7.0	0.0	0.3784		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	1	2
-Cancer Hotspot 3D				Somatic Variant	GSG2	Missense	p.A239S	17	3627944	3627944	G	G	T	0.2097	124.0	0.0	0.0										38.0	0.0	0.9589		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	1	1
 Cancer Hotspot 3D				Somatic Variant	TDRD7	Missense	p.C710S	9	100237714	100237714	G	G	C	0.2987	77.0	0.0	0.0										7.0	0.0	0.1404		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	1	1
-Cancer Hotspot 3D				Somatic Variant	MCF2	Splice Site		X	138697212	138697212	C	C	T	0.3409	88.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	1	1
 Cancer Hotspot 3D				Somatic Variant	FGG	Nonsense	p.W398*	4	155526154	155526154	C	C	T	0.3458	107.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	1	1
-Cancer Hotspot 3D				Rearrangement	VIM	Fusion	VIM--TRIM26	10	17277879							0.0	0.0			8	VIM	10	17277879	TRIM26	6	30154071					example			0	0	1	0	0	1	1
-Cancer Hotspot 3D				Rearrangement	PSAP	Fusion	PSAP--MALAT1	10	73590916							0.0	0.0			5	PSAP	10	73590916	MALAT1	11	65268053					example			0	0	1	0	0	1	1
-Cancer Hotspot 3D				Rearrangement	PSAP	Fusion	PSAP--LRP1	10	73577182							0.0	0.0			5	PSAP	10	73577182	LRP1	12	57559896					example			0	0	1	0	0	1	1
-Cancer Hotspot 3D				Rearrangement	VIM	Fusion	H19--VIM	11	2018788							0.0	0.0			7	H19	11	2018788	VIM	10	17271885					example			0	0	1	0	0	1	1
+Cancer Hotspot 3D				Somatic Variant	MCF2	Splice Site		X	138697212	138697212	C	C	T	0.3409	88.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	1	1
+Cancer Hotspot 3D				Rearrangement	VIM	Fusion	VIM--TRIM26	10	17277879											8	VIM	10	17277879	TRIM26	6	30154071					example			0	0	1	0	0	1	1
+Cancer Hotspot 3D				Rearrangement	PSAP	Fusion	PSAP--MALAT1	10	73590916											5	PSAP	10	73590916	MALAT1	11	65268053					example			0	0	1	0	0	1	1
+Cancer Hotspot 3D				Rearrangement	PSAP	Fusion	PSAP--LRP1	10	73577182											5	PSAP	10	73577182	LRP1	12	57559896					example			0	0	1	0	0	1	1
+Cancer Hotspot 3D				Rearrangement	VIM	Fusion	H19--VIM	11	2018788											7	H19	11	2018788	VIM	10	17271885					example			0	0	1	0	0	1	1
+Cancer Hotspot 3D				Somatic Variant	GSG2	Missense	p.A239S	17	3627944	3627944	G	G	T	0.2097	124.0	0.0	0.0										38.0	0.0	0.9589		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	1	0
 Cancer Hotspot 3D				Somatic Variant	PCDHB13	Missense	p.E232K	5	140594389	140594389	G	G	A	0.4427	131.0	0.0	0.0										8.0	0.0	0.5071		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	0	2
 Cancer Hotspot 3D				Somatic Variant	PCDHB8	Missense	p.E311K	5	140558546	140558546	G	G	A	0.398	98.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	0	2
 Cancer Hotspot 3D				Somatic Variant	ZNF572	Missense	p.L483P	8	125989958	125989958	T	T	C	0.2485	165.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	1	0	0	0	1
-Cancer Hotspot 3D				Rearrangement	MLST8	Fusion	DNMT1--MLST8	19	10244925							0.0	0.0			5	DNMT1	19	10244925	MLST8	16	2258536					example			0	0	1	0	0	0	1
+Cancer Hotspot 3D				Rearrangement	MLST8	Fusion	DNMT1--MLST8	19	10244925											5	DNMT1	19	10244925	MLST8	16	2258536					example			0	0	1	0	0	0	1
 Cancer Gene Census				Somatic Variant	N4BP2	Missense	p.P12L	4	40098995	40098995	C	C	T	0.381	84.0	0.0	0.0										11.0	0.0	0.6527		example	example_tumor_profile	example_normal_profile	0	0	0	1	0	1	2
 Cancer Gene Census				Somatic Variant	GRIN2A	Nonsense	p.R681*	16	9916248	9916248	G	G	A	0.5663	83.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	1	0	1	2
 Cancer Gene Census				Somatic Variant	AKAP9	Missense	p.R1912Q	7	91690671	91690671	G	G	A	0.5333	180.0	1.6e-05	0.0										41.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	1	0	1	1
 Cancer Gene Census				Somatic Variant	MUC16	Missense	p.V9246M	19	9059710	9059710	C	C	T	0.4324	37.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	1	0	1	1
-Cancer Gene Census				Rearrangement	TAF15	Fusion	TAF15--LTBP2	17	34171768							0.0	0.0			6	TAF15	17	34171768	LTBP2	14	75002695					example			0	0	0	1	0	1	1
-Cancer Gene Census				Rearrangement	CHD2	Fusion	CHD2--C1QA	15	93470551							0.0	0.0			6	CHD2	15	93470551	C1QA	1	22965509					example			0	0	0	1	0	1	1
+Cancer Gene Census				Rearrangement	TAF15	Fusion	TAF15--LTBP2	17	34171768											6	TAF15	17	34171768	LTBP2	14	75002695					example			0	0	0	1	0	1	1
+Cancer Gene Census				Rearrangement	CHD2	Fusion	CHD2--C1QA	15	93470551											6	CHD2	15	93470551	C1QA	1	22965509					example			0	0	0	1	0	1	1
 Cancer Gene Census				Somatic Variant	AFF4	Missense	p.S343F	5	132262835	132262835	G	G	A	0.1828	93.0	0.0	0.0										53.0	0.0189	0.9812		example	example_tumor_profile	example_normal_profile	0	0	0	1	0	0	1
 Cancer Gene Census				Somatic Variant	KTN1	Missense	p.S773L	14	56115539	56115539	C	C	T	0.2833	180.0	0.0	0.0										21.0	0.0	0.8773		example	example_tumor_profile	example_normal_profile	0	0	0	1	0	0	1
 Cancer Gene Census				Somatic Variant	AFF3	Missense	p.S699P	2	100210028	100210028	A	A	G	0.7564	78.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	1	0	0	1
-Cancer Gene Census				Rearrangement	POLR2A	Fusion	POLR2A--AP2M1	17	7406801							0.0	0.0			12	POLR2A	17	7406801	AP2M1	3	183898675					example			0	0	0	1	0	0	1
-Cancer Gene Census				Rearrangement	MALAT1	Fusion	PSAP--MALAT1	10	73590916							0.0	0.0			5	PSAP	10	73590916	MALAT1	11	65268053					example			0	0	0	1	0	0	1
+Cancer Gene Census				Rearrangement	POLR2A	Fusion	POLR2A--AP2M1	17	7406801											12	POLR2A	17	7406801	AP2M1	3	183898675					example			0	0	0	1	0	0	1
+Cancer Gene Census				Rearrangement	MALAT1	Fusion	PSAP--MALAT1	10	73590916											5	PSAP	10	73590916	MALAT1	11	65268053					example			0	0	0	1	0	0	0
 Cancer Pathway				Somatic Variant	ITGAL	Missense	p.L805M	16	30518082	30518082	C	C	A	0.0227	176.0	0.0	0.0										87.0	0.0	0.2478		example	example_tumor_profile	example_normal_profile	0	0	0	0	1	1	1
-Cancer Pathway				Rearrangement	MMP9	Fusion	MMP9--BACE2	20	44643093							0.0	0.0			5	MMP9	20	44643093	BACE2	21	42629101					example			0	0	0	0	1	1	1
-Cancer Pathway				Rearrangement	COL4A1	Fusion	COL4A1--HLA-B	13	110853828							0.0	0.0			5	COL4A1	13	110853828	HLA-B	6	31323220					example			0	0	0	0	1	1	1
-Cancer Pathway				Rearrangement	FN1	Fusion	MAN2C1--FN1	15	75654695							0.0	0.0			5	MAN2C1	15	75654695	FN1	2	216236768					example			0	0	0	0	1	1	1
-Cancer Pathway				Rearrangement	MMP9	Fusion	FOSL2--MMP9	2	28638147							0.0	0.0			6	FOSL2	2	28638147	MMP9	20	44642051					example			0	0	0	0	1	1	1
-Cancer Pathway				Somatic Variant	MCM10	Nonsense	p.R108*	10	13213236	13213236	C	C	T	0.5517	29.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	1	0	1
+Cancer Pathway				Rearrangement	MMP9	Fusion	MMP9--BACE2	20	44643093											5	MMP9	20	44643093	BACE2	21	42629101					example			0	0	0	0	1	1	1
+Cancer Pathway				Rearrangement	COL4A1	Fusion	COL4A1--HLA-B	13	110853828											5	COL4A1	13	110853828	HLA-B	6	31323220					example			0	0	0	0	1	1	1
+Cancer Pathway				Rearrangement	FN1	Fusion	MAN2C1--FN1	15	75654695											5	MAN2C1	15	75654695	FN1	2	216236768					example			0	0	0	0	1	1	1
+Cancer Pathway				Rearrangement	MMP9	Fusion	FOSL2--MMP9	2	28638147											6	FOSL2	2	28638147	MMP9	20	44642051					example			0	0	0	0	1	1	1
+Cancer Pathway				Somatic Variant	MCM10	Nonsense	p.R108*	10	13213236	13213236	C	C	T	0.5517	29.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	1	0	2
 Cancer Module				Somatic Variant	CD300A	Missense	p.G69E	17	72469840	72469840	G	G	A	0.2632	95.0	8e-06	0.0										260.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	LRRC32	Missense	p.P615L	11	76370793	76370793	G	G	A	0.3571	56.0	0.0	0.0										93.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	CLIP2	Missense	p.A356T	7	73771658	73771658	G	G	A	0.5714	42.0	0.0	0.0										57.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	INPP5K	Missense	p.S315F	17	1401249	1401249	G	G	A	0.4857	175.0	0.0	0.0										24.0	0.0	0.9995		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	SATB1	Missense	p.H290Y	3	18436292	18436292	G	G	A	0.2111	90.0	0.0	0.0										55.0	0.0182	0.9944		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	FAM49A	Missense	p.E23K	2	16769321	16769321	C	C	T	0.2895	76.0	0.0	0.0										27.0	0.0	0.9585		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	ATP10D	Missense	p.S1188L	4	47578986	47578986	C	C	T	0.3684	38.0	0.0	0.0										18.0	0.0	0.9121		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	ZCCHC14	Missense	p.S390L	16	87448043	87448043	G	G	A	0.2921	89.0	8e-06	0.0										20.0	0.0	0.8623		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	NDUFA9	Missense	p.P309L	12	4794454	4794454	C	C	T	0.2778	72.0	8e-06	0.0										21.0	0.0	0.8557		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	ADAM28	Missense	p.D762N	8	24211322	24211322	G	G	A	0.2821	195.0	0.0	0.0										15.0	0.0	0.6479		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	LMOD1	Missense	p.D268N	1	201869339	201869339	C	C	T	0.0972	72.0	0.0	0.0										38.0	0.0	0.5586		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	HOMER2	Missense	p.S35F	15	83561495	83561495	G	G	A	0.3558	208.0	0.0	0.0										8.0	0.0	0.3116		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	SLX4	Missense	p.S1054L	16	3640478	3640478	G	G	A	0.233	103.0	2.5e-05	0.0										10.0	0.0	0.2054		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	ST18	Missense	p.G737E	8	53050002	53050002	C	C	T	0.4222	90.0	0.0	0.0										5.0	0.0	0.1128		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	ENPEP	Missense	p.S420F	4	111431465	111431465	C	C	T	0.3294	85.0	0.0	0.0										5.0	0.0	0.0499		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	CACNA1A	Missense	p.M103I	19	13566011	13566011	C	C	T	0.3194	72.0	0.0	0.0										4.0	0.0	0.013		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
-Cancer Module				Somatic Variant	ADRBK2	Missense	p.R295W	22	26083560	26083560	C	C	T	0.0102	492.0	9.9e-05	0.0										44.0	0.0	0.0037		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	LRRC6	Missense	p.S223I	8	133637686	133637686	C	C	A	0.2292	96.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	MMRN1	Missense	p.P85S	4	90816375	90816375	C	C	T	0.2632	57.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	CLDN1	Missense	p.R188Q	3	190026139	190026139	C	C	T	0.5034	147.0	5.8e-05	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	PKD1L1	Missense	p.R2711W	7	47840309	47840309	G	G	A	0.0317	126.0	0.000198	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	MKKS	Missense	p.R309C	20	10393238	10393238	G	G	A	0.0423	142.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
-Cancer Module				Somatic Variant	COL4A5	Missense	p.R1625C	X	107938566	107938566	C	C	T	0.2871	101.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
-Cancer Module				Somatic Variant	DNAH9	Missense	p.E1138K	17	11583132	11583132	G	G	A	0.2868	129.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
-Cancer Module				Somatic Variant	USH2A	Missense	p.R1962K	1	216243607	216243607	C	C	T	0.203	197.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	TRPC3	Missense	p.G773R	4	122824153	122824153	C	C	T	0.3521	71.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	TPTE	Missense	p.S447L	21	10914379	10914379	G	G	A	0.0982	224.0	8e-06	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	COL4A5	Missense	p.G595E	X	107841936	107841936	G	G	A	0.4	95.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	CYP2C9	Missense	p.E250K	10	96708970	96708970	G	G	A	0.3548	93.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
-Cancer Module				Somatic Variant	CLEC3A	Missense	p.E60K	16	78062066	78062066	G	G	A	0.3111	90.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	DNAH9	Missense	p.E1138K	17	11583132	11583132	G	G	A	0.2868	129.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	MYH2	Missense	p.A142T	17	10448744	10448744	C	C	T	0.5238	168.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	TPTE2	Missense	p.N362K	13	20010396	20010396	A	A	T	0.0556	72.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	USH2A	Missense	p.R1962K	1	216243607	216243607	C	C	T	0.203	197.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	COBL	Missense	p.S47L	7	51287543	51287543	G	G	A	0.1899	79.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	DNAH9	Splice Site	p.P634S	17	11543700	11543700	C	C	T	0.2031	64.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	DNAH5	Missense	p.R4615C	5	13692125	13692125	G	G	A	0.1667	126.0	1.6e-05	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	SPINK5	Missense	p.R571H	5	147491350	147491350	G	G	A	0.3019	106.0	4.1e-05	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
+Cancer Module				Somatic Variant	TPTE	Missense	p.E380K	21	10920116	10920116	C	C	T	0.1526	367.0	0.000124	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	2
 Cancer Module				Somatic Variant	COL12A1	Missense	p.P2977H	6	75799837	75799837	G	G	T	0.08	150.0	0.0	0.0										524.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	DYNC1H1	Missense	p.G2266E	14	102478390	102478390	G	G	A	0.3205	78.0	0.0	0.0										374.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	SEC24D	Missense	p.G251V	4	119736232	119736232	C	C	A	0.2727	77.0	0.0	0.0										202.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	DOCK2	Missense	p.D309N	5	169122888	169122888	G	G	A	0.4557	79.0	0.0	0.0										138.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	ASAH1	Missense	p.K200M	8	17919837	17919837	T	T	A	0.2419	215.0	0.0	0.0										104.0	0.0096	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	LRRC32	Missense	p.P615L	11	76370793	76370793	G	G	A	0.3571	56.0	0.0	0.0										93.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	GRB10	Missense	p.S39F	7	50771541	50771541	G	G	A	0.2039	206.0	8e-06	0.0										93.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	CLIP2	Missense	p.A356T	7	73771658	73771658	G	G	A	0.5714	42.0	0.0	0.0										57.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	SVIL	Missense	p.S252F	10	29839598	29839598	G	G	A	0.6327	49.0	0.0	0.0										34.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	TCOF1	Missense	p.A643T	5	149755678	149755678	G	G	A	0.5128	195.0	0.0	0.0										31.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	POLA2	Missense	p.P438S	11	65061691	65061691	C	C	T	0.6858	261.0	0.0	0.0										29.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	DIP2C	Missense	p.P130S	10	486817	486817	G	G	A	0.8387	62.0	0.0	0.0										24.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	GCNT1	Missense	p.L397S	9	79118487	79118487	T	T	C	0.6129	93.0	0.0	0.0										23.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	PCNXL2	Missense	p.S1304L	1	233231536	233231536	G	G	A	0.6458	48.0	0.0	0.0										21.0	0.0476	0.9999		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	AKAP12	Missense	p.E879K	6	151672161	151672161	G	G	A	0.4961	129.0	0.0	0.0										26.0	0.0	0.9998		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	C11orf30	Missense	p.P850H	11	76250676	76250676	C	C	A	0.7345	113.0	0.0	0.0										14.0	0.0	0.9998		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	COL7A1	Missense	p.G2156E	3	48611729	48611729	C	C	T	0.4684	79.0	0.0	0.0										27.0	0.0	0.9995		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	INPP5K	Missense	p.S315F	17	1401249	1401249	G	G	A	0.4857	175.0	0.0	0.0										24.0	0.0	0.9995		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	FLNC	Missense	p.S2372F	7	128494946	128494946	C	C	T	0.5688	109.0	0.0	0.0										19.0	0.0	0.9993		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	PDE4A	Missense	p.P353S	19	10568734	10568734	C	C	T	0.3396	106.0	0.0	0.0										35.0	0.0	0.9983		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	ENC1	Missense	p.Y70C	5	73932102	73932102	T	T	C	0.2871	101.0	0.0	0.0										43.0	0.0	0.9981		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	SATB1	Missense	p.H290Y	3	18436292	18436292	G	G	A	0.2111	90.0	0.0	0.0										55.0	0.0182	0.9944		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	SRP72	Missense	p.G240D	4	57344621	57344621	G	G	A	0.3026	76.0	0.0	0.0										28.0	0.0	0.9737		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	ANKRD17	Missense	p.D598V	4	74012557	74012557	T	T	A	0.2906	117.0	0.0	0.0										27.0	0.0	0.9644		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	SUCLG1	Splice Site	p.A107P	2	84668583	84668583	C	C	G	0.2203	59.0	0.0	0.0										39.0	0.0256	0.963		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	ZFX	Missense	p.M796L	X	24229461	24229461	A	A	T	0.3409	88.0	0.0	0.0										19.0	0.0	0.9154		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	ZNF638	Missense	p.S605A	2	71592654	71592654	T	T	G	0.2571	105.0	0.0	0.0										24.0	0.0	0.8837		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	ZCCHC14	Missense	p.S390L	16	87448043	87448043	G	G	A	0.2921	89.0	8e-06	0.0										20.0	0.0	0.8623		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	NDUFA9	Missense	p.P309L	12	4794454	4794454	C	C	T	0.2778	72.0	8e-06	0.0										21.0	0.0	0.8557		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	WDR7	Missense	p.R420Q	18	54362331	54362331	G	G	A	0.2694	193.0	0.0	0.0										21.0	0.0	0.8494		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	COL5A3	Missense	p.G932D	19	10089887	10089887	C	C	T	0.2105	38.0	8e-06	0.0										26.0	0.0	0.8001		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	DST	Missense	p.K6480I	6	56357883	56357883	T	T	A	0.1034	58.0	0.0	0.0										53.0	0.0	0.7917		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	NCAPH	Missense	p.S284F	2	97017699	97017699	C	C	T	0.7007	137.0	0.0	0.0										5.0	0.0	0.5252		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	HOMER2	Missense	p.S35F	15	83561495	83561495	G	G	A	0.3558	208.0	0.0	0.0										8.0	0.0	0.3116		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	TMCO6	Missense	p.P310L	5	140023375	140023375	C	C	T	0.3981	103.0	0.0	0.0										7.0	0.0	0.2951		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	CHST15	Missense	p.P13S	10	125805692	125805692	G	G	A	0.0482	83.0	0.0	0.0										23.0	0.0	0.0634		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	PLA2G5	Missense	p.G59S	1	20412710	20412710	G	G	A	0.2923	65.0	0.0	0.0										5.0	0.0	0.0352		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
@@ -108,84 +112,88 @@ Cancer Module				Somatic Variant	KLF12	Missense	p.R396C	13	74269650	74269650	G	G
 Cancer Module				Somatic Variant	PARP2	Missense	p.I242R	14	20822329	20822329	T	T	G	0.0857	105.0	0.0	0.0										7.0	0.0	0.0032		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	PCDHGB6	Missense	p.D796N	5	140790155	140790155	G	G	A	0.2	85.0	0.0	0.0										4.0	0.0	0.0023		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	RBL2	Missense	p.S425R	16	53493458	53493458	C	C	A	0.0288	139.0	0.0	0.0										8.0	0.0	0.0002		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	LRRC6	Missense	p.S223I	8	133637686	133637686	C	C	A	0.2292	96.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	MYO5B	Missense	p.L678R	18	47455939	47455939	A	A	C	0.2083	24.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	SPTBN4	Missense	p.N204Y	19	41000826	41000826	A	A	T	0.2857	35.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	CLDN1	Missense	p.R188Q	3	190026139	190026139	C	C	T	0.5034	147.0	5.8e-05	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	PKD1L1	Missense	p.R2711W	7	47840309	47840309	G	G	A	0.0317	126.0	0.000198	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	PLEKHF2	Missense	p.K76R	8	96166499	96166499	A	A	G	0.1806	144.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	DNAH5	Missense	p.A2343V	5	13814916	13814916	G	G	A	0.5455	99.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	PLEKHF2	Missense	p.K76R	8	96166499	96166499	A	A	G	0.1806	144.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	BSN	Missense	p.P628S	3	49688408	49688408	C	C	T	0.54	100.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	DYX1C1	Missense	p.P45S	15	55790048	55790048	G	G	A	0.3959	197.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	TRPC3	Missense	p.G773R	4	122824153	122824153	C	C	T	0.3521	71.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	TPTE	Missense	p.S447L	21	10914379	10914379	G	G	A	0.0982	224.0	8e-06	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	COL4A5	Missense	p.G595E	X	107841936	107841936	G	G	A	0.4	95.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	POF1B	Missense	p.P556S	X	84537307	84537307	G	G	A	0.2917	96.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	MGAM	Missense	p.S1757N	7	141800685	141800685	G	G	A	0.6364	55.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	PSG9	Missense	p.G213E	19	43766083	43766083	C	C	T	0.4188	191.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	MYH7	Missense	p.M546I	14	23897044	23897044	C	C	T	0.5152	66.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	GABRA2	Missense	p.L25F	4	46388203	46388203	C	C	G	0.2973	37.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	COL4A5	Missense	p.R1625C	X	107938566	107938566	C	C	T	0.2871	101.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	CLEC3A	Missense	p.E60K	16	78062066	78062066	G	G	A	0.3111	90.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	DNAH3	Missense	p.P716T	16	21117949	21117949	G	G	T	0.512	125.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	GABRA2	Missense	p.L25F	4	46388203	46388203	C	C	G	0.2973	37.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	ISL1	Missense	p.E316K	5	50689340	50689340	G	G	A	0.275	80.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	MGAM	Missense	p.S1757N	7	141800685	141800685	G	G	A	0.6364	55.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	MYH7	Missense	p.M546I	14	23897044	23897044	C	C	T	0.5152	66.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	PCK1	Missense	p.P414L	20	56139592	56139592	C	C	T	0.4267	150.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	POF1B	Missense	p.P556S	X	84537307	84537307	G	G	A	0.2917	96.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	PSG9	Missense	p.G213E	19	43766083	43766083	C	C	T	0.4188	191.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	SCML2	Missense	p.M136I	X	18338530	18338530	C	C	T	0.3684	95.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	TPTE2	Missense	p.N362K	13	20010396	20010396	A	A	T	0.0556	72.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	DNAH9	Splice Site	p.P634S	17	11543700	11543700	C	C	T	0.2031	64.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	UNC13A	Missense	p.P211R	19	17769006	17769006	G	G	C	0.2667	30.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
 Cancer Module				Somatic Variant	PPEF1	Missense	p.S323L	X	18807294	18807294	C	C	T	0.2619	84.0	1.6e-05	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Somatic Variant	TPTE	Missense	p.E380K	21	10920116	10920116	C	C	T	0.1526	367.0	0.000124	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	1
-Cancer Module				Rearrangement	SRRM2	Fusion	SRRM2--GALNT12	16	2807904							0.0	0.0			7	SRRM2	16	2807904	GALNT12	9	101606449					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	SERPING1	Fusion	SERPING1--TBCD	11	57367512							0.0	0.0			8	SERPING1	11	57367512	TBCD	17	80772733					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	SCPEP1	Fusion	SCPEP1--FOXP2	17	55058482							0.0	0.0			5	SCPEP1	17	55058482	FOXP2	7	114269997					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	SCPEP1	Fusion	SCPEP1--AC020606.1	17	55058482							0.0	0.0			5	SCPEP1	17	55058482	AC020606.1	7	114269997					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	PFKFB4	Fusion	PFKFB4--SFMBT2	3	48587328							0.0	0.0			5	PFKFB4	3	48587328	SFMBT2	10	7327916					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	MAN2C1	Fusion	MAN2C1--FN1	15	75654695							0.0	0.0			5	MAN2C1	15	75654695	FN1	2	216236768					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	H19	Fusion	H19--VIM	11	2018788							0.0	0.0			7	H19	11	2018788	VIM	10	17271885					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	GALC	Fusion	GALC--NAA30	14	88429832							0.0	0.0			5	GALC	14	88429832	NAA30	14	57863548					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	FOSL2	Fusion	FOSL2--MMP9	2	28638147							0.0	0.0			6	FOSL2	2	28638147	MMP9	20	44642051					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	FBLN1	Fusion	FBLN1--PDXK	22	45938114							0.0	0.0			5	FBLN1	22	45938114	PDXK	21	45176417					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	COL1A2	Fusion	COL1A2--APBA3	7	94055330							0.0	0.0			6	COL1A2	7	94055330	APBA3	19	3760199					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	ACTG1	Fusion	ACTG1--LAPTM5	17	79477655							0.0	0.0			6	ACTG1	17	79477655	LAPTM5	1	31211872					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	FTL	Fusion	TGFBR1--FTL	9	101891297							0.0	0.0			6	TGFBR1	9	101891297	FTL	19	49469905					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	LTBP2	Fusion	TAF15--LTBP2	17	34171768							0.0	0.0			6	TAF15	17	34171768	LTBP2	14	75002695					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	TBCD	Fusion	SERPING1--TBCD	11	57367512							0.0	0.0			8	SERPING1	11	57367512	TBCD	17	80772733					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	FOXP2	Fusion	SCPEP1--FOXP2	17	55058482							0.0	0.0			5	SCPEP1	17	55058482	FOXP2	7	114269997					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	LRP1	Fusion	PSAP--LRP1	10	73577182							0.0	0.0			5	PSAP	10	73577182	LRP1	12	57559896					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	AP2M1	Fusion	POLR2A--AP2M1	17	7406801							0.0	0.0			12	POLR2A	17	7406801	AP2M1	3	183898675					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	COL6A1	Fusion	PCED1A--COL6A1	20	2819026							0.0	0.0			7	PCED1A	20	2819026	COL6A1	21	47422458					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	BACE2	Fusion	MMP9--BACE2	20	44643093							0.0	0.0			5	MMP9	20	44643093	BACE2	21	42629101					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	PDXK	Fusion	FBLN1--PDXK	22	45938114							0.0	0.0			5	FBLN1	22	45938114	PDXK	21	45176417					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	APBA3	Fusion	COL1A2--APBA3	7	94055330							0.0	0.0			6	COL1A2	7	94055330	APBA3	19	3760199					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	CITED4	Fusion	COL1A1--CITED4	17	48273298							0.0	0.0			6	COL1A1	17	48273298	CITED4	1	41327916					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	C1QA	Fusion	CHD2--C1QA	15	93470551							0.0	0.0			6	CHD2	15	93470551	C1QA	1	22965509					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	COL1A2	Fusion	BRD7--COL1A2	16	50350942							0.0	0.0			5	BRD7	16	50350942	COL1A2	7	94055761					example			0	0	0	0	0	1	1
-Cancer Module				Rearrangement	LAPTM5	Fusion	ACTG1--LAPTM5	17	79477655							0.0	0.0			6	ACTG1	17	79477655	LAPTM5	1	31211872					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	SRRM2	Fusion	SRRM2--GALNT12	16	2807904											7	SRRM2	16	2807904	GALNT12	9	101606449					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	SERPING1	Fusion	SERPING1--TBCD	11	57367512											8	SERPING1	11	57367512	TBCD	17	80772733					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	SCPEP1	Fusion	SCPEP1--FOXP2	17	55058482											5	SCPEP1	17	55058482	FOXP2	7	114269997					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	SCPEP1	Fusion	SCPEP1--AC020606.1	17	55058482											5	SCPEP1	17	55058482	AC020606.1	7	114269997					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	PFKFB4	Fusion	PFKFB4--SFMBT2	3	48587328											5	PFKFB4	3	48587328	SFMBT2	10	7327916					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	MAN2C1	Fusion	MAN2C1--FN1	15	75654695											5	MAN2C1	15	75654695	FN1	2	216236768					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	GALC	Fusion	GALC--NAA30	14	88429832											5	GALC	14	88429832	NAA30	14	57863548					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	FOSL2	Fusion	FOSL2--MMP9	2	28638147											6	FOSL2	2	28638147	MMP9	20	44642051					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	FBLN1	Fusion	FBLN1--PDXK	22	45938114											5	FBLN1	22	45938114	PDXK	21	45176417					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	COL1A2	Fusion	COL1A2--APBA3	7	94055330											6	COL1A2	7	94055330	APBA3	19	3760199					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	ACTG1	Fusion	ACTG1--LAPTM5	17	79477655											6	ACTG1	17	79477655	LAPTM5	1	31211872					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	FTL	Fusion	TGFBR1--FTL	9	101891297											6	TGFBR1	9	101891297	FTL	19	49469905					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	LTBP2	Fusion	TAF15--LTBP2	17	34171768											6	TAF15	17	34171768	LTBP2	14	75002695					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	TBCD	Fusion	SERPING1--TBCD	11	57367512											8	SERPING1	11	57367512	TBCD	17	80772733					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	FOXP2	Fusion	SCPEP1--FOXP2	17	55058482											5	SCPEP1	17	55058482	FOXP2	7	114269997					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	LRP1	Fusion	PSAP--LRP1	10	73577182											5	PSAP	10	73577182	LRP1	12	57559896					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	AP2M1	Fusion	POLR2A--AP2M1	17	7406801											12	POLR2A	17	7406801	AP2M1	3	183898675					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	COL6A1	Fusion	PCED1A--COL6A1	20	2819026											7	PCED1A	20	2819026	COL6A1	21	47422458					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	BACE2	Fusion	MMP9--BACE2	20	44643093											5	MMP9	20	44643093	BACE2	21	42629101					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	PDXK	Fusion	FBLN1--PDXK	22	45938114											5	FBLN1	22	45938114	PDXK	21	45176417					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	APBA3	Fusion	COL1A2--APBA3	7	94055330											6	COL1A2	7	94055330	APBA3	19	3760199					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	CITED4	Fusion	COL1A1--CITED4	17	48273298											6	COL1A1	17	48273298	CITED4	1	41327916					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	C1QA	Fusion	CHD2--C1QA	15	93470551											6	CHD2	15	93470551	C1QA	1	22965509					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	COL1A2	Fusion	BRD7--COL1A2	16	50350942											5	BRD7	16	50350942	COL1A2	7	94055761					example			0	0	0	0	0	1	1
+Cancer Module				Rearrangement	LAPTM5	Fusion	ACTG1--LAPTM5	17	79477655											6	ACTG1	17	79477655	LAPTM5	1	31211872					example			0	0	0	0	0	1	1
+Cancer Module				Somatic Variant	PCNXL2	Missense	p.S1304L	1	233231536	233231536	G	G	A	0.6458	48.0	0.0	0.0										21.0	0.0476	0.9999		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	0
+Cancer Module				Somatic Variant	C11orf30	Missense	p.P850H	11	76250676	76250676	C	C	A	0.7345	113.0	0.0	0.0										14.0	0.0	0.9998		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	0
+Cancer Module				Somatic Variant	ADRBK2	Missense	p.R295W	22	26083560	26083560	C	C	T	0.0102	492.0	9.9e-05	0.0										44.0	0.0	0.0037		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	0
+Cancer Module				Somatic Variant	DYX1C1	Missense	p.P45S	15	55790048	55790048	G	G	A	0.3959	197.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	1	0
+Cancer Module				Rearrangement	H19	Fusion	H19--VIM	11	2018788											7	H19	11	2018788	VIM	10	17271885					example			0	0	0	0	0	1	0
+Cosmic				Somatic Variant	SAMD4A	Missense	p.A707V	14	55251330	55251330	C	C	T	0.521	119.0	0.0	0.0										82.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	AGO2	Missense	p.M166I	8	141572572	141572572	C	C	T	0.5513	78.0	0.0	0.0										42.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	MDGA1	Missense	p.E248K	6	37622290	37622290	C	C	T	0.3791	153.0	1.7e-05	0.0										30.0	0.0	0.9985		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	LCLAT1	Missense	p.R78C	2	30748574	30748574	C	C	T	0.7288	118.0	0.0	0.0										11.0	0.0909	0.9965		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	IREB2	Missense	p.R622C	15	78780591	78780591	C	C	T	0.4208	183.0	0.0	0.0										17.0	0.0588	0.9624		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
-Cosmic				Somatic Variant	GCN1L1	Missense	p.R1037H	12	120594774	120594774	C	C	T	0.0556	54.0	0.0	0.0										72.0	0.0	0.6476		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	OLFML3	Missense	p.R202W	1	114523774	114523774	C	C	T	0.0811	37.0	8e-06	0.0										46.0	0.0435	0.6072		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	ATF7IP2	Missense	p.S549F	16	10575703	10575703	C	C	T	0.5227	88.0	0.0	0.0										7.0	0.0	0.5469		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	RRAGB	Missense	p.R112Q	X	55755751	55755751	G	G	A	0.253	83.0	0.0	0.0										12.0	0.0	0.381		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	ZFHX4	Missense	p.E1701K	8	77764258	77764258	G	G	A	0.5135	111.0	0.0	0.0										5.0	0.0	0.2099		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	RB1CC1	Nonsense	p.Q397*	8	53574264	53574264	G	G	A	0.2566	113.0	0.0	0.0										4.0	0.0	0.0053		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	ZBTB22	Missense	p.S95L	6	33284410	33284410	G	G	A	0.013	462.0	0.0	0.0										32.0	0.0	0.0023		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	RCAN3	Missense	p.P154L	1	24859664	24859664	C	C	T	0.0408	98.0	0.000222	0.0										5.0	0.0	0.0001		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
-Cosmic				Somatic Variant	ZNF766	Missense	p.S200L	19	52793643	52793643	C	C	T	0.2159	88.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	ZNF268	Missense	p.P751S	12	133780523	133780523	C	C	T	0.2941	17.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	ZNF766	Missense	p.S200L	19	52793643	52793643	C	C	T	0.2159	88.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	TBX18	Missense	p.G552E	6	85446572	85446572	C	C	T	0.2719	114.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	ZSCAN1	Missense	p.E216K	19	58564838	58564838	G	G	A	0.1714	35.0	8e-06	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	KCNH1	Missense	p.G467R	1	211093045	211093045	C	C	T	0.7263	190.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	SIGLEC12	Nonsense	p.W257*	19	52003211	52003211	C	C	T	0.3898	59.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
-Cosmic				Somatic Variant	WBSCR17	Missense	p.G358E	7	71036380	71036380	G	G	A	0.1758	91.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
-Cosmic				Somatic Variant	OR2A5	Missense	p.G299S	7	143748389	143748389	G	G	A	0.2603	146.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	ADAM21	Missense	p.S39F	14	70924332	70924332	C	C	T	0.5605	157.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	CCDC39	Nonsense	p.R572*	3	180359941	180359941	G	G	A	0.3077	52.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	CDH7	Missense	p.T629I	18	63547658	63547658	C	C	T	0.2518	139.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
-Cosmic				Somatic Variant	WDR72	Missense	p.D243N	15	54003663	54003663	C	C	T	0.3359	131.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
-Cosmic				Somatic Variant	OR10G8	Missense	p.P284S	11	123901179	123901179	C	C	T	0.7627	118.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
-Cosmic				Somatic Variant	OR8K5	Missense	p.S243F	11	55927066	55927066	G	G	A	0.7368	76.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	CELA1	Missense	p.S35F	12	51737633	51737633	G	G	A	0.2807	57.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	OR10G8	Missense	p.P284S	11	123901179	123901179	C	C	T	0.7627	118.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	OR2A5	Missense	p.G299S	7	143748389	143748389	G	G	A	0.2603	146.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	OR8K5	Missense	p.S243F	11	55927066	55927066	G	G	A	0.7368	76.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	PCDHB17	Missense	p.E463K	5	140536963	140536963	G	G	A	0.5312	96.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	PLCXD3	Missense	p.G91E	5	41382468	41382468	C	C	T	0.5882	102.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
+Cosmic				Somatic Variant	WDR72	Missense	p.D243N	15	54003663	54003663	C	C	T	0.3359	131.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	SLC16A14	Missense	p.D269N	2	230911037	230911037	C	C	T	0.7802	91.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	STXBP5L	Missense	p.G503E	3	120973808	120973808	G	G	A	0.5833	84.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	XKR3	Missense	p.S19L	22	17288908	17288908	G	G	A	0.3132	182.0	1.7e-05	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	2
 Cosmic				Somatic Variant	MYO1F	Missense	p.G226D	19	8616718	8616718	C	C	T	0.2763	76.0	0.0	0.0										228.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	PIGT	Missense	p.H462Y	20	44053005	44053005	C	C	T	0.2073	82.0	0.0	0.0										141.0	0.0071	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	SUN1	Missense	p.S447L	7	893221	893221	C	C	T	0.5362	69.0	0.0	0.0										84.0	0.0119	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	SAMD4A	Missense	p.A707V	14	55251330	55251330	C	C	T	0.521	119.0	0.0	0.0										82.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	CIRH1A	Nonsense	p.Q350*	16	69187532	69187532	C	C	T	0.482	139.0	0.0	0.0										57.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	PRCP	Missense	p.D242E	11	82560981	82560981	A	A	C	0.7867	150.0	0.0	0.0										44.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	SCAF11	Nonsense	p.R1100*	12	46320186	46320186	G	G	A	0.5693	137.0	0.0	0.0										40.0	0.025	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	CARD14	Nonsense	p.Y620*	17	78175551	78175551	C	C	G	0.4681	94.0	0.0	0.0										36.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
@@ -195,72 +203,64 @@ Cosmic				Somatic Variant	OR9A2	Missense	p.I70L	7	142724012	142724012	T	T	G	0.54
 Cosmic				Somatic Variant	TC2N	Missense	p.S284Y	14	92264133	92264133	G	G	T	0.5	120.0	0.0	0.0										11.0	0.0	0.8765		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	TPRG1L	Missense	p.P152S	1	3542437	3542437	C	C	T	0.3	80.0	0.0	0.0										20.0	0.05	0.8749		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	SCFD2	Missense	p.D465N	4	54011668	54011668	C	C	T	0.27	100.0	0.0	0.0										12.0	0.0	0.4275		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	METTL13	Missense	p.A170T	1	171753234	171753234	G	G	A	0.1699	153.0	0.0	0.0										19.0	0.0	0.4259		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	RRAGB	Missense	p.R112Q	X	55755751	55755751	G	G	A	0.253	83.0	0.0	0.0										12.0	0.0	0.381		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	CPT1C	Missense	p.G479V	19	50210867	50210867	G	G	T	0.3214	28.0	0.0	0.0										8.0	0.0	0.2776		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	ZNF814	Missense	p.E27Q	19	58388368	58388368	C	C	G	0.2909	55.0	0.0	0.0										9.0	0.0	0.2772		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	ZFHX4	Missense	p.E1701K	8	77764258	77764258	G	G	A	0.5135	111.0	0.0	0.0										5.0	0.0	0.2099		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	FLG	Missense	p.G1710E	1	152282233	152282233	C	C	T	0.1972	289.0	0.0	0.0										12.0	0.0	0.2071		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	FLG	Missense	p.P985S	1	152284409	152284409	G	G	A	0.2136	323.0	0.0	0.0										11.0	0.0	0.1998		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	TSNAX	Nonsense	p.K93*	1	231678267	231678267	A	A	T	0.1513	238.0	0.0	0.0										14.0	0.0	0.1633		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	EEA1	Missense	p.E1303D	12	93171424	93171424	T	T	G	0.1077	130.0	0.0	0.0										16.0	0.0	0.111		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	RLTPR	Splice Site	p.D864N	16	67685825	67685825	G	G	A	0.1765	102.0	0.0	0.0										10.0	0.0	0.1019		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	EPPK1	Missense	p.E1751K	8	144942171	144942171	C	C	T	0.381	63.0	8e-06	0.0										4.0	0.0	0.0252		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	RB1CC1	Nonsense	p.Q397*	8	53574264	53574264	G	G	A	0.2566	113.0	0.0	0.0										4.0	0.0	0.0053		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	ZBTB22	Missense	p.S95L	6	33284410	33284410	G	G	A	0.013	462.0	0.0	0.0										32.0	0.0	0.0023		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	NAV3	Missense	p.A1797V	12	78573335	78573335	C	C	T	0.1026	117.0	0.0	0.0										5.0	0.0	0.0009		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	RB1CC1	Missense	p.Q1361H	8	53555277	53555277	T	T	G	0.1622	74.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	CCSER1	Missense	p.S162F	4	91229920	91229920	C	C	T	0.3396	53.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	ENOX2	Missense	p.E376K	X	129790645	129790645	C	C	T	0.3333	57.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	RB1CC1	Missense	p.Q1361H	8	53555277	53555277	T	T	G	0.1622	74.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	TMEM67	Missense	p.V178I	8	94777659	94777659	G	G	A	0.5179	168.0	4.1e-05	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	SMTNL1	Nonsense	p.W370*	11	57314005	57314005	G	G	A	0.5915	71.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	CLEC4F	Missense	p.L193F	2	71043934	71043934	T	T	A	0.2658	79.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	USP54	Missense	p.V426L	10	75294397	75294397	C	C	G	0.0317	126.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	SMTNL1	Nonsense	p.W370*	11	57314005	57314005	G	G	A	0.5915	71.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	TENM2	Missense	p.D1408N	5	167643916	167643916	G	G	A	0.4841	126.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	ZSCAN1	Missense	p.E216K	19	58564838	58564838	G	G	A	0.1714	35.0	8e-06	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	USP54	Missense	p.V426L	10	75294397	75294397	C	C	G	0.0317	126.0	0.0	0.0										2.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	ATF7IP2	Missense	p.S209L	16	10525103	10525103	C	C	T	0.2276	123.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	CPED1	Missense	p.E558K	7	120776117	120776117	G	G	A	0.55	60.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	RDM1	Missense	p.G176C	17	34251650	34251650	C	C	A	0.053	132.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	LMLN	Missense	p.P158S	3	197703509	197703509	C	C	T	0.2535	142.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	SLC44A5	Missense	p.E320K	1	75693438	75693438	C	C	T	0.3077	52.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	SIK2	Splice Site		11	111571735	111571735	G	G	T	0.908	87.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	KCNH1	Missense	p.G467R	1	211093045	211093045	C	C	T	0.7263	190.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	PCDHAC2	Missense	p.D650N	5	140348299	140348299	G	G	A	0.5085	59.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	RDM1	Missense	p.G176C	17	34251650	34251650	C	C	A	0.053	132.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	SIK2	Splice Site		11	111571735	111571735	G	G	T	0.908	87.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	SLC44A5	Missense	p.E320K	1	75693438	75693438	C	C	T	0.3077	52.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	ATCAY	Missense	p.H313Q	19	3913828	3913828	C	C	A	0.3333	21.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	LIPI	Missense	p.P274L	21	15537624	15537624	G	G	A	0.448	125.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	C1orf173	Missense	p.S1017N	1	75038344	75038344	C	C	T	0.359	78.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	LRFN2	Missense	p.A143T	6	40400426	40400426	C	C	T	0.2647	34.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	BNC1	Missense	p.G597D	15	83932213	83932213	C	C	T	0.1979	96.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	DCBLD1	Splice Site		6	117865742	117865742	T	T	C	0.3062	160.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	OR10R2	Missense	p.S330F	1	158450656	158450656	C	C	T	0.598	102.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	FMN2	Missense	p.S1630L	1	240555841	240555841	C	C	T	0.4031	196.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	GPR139	Nonsense	p.W326*	16	20043141	20043141	C	C	T	0.2564	156.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	PLCXD3	Missense	p.G91E	5	41382468	41382468	C	C	T	0.5882	102.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	ZNF679	Missense	p.H342Y	7	63727035	63727035	C	C	T	0.2121	66.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	PCDHB1	Missense	p.P651S	5	140433006	140433006	C	C	T	0.3413	167.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	CCDC39	Nonsense	p.R572*	3	180359941	180359941	G	G	A	0.3077	52.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	PRDM9	Missense	p.E185D	5	23522459	23522459	A	A	T	0.2356	191.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	LIPI	Missense	p.P274L	21	15537624	15537624	G	G	A	0.448	125.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	LRFN2	Missense	p.A143T	6	40400426	40400426	C	C	T	0.2647	34.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	MEGF10	Nonsense	p.W823*	5	126778795	126778795	G	G	A	0.4368	87.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	OR10R2	Missense	p.S330F	1	158450656	158450656	C	C	T	0.598	102.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	PCDHB1	Missense	p.P651S	5	140433006	140433006	C	C	T	0.3413	167.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	PRDM9	Missense	p.E185D	5	23522459	23522459	A	A	T	0.2356	191.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	SRRM4	Missense	p.E213K	12	119568505	119568505	G	G	A	0.4857	35.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	BNC1	Missense	p.G597D	15	83932213	83932213	C	C	T	0.1979	96.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Somatic Variant	C10orf2	Frameshift	p.L112fs	10	102748300	102748301	TC	TC	-	0.087	322.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	TICRR	Missense	p.S735L	15	90144579	90144579	C	C	T	0.3821	123.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
+Cosmic				Somatic Variant	ZNF679	Missense	p.H342Y	7	63727035	63727035	C	C	T	0.2121	66.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	IZUMO2	Missense	p.R153K	19	50661563	50661563	C	C	T	0.2078	77.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	RP1	Missense	p.G1626R	8	55541318	55541318	G	G	A	0.3521	142.0	8e-06	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	OR5V1	Missense	p.T282I	6	29323128	29323128	G	G	A	0.4479	163.0	1.6e-05	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	ASB17	Missense	p.P108L	1	76397654	76397654	G	G	A	0.4118	85.0	3.3e-05	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
 Cosmic				Somatic Variant	TMEM38A	Missense	p.A280T	19	16799120	16799120	G	G	A	0.1111	27.0	7.4e-05	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	1
-Cosmic				Rearrangement	LENG9	Fusion	LENG9--LIN28A	19	54972985							0.0	0.0			6	LENG9	19	54972985	LIN28A	1	26754906					example			0	0	0	0	0	0	1
-Cosmic				Rearrangement	FUCA2	Fusion	FUCA2--MROH1	6	143825267							0.0	0.0			5	FUCA2	6	143825267	MROH1	8	145293978					example			0	0	0	0	0	0	1
-Cosmic				Rearrangement	BRD7	Fusion	BRD7--COL1A2	16	50350942							0.0	0.0			5	BRD7	16	50350942	COL1A2	7	94055761					example			0	0	0	0	0	0	1
-Cosmic				Rearrangement	TRIM26	Fusion	VIM--TRIM26	10	17277879							0.0	0.0			8	VIM	10	17277879	TRIM26	6	30154071					example			0	0	0	0	0	0	1
-Cosmic				Rearrangement	GALNT12	Fusion	SRRM2--GALNT12	16	2807904							0.0	0.0			7	SRRM2	16	2807904	GALNT12	9	101606449					example			0	0	0	0	0	0	1
-Cosmic				Rearrangement	SFMBT2	Fusion	PFKFB4--SFMBT2	3	48587328							0.0	0.0			5	PFKFB4	3	48587328	SFMBT2	10	7327916					example			0	0	0	0	0	0	1
-Cosmic				Rearrangement	LIN28A	Fusion	LENG9--LIN28A	19	54972985							0.0	0.0			6	LENG9	19	54972985	LIN28A	1	26754906					example			0	0	0	0	0	0	1
-Cosmic				Rearrangement	NAA30	Fusion	GALC--NAA30	14	88429832							0.0	0.0			5	GALC	14	88429832	NAA30	14	57863548					example			0	0	0	0	0	0	1
-VUS				Somatic Variant	AGO2	Missense	p.M166I	8	141572572	141572572	C	C	T	0.5513	78.0	0.0	0.0										42.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
-VUS				Somatic Variant	ATF7IP2	Missense	p.S549F	16	10575703	10575703	C	C	T	0.5227	88.0	0.0	0.0										7.0	0.0	0.5469		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
-VUS				Somatic Variant	CCSER1	Missense	p.S162F	4	91229920	91229920	C	C	T	0.3396	53.0	0.0	0.0										3.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
-VUS				Somatic Variant	ATF7IP2	Missense	p.S209L	16	10525103	10525103	C	C	T	0.2276	123.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
-VUS				Somatic Variant	PCDHB17	Missense	p.E463K	5	140536963	140536963	G	G	A	0.5312	96.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
-VUS				Somatic Variant	TICRR	Missense	p.S735L	15	90144579	90144579	C	C	T	0.3821	123.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
-VUS				Rearrangement	RMRP	Fusion	RMRP--ITGB2	9	35657873							0.0	0.0			6	RMRP	9	35657873	ITGB2	21	46320255					example			0	0	0	0	0	0	0
-VUS				Rearrangement	PCED1A	Fusion	PCED1A--COL6A1	20	2819026							0.0	0.0			7	PCED1A	20	2819026	COL6A1	21	47422458					example			0	0	0	0	0	0	0
-VUS				Rearrangement	AC020606.1	Fusion	SCPEP1--AC020606.1	17	55058482							0.0	0.0			5	SCPEP1	17	55058482	AC020606.1	7	114269997					example			0	0	0	0	0	0	0
-VUS				Rearrangement	MROH1	Fusion	FUCA2--MROH1	6	143825267							0.0	0.0			5	FUCA2	6	143825267	MROH1	8	145293978					example			0	0	0	0	0	0	0
+Cosmic				Rearrangement	PCED1A	Fusion	PCED1A--COL6A1	20	2819026											7	PCED1A	20	2819026	COL6A1	21	47422458					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	LENG9	Fusion	LENG9--LIN28A	19	54972985											6	LENG9	19	54972985	LIN28A	1	26754906					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	FUCA2	Fusion	FUCA2--MROH1	6	143825267											5	FUCA2	6	143825267	MROH1	8	145293978					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	BRD7	Fusion	BRD7--COL1A2	16	50350942											5	BRD7	16	50350942	COL1A2	7	94055761					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	TRIM26	Fusion	VIM--TRIM26	10	17277879											8	VIM	10	17277879	TRIM26	6	30154071					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	GALNT12	Fusion	SRRM2--GALNT12	16	2807904											7	SRRM2	16	2807904	GALNT12	9	101606449					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	SFMBT2	Fusion	PFKFB4--SFMBT2	3	48587328											5	PFKFB4	3	48587328	SFMBT2	10	7327916					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	LIN28A	Fusion	LENG9--LIN28A	19	54972985											6	LENG9	19	54972985	LIN28A	1	26754906					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	NAA30	Fusion	GALC--NAA30	14	88429832											5	GALC	14	88429832	NAA30	14	57863548					example			0	0	0	0	0	0	1
+Cosmic				Rearrangement	MROH1	Fusion	FUCA2--MROH1	6	143825267											5	FUCA2	6	143825267	MROH1	8	145293978					example			0	0	0	0	0	0	1
+VUS				Somatic Variant	CIRH1A	Nonsense	p.Q350*	16	69187532	69187532	C	C	T	0.482	139.0	0.0	0.0										57.0	0.0	1.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
+VUS				Somatic Variant	GCN1L1	Missense	p.R1037H	12	120594774	120594774	C	C	T	0.0556	54.0	0.0	0.0										72.0	0.0	0.6476		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
+VUS				Somatic Variant	METTL13	Missense	p.A170T	1	171753234	171753234	G	G	A	0.1699	153.0	0.0	0.0										19.0	0.0	0.4259		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
+VUS				Somatic Variant	RLTPR	Splice Site	p.D864N	16	67685825	67685825	G	G	A	0.1765	102.0	0.0	0.0										10.0	0.0	0.1019		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
+VUS				Somatic Variant	WBSCR17	Missense	p.G358E	7	71036380	71036380	G	G	A	0.1758	91.0	0.0	0.0										1.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
+VUS				Somatic Variant	C1orf173	Missense	p.S1017N	1	75038344	75038344	C	C	T	0.359	78.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
+VUS				Somatic Variant	C10orf2	Frameshift	p.L112fs	10	102748300	102748301	TC	TC	-	0.087	322.0	0.0	0.0										0.0	0.0	0.0		example	example_tumor_profile	example_normal_profile	0	0	0	0	0	0	0
+VUS				Rearrangement	RMRP	Fusion	RMRP--ITGB2	9	35657873											6	RMRP	9	35657873	ITGB2	21	46320255					example			0	0	0	0	0	0	0
+VUS				Rearrangement	AC020606.1	Fusion	SCPEP1--AC020606.1	17	55058482											5	SCPEP1	17	55058482	AC020606.1	7	114269997					example			0	0	0	0	0	0	0
