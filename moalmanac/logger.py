@@ -10,12 +10,19 @@ class Logger:
     @classmethod
     def setup(cls, output_folder, file_prefix, config):
         filename = cls.generate_filename(folder=output_folder, label=file_prefix)
+        logger = logging.getLogger()
+        if logger.hasHandlers():
+            logger.handlers.clear()
         logging.basicConfig(
             filename=filename,
             filemode='w',
             format="%(asctime)s - %(levelname)s - %(message)s",
             level=config['logging']['level']
         )
+
+    @classmethod
+    def shutdown(cls):
+        logging.shutdown()
 
 
 class Messages:

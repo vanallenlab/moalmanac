@@ -715,6 +715,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     end_time = time.time()
     elapsed_time = round((end_time - start_time), 4)
     logger.Messages.general("Molecular Oncology Almanac process complete. Runtime: %s seconds" % elapsed_time)
+    logger.Logger.shutdown()
 
 
 if __name__ == "__main__":
