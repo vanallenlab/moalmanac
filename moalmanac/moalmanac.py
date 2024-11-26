@@ -672,6 +672,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     writer.GermlineCancer.write(evaluated_germline, string_id, output_folder)
     writer.GermlineHereditary.write(evaluated_germline, string_id, output_folder)
     writer.Integrated.write(integrated, string_id, output_folder)
+    writer.Metadata.write(metadata_dictionary, string_id, output_folder)
     writer.MSI.write(evaluated_microsatellite_status_variants, string_id, output_folder)
     writer.MutationalBurden.write(evaluated_tumor_mutational_burden, string_id, output_folder)
     writer.SomaticScored.write(evaluated_somatic, string_id, output_folder)

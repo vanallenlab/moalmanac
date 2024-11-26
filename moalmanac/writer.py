@@ -1,5 +1,6 @@
 import json
 import logger
+import pandas as pd
 from config import COLNAMES
 
 
@@ -107,7 +108,7 @@ class Writer:
 
     @staticmethod
     def export_series(series, output_name):
-        series.to_csv(output_name, sep='\t', index=True)
+        series.to_csv(output_name, sep='\t', header=False)
 
     @staticmethod
     def export_dataframe(df, output_name):
@@ -116,6 +117,12 @@ class Writer:
     @staticmethod
     def export_dataframe_indexed(df, output_name, index_label):
         df.to_csv(output_name, sep='\t', index_label=index_label)
+
+    @staticmethod
+    def export_json(dictionary, file):
+        json_object = json.dumps(dictionary, indent=4)
+        with open(file, 'w') as f:
+            f.write(json_object)
 
     @staticmethod
     def log(label, filename, dataframe, add_line_break=False):
@@ -296,6 +303,18 @@ class Integrated:
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.log(label="Integrated summary", filename=output_name, dataframe=output_dataframe)
         Writer.export_dataframe_indexed(df=output_dataframe, output_name=output_name, index_label=Writer.feature)
+
+
+class Metadata:
+    output_suffix = 'input-metadata.txt'
+
+    @classmethod
+    def write(cls, series, patient_id, folder):
+        output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
+        logger.Messages.general(message=f"Writing input metadata to {output_name}")
+        if isinstance(series, dict):
+            series = pd.Series(series)
+        Writer.export_series(series=series, output_name=output_name)
 
 
 class MSI:
