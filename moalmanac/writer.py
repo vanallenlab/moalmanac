@@ -1,6 +1,8 @@
 import json
-import logger
 import pandas as pd
+
+import logger
+import reader
 from config import COLNAMES
 
 
@@ -47,12 +49,15 @@ class Writer:
     sensitive_citation = COLNAMES[section]['sensitive_citation']
     resistance_citation = COLNAMES[section]['resistance_citation']
     prognostic_citation = COLNAMES[section]['prognostic_citation']
-    sensitive_matches = COLNAMES[section]['sensitive_matches']
+    sensitive_matches = COLNAMES[section]['sensitivity_matches']
     resistance_matches = COLNAMES[section]['resistance_matches']
-    prognostic_matches = COLNAMES[section]['prognostis_matches']
+    prognostic_matches = COLNAMES[section]['prognostic_matches']
 
     metadata = COLNAMES[section]['metadata']
     actionable_matches = COLNAMES[section]['actionable_matches']
+    config = COLNAMES[section]['config']
+    input_files = COLNAMES[section]['input_files']
+    datasources = COLNAMES[section]['datasources']
 
     feature_type = COLNAMES[section]['feature_type']
     feature = COLNAMES[section]['feature']
@@ -204,29 +209,67 @@ class ActionableMatches:
     output_suffix = 'actionable_db_matches.json'
 
     @staticmethod
-    def format(df):
+    def check_dtype(obj, expected_type, alternate_value):
+        if isinstance(obj, expected_type):
+            return obj
+        else:
+            return alternate_value
+
+    @classmethod
+    def format(cls, df):
         items = []
         for idx in df.index:
             series = df.loc[idx, :]
+            sensitive_matches = cls.check_dtype(
+                obj=series.loc[Writer.sensitive_matches],
+                expected_type=list,
+                alternate_value=[]
+            )
+            resistance_matches = cls.check_dtype(
+                obj=series.loc[Writer.resistance_matches],
+                expected_type=list,
+                alternate_value=[]
+            )
+            prognosis_matches = cls.check_dtype(
+                obj=series.loc[Writer.prognostic_matches],
+                expected_type=list,
+                alternate_value=[]
+            )
+            alt_type = cls.check_dtype(
+                obj=series.loc[Writer.alt_type],
+                expected_type=str,
+                alternate_value=''
+            )
+            alt = cls.check_dtype(
+                obj=series.loc[Writer.alt],
+                expected_type=str,
+                alternate_value=''
+            )
+
             item = {
+                'index': idx,
                 Writer.feature_display: series.loc[Writer.feature_display],
                 Writer.feature_type: series.loc[Writer.feature_type],
                 Writer.feature: series.loc[Writer.feature],
-                Writer.alt_type: series.loc[Writer.alt_type],
-                Writer.alt: series.loc[Writer.alt],
-                Writer.sensitive_matches: series.loc[Writer.sensitive_matches],
-                Writer.resistance_matches: series.loc[Writer.resistance_matches],
-                Writer.prognostic_matches: series.loc[Writer.prognostic_matches]
+                Writer.alt_type: alt_type,
+                Writer.alt: alt,
+                Writer.sensitive_matches: sensitive_matches,
+                Writer.resistance_matches: resistance_matches,
+                Writer.prognostic_matches: prognosis_matches
             }
             items.append(item)
         return items
 
     @classmethod
-    def write(cls, df, metadata, patient_id, folder):
+    def write(cls, df, metadata, config, inputs, datasources, patient_id, folder):
         items = cls.format(df)
         if isinstance(metadata, pd.Series):
             metadata = metadata.to_dict()
+        config_dictionary = reader.Ini.convert_ini_to_dictionary(ini=config)
         dictionary = {
+            Writer.config: config_dictionary,
+            Writer.input_files: inputs,
+            Writer.datasources: datasources,
             Writer.metadata: metadata,
             Writer.actionable_matches: items
         }
