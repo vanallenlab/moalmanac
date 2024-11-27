@@ -54,7 +54,7 @@ class Writer:
     prognostic_matches = COLNAMES[section]['prognostic_matches']
 
     metadata = COLNAMES[section]['metadata']
-    actionable_matches = COLNAMES[section]['actionable_matches']
+    clinically_relevant_matches = COLNAMES[section]['clinically_relevant_matches']
     config = COLNAMES[section]['config']
     input_files = COLNAMES[section]['input_files']
     datasources = COLNAMES[section]['datasources']
@@ -205,8 +205,8 @@ class Actionable:
         return output_dataframe
 
 
-class ActionableMatches:
-    output_suffix = 'actionable_db_matches.json'
+class ClinicallyRelevantMatches:
+    output_suffix = 'clinically_relevant_db_matches.json'
 
     @staticmethod
     def check_dtype(obj, expected_type, alternate_value):
@@ -271,7 +271,7 @@ class ActionableMatches:
             Writer.input_files: inputs,
             Writer.datasources: datasources,
             Writer.metadata: metadata,
-            Writer.actionable_matches: items
+            Writer.clinically_relevant_matches: items
         }
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.log_message(label="Additional matches to moalmanac", filename=output_name)
