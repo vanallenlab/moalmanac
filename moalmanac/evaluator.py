@@ -264,7 +264,7 @@ class Actionable:
         idx_msi = idx_msi & ~idx_msi_variants
         idx_burden = df[feature_type_column].isin([biomarker_types['burden']])
         idx_signature = df[feature_type_column].isin([biomarker_types['signature']])
-        idx_wgd = df[feature_column].isin([biomarker_types['aneuploidy']])
+        idx_wgd = df[feature_type_column].isin([biomarker_types['aneuploidy']])
 
         df.loc[idx_somatic, display_column] = cls.display_variant(df=df, idx=idx_somatic)
         df.loc[idx_germline, display_column] = cls.display_variant(df=df, idx=idx_germline)
