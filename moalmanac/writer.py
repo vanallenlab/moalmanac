@@ -439,24 +439,6 @@ class Json:
               patient_id,
               output_folder
         ):
-        '''
-        config
-        execution_runtime
-        input_datasources
-        input_files
-        input_metadata
-        actionable
-        germline_acmg
-        germline_cancer
-        germline_hereditary
-        integrated
-        msi_variants
-        somatic_filtered
-        somatic_scored
-        therapeutic_strategies
-        tumor_mutational_burden
-        '''
-
         if isinstance(input_metadata, pd.Series):
             input_metadata = input_metadata.to_dict()
         config_dictionary = reader.Ini.convert_ini_to_dictionary(ini=config)
