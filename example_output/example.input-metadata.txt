@@ -1,0 +1,10 @@
+patient_id	example
+reported_tumor_type	MEL
+stage	Metastatic
+description	Test patient for development runs
+purity	0.85
+ploidy	4.02
+WGD	True
+microsatellite_status	MSI-High
+oncotree_term	Melanoma
+oncotree_code	MEL

@@ -26,8 +26,10 @@ All outputs will be produced by Molecular Oncology Almanac, though some may not 
     * [American College of Medical Genetics](#american-college-of-medical-genetics)
     * [Somatic cancers](#somatic-cancers)
     * [Hereditary Cancers](#hereditary-cancers)
+  * [Input metadata](#input-metadata)
   * [Integrated summary](#integrated-summary)
   * [Microsatellite Instability variants](#microsatellite-instability-variants)
+  * [MOAlmanac execution json](#moalmanac-execution-json)
   * [Mutational burden](#mutational-burden)
   * [Preclinical efficacy](#preclinical-efficacy)
   * [Profile-to-cell line matchmaking](#profile-to-cell-line-matchmaking)
@@ -274,6 +276,19 @@ Germline variants whose gene appears in a curated list of genes [related to here
 - [Germline variants](#germline-variants)
 - [Identifiers](#identifiers)
 
+## Input metadata
+Filename suffix: `.input-metadata.txt`
+
+Table representation of the patient dictionary, which contains input details such as:
+- `patient_id` (str) - the string label for the case 
+- `reported_tumor_type` (str) - the tumor type string, as passed to the main function
+- `stage` (str) - a free text description of the stage of disease
+- `description` (str) - a free text description of the case patient
+- `purity` (float) - tumor purity, as passed to the main function
+- `ploidy` (float) - tumor ploidy, as passed to the main function
+- `WGD` (boolean) - boolean for if whole-genome doubling is present, as passed to the main function
+- `microsatellite_status` (str) - categorical label for microsatellite status: unknown, microsatellite stable, microsatellite instability low, microsatellite instability high
+
 ## Integrated summary
 Filename suffix: `.integrated.summary.txt`
 
@@ -298,6 +313,26 @@ Columns present in this file are:
 - [Somatic and germline variants](#somatic-and-germline-variants)
 - [Datasource columns](#datasource-bins)
 - [Identifiers](#identifiers)
+
+## MOAlmanac execution json
+Filename suffix: `.moalmanac-execution.json`
+
+A JSON output that contains all runtime details for a single execution of moalmanac's main function. The dictionary contains the following keys:
+- `config` - all settings present in `config.ini` for the process execution
+- `execution_runtime` - start datetime of moalmanac main function as well as the elapsed seconds for execution
+- `input_files` - paths to input files of case profile provided to moalmanac
+- `input_datasources` - paths to input datasources as provided in `annotation-databases.ini`
+- `input_metadata` - input metadata, passed to the main function with the `patient` dictionary
+- `actionable` - dictionary representation of `.actionable.txt` output
+- `germline_acmg` - dictionary representation of `.germline.acmg.txt` output
+- `germline_cancer` - dictionary representation of `.germline.cancer_related.txt` output
+- `germline_hereditary` - dictionary representation of `.germline.hereditary_cancers.txt` output
+- `integrated` - dictionary representation of `.integrated.summary.txt` output
+- `msi_variants` - dictioanry representation of `.msi_variants.txt` output
+- `somatic_filtered` - dictionary representation of `.somatic.filtered.txt` output
+- `somatic_scored` - dictionary representation of `.somatic.scored.txt` output
+- `therapeutic_strategies` - dictionary representation of `.therapeutic_strategies.txt` output
+- `tumor_mutational_burden` - dictionary representation of the `.mutational_burden.txt` output
 
 ## Mutational burden
 Filename suffix: `.mutational_burden.txt`
