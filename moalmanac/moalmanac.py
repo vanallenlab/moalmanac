@@ -683,15 +683,6 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     output_strategies = writer.Strategies.write(strategies, string_id, output_folder)
     output_preclinical_efficacy = writer.PreclinicalEfficacy.write(efficacy_summary, string_id, output_folder)
     output_preclinical_matchmaking = writer.PreclinicalMatchmaking.write(similarity_results, string_id, output_folder)
-    output_matches = writer.ClinicallyRelevantMatches.write(
-        df=actionable,
-        metadata=metadata_dictionary,
-        config=config,
-        inputs=inputs,
-        datasources=dbs,
-        patient_id=string_id,
-        folder=output_folder
-    )
 
     logger.Messages.header(label="Generating and writing figures")
     if function_toggle.getboolean('generate_figures'):
