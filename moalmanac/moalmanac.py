@@ -1,5 +1,7 @@
-import time
+
 import argparse
+import datetime
+import time
 import os
 import subprocess
 
@@ -446,6 +448,7 @@ def process_preclinical_efficacy(dbs, dataframe, folder, label, config, plot: bo
 
 def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     start_time = time.time()
+    start_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     start_logging(
         patient=patient,
         inputs=inputs,
@@ -723,8 +726,28 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
         logger.Messages.general(message="Generating report disabled, skipping", add_line_break=True)
 
     end_time = time.time()
-
     elapsed_time = round((end_time - start_time), 4)
+
+    output_json = writer.Json.write(
+        config=config,
+        execution_runtime={'start': start_datetime, 'elapsed (seconds)': elapsed_time},
+        input_datasources=dbs,
+        input_files=inputs,
+        input_metadata=metadata_dictionary,
+        actionable=actionable,
+        germline_acmg=output_g_acmg,
+        germline_cancer=output_g_cancer,
+        germline_hereditary=output_g_hereditary,
+        integrated=output_integrated,
+        msi_variants=output_msi,
+        somatic_filtered=output_somatic_filtered,
+        somatic_scored=output_somatic_scored,
+        therapeutic_strategies=output_strategies,
+        tumor_mutational_burden=output_tmb,
+        patient_id=string_id,
+        output_folder=output_folder
+    )
+
     logger.Messages.general("Molecular Oncology Almanac process complete. Runtime: %s seconds" % elapsed_time)
     logger.Logger.shutdown()
 

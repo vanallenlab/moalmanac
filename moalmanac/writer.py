@@ -53,11 +53,28 @@ class Writer:
     resistance_matches = COLNAMES[section]['resistance_matches']
     prognostic_matches = COLNAMES[section]['prognostic_matches']
 
-    metadata = COLNAMES[section]['metadata']
+    metadata = COLNAMES[section]['input_metadata']
     clinically_relevant_matches = COLNAMES[section]['clinically_relevant_matches']
     config = COLNAMES[section]['config']
     input_files = COLNAMES[section]['input_files']
-    datasources = COLNAMES[section]['datasources']
+    datasources = COLNAMES[section]['input_datasources']
+
+
+    #config = COLNAMES[section]['config']
+    execution_runtime = COLNAMES[section]['execution_runtime']
+    input_datasources = COLNAMES[section]['input_datasources']
+    #input_files = COLNAMES[section]['input_files']
+    input_metadata = COLNAMES[section]['input_metadata']
+    actionable = COLNAMES[section]['actionable']
+    germline_acmg = COLNAMES[section]['germline_acmg']
+    germline_cancer = COLNAMES[section]['germline_cancer']
+    germline_hereditary = COLNAMES[section]['germline_hereditary']
+    integrated = COLNAMES[section]['integrated']
+    msi_variants = COLNAMES[section]['msi_variants']
+    somatic_filtered = COLNAMES[section]['somatic_filtered']
+    somatic_scored = COLNAMES[section]['somatic_scored']
+    therapeutic_strategies = COLNAMES[section]['therapeutic_strategies']
+    tumor_mutational_burden = COLNAMES[section]['tumor_mutational_burden']
 
     feature_type = COLNAMES[section]['feature_type']
     feature = COLNAMES[section]['feature']
@@ -112,6 +129,22 @@ class Writer:
     patient_id = COLNAMES[section]['patient_id']
     tumor = COLNAMES[section]['tumor']
     normal = COLNAMES[section]['normal']
+
+    @staticmethod
+    def check_dtype(obj, expected_type, alternate_value):
+        if isinstance(obj, expected_type):
+            return obj
+        else:
+            return alternate_value
+
+    @staticmethod
+    def convert_dataframe_to_dict(df, reset_index=True, orient='records'):
+        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
+        with pd.option_context("future.no_silent_downcasting", True):
+            if reset_index:
+                return df.fillna("").reset_index().to_dict(orient=orient)
+            else:
+                return df.fillna("").to_dict(orient=orient)
 
     @staticmethod
     def create_output_name(folder, patient_id, output_suffix):
@@ -215,32 +248,33 @@ class ClinicallyRelevantMatches:
         else:
             return alternate_value
 
+
     @classmethod
     def format(cls, df):
         items = []
         for idx in df.index:
             series = df.loc[idx, :]
-            sensitive_matches = cls.check_dtype(
+            sensitive_matches = Writer.check_dtype(
                 obj=series.loc[Writer.sensitive_matches],
                 expected_type=list,
                 alternate_value=[]
             )
-            resistance_matches = cls.check_dtype(
+            resistance_matches = Writer.check_dtype(
                 obj=series.loc[Writer.resistance_matches],
                 expected_type=list,
                 alternate_value=[]
             )
-            prognosis_matches = cls.check_dtype(
+            prognosis_matches = Writer.check_dtype(
                 obj=series.loc[Writer.prognostic_matches],
                 expected_type=list,
                 alternate_value=[]
             )
-            alt_type = cls.check_dtype(
+            alt_type = Writer.check_dtype(
                 obj=series.loc[Writer.alt_type],
                 expected_type=str,
                 alternate_value=''
             )
-            alt = cls.check_dtype(
+            alt = Writer.check_dtype(
                 obj=series.loc[Writer.alt],
                 expected_type=str,
                 alternate_value=''
@@ -259,6 +293,7 @@ class ClinicallyRelevantMatches:
             }
             items.append(item)
         return items
+
 
     @classmethod
     def write(cls, df, metadata, config, inputs, datasources, patient_id, folder):
@@ -410,6 +445,117 @@ class Integrated:
         Writer.log_dataframe(label="Integrated summary", filename=output_name, dataframe=output_dataframe)
         Writer.export_dataframe_indexed(df=output_dataframe, output_name=output_name, index_label=Writer.feature)
         return output_dataframe
+
+
+class Json:
+    output_suffix = 'moalmanac-execution.json'
+
+    @classmethod
+    def format_actionable(cls, df):
+        items = []
+        for idx in df.index:
+            series = df.loc[idx, :]
+            sensitive_matches = Writer.check_dtype(
+                obj=series.loc[Writer.sensitive_matches],
+                expected_type=list,
+                alternate_value=[]
+            )
+            resistance_matches = Writer.check_dtype(
+                obj=series.loc[Writer.resistance_matches],
+                expected_type=list,
+                alternate_value=[]
+            )
+            prognosis_matches = Writer.check_dtype(
+                obj=series.loc[Writer.prognostic_matches],
+                expected_type=list,
+                alternate_value=[]
+            )
+            alt_type = Writer.check_dtype(
+                obj=series.loc[Writer.alt_type],
+                expected_type=str,
+                alternate_value=''
+            )
+            alt = Writer.check_dtype(
+                obj=series.loc[Writer.alt],
+                expected_type=str,
+                alternate_value=''
+            )
+
+            item = {
+                'index': idx,
+                Writer.feature_display: series.loc[Writer.feature_display],
+                Writer.feature_type: series.loc[Writer.feature_type],
+                Writer.feature: series.loc[Writer.feature],
+                Writer.alt_type: alt_type,
+                Writer.alt: alt,
+                Writer.sensitive_matches: sensitive_matches,
+                Writer.resistance_matches: resistance_matches,
+                Writer.prognostic_matches: prognosis_matches
+            }
+            items.append(item)
+        return items
+
+    @classmethod
+    def write(cls,
+              config,
+              execution_runtime,
+              input_datasources,
+              input_files,
+              input_metadata,
+              actionable,
+              germline_acmg,
+              germline_cancer,
+              germline_hereditary,
+              integrated,
+              msi_variants,
+              somatic_filtered,
+              somatic_scored,
+              therapeutic_strategies,
+              tumor_mutational_burden,
+              patient_id,
+              output_folder
+        ):
+        '''
+        config
+        execution_runtime
+        input_datasources
+        input_files
+        input_metadata
+        actionable
+        germline_acmg
+        germline_cancer
+        germline_hereditary
+        integrated
+        msi_variants
+        somatic_filtered
+        somatic_scored
+        therapeutic_strategies
+        tumor_mutational_burden
+        '''
+
+        if isinstance(input_metadata, pd.Series):
+            input_metadata = input_metadata.to_dict()
+        config_dictionary = reader.Ini.convert_ini_to_dictionary(ini=config)
+        dictionary = {
+            Writer.config: config_dictionary,
+            Writer.execution_runtime: execution_runtime,
+            Writer.input_files: input_files,
+            Writer.datasources: input_datasources,
+            Writer.metadata: input_metadata,
+            Writer.actionable: cls.format_actionable(actionable),
+            Writer.germline_acmg: Writer.convert_dataframe_to_dict(df=germline_acmg),
+            Writer.germline_cancer: Writer.convert_dataframe_to_dict(df=germline_cancer),
+            Writer.germline_hereditary: Writer.convert_dataframe_to_dict(df=germline_hereditary),
+            Writer.integrated: Writer.convert_dataframe_to_dict(df=integrated),
+            Writer.msi_variants: Writer.convert_dataframe_to_dict(df=msi_variants),
+            Writer.somatic_filtered: Writer.convert_dataframe_to_dict(df=somatic_filtered),
+            Writer.somatic_scored: Writer.convert_dataframe_to_dict(df=somatic_scored),
+            Writer.therapeutic_strategies: Writer.convert_dataframe_to_dict(df=therapeutic_strategies),
+            Writer.tumor_mutational_burden: Writer.convert_dataframe_to_dict(df=tumor_mutational_burden)
+        }
+        output_name = Writer.create_output_name(output_folder, patient_id, cls.output_suffix)
+        Writer.log_message(label="JSON output", filename=output_name)
+        Writer.export_json(dictionary=dictionary, file=output_name)
 
 
 class Metadata:
