@@ -183,7 +183,6 @@ class UnitTestCoverageMetrics(unittest.TestCase):
         """
         series = pd.Series([3, pd.NA, '4|5', '4|', '5'])
         result = CoverageMetrics.apply_min_coverage_for_onps(series)
-        print(result)
         self.assertEqual(first=3, second=result.loc[0])
         self.assertEqual(first=4, second=result.loc[2])
         self.assertEqual(first=4, second=result.loc[3])

@@ -53,17 +53,10 @@ class Writer:
     resistance_matches = COLNAMES[section]['resistance_matches']
     prognostic_matches = COLNAMES[section]['prognostic_matches']
 
-    metadata = COLNAMES[section]['input_metadata']
-    clinically_relevant_matches = COLNAMES[section]['clinically_relevant_matches']
     config = COLNAMES[section]['config']
-    input_files = COLNAMES[section]['input_files']
-    datasources = COLNAMES[section]['input_datasources']
-
-
-    #config = COLNAMES[section]['config']
     execution_runtime = COLNAMES[section]['execution_runtime']
     input_datasources = COLNAMES[section]['input_datasources']
-    #input_files = COLNAMES[section]['input_files']
+    input_files = COLNAMES[section]['input_files']
     input_metadata = COLNAMES[section]['input_metadata']
     actionable = COLNAMES[section]['actionable']
     germline_acmg = COLNAMES[section]['germline_acmg']
@@ -445,9 +438,9 @@ class Json:
         dictionary = {
             Writer.config: config_dictionary,
             Writer.execution_runtime: execution_runtime,
+            Writer.input_datasources: input_datasources,
             Writer.input_files: input_files,
-            Writer.datasources: input_datasources,
-            Writer.metadata: input_metadata,
+            Writer.input_metadata: input_metadata,
             Writer.actionable: cls.format_actionable(actionable),
             Writer.germline_acmg: Writer.convert_dataframe_to_dict(df=germline_acmg),
             Writer.germline_cancer: Writer.convert_dataframe_to_dict(df=germline_cancer),

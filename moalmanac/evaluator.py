@@ -243,7 +243,7 @@ class Actionable:
         actionable_list = []
         for dataframe in [somatic, germline, ms_variants_summary, ms_status, burden, signatures, wgd]:
             actionable_list.append(Evaluator.subset_almanac_bin(dataframe))
-        df = features.Features.concat_list_of_dataframes(list_of_dataframes=actionable_list)
+        df = features.Features.concat_list_of_dataframes(list_of_dataframes=actionable_list).reset_index(drop=True)
 
         df[Evaluator.feature_display] = cls.format_feature_display(df=df, config=config)
         return df.sort_values(cls.sort_columns, ascending=False)
