@@ -19,7 +19,7 @@ The codebase is available for download through this GitHub repository, [Dockerhu
 ### Installation
 Molecular Oncology Almanac is a Python application using Python 3.12. This application, datasources, and all dependencies are packaged on Docker and can be downloaded with the command
  ```bash
-docker pull vanallenlab/moalmanac
+docker pull vanallenlab/moalmanac:latest
 ```
 
 Alternatively, the package can be built from this GitHub repository. To download via GitHub,
