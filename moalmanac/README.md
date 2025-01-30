@@ -13,7 +13,7 @@ Required arguments:
 
 Optional arguments:
 ```
-    --tumor_type            <string>    tumor ontology, default=Unknown. MOAlmanac will attempt to map to both OncoTree codes and terms.
+    --tumor_type            <string>    tumor ontology, default=Unknown
     --stage                 <string>    tumor stage, default=Unknown
     --snv_handle            <string>    handle for MAF file of somatic single nucleotide variants
     --indel_handle          <string>    handle for MAF file of somatic insertions and deletions
