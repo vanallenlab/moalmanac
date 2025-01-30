@@ -761,7 +761,7 @@ if __name__ == "__main__":
     arg_parser.add_argument(
         '--tumor_type',
         default='Unknown',
-        help='reported tumor type'
+        help='reported tumor type, will attempt to map to both OncoTree codes and terms.'
     )
     arg_parser.add_argument(
         '--stage',
