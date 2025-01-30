@@ -2,7 +2,7 @@
 The Molecular Oncology Almanac utilizes OncoTree to standardize the input of disease ontology in order to frame a given patient's mutational burden and match assertions from the almanac as closely as possible. 
 
 ## About Oncotree
-OncoTree was developed by Memorial Sloan Kettering Cancer Center as a tool for the cBioPortal and distributed under a Creative Commons Attribution 4.0 International License. Please visit their [website][1], [swagger][2], or [GitHub][3] to learn more.
+OncoTree was developed by Memorial Sloan Kettering Cancer Center as a tool for the cBioPortal and distributed under a Creative Commons Attribution 4.0 International License. Please visit their [website](https://oncotree.mskcc.org/), [API](https://oncotree.mskcc.org/swagger-ui.html), or [GitHub](https://github.com/cBioPortal/oncotree) to learn more.
 
 ## Usage: Generating OncoTree for use
 The following command can be run to generate a new OncoTree table for usage with the Molecular Oncology Almanac.
