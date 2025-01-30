@@ -1,5 +1,5 @@
 # Annotated inputs
-Molecular features formatted as described in the `formatted/` folder are to be annotated by [MOAlmanac](https://github.com/vanallenlab/moalmanac) before use. Inputs requirements are needed to run this step are,
+Molecular features formatted as described in the `formatted/` folder are to be annotated by [MOAlmanac](https://github.com/vanallenlab/moalmanac) before use. The inputs requirements are needed to run this step are,
 - A formatted input for somatic variants, as described in the `formatted/` folder
 - A formatted input for copy number alterations, as described in the `formatted/` folder
 - A formatted input for fusions, as described in the `formatted/` folder

@@ -1,5 +1,5 @@
 # Databases: Exome Aggregation Consortium (ExAC)
-The Molecular Oncology Almanac utilizes [ExAC](http://exac.broadinstitute.org/) to annotate population allele frequency of alterations and identify variants that may not be related to cancer. Specifically, our heuristic will sort against alterations that appear in ExAC. While alterations will stay in their same bin,they will appear lower than other variants that do not appear in ExAC.
+The Molecular Oncology Almanac utilizes [ExAC](http://exac.broadinstitute.org/) to annotate population allele frequency of alterations and identify variants that may not be related to cancer. Specifically, our heuristic will sort against alterations that appear in ExAC. While alterations will stay in their same bin, they will appear lower than other variants that do not appear in ExAC.
 
 ## About the Exome Aggregation Consortium
 The Exome Aggregation Consortium was developed and is maintained by [several principle investigators](http://exac.broadinstitute.org/about). It is a dataset of germline sequencing data from over 60,000 unrelated individuals. 
