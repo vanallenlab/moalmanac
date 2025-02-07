@@ -260,7 +260,7 @@ if __name__ == "__main__":
         '--config',
         '-c',
         help='MOAlmanac configuration file',
-        default='../../config.ini'
+        default='../../moalmanac/config.ini'
     )
     arg_parser.add_argument(
         '--file',
