@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moalmanac"
+version = "0.8.1"
+description = 'A clinical interpretation algorithm for cancer genomics'
+readme = "README.md"
+requires-python = ">=3.12"
+license = "GPL-2.0"
+keywords = []
+authors = [
+  { name = "Brendan Reardon" },
+]
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = []
+
+[project.urls]
+Documentation = "https://github.com/vanallenlab/moalmanac#readme"
+Issues = "https://github.com/vanallenlab/moalmanac/issues"
+Source = "https://github.com/vanallenlab/moalmanac"
