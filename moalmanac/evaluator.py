@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import re
 
-import datasources
-import features
-from config import COLNAMES
+from moalmanac import datasources
+from moalmanac import features
+from moalmanac.config import COLNAMES
 
 
 class Evaluator:

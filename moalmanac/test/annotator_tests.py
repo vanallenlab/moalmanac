@@ -3,12 +3,12 @@ import operator as op
 import pandas as pd
 import scipy.stats as stats
 
-from annotator import Annotator, ACMG, Almanac, ExAC, OverlapValidation, PreclinicalEfficacy, PreclinicalMatchmaking
-from datasources import Datasources
-from datasources import Almanac as datasource_Almanac
-from datasources import Preclinical as datasources_Preclinical
-from features import Features
-from investigator import SensitivityDictionary
+from moalmanac.annotator import Annotator, ACMG, Almanac, ExAC, OverlapValidation, PreclinicalEfficacy, PreclinicalMatchmaking
+from moalmanac.datasources import Datasources
+from moalmanac.datasources import Almanac as datasource_Almanac
+from moalmanac.datasources import Preclinical as datasources_Preclinical
+from moalmanac.features import Features
+from moalmanac.investigator import SensitivityDictionary
 
 
 class UnitTestAnnotator(unittest.TestCase):

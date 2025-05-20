@@ -1,10 +1,10 @@
 import unittest
 import pandas as pd
 
-from features import CoverageMetrics
-from moalmanac import features
-from config import COLNAMES
-from reader import Ini
+from moalmanac.features import CoverageMetrics
+from moalmanac.moalmanac import features
+from moalmanac.config import COLNAMES
+from moalmanac.reader import Ini
 
 class UnitTestFeatures(unittest.TestCase):
     def test_annotate_feature_type(self):

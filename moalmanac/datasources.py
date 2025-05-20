@@ -1,7 +1,7 @@
 import pandas as pd
 
-from reader import Reader
-from config import COLNAMES
+from moalmanac.reader import Reader
+from moalmanac.config import COLNAMES
 
 
 class Datasources:

@@ -1,9 +1,9 @@
 import json
 import pandas as pd
 
-import logger
-import reader
-from config import COLNAMES
+from moalmanac import logger
+from moalmanac import reader
+from moalmanac.config import COLNAMES
 
 
 class Writer:

@@ -1,11 +1,11 @@
 import datetime
 import flask
 import flask_frozen
-import logger
 import pandas
 import os
 
-from config import COLNAMES
+from moalmanac import logger
+from moalmanac.config import COLNAMES
 
 
 class Reporter:

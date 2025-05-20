@@ -3,10 +3,10 @@
 import argparse
 import pandas as pd
 
-import annotator
-import datasources
-from config import COLNAMES
-from config import CONFIG
+from moalmanac import annotator
+from moalmanac import datasources
+from moalmanac.config import COLNAMES
+from moalmanac.config import CONFIG
 
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
@@ -62,14 +62,14 @@ EVIDENCE_MAP = {
 INV_MAP = {float(v): k for k, v in EVIDENCE_MAP.items()}
 
 
-def annotate_match_1(df):
+def annotate_match_1(df, almanac_genes):
     # Biologically Relevant, no evidence
     idx_match = df['feature'].isin(almanac_genes)
     df.loc[idx_match, 'feature_match_1'] = 1
     return df
 
 
-def annotate_match_2(df):
+def annotate_match_2(df, db):
     # Gene and Dtype match; feature_match = 2, will have evidence
     match_columns = ['feature']
     df = (df
@@ -88,7 +88,7 @@ def annotate_match_2(df):
     return df
 
 
-def annotate_match_3(df):
+def annotate_match_3(df, db):
     # Gene, Dtype, AType match; feature_match = 3, will have evidence
     match_columns = ['feature', 'alteration_type']
     df = (df
@@ -165,9 +165,9 @@ if __name__ == "__main__":
     almanac_genes = almanac_json.table('genes').all()[0]['genes']
     db = load_db(almanac_json, feature_type)
     dataframe = load_df(args.input, feature_type)
-    dataframe = annotate_match_1(dataframe)
-    dataframe = annotate_match_2(dataframe)
-    dataframe = annotate_match_3(dataframe)
+    dataframe = annotate_match_1(dataframe, almanac_genes)
+    dataframe = annotate_match_2(dataframe, db)
+    dataframe = annotate_match_3(dataframe, db)
 
     dataframe['evidence_map'] = dataframe['evidence'].copy(deep=True)
     dataframe['evidence'] = dataframe['evidence'].fillna('').replace(INV_MAP)

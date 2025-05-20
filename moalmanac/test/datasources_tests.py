@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 
-from datasources import CancerHotspots, Preclinical
+from moalmanac.datasources import CancerHotspots, Preclinical
 
 
 class UnitTestCancerHotspots(unittest.TestCase):

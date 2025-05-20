@@ -1,7 +1,7 @@
 import configparser
+import os
 
-default_colnames = 'colnames.ini'
-
+default_colnames = os.path.join(os.path.dirname(__file__), 'colnames.ini')
 
 def create_colnames_dict(config):
     dictionary = {}

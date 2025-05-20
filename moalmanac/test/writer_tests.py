@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 
-from writer import Writer, GermlineCancer
+from moalmanac.writer import Writer, GermlineCancer
 
 
 class UnitTestWriter(unittest.TestCase):

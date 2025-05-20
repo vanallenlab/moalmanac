@@ -3,10 +3,10 @@ import math
 import numpy as np
 import scipy.stats as stats
 
-from datasources import Preclinical
-from illustrator import PreclinicalEfficacy
+from moalmanac.datasources import Preclinical
+from moalmanac.illustrator import PreclinicalEfficacy
 
-from config import COLNAMES
+from moalmanac.config import COLNAMES
 
 
 class Investigator(object):

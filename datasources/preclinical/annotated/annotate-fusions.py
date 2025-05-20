@@ -1,23 +1,14 @@
 # RUN THIS FROM moalmanac/moalmanac, instead of moalmanac/datasources/gdsc
 # Comment line 687 to not add addito
 
-import time
 import argparse
 import pandas as pd
 
-import annotator
-import datasources
-import features
-import evaluator
-import illustrator
-import investigator
-import matchmaker
-import ontologymapper
-import reporter
-import writer
+from moalmanac import annotator
+from moalmanac import datasources
 
-from config import COLNAMES
-from config import CONFIG
+from moalmanac.config import COLNAMES
+from moalmanac.config import CONFIG
 
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'

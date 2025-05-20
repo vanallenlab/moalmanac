@@ -1,4 +1,4 @@
-from config import COLNAMES
+from moalmanac.config import COLNAMES
 
 import io
 import base64
