@@ -1,0 +1,28 @@
+[project]
+name = "moalmanac"
+version = "0.8.1"
+description = "Short description of your package"
+authors = [{name="Brendan Reardon", email="brendan_reardon@dfci.harvard.edu"}]
+readme = "README.md"
+license = {text = "GNU-GPL-2.0-only"}
+requires-python = ">=3.12"
+dependencies = [
+    "flask==3.0.2",
+    "Frozen-Flask==1.0.2",
+    "ipykernel==6.29.4",
+    "jupyter==1.0.0",
+    "matplotlib==3.8.3",
+    "numpy==1.26.4",
+    "pandas==2.2.2",
+    "requests==2.31.0",
+    "scikit-learn==1.4.2",
+    "scipy==1.13.0",
+    "snfpy==0.2.2"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
