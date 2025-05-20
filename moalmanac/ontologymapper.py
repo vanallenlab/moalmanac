@@ -1,4 +1,4 @@
-from datasources import Oncotree
+from moalmanac.datasources import Oncotree
 
 
 class OntologyMapper(object):

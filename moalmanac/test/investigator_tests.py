@@ -2,9 +2,9 @@ import unittest
 import pandas as pd
 import math
 
-from datasources import Preclinical
-from investigator import Investigator, SensitivityDictionary
-from reader import Ini
+from moalmanac.datasources import Preclinical
+from moalmanac.investigator import Investigator, SensitivityDictionary
+from moalmanac.reader import Ini
 
 class UnitTestSensitivityDictionary(unittest.TestCase):
     def test_calculate_series_exp(self):

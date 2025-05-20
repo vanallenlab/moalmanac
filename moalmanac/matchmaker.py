@@ -3,13 +3,13 @@ import pandas as pd
 import snf
 from sklearn import metrics
 
-from annotator import Almanac as AnnotatorAlmanac
-from annotator import PreclinicalMatchmaking as AnnotatorPreclinicalMatchmaking
-from datasources import Almanac as DatasourceAlmanac
-from datasources import CancerGeneCensus as DatasourceCGC
-from datasources import Preclinical as DatasourcePreclinical
+from moalmanac.annotator import Almanac as AnnotatorAlmanac
+from moalmanac.annotator import PreclinicalMatchmaking as AnnotatorPreclinicalMatchmaking
+from moalmanac.datasources import Almanac as DatasourceAlmanac
+from moalmanac.datasources import CancerGeneCensus as DatasourceCGC
+from moalmanac.datasources import Preclinical as DatasourcePreclinical
 
-from config import COLNAMES
+from moalmanac.config import COLNAMES
 
 
 class Matchmaker:

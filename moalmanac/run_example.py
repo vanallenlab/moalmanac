@@ -5,7 +5,8 @@ import time
 
 from datetime import date
 
-from reader import Ini
+from moalmanac.reader import Ini
+from moalmanac import moalmanac
 
 metadata_dictionary = {
     'patient_id': 'example',

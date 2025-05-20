@@ -4,20 +4,20 @@ import os
 import pandas as pd
 import subprocess
 
-import annotator
-import datasources
-import features
-import evaluator
-import illustrator
-import investigator
-import matchmaker
-import moalmanac
-import ontologymapper
-import reporter
-import writer
+from moalmanac import annotator
+from moalmanac import datasources
+from moalmanac import features
+from moalmanac import evaluator
+from moalmanac import illustrator
+from moalmanac import investigator
+from moalmanac import matchmaker
+from moalmanac import moalmanac
+from moalmanac import ontologymapper
+from moalmanac import reporter
+from moalmanac import writer
 
-from config import COLNAMES
-from reader import Ini
+from moalmanac.config import COLNAMES
+from moalmanac.reader import Ini
 
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'

@@ -5,19 +5,19 @@ import time
 import os
 import subprocess
 
-import annotator
-import datasources
-import features
-import evaluator
-import investigator
-import logger
-import matchmaker
-import ontologymapper
-import reporter
-import writer
+from moalmanac import annotator
+from moalmanac import datasources
+from moalmanac import features
+from moalmanac import evaluator
+from moalmanac import investigator
+from moalmanac import logger
+from moalmanac import matchmaker
+from moalmanac import ontologymapper
+from moalmanac import reporter
+from moalmanac import writer
 
-from config import COLNAMES
-from reader import Ini
+from moalmanac.config import COLNAMES
+from moalmanac.reader import Ini
 
 snv_handle = 'snv_handle'
 indel_handle = 'indel_handle'
@@ -687,7 +687,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     logger.Messages.header(label="Generating and writing figures")
     if function_toggle.getboolean('generate_figures'):
         logger.Messages.general(message="Plotting DNA and RNA somatic variant overlap")
-        import illustrator
+        from moalmanac import illustrator
         illustrator.ValidationOverlap.generate_dna_rna_plot(
             df=evaluated_somatic,
             patient_id=string_id,

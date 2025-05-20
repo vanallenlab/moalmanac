@@ -5,7 +5,8 @@ import time
 
 from datetime import date
 
-from reader import Ini
+from moalmanac.reader import Ini
+from moalmanac import moalmanac
 
 pre_or_post_code_changes = "pre"
 #pre_or_post_code_changes = "post"

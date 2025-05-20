@@ -4,11 +4,11 @@ import scipy.stats as stats
 import operator as op
 import copy
 
-import datasources
-import features
-import logger
+from moalmanac import datasources
+from moalmanac import features
+from moalmanac import logger
 
-from config import COLNAMES
+from moalmanac.config import COLNAMES
 
 
 class Annotator:

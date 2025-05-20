@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from evaluator import Evaluator, Actionable, Integrative, Microsatellite, Strategies
+from moalmanac.evaluator import Evaluator, Actionable, Integrative, Microsatellite, Strategies
 
 
 class UnitTestEvaluator(unittest.TestCase):
