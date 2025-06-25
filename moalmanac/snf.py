@@ -79,7 +79,7 @@ class SNF:
             if isinstance(d, (list, tuple)):
                 yield from cls._check_data_metric(d, m)
             else:
-                yield check_array(d, force_all_finite=False), m
+                yield check_array(d, ensure_all_finite=False), m
 
     @classmethod
     def make_affinity(cls, *data, metric='sqeuclidean', K=20, mu=0.5, normalize=True):
@@ -220,7 +220,7 @@ class SNF:
         """
 
         # check inputs
-        dist = check_array(dist, force_all_finite=False)
+        dist = check_array(dist, ensure_all_finite=False)
         dist = check_symmetric(dist, raise_warning=False)
 
         # get mask for potential NaN values and set diagonals zero
@@ -437,7 +437,7 @@ class SNF:
 
         prep = []
         for a in cls._flatten(aff):
-            ac = check_array(a, force_all_finite=True, copy=True)
+            ac = check_array(a, ensure_all_finite=True, copy=True)
             prep.append(check_symmetric(ac, raise_warning=False))
         check_consistent_length(*prep)
 
