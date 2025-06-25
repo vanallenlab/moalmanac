@@ -1,6 +1,12 @@
 """
-This file is adapted from the snfpy project:
-https://github.com/rmarkello/snfpy/tree/master
+This file is adapted from the snfpy repository, https://github.com/rmarkello/snfpy/tree/master,
+which is a translation of the original Similarity Network Fusion (SNF) code, implemented in R
+and matlab: http://compbio.cs.toronto.edu/SNF/SNF/Software.html
+
+Original publication:
+Wang, B., Mezlini, A. M., Demir, F., Fiume, M., Tu, Z., Brudno, M., Haibe-Kains, B., &
+Goldenberg, A. (2014). Similarity network fusion for aggregating data types on a genomic scale.
+Nature Methods, 11(3), 333.
 
 Original license: GNU Lesser General Public License v3.0 (LGPL-3.0)
 See: https://www.gnu.org/licenses/lgpl-3.0.html
