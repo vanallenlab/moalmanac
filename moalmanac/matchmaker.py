@@ -545,18 +545,15 @@ class SNFTypesCGCwithEvidence(Models):
         boolean_dataframe_1 = AlmanacFeatures.create_boolean_table(inputs, samples, almanac_subset)
 
         data = [
-            boolean_dataframe_variants.loc[samples, :],#.fillna(0),
-            boolean_dataframe_copy_numbers.loc[samples, :],#.fillna(0),
-            boolean_dataframe_fusions.loc[samples, :],#.fillna(0),
-            boolean_dataframe_1.loc[samples, :]#.fillna(0),
+            boolean_dataframe_variants.loc[samples, :].fillna(0),
+            boolean_dataframe_copy_numbers.loc[samples, :].fillna(0),
+            boolean_dataframe_fusions.loc[samples, :].fillna(0),
+            boolean_dataframe_1.loc[samples, :].fillna(0)
         ]
 
         np.random.seed(seed)
-        print('Running make affinity')
         affinity_networks = SNF.make_affinity(data, metric='jaccard', normalize=False, K=20, mu=0.5)
-        print('Fusing network')
         fused_network = SNF.snf(affinity_networks, K=20)
-        print('Network fused')
         fused_dataframe = pd.DataFrame(fused_network, index=samples, columns=samples)
         distance_dataframe = pd.DataFrame(1, index=samples, columns=samples).subtract(fused_dataframe)
         stacked_dataframe = cls.stack_distances(distance_dataframe, cls.label)
