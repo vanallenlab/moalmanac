@@ -143,16 +143,6 @@ class SNF:
         where :math:`\overline{\rho}(x_{i},N_{i})` represents the average value
         of distances between :math:`x_{i}` and its neighbors :math:`N_{1..K}`,
         and :math:`\mu\in(0, 1)\subset\mathbb{R}`.
-
-        Examples
-        --------
-        >>> from snf import datasets
-        >>> simdata = datasets.load_simdata()
-
-        >>> from snf import compute
-        >>> aff = compute.make_affinity(simdata.data[0], K=20, mu=0.5)
-        >>> aff.shape
-        (200, 200)
         """
 
         affinity = []
@@ -227,22 +217,6 @@ class SNF:
         where :math:`\overline{\rho}(x_{i},N_{i})` represents the average value
         of distances between :math:`x_{i}` and its neighbors :math:`N_{1..K}`,
         and :math:`\mu\in(0, 1)\subset\mathbb{R}`.
-
-        Examples
-        --------
-        >>> from snf import datasets
-        >>> simdata = datasets.load_simdata()
-
-        We need to construct a distance matrix before we can create a similarity
-        matrix using :py:func:`snf.compute.affinity_matrix`:
-
-        >>> from scipy.spatial.distance import cdist
-        >>> dist = cdist(simdata.data[0], simdata.data[0])
-
-        >>> from snf import compute
-        >>> aff = compute.affinity_matrix(dist)
-        >>> aff.shape
-        (200, 200)
         """
 
         # check inputs
