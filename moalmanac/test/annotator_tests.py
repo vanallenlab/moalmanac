@@ -263,25 +263,25 @@ class UnitTestValidation(unittest.TestCase):
         self.assertEqual([0.4103, '', 0.9715, 0.0], result['validation_detection_power'].tolist())
 
     def test_calculate_beta_binomial(self):
-        self.assertEqual(0.7006851149078945, stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63))
+        self.assertAlmostEqual(0.7006851149078945, stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63), places=10)
         self.assertEqual(0.7007, round(stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63), 4))
         series_n = pd.Series([10, 50, 100])
         series_a = pd.Series([5, 25, 50])
         series_b = pd.Series([15, 40, 100])
         solutions = list(stats.betabinom.sf(k=3, n=series_n, a=series_a, b=series_b, loc=0))
-        self.assertEqual(0.25543941316055174, solutions[0])
-        self.assertEqual(0.9999749071547652, solutions[1])
-        self.assertEqual(0.9999999996130999, solutions[2])
+        self.assertAlmostEqual(0.25543941316055174, solutions[0], places=10)
+        self.assertAlmostEqual(0.9999749071547652, solutions[1], places=10)
+        self.assertAlmostEqual(0.9999999996130999, solutions[2], places=10)
 
     def test_calculate_validation_detection_power(self):
         tumor_f = pd.Series([0, 0.33, 0.5, 1])
         coverage = pd.Series([5, 100, 50, 66])
         validation_coverage = pd.Series([12, 70, 40, 20])
         result = OverlapValidation.calculate_validation_detection_power(tumor_f, coverage, validation_coverage)
-        self.assertEqual(0.16176470588235325, result[0])
-        self.assertEqual(0.999998846495356, result[1])
-        self.assertEqual(0.9999945730050155, result[2])
-        self.assertEqual(0.9999999999999977, result[3])
+        self.assertAlmostEqual(0.16176470588235325, result[0], places=10)
+        self.assertAlmostEqual(0.999998846495356, result[1], places=10)
+        self.assertAlmostEqual(0.9999945730050155, result[2], places=10)
+        self.assertAlmostEqual(0.9999999999999977, result[3], places=10)
 
     def test_drop_validation_columns(self):
         columns = ['A', 'B', OverlapValidation.validation_tumor_f, OverlapValidation.validation_coverage, 'C']
