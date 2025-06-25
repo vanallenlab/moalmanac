@@ -337,3 +337,25 @@ proprietary programs.  If your program is a subroutine library, you may
 consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.
+
+---
+This repository contains code is adapted from the snfpy repository (moalmanac/snf.py, from https://github.com/rmarkello/snfpy/tree/master),
+which is licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0). See snfpy_LICENSE.txt for the full text
+of the LGPL-3.0 license.
+
+That code is a translation of the original Similarity Network Fusion (SNF) code, implemented in R
+and matlab: http://compbio.cs.toronto.edu/SNF/SNF/Software.html
+
+If you use this portion of the code, please cite:
+
+Wang, B., Mezlini, A. M., Demir, F., Fiume, M., Tu, Z., Brudno, M., Haibe-Kains, B., &
+Goldenberg, A. (2014). Similarity network fusion for aggregating data types on a genomic scale.
+Nature Methods, 11(3), 333.
+
+
+That code is licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0),
+and is used in accordance with its terms. See snfpy_LICENSE.txt for the full text
+of the LGPL-3.0 license.
+
+The rest of this repository is licensed under the GNU General Public License v2.0.
+

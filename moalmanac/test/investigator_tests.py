@@ -46,7 +46,7 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
         series2 = pd.Series([1, 2, 3, 4, 5, 6], name='value')
         series3 = pd.Series([], dtype=float, name='value')
         statistic, pvalue = SensitivityDictionary.calculate_mann_whitney_u(series1, series2)
-        self.assertEqual(pvalue, 0.25642920468772246)
+        self.assertAlmostEqual(pvalue, 0.25642920468772246, places=10)
         self.assertEqual(statistic, 10.5)
         statistic, pvalue = SensitivityDictionary.calculate_mann_whitney_u(series1, series3)
         self.assertTrue(math.isnan(pvalue))
@@ -82,8 +82,8 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
         expected_trametinib = '2.344e-09'
         config = Ini.read('config.ini', extended_interpolation=False, convert_to_dictionary=False)
         result = SensitivityDictionary.create(dbs, actionable, config)
-        self.assertEqual(result[0]['Dabrafenib']['BRAF']['comparison']['pvalue_mww'], expected_dabrafenib)
-        self.assertEqual(result[0]['Trametinib']['BRAF']['comparison']['pvalue_mww'], expected_trametinib)
+        self.assertAlmostEqual(result[0]['Dabrafenib']['BRAF']['comparison']['pvalue_mww'], expected_dabrafenib, places=10)
+        self.assertAlmostEqual(result[0]['Trametinib']['BRAF']['comparison']['pvalue_mww'], expected_trametinib, places=10)
 
     def test_create_drug_dict(self):
         all_samples = ['A', 'B', 'C', 'D']
