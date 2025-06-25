@@ -397,7 +397,16 @@ class SNF:
                 nzW = np.nan_to_num(Wk[n])
                 aw = np.nan_to_num(mat)
                 # propagate `Wsum` through masked affinity matrix (`nzW`)
-                aff0 = nzW @ (Wsum - aw) @ nzW.T / (n_aff - 1)  # TODO: / by 0
+
+                # Modified by Van Allen lab
+                ## safe denominator
+                denominator = np.maximum(n_aff -1, 1)
+
+                ## Compute aff0 with safe broadcasting
+                with np.errstate(divide='ignore', invalid='ignore', over='ignore'):
+                    aff0 = nzW @ (Wsum - aw) @ nzW.T
+                    aff0 = np.divide(aff0, denominator, out=np.zeros_like(aff0), where=denominator!=0)
+
                 # ensure diagonal retains highest similarity
                 aff[n] = cls._B0_normalized(aff0, alpha=alpha)
 
