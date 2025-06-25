@@ -1,13 +1,16 @@
 import numpy as np
 import pandas as pd
-import snf
 from sklearn import metrics
+
+#import warnings
+#warnings.filterwarnings("ignore", message=".*force_all_finite.*")
 
 from annotator import Almanac as AnnotatorAlmanac
 from annotator import PreclinicalMatchmaking as AnnotatorPreclinicalMatchmaking
 from datasources import Almanac as DatasourceAlmanac
 from datasources import CancerGeneCensus as DatasourceCGC
 from datasources import Preclinical as DatasourcePreclinical
+from snf import SNF
 
 from config import COLNAMES
 
@@ -545,15 +548,18 @@ class SNFTypesCGCwithEvidence(Models):
         boolean_dataframe_1 = AlmanacFeatures.create_boolean_table(inputs, samples, almanac_subset)
 
         data = [
-            boolean_dataframe_variants.loc[samples, :].fillna(0),
-            boolean_dataframe_copy_numbers.loc[samples, :].fillna(0),
-            boolean_dataframe_fusions.loc[samples, :].fillna(0),
-            boolean_dataframe_1.loc[samples, :].fillna(0),
+            boolean_dataframe_variants.loc[samples, :],#.fillna(0),
+            boolean_dataframe_copy_numbers.loc[samples, :],#.fillna(0),
+            boolean_dataframe_fusions.loc[samples, :],#.fillna(0),
+            boolean_dataframe_1.loc[samples, :]#.fillna(0),
         ]
 
         np.random.seed(seed)
-        affinity_networks = snf.make_affinity(data, metric='jaccard', normalize=False, K=20, mu=0.5)
-        fused_network = snf.snf(affinity_networks, K=20)
+        print('Running make affinity')
+        affinity_networks = SNF.make_affinity(data, metric='jaccard', normalize=False, K=20, mu=0.5)
+        print('Fusing network')
+        fused_network = SNF.snf(affinity_networks, K=20)
+        print('Network fused')
         fused_dataframe = pd.DataFrame(fused_network, index=samples, columns=samples)
         distance_dataframe = pd.DataFrame(1, index=samples, columns=samples).subtract(fused_dataframe)
         stacked_dataframe = cls.stack_distances(distance_dataframe, cls.label)

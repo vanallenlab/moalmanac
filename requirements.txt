@@ -8,4 +8,3 @@ pandas==2.2.2
 requests==2.32.4
 scikit-learn==1.7.0
 scipy==1.16.0
-snfpy==0.2.2
