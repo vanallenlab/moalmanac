@@ -2,9 +2,6 @@ import numpy as np
 import pandas as pd
 from sklearn import metrics
 
-#import warnings
-#warnings.filterwarnings("ignore", message=".*force_all_finite.*")
-
 from annotator import Almanac as AnnotatorAlmanac
 from annotator import PreclinicalMatchmaking as AnnotatorPreclinicalMatchmaking
 from datasources import Almanac as DatasourceAlmanac
