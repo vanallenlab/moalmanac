@@ -233,8 +233,8 @@ class ValidationOverlap(Illustrator):
     def format_data(cls, df, biomarker_type_string):
         idx = df[df[cls.feature_type] == biomarker_type_string].index
         data = df.loc[idx, cls.columns["str"] + cls.columns["float"]]
-        data.loc[idx, cls.columns["float"]] = df.loc[idx, cls.columns["float"]].fillna(
-            0.0
+        data.loc[idx, cls.columns["float"]] = (
+            df.loc[idx, cls.columns["float"]].astype(float).fillna(0.0)
         )
         data[cls.coverage] = pd.to_numeric(data[cls.coverage])
         data[cls.tumor_f] = pd.to_numeric(data[cls.tumor_f])
