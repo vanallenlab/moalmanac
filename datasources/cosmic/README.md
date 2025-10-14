@@ -4,6 +4,8 @@ The Molecular Oncology Almanac's heuristic utilizes the [Catalogue of Somatic Mu
 ## About COSMIC
 COSMIC is developed and maintained by the [Wellcome Trust Sanger Institute](http://www.sanger.ac.uk/) for exploring the impact of somatic mutations in human cancer.  
 
+COSMIC's is distributed under their license and terms, [described here](https://www.cosmickb.org/terms/). Users must register and download COSMIC's datasource themselves for use with the Molecular Oncology Almanac. 
+
 ## Usage: Downloading and formatting COSMIC
 Data can be downloaded from [COSMIC's one click data downloads portal](http://cancer.sanger.ac.uk/cosmic/download). The Molecular Oncology Almanac leverages the `COSMIC Mutation Data` file, labeled as `CosmicMutantExport.tsv.gz`. Please download the whole file (4 GB) and uncompress the file.
 
