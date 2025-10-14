@@ -7,6 +7,8 @@ The Exome Aggregation Consortium was developed and is maintained by [several pri
 ExAC is [released openly and publicly](https://gnomad.broadinstitute.org/policies). 
 
 ## Usage: Downloading and formatting ExAC for use
+If you do not want to use ExAC annotations within the Molecular Oncology Almanac, set the `exac_handle` variable to be `${root}/exac/exac.expanded.r1.empty.txt` within the [annotation-databases.ini config file](../../moalmanac/annotation-databases.ini).  
+
 All releases of ExAC [are available for download on their webpage](https://gnomad.broadinstitute.org/downloads#exac) and, as of this writing, The file of the extension `.sites.vep.vcf.gz`, with corresponding index `.sites.vep.vcf.gz.tbi`, should be downloaded, this may take some time since the file is on the order of ~ 4.6 GB in size. The [GATK](https://gatk.broadinstitute.org/hc/en-us) tool [VariantsToTable](https://gatk.broadinstitute.org/hc/en-us/articles/360036711531-VariantsToTable) is then used by the Molecular Oncology Almanac to extract variants and desired columns which have passed the VQSR sensitivity filter and hard filters, as annotated by ExAC. The script `build_exac.sh` is then used to turn the vcf into a format readable by the Molecular Oncology Almanac.
 
 The following steps should be performed to prepare ExAC for use with MOAlmanac,
