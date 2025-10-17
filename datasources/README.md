@@ -5,7 +5,7 @@ Some files require download over Google. If you are unable to download through G
 
 | Name                                                    | Immediately ready for use from Github | Included in Docker |
 |---------------------------------------------------------|---------------------------------------|--------------------|
-| [COSMIC](cosmic/)                                       | :x:                                   | :white_check_mark: |
+| [COSMIC](cosmic/)                                       | :x:                                   | :x: |
 | [ExAC](exac/)                                           | :x:                                   | :white_check_mark: |
 | [American College of Medical Genetics v2 (ACMG)](acmg/) | :white_check_mark:                    | :white_check_mark: |
 | [Cancer cell line data](preclinical/)                   | :white_check_mark:                    | :white_check_mark: |
