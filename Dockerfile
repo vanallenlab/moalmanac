@@ -21,7 +21,9 @@ COPY datasources/acmg/ /datasources/acmg/
 COPY datasources/cancergenecensus/ /datasources/cancergenecensus/
 COPY datasources/cancerhotspots/ /datasources/cancerhotspots/
 COPY datasources/clinvar/ /datasources/clinvar/
-COPY datasources/cosmic/ /datasources/cosmic/
+COPY datasources/cosmic/CosmicMutantExport_empty.lite.txt /datasources/cosmic/
+COPY datasources/cosmic/prepare_cosmic.py /datasources/cosmic/
+COPY datasources/cosmic/README.md /datasources/cosmic/
 COPY datasources/exac/ /datasources/exac/
 COPY datasources/gsea_gene_sets/ /datasources/gsea_gene_sets/
 COPY datasources/hereditary/ /datasources/hereditary/
