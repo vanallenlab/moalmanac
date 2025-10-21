@@ -4,6 +4,8 @@ The Molecular Oncology Almanac's heuristic utilizes the [Cancer Gene Census (CGC
 ## About the Cancer Gene Census
 The Cancer Gene Census is developed and maintained by the [Wellcome Trust Sanger Institute](http://www.sanger.ac.uk/) and is a project of [COSMIC](http://cancer.sanger.ac.uk/cosmic) to catalogue genes with mutations that are causally implicated in cancer.
 
+The Cancer Gene Census is distributed under COSMIC's license and terms, [described here](https://www.cosmickb.org/terms/). Users must register and download the Cancer Gene Census datasource themselves for use with the Molecular Oncology Almanac.
+
 ## Usage: Downloading the Cancer Gene Census
 Data can be downloaded for the CGC from either [COSMIC's data downloads page](http://cancer.sanger.ac.uk/cosmic/download) or directly exported as a csv or tsv from [the CGC's webpage](http://cancer.sanger.ac.uk/census). Once downloaded, gene names can be extracted with the script `extract_genes.py`. For example,
 ```bash
