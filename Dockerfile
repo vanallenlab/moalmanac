@@ -18,7 +18,10 @@ RUN mkdir /docs/
 COPY moalmanac/test/ moalmanac/test/
 
 COPY datasources/acmg/ /datasources/acmg/
-COPY datasources/cancergenecensus/ /datasources/cancergenecensus/
+COPY datasources/cancergenecensus/cancer_gene_census_empty.genes.tsv /datasources/cancergenecensus/
+COPY datasources/cancergenecensus/diff_versions.py /datasources/cancergenecensus/
+COPY datasources/cancergenecensus/extract_genes.py /datasources/cancergenecensus/
+COPY datasources/cancergenecensus/README.md /datasources/cancergenecensus/
 COPY datasources/cancerhotspots/ /datasources/cancerhotspots/
 COPY datasources/clinvar/ /datasources/clinvar/
 COPY datasources/cosmic/CosmicMutantExport_empty.lite.txt /datasources/cosmic/
