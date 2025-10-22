@@ -1,5 +1,5 @@
 # Datasources used by MOAlmanac
-MOAlmanac leverages several datasources to annotate and evaluate molecular features for clinical and biological relevance. **If you are running this software after cloning it from Github, you will need to preprocess some before running this tool** because they either exceed GitHub's storage limit of 100 Mb or have licensing access restrictions. For instructions on how to build the relevant datasources, please refer to their respective folders in this directory.
+MOAlmanac leverages several datasources to annotate and evaluate molecular features for clinical and biological relevance. **If you are running this software after cloning it from Github, or using the Docker image, you will need to preprocess some before running this tool** because they either exceed GitHub's storage limit of 100 Mb or have licensing access restrictions. For instructions on how to build the relevant datasources, please refer to their respective folders in this directory.
 
 | Name                                                    | Immediately ready for use from Github | Included in Docker |
 |---------------------------------------------------------|---------------------------------------|--------------------|
