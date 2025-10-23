@@ -153,6 +153,13 @@ class CancerGeneCensus:
     def import_ds(cls, dbs):
         return Reader.safe_read(dbs['cgc_handle'], '\t', cls.column_map)
 
+    @classmethod
+    def check_if_empty(cls, dbs):
+        db = cls.import_ds(dbs=dbs)
+        if db.empty:
+            return True
+        else:
+            return False
 
 class CancerHotspots:
     gene = Datasources.feature

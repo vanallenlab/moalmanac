@@ -638,7 +638,8 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
                     add_line_break=True
                 )
 
-            if model_similarity_on:
+            cgc_empty = datasources.CancerGeneCensus.check_if_empty(dbs=dbs)
+            if model_similarity_on and not cgc_empty:
                 logger.Messages.general(
                     message="Performing genomic similarity to cancer cell lines enabled, processing..."
                 )
@@ -656,6 +657,11 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
                 )
                 logger.Messages.general(message="...genomic similarity to cancer cell lines summarized")
                 logger.Messages.general(message="Genomic similarity to cancer cell lines complete", add_line_break=True)
+            elif cgc_empty:
+                logger.Messages.general(
+                    message="Genomic similarity to cancer cell lines requires Cancer Gene Census database, skipping...",
+                    add_line_break=True,
+                )
             else:
                 logger.Messages.general(
                     message="Genomic similarity to cancer cell lines disabled, skipping...",
