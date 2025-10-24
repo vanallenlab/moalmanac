@@ -5,7 +5,7 @@ import sys
 
 
 def convert_dictionary_to_dataframe(dictionary):
-    return pandas.DataFrame.from_dict(dictionary, orient='index').T
+    return pandas.DataFrame.from_dict(dictionary, orient="index").T
 
 
 def convert_response_to_df(json):
@@ -25,36 +25,48 @@ def request_get(request_uri):
 
 
 def read_file(file, relevant_columns):
-    return pandas.read_csv(file, sep='\t', usecols=relevant_columns, low_memory=False)
+    return pandas.read_csv(file, sep="\t", usecols=relevant_columns, low_memory=False)
 
 
 def subset_oncotree(dataframe):
     column_map = {
-        'code': 'code',
-        'mainType': 'main_type',
-        'name': 'name',
-        'tissue': 'tissue'
+        "code": "code",
+        "mainType": "main_type",
+        "name": "name",
+        "tissue": "tissue",
     }
 
-    return dataframe.loc[:, column_map.keys()].sort_values('code').rename(columns=column_map)
+    return (
+        dataframe.loc[:, column_map.keys()]
+        .sort_values("code")
+        .rename(columns=column_map)
+    )
 
 
 def write_file(dataframe, date):
     output_name = create_output_filename(date)
-    dataframe.to_csv(output_name, sep='\t', index=False)
+    dataframe.to_csv(output_name, sep="\t", index=False)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='get oncotree', description='Download Oncotree for use with MOAlmanac')
-    parser.add_argument('--date', '-d', help='date of access; e.g. 2023-03-09', required=True)
+    parser = argparse.ArgumentParser(
+        prog="get oncotree", description="Download Oncotree for use with MOAlmanac"
+    )
+    parser.add_argument(
+        "--date", "-d", help="date of access; e.g. 2023-03-09", required=True
+    )
     args = parser.parse_args()
 
     endpoint = "http://oncotree.mskcc.org/api/tumorTypes"
     r = request_get(endpoint)
     if r.status_code == 200:
-        print(f"Request status code: {r.status_code}, Successful request from {endpoint}")
+        print(
+            f"Request status code: {r.status_code}, Successful request from {endpoint}"
+        )
     else:
-        print(f"Request status code: {r.status_code}, Unsuccessful request from {endpoint}")
+        print(
+            f"Request status code: {r.status_code}, Unsuccessful request from {endpoint}"
+        )
         print(r.content)
         sys.exit()
 
