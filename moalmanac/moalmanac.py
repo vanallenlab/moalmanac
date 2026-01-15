@@ -3,6 +3,7 @@ import datetime
 import time
 import os
 import subprocess
+import sys
 
 import annotator
 import datasources
@@ -1128,17 +1129,35 @@ if __name__ == "__main__":
     }
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
+    try:
+        config_ini = Ini.read(
+            args.config, extended_interpolation=False, convert_to_dictionary=False
+        )
 
-    config_ini = Ini.read(args.config, extended_interpolation=False, convert_to_dictionary=False)
+        db_paths = Ini.read(
+            args.dbs,
+            extended_interpolation=True,
+            convert_to_dictionary=True,
+            resolve_paths=True,
+        )
+        db_paths = db_paths['paths']
 
-    db_paths = Ini.read(args.dbs, extended_interpolation=True, convert_to_dictionary=True, resolve_paths=True)
-    db_paths = db_paths['paths']
-
-    if args.preclinical_dbs:
-        preclinical_db_paths = Ini.read(args.preclinical_dbs, extended_interpolation=True, convert_to_dictionary=True, resolve_paths=True)
-        preclinical_db_paths = preclinical_db_paths['paths']
-    else:
-        preclinical_db_paths = None
+        if args.preclinical_dbs:
+            preclinical_db_paths = Ini.read(
+                args.preclinical_dbs,
+                extended_interpolation=True,
+                convert_to_dictionary=True,
+                resolve_paths=True,
+            )
+            preclinical_db_paths = preclinical_db_paths['paths']
+        else:
+            preclinical_db_paths = None
+    except FileNotFoundError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(2)
+    except RuntimeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(2)
 
     main(
         patient=patient_dict,

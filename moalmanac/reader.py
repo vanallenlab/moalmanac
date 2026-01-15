@@ -17,13 +17,23 @@ class Ini:
 
     @staticmethod
     def load(path, extended_interpolation=False):
+        path = pathlib.Path(path)
+
+        if not path.exists():
+            raise FileNotFoundError(f"INI file not found: {path}")
+        if not path.is_file():
+            raise FileNotFoundError(f"INI path is not a file: {path}")
+
         if extended_interpolation:
             config = configparser.ConfigParser(
                 interpolation=configparser.ExtendedInterpolation()
             )
         else:
             config = configparser.ConfigParser()
-        config.read(path)
+
+        read_okay = config.read(path)
+        if not read_okay:
+            raise RuntimeError(f"Failed to read Ini file: {path}")
         return config
 
     @classmethod
