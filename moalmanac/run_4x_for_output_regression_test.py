@@ -7,8 +7,8 @@ from datetime import date
 
 from reader import Ini
 
-# pre_or_post_code_changes = "pre"
-pre_or_post_code_changes = "post"
+pre_or_post_code_changes = "pre"
+# pre_or_post_code_changes = "post"
 
 metadata_dictionary = {
     'patient_id': 'example',
