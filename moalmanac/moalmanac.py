@@ -895,11 +895,11 @@ if __name__ == "__main__":
 
     config_ini = Ini.read(args.config, extended_interpolation=False, convert_to_dictionary=False)
 
-    db_paths = Ini.read(args.dbs, extended_interpolation=True, convert_to_dictionary=True)
+    db_paths = Ini.read(args.dbs, extended_interpolation=True, convert_to_dictionary=True, resolve_paths=True)
     db_paths = db_paths['paths']
 
     if args.preclinical_dbs:
-        preclinical_db_paths = Ini.read(args.preclinical_dbs, extended_interpolation=True, convert_to_dictionary=True)
+        preclinical_db_paths = Ini.read(args.preclinical_dbs, extended_interpolation=True, convert_to_dictionary=True, resolve_paths=True)
         preclinical_db_paths = preclinical_db_paths['paths']
     else:
         preclinical_db_paths = None

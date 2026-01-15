@@ -1,35 +1,72 @@
 import configparser
 import json
 import pandas as pd
+import pathlib
 import pickle
 
 
 class Ini:
-    @classmethod
-    def read(cls, path, extended_interpolation=False, convert_to_dictionary=False):
-        ini = cls.load(path, extended_interpolation=extended_interpolation)
-        if convert_to_dictionary:
-            return cls.convert_ini_to_dictionary(ini)
-        else:
-            return ini
-
     @staticmethod
     def convert_ini_to_dictionary(ini):
         dictionary = {}
         for section in ini.sections():
             dictionary[section] = {}
-            for (key, value) in ini.items(section):
+            for key, value in ini.items(section):
                 dictionary[section][key] = value
         return dictionary
 
     @staticmethod
     def load(path, extended_interpolation=False):
         if extended_interpolation:
-            config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+            config = configparser.ConfigParser(
+                interpolation=configparser.ExtendedInterpolation()
+            )
         else:
             config = configparser.ConfigParser()
         config.read(path)
         return config
+
+    @classmethod
+    def read(
+        cls,
+        path,
+        extended_interpolation=False,
+        convert_to_dictionary=False,
+        resolve_paths=False,
+    ):
+        ini = cls.load(path, extended_interpolation=extended_interpolation)
+        if convert_to_dictionary:
+            data = cls.convert_ini_to_dictionary(ini)
+            if resolve_paths:
+                base = pathlib.Path(path).resolve().parent.parent
+                data = cls.resolve_paths_dict(data=data, base_directory=base)
+            return data
+        else:
+            return ini
+
+    @staticmethod
+    def resolve_paths_dict(data: dict, base_directory: pathlib.Path) -> dict:
+        """
+        Resolve all values under any 'paths' section in Ini to absolute paths.
+        """
+        resolved = dict(data)
+
+        if "paths" not in resolved:
+            return resolved
+
+        out = {}
+        for key, value in resolved["paths"].items():
+            if value is None:
+                out[key] = value
+                continue
+
+            p = pathlib.Path(value)
+            if not p.is_absolute():
+                revised_path = (base_directory / p).resolve()
+            out[key] = str(revised_path)
+
+        resolved["paths"] = out
+        return resolved
 
 
 class Reader:
@@ -47,8 +84,12 @@ class Reader:
     @staticmethod
     def check_column_names(df, columns_map):
         for column_name in columns_map.keys():
-            assert str.lower(column_name) in df.columns.str.lower(), \
-                'Expected column %s not found among %s' % (str.lower(column_name), df.columns.str.lower())
+            assert (
+                str.lower(column_name) in df.columns.str.lower()
+            ), 'Expected column %s not found among %s' % (
+                str.lower(column_name),
+                df.columns.str.lower(),
+            )
 
     @staticmethod
     def read(handle, delimiter, **kwargs):
@@ -81,13 +122,27 @@ class Reader:
         lowercase_column_map = cls.return_keys_as_lowercase(column_map)
         if comment_character != '':
             n_comment_rows = cls.check_comment_rows(handle, comment_character)
-            cls.check_column_names(cls.read(handle, delimiter, nrows=3, header=n_comment_rows, **kwargs), column_map)
-            df = cls.read(handle, delimiter, header=n_comment_rows,
-                          usecols=(lambda x: str.lower(str(x)) in lowercase_column_map.keys()), **kwargs)
+            cls.check_column_names(
+                cls.read(handle, delimiter, nrows=3, header=n_comment_rows, **kwargs),
+                column_map,
+            )
+            df = cls.read(
+                handle,
+                delimiter,
+                header=n_comment_rows,
+                usecols=(lambda x: str.lower(str(x)) in lowercase_column_map.keys()),
+                **kwargs,
+            )
         else:
-            cls.check_column_names(cls.read(handle, delimiter, nrows=3, **kwargs), column_map)
-            df = cls.read(handle, delimiter,
-                          usecols=(lambda x: str.lower(str(x)) in lowercase_column_map.keys()), **kwargs)
+            cls.check_column_names(
+                cls.read(handle, delimiter, nrows=3, **kwargs), column_map
+            )
+            df = cls.read(
+                handle,
+                delimiter,
+                usecols=(lambda x: str.lower(str(x)) in lowercase_column_map.keys()),
+                **kwargs,
+            )
         df = cls.return_columns_as_lowercase(df)
         df = df.rename(columns=lowercase_column_map)
         return df
