@@ -2,6 +2,7 @@ import argparse
 import datetime
 import time
 import os
+import pathlib
 import subprocess
 import sys
 
@@ -287,6 +288,32 @@ class Load:
                 handle=path, config=config
             )
         return accept, reject
+
+    @staticmethod
+    def validate_and_log_paths(input_files_dictionary):
+        for key, value in input_files_dictionary.items():
+            if value is None or (isinstance(value, str) and value.strip() == ""):
+                logger.Messages.general(
+                    message=f"{key}={value} is empty and will not be loaded."
+                )
+                continue
+            if not isinstance(value, str):
+                logger.Messages.general(
+                    message=f"{key}={value} has an unsupported type {type(value).__name__} and will not be loaded."
+                )
+                continue
+            path = pathlib.Path(value)
+            if path.exists():
+                logger.Messages.general(
+                    message=f"{key}={value} exists and will attempt to load."
+                )
+            else:
+                logger.Messages.general(
+                    message=(
+                        f"[INPUT WARNING] {key}={value} does NOT exist. "
+                        "This input will be loaded as an empty dataframe and downstream results may be incomplete."
+                    )
+                )
 
 
 class Process:
@@ -584,12 +611,12 @@ def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
     logger.Messages.start()
     logger.Messages.general(message=f"Current working directory: {os.getcwd()}")
     logger.Messages.header(label="Inputs")
-    input_dictonaries = [
+    input_dictionaries = [
         ("Patient metadata", patient),
         ("Input files", inputs),
         ("Datasources", dbs),
     ]
-    for label, dictionary in input_dictonaries:
+    for label, dictionary in input_dictionaries:
         logger.Messages.inputs(label=label, dictionary=dictionary)
 
     if dbs_preclinical:
@@ -607,6 +634,9 @@ def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
         logger.Messages.inputs(
             label=f"Config section: {section}", dictionary=section_dictionary
         )
+
+    logger.Messages.header(label='Validating input file paths')
+    Load.validate_and_log_paths(input_files_dictionary=inputs)
 
     logger.Messages.general(
         message="Logging for inputs provided complete.", add_line_break=True
