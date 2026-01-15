@@ -73,7 +73,7 @@ class Reader:
     @staticmethod
     def check_comment_rows(handle, comment_character):
         skip_rows = 0
-        with open(handle, 'r') as f:
+        with open(handle, "r") as f:
             for line in f:
                 if line.startswith(comment_character):
                     skip_rows += 1
@@ -93,16 +93,16 @@ class Reader:
 
     @staticmethod
     def read(handle, delimiter, **kwargs):
-        return pd.read_csv(handle, sep=delimiter, dtype='object', **kwargs)
+        return pd.read_csv(handle, sep=delimiter, dtype="object", **kwargs)
 
     @staticmethod
     def read_json(handle):
-        with open(handle, 'r') as json_handle:
+        with open(handle, "r") as json_handle:
             return json.load(json_handle)
 
     @staticmethod
     def read_pickle(handle):
-        with open(handle, 'rb') as pickle_handle:
+        with open(handle, "rb") as pickle_handle:
             return pickle.load(pickle_handle)
 
     @staticmethod
@@ -118,9 +118,9 @@ class Reader:
         return new_dictionary
 
     @classmethod
-    def safe_read(cls, handle, delimiter, column_map, comment_character='', **kwargs):
+    def safe_read(cls, handle, delimiter, column_map, comment_character="", **kwargs):
         lowercase_column_map = cls.return_keys_as_lowercase(column_map)
-        if comment_character != '':
+        if comment_character != "":
             n_comment_rows = cls.check_comment_rows(handle, comment_character)
             cls.check_column_names(
                 cls.read(handle, delimiter, nrows=3, header=n_comment_rows, **kwargs),

@@ -19,11 +19,11 @@ class OntologyMapper(object):
         elif code_match:
             idx = cls.get_index_match(df, cls.code, tumor_type)
         else:
-            return {cls.ontology: tumor_type, cls.code: 'NA'}
+            return {cls.ontology: tumor_type, cls.code: "NA"}
 
         return {
             cls.ontology: df.loc[idx, cls.ontology],
-            cls.code: df.loc[idx, cls.code]
+            cls.code: df.loc[idx, cls.code],
         }
 
     @classmethod

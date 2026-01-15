@@ -19,47 +19,47 @@ class Investigator(object):
     gene = Preclinical.gene
     partner = Preclinical.partner
 
-    preclinical_section = 'preclinical'
-    n_wt = COLNAMES[preclinical_section]['n_wt']
-    n_mut = COLNAMES[preclinical_section]['n_mut']
-    wt_samples = COLNAMES[preclinical_section]['wt_samples']
-    mut_samples = COLNAMES[preclinical_section]['mut_samples']
+    preclinical_section = "preclinical"
+    n_wt = COLNAMES[preclinical_section]["n_wt"]
+    n_mut = COLNAMES[preclinical_section]["n_mut"]
+    wt_samples = COLNAMES[preclinical_section]["wt_samples"]
+    mut_samples = COLNAMES[preclinical_section]["mut_samples"]
 
-    n_cell_lines_considered = COLNAMES[preclinical_section]['n_cell_lines_considered']
-    n_wt_tested = COLNAMES[preclinical_section]['n_wt_tested']
-    n_mut_tested = COLNAMES[preclinical_section]['n_mut_tested']
-    wt_values = COLNAMES[preclinical_section]['wt_values']
-    mut_values = COLNAMES[preclinical_section]['mut_values']
-    wt_median = COLNAMES[preclinical_section]['wt_median']
-    mut_median = COLNAMES[preclinical_section]['mut_median']
-    wt_mean = COLNAMES[preclinical_section]['wt_mean']
-    mut_mean = COLNAMES[preclinical_section]['mut_mean']
-    wt_std = COLNAMES[preclinical_section]['wt_std']
-    mut_std = COLNAMES[preclinical_section]['mut_std']
+    n_cell_lines_considered = COLNAMES[preclinical_section]["n_cell_lines_considered"]
+    n_wt_tested = COLNAMES[preclinical_section]["n_wt_tested"]
+    n_mut_tested = COLNAMES[preclinical_section]["n_mut_tested"]
+    wt_values = COLNAMES[preclinical_section]["wt_values"]
+    mut_values = COLNAMES[preclinical_section]["mut_values"]
+    wt_median = COLNAMES[preclinical_section]["wt_median"]
+    mut_median = COLNAMES[preclinical_section]["mut_median"]
+    wt_mean = COLNAMES[preclinical_section]["wt_mean"]
+    mut_mean = COLNAMES[preclinical_section]["mut_mean"]
+    wt_std = COLNAMES[preclinical_section]["wt_std"]
+    mut_std = COLNAMES[preclinical_section]["mut_std"]
 
-    statistic = COLNAMES[preclinical_section]['statistic']
-    pvalue = COLNAMES[preclinical_section]['pvalue']
+    statistic = COLNAMES[preclinical_section]["statistic"]
+    pvalue = COLNAMES[preclinical_section]["pvalue"]
 
-    dtype = COLNAMES[preclinical_section]['dtype']
-    feature = COLNAMES[preclinical_section]['feature']
-    feature_type = COLNAMES[preclinical_section]['feature_type']
-    alteration_type = COLNAMES[preclinical_section]['alteration_type']
-    alteration = COLNAMES[preclinical_section]['alteration']
-    feature_display = COLNAMES[preclinical_section]['feature_display']
-    therapy = COLNAMES[preclinical_section]['therapy']
-    therapy_mapped = COLNAMES[preclinical_section]['therapy_mapped']
-    sensitive_therapy = COLNAMES[preclinical_section]['sensitive_therapy']
-    base64 = COLNAMES[preclinical_section]['base64']
-    patient_id = COLNAMES[preclinical_section]['patient_id']
-    use_column = COLNAMES[preclinical_section]['use_column']
-    model_id = COLNAMES[preclinical_section]['model_id']
-    ln_ic50 = COLNAMES[preclinical_section]['ln_ic50']
-    ic50 = COLNAMES[preclinical_section]['ic50']
-    tested_subfeature = COLNAMES[preclinical_section]['tested_subfeature']
+    dtype = COLNAMES[preclinical_section]["dtype"]
+    feature = COLNAMES[preclinical_section]["feature"]
+    feature_type = COLNAMES[preclinical_section]["feature_type"]
+    alteration_type = COLNAMES[preclinical_section]["alteration_type"]
+    alteration = COLNAMES[preclinical_section]["alteration"]
+    feature_display = COLNAMES[preclinical_section]["feature_display"]
+    therapy = COLNAMES[preclinical_section]["therapy"]
+    therapy_mapped = COLNAMES[preclinical_section]["therapy_mapped"]
+    sensitive_therapy = COLNAMES[preclinical_section]["sensitive_therapy"]
+    base64 = COLNAMES[preclinical_section]["base64"]
+    patient_id = COLNAMES[preclinical_section]["patient_id"]
+    use_column = COLNAMES[preclinical_section]["use_column"]
+    model_id = COLNAMES[preclinical_section]["model_id"]
+    ln_ic50 = COLNAMES[preclinical_section]["ln_ic50"]
+    ic50 = COLNAMES[preclinical_section]["ic50"]
+    tested_subfeature = COLNAMES[preclinical_section]["tested_subfeature"]
 
     @staticmethod
     def list_feature_combinations(split_feature, feature_length):
-        return ['.'.join(split_feature[:i]) for i in range(1, feature_length + 1)]
+        return [".".join(split_feature[:i]) for i in range(1, feature_length + 1)]
 
     @staticmethod
     def split_string(string, delimiter):
@@ -68,7 +68,7 @@ class Investigator(object):
 
 class SensitivityDictionary(Investigator):
     rounding_places = 3
-    fill_na_value = ''
+    fill_na_value = ""
 
     @classmethod
     def calculate_series_exp(cls, series):
@@ -98,7 +98,7 @@ class SensitivityDictionary(Investigator):
         if (len(series1) == 0) | (len(series2) == 0):
             return np.nan, np.nan
         else:
-            return stats.mannwhitneyu(series1, series2, alternative='two-sided')
+            return stats.mannwhitneyu(series1, series2, alternative="two-sided")
 
     @classmethod
     def create(cls, dbs, df_actionable, config):
@@ -111,14 +111,19 @@ class SensitivityDictionary(Investigator):
         mappings = dbs[cls.mappings]
 
         input_dtypes = [
-            config['feature_types']['mut'],
-            config['feature_types']['cna'],
-            config['feature_types']['fusion']
+            config["feature_types"]["mut"],
+            config["feature_types"]["cna"],
+            config["feature_types"]["fusion"],
         ]
 
-        samples = Preclinical.generate_sample_list(summary, cls.use_column, cls.model_id)
+        samples = Preclinical.generate_sample_list(
+            summary, cls.use_column, cls.model_id
+        )
         idx_feature_type = df_actionable[cls.feature_type].isin(input_dtypes)
-        idx_sensitive = ~(df_actionable[cls.sensitive_therapy].isnull() | df_actionable[cls.sensitive_therapy].eq(''))
+        idx_sensitive = ~(
+            df_actionable[cls.sensitive_therapy].isnull()
+            | df_actionable[cls.sensitive_therapy].eq("")
+        )
 
         dictionary = {}
         for index in df_actionable[idx_feature_type & idx_sensitive].index:
@@ -129,30 +134,40 @@ class SensitivityDictionary(Investigator):
             feature_display = df_actionable.loc[index, cls.feature_display]
             index_dict = {}
             if mapped:
-                feature_dictionary = cls.split_samples_by_wt_mut(df_actionable.loc[index, :], dbs, samples, config)
+                feature_dictionary = cls.split_samples_by_wt_mut(
+                    df_actionable.loc[index, :], dbs, samples, config
+                )
                 features = list(feature_dictionary)
                 for therapy in mapped:
                     therapy_dict = {}
                     for feature in features:
                         feature_dict_copy = feature_dictionary.copy()
-                        wt_samples = feature_dictionary[feature]['samples'][0]
-                        mut_samples = feature_dictionary[feature]['samples'][1]
-                        drug_dict = cls.create_drug_dict(gdsc, therapy, wt_samples, mut_samples)
-                        feature_dict_copy.update({'comparison': drug_dict})
+                        wt_samples = feature_dictionary[feature]["samples"][0]
+                        mut_samples = feature_dictionary[feature]["samples"][1]
+                        drug_dict = cls.create_drug_dict(
+                            gdsc, therapy, wt_samples, mut_samples
+                        )
+                        feature_dict_copy.update({"comparison": drug_dict})
                         therapy_dict.update({feature: feature_dict_copy})
                     figure = PreclinicalEfficacy.draw(therapy_dict, therapy, features)
                     figure_base64 = PreclinicalEfficacy.convert_figure_base64(figure)
-                    therapy_dict.update({'figure': figure})
-                    therapy_dict.update({'figure_name': f"{feature_display}.{therapy.split(' ')[0]}"})
-                    therapy_dict.update({'figure_base64': figure_base64})
+                    therapy_dict.update({"figure": figure})
+                    therapy_dict.update(
+                        {"figure_name": f"{feature_display}.{therapy.split(' ')[0]}"}
+                    )
+                    therapy_dict.update({"figure_base64": figure_base64})
                     index_dict.update({therapy: therapy_dict})
                 dictionary.update({index: index_dict})
         return dictionary
 
     @classmethod
     def create_drug_dict(cls, gdsc, therapy, wt_samples, mut_samples):
-        wt_ln_ic50 = cls.extract_ln_ic50s(gdsc, cls.therapy, therapy, wt_samples, cls.ln_ic50)
-        mut_ln_ic50 = cls.extract_ln_ic50s(gdsc, cls.therapy, therapy, mut_samples, cls.ln_ic50)
+        wt_ln_ic50 = cls.extract_ln_ic50s(
+            gdsc, cls.therapy, therapy, wt_samples, cls.ln_ic50
+        )
+        mut_ln_ic50 = cls.extract_ln_ic50s(
+            gdsc, cls.therapy, therapy, mut_samples, cls.ln_ic50
+        )
         wt_series = cls.calculate_series_exp(wt_ln_ic50)
         mut_series = cls.calculate_series_exp(mut_ln_ic50)
         statistic, p_value = cls.calculate_mann_whitney_u(wt_series, mut_series)
@@ -170,7 +185,7 @@ class SensitivityDictionary(Investigator):
             cls.wt_std: cls.calculate_series_std(wt_series),
             cls.mut_std: cls.calculate_series_std(mut_series),
             cls.statistic: cls.round_value(statistic, cls.rounding_places),
-            cls.pvalue: cls.round_scientific_notation(p_value, cls.rounding_places)
+            cls.pvalue: cls.round_scientific_notation(p_value, cls.rounding_places),
         }
 
     @classmethod
@@ -191,13 +206,15 @@ class SensitivityDictionary(Investigator):
     @classmethod
     def generate_feature_string(cls, list_of_labels):
         list_of_labels = cls.filter_empty_values(list_of_labels)
-        return ' '.join(list_of_labels)
+        return " ".join(list_of_labels)
 
     @classmethod
     def generate_feature_strings(cls, list_of_list_of_labels, series):
         feature_strings = []
         for list_of_labels in list_of_list_of_labels:
-            feature_strings.append(cls.generate_feature_string(series.loc[list_of_labels].tolist()))
+            feature_strings.append(
+                cls.generate_feature_string(series.loc[list_of_labels].tolist())
+            )
         return feature_strings
 
     @classmethod
@@ -209,11 +226,13 @@ class SensitivityDictionary(Investigator):
             mutated_samples = pd.Series(mutated_samples).dropna().tolist()
             wt_samples = pd.Series(wt_samples).dropna().tolist()
             dictionary[feature_string] = {}
-            dictionary[feature_string]['samples'] = [wt_samples, mutated_samples]
+            dictionary[feature_string]["samples"] = [wt_samples, mutated_samples]
         return dictionary
 
     @classmethod
-    def select_split_function(cls, feature_type, variant_string, copy_number_string, fusion_string):
+    def select_split_function(
+        cls, feature_type, variant_string, copy_number_string, fusion_string
+    ):
         if feature_type == variant_string:
             return cls.split_samples_for_variants
         elif feature_type == copy_number_string:
@@ -225,7 +244,7 @@ class SensitivityDictionary(Investigator):
 
     @classmethod
     def split_exit(cls, dbs, series, samples):
-        msg = f'Invalid feature type, {series.loc[cls.feature_type]}, passed when evaluating preclinical efficacy.'
+        msg = f"Invalid feature type, {series.loc[cls.feature_type]}, passed when evaluating preclinical efficacy."
         print(msg)
         exit()
 
@@ -234,15 +253,11 @@ class SensitivityDictionary(Investigator):
         feature_type = series.loc[cls.feature_type]
         split_function = cls.select_split_function(
             feature_type=feature_type,
-            variant_string=config['feature_types']['mut'],
-            copy_number_string=config['feature_types']['cna'],
-            fusion_string=config['feature_types']['fusion']
+            variant_string=config["feature_types"]["mut"],
+            copy_number_string=config["feature_types"]["cna"],
+            fusion_string=config["feature_types"]["fusion"],
         )
-        return split_function(
-            dbs=dbs,
-            series=series,
-            all_samples=samples
-        )
+        return split_function(dbs=dbs, series=series, all_samples=samples)
 
     @classmethod
     def split_samples_for_copy_numbers(cls, dbs, series, all_samples):
@@ -251,19 +266,21 @@ class SensitivityDictionary(Investigator):
 
         feature_cond = genes[cls.feature].eq(series.loc[cls.feature])
         feature_type_cond = db[cls.feature].eq(series.loc[cls.feature])
-        alteration_type_cond = feature_type_cond & db[cls.alteration_type].eq(series.loc[cls.alteration_type])
+        alteration_type_cond = feature_type_cond & db[cls.alteration_type].eq(
+            series.loc[cls.alteration_type]
+        )
 
         feature_string_labels = [
             [cls.feature],
             [cls.feature, cls.feature_type],
-            [cls.feature, cls.feature_type, cls.alteration_type]
+            [cls.feature, cls.feature_type, cls.alteration_type],
         ]
         feature_strings = cls.generate_feature_strings(feature_string_labels, series)
 
         groups = [
             (genes, feature_cond, feature_strings[0]),
             (db, feature_type_cond, feature_strings[1]),
-            (db, alteration_type_cond, feature_strings[2])
+            (db, alteration_type_cond, feature_strings[2]),
         ]
         return cls.populate_feature_dictionary(groups, all_samples)
 
@@ -272,8 +289,8 @@ class SensitivityDictionary(Investigator):
         genes = dbs[cls.gene]
         db = dbs[cls.fusions]
 
-        gene0 = series.loc[cls.alteration].split('--')[0]
-        gene1 = series.loc[cls.alteration].split('--')[1]
+        gene0 = series.loc[cls.alteration].split("--")[0]
+        gene1 = series.loc[cls.alteration].split("--")[1]
 
         gene0_cond = genes[cls.feature].eq(gene0)
         gene1_cond = genes[cls.feature].eq(gene1)
@@ -284,9 +301,9 @@ class SensitivityDictionary(Investigator):
         feature_strings = [
             gene0,
             gene1,
-            '{gene} Fusions'.format(gene=gene0),
-            '{gene} Fusions'.format(gene=gene1),
-            '{gene}--{partner}'.format(gene=gene0, partner=gene1)
+            "{gene} Fusions".format(gene=gene0),
+            "{gene} Fusions".format(gene=gene1),
+            "{gene}--{partner}".format(gene=gene0, partner=gene1),
         ]
 
         groups = [
@@ -294,7 +311,7 @@ class SensitivityDictionary(Investigator):
             (genes, gene1_cond, feature_strings[1]),
             (db, gene0_feature_type_cond, feature_strings[2]),
             (db, gene1_feature_type_cond, feature_strings[3]),
-            (db, fusion_cond, feature_strings[4])
+            (db, fusion_cond, feature_strings[4]),
         ]
         return cls.populate_feature_dictionary(groups, all_samples)
 
@@ -305,22 +322,28 @@ class SensitivityDictionary(Investigator):
 
         feature_cond = genes[cls.feature].eq(series.loc[cls.feature])
         feature_type_cond = db[cls.feature].eq(series.loc[cls.feature])
-        alteration_type_cond = feature_type_cond & db[cls.alteration_type].eq(series.loc[cls.alteration_type])
-        alteration_cond = alteration_type_cond & db[cls.alteration].eq(series.loc[cls.alteration])
+        alteration_type_cond = feature_type_cond & db[cls.alteration_type].eq(
+            series.loc[cls.alteration_type]
+        )
+        alteration_cond = alteration_type_cond & db[cls.alteration].eq(
+            series.loc[cls.alteration]
+        )
 
         feature_string_labels = [
             [cls.feature],
             [cls.feature, cls.feature_type],
             [cls.feature, cls.feature_type, cls.alteration_type],
-            [cls.feature, cls.feature_type, cls.alteration_type, cls.alteration]
+            [cls.feature, cls.feature_type, cls.alteration_type, cls.alteration],
         ]
-        feature_strings = cls.generate_feature_strings(feature_string_labels, series.fillna(cls.fill_na_value))
+        feature_strings = cls.generate_feature_strings(
+            feature_string_labels, series.fillna(cls.fill_na_value)
+        )
 
         groups = [
             (genes, feature_cond, feature_strings[0]),
             (db, feature_type_cond, feature_strings[1]),
             (db, alteration_type_cond, feature_strings[2]),
-            (db, alteration_cond, feature_strings[3])
+            (db, alteration_cond, feature_strings[3]),
         ]
         return cls.populate_feature_dictionary(groups, all_samples)
 
@@ -341,18 +364,29 @@ class SensitivityDictionary(Investigator):
         if value > 0.0001:
             return cls.round_value(value, places)
         else:
-            return ''.join(['{:0.', str(places), 'e}']).format(value)
+            return "".join(["{:0.", str(places), "e}"]).format(value)
 
 
 class SummaryDataFrame(Investigator):
     feature_columns = [Investigator.n_mut, Investigator.n_wt]
-    therapy_columns = [Investigator.n_mut_tested, Investigator.n_wt_tested,
-                       Investigator.mut_median, Investigator.mut_mean, Investigator.mut_std,
-                       Investigator.wt_median, Investigator.wt_mean, Investigator.wt_std,
-                       Investigator.pvalue, Investigator.statistic]
-    columns = [Investigator.patient_id,
-               Investigator.feature_display, Investigator.tested_subfeature,
-               Investigator.therapy]
+    therapy_columns = [
+        Investigator.n_mut_tested,
+        Investigator.n_wt_tested,
+        Investigator.mut_median,
+        Investigator.mut_mean,
+        Investigator.mut_std,
+        Investigator.wt_median,
+        Investigator.wt_mean,
+        Investigator.wt_std,
+        Investigator.pvalue,
+        Investigator.statistic,
+    ]
+    columns = [
+        Investigator.patient_id,
+        Investigator.feature_display,
+        Investigator.tested_subfeature,
+        Investigator.therapy,
+    ]
     columns += feature_columns + therapy_columns
 
     @classmethod
@@ -361,10 +395,14 @@ class SummaryDataFrame(Investigator):
         for index in dictionary.keys():
             for therapy in dictionary[index].keys():
                 for subfeature in list(dictionary[index][therapy].keys()):
-                    if 'figure' in subfeature:
+                    if "figure" in subfeature:
                         continue
-                    series = pd.Series(dictionary[index][therapy][subfeature]['comparison'])
-                    series.loc[Investigator.feature_display] = dataframe.loc[index, Investigator.feature_display]
+                    series = pd.Series(
+                        dictionary[index][therapy][subfeature]["comparison"]
+                    )
+                    series.loc[Investigator.feature_display] = dataframe.loc[
+                        index, Investigator.feature_display
+                    ]
                     series.loc[Investigator.tested_subfeature] = subfeature
                     series.loc[Investigator.therapy] = therapy
                     series.loc[Investigator.patient_id] = patient_id

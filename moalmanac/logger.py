@@ -15,9 +15,9 @@ class Logger:
             logger.handlers.clear()
         logging.basicConfig(
             filename=filename,
-            filemode='w',
+            filemode="w",
             format="%(asctime)s - %(levelname)s - %(message)s",
-            level=config['logging']['level']
+            level=config["logging"]["level"],
         )
 
     @classmethod
