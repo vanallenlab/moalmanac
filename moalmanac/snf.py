@@ -18,7 +18,12 @@ with Python 3.12+ and updated versions of NumPy and scikit-learn.
 import numpy as np
 from scipy.spatial.distance import cdist
 from scipy import sparse, stats
-from sklearn.utils.validation import check_array, check_symmetric, check_consistent_length
+from sklearn.utils.validation import (
+    check_array,
+    check_symmetric,
+    check_consistent_length,
+)
+
 
 class SNF:
     @classmethod
@@ -82,7 +87,7 @@ class SNF:
                 yield check_array(d, ensure_all_finite=False), m
 
     @classmethod
-    def make_affinity(cls, *data, metric='sqeuclidean', K=20, mu=0.5, normalize=True):
+    def make_affinity(cls, *data, metric="sqeuclidean", K=20, mu=0.5, normalize=True):
         r"""
         Constructs affinity (i.e., similarity) matrix from `data`
 
@@ -229,7 +234,7 @@ class SNF:
 
         # sort array and get average distance to K nearest neighbors
         T = np.sort(dist, axis=1)
-        TT = np.vstack(T[:, 1:K + 1].mean(axis=1) + np.spacing(1))
+        TT = np.vstack(T[:, 1 : K + 1].mean(axis=1) + np.spacing(1))
 
         # compute sigma (see equation in Notes)
         sigma = (TT + TT.T + dist) / 3
@@ -400,12 +405,17 @@ class SNF:
 
                 # Modified by Van Allen lab
                 ## safe denominator
-                denominator = np.maximum(n_aff -1, 1)
+                denominator = np.maximum(n_aff - 1, 1)
 
                 ## Compute aff0 with safe broadcasting
-                with np.errstate(divide='ignore', invalid='ignore', over='ignore'):
+                with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
                     aff0 = nzW @ (Wsum - aw) @ nzW.T
-                    aff0 = np.divide(aff0, denominator, out=np.zeros_like(aff0), where=denominator!=0)
+                    aff0 = np.divide(
+                        aff0,
+                        denominator,
+                        out=np.zeros_like(aff0),
+                        where=denominator != 0,
+                    )
 
                 # ensure diagonal retains highest similarity
                 aff[n] = cls._B0_normalized(aff0, alpha=alpha)
@@ -471,7 +481,7 @@ class SNF:
             likelihood of group membership
         """
 
-        W_norm, Y_orig = cls._dnorm(W, 'ave'), Y.copy()
+        W_norm, Y_orig = cls._dnorm(W, "ave"), Y.copy()
         train_index = Y.sum(axis=1) == 1
 
         for iteration in range(t):
@@ -482,7 +492,7 @@ class SNF:
         return Y
 
     @classmethod
-    def _dnorm(cls, W, norm='ave'):
+    def _dnorm(cls, W, norm="ave"):
         """
         Normalizes a symmetric kernel `W`
 
@@ -500,16 +510,15 @@ class SNF:
             Normalized `W`
         """
 
-        if norm not in ['ave', 'gph']:
-            raise ValueError('Provided `norm` {} not in [\'ave\', \'gph\'].'
-                             .format(norm))
+        if norm not in ["ave", "gph"]:
+            raise ValueError("Provided `norm` {} not in ['ave', 'gph'].".format(norm))
 
         D = W.sum(axis=1) + np.spacing(1)
 
-        if norm == 'ave':
-            W_norm = sparse.diags(1. / D) @ W
+        if norm == "ave":
+            W_norm = sparse.diags(1.0 / D) @ W
         else:
-            D = sparse.diags(1. / np.sqrt(D))
+            D = sparse.diags(1.0 / np.sqrt(D))
             W_norm = D @ (W @ D)
 
         return W_norm
@@ -553,21 +562,26 @@ class SNF:
         try:
             check_consistent_length(train, test)
         except ValueError:
-            raise ValueError('Training and testing set must have same number of '
-                             'data types.')
+            raise ValueError(
+                "Training and testing set must have same number of " "data types."
+            )
         if not all([len(labels) == len(t) for t in train]):
-            raise ValueError('Training data must have the same number of subjects '
-                             'as provided labels.')
+            raise ValueError(
+                "Training data must have the same number of subjects "
+                "as provided labels."
+            )
 
         # generate affinity matrices for stacked train/test data sets
         affinities = []
-        for (tr, te) in zip(train, test):
+        for tr, te in zip(train, test):
             try:
                 check_consistent_length(tr.T, te.T)
             except ValueError:
-                raise ValueError('Train and test data must have same number of '
-                                 'features for each data type. Make sure to '
-                                 'supply data types in the same order.')
+                raise ValueError(
+                    "Train and test data must have same number of "
+                    "features for each data type. Make sure to "
+                    "supply data types in the same order."
+                )
             affinities += [cls.make_affinity(np.row_stack([tr, te]), K=K, mu=mu)]
 
         # fuse with SNF
@@ -582,7 +596,7 @@ class SNF:
 
         # propagate labels from train data to test data using SNF fused array
         propagated_labels = cls._label_prop(fused_aff, all_labels, t=1000)
-        predicted_labels = groups[propagated_labels[len(train[0]):].argmax(axis=1)]
+        predicted_labels = groups[propagated_labels[len(train[0]) :].argmax(axis=1)]
 
         return predicted_labels
 
