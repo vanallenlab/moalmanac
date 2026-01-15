@@ -1,6 +1,7 @@
 import moalmanac
 import os
 import subprocess
+import sys
 import time
 
 from datetime import datetime
@@ -44,28 +45,35 @@ input_dictionary = {
     'disable_matchmaking': False,
 }
 
-config_ini_path = "config.ini"
-config_ini = Ini.read(
-    config_ini_path, extended_interpolation=False, convert_to_dictionary=False
-)
+try:
+    config_ini_path = "config.ini"
+    config_ini = Ini.read(
+        config_ini_path, extended_interpolation=False, convert_to_dictionary=False
+    )
 
-dbs_ini_path = "annotation-databases.ini"
-db_paths = Ini.read(
-    dbs_ini_path,
-    extended_interpolation=True,
-    convert_to_dictionary=True,
-    resolve_paths=True,
-)
-db_paths = db_paths['paths']
+    dbs_ini_path = "annotation-databases.ini"
+    db_paths = Ini.read(
+        dbs_ini_path,
+        extended_interpolation=True,
+        convert_to_dictionary=True,
+        resolve_paths=True,
+    )
+    db_paths = db_paths['paths']
 
-dbs_preclinical_ini_path = "preclinical-databases.ini"
-preclinical_db_paths = Ini.read(
-    dbs_preclinical_ini_path,
-    extended_interpolation=True,
-    convert_to_dictionary=True,
-    resolve_paths=True,
-)
-preclinical_db_paths = preclinical_db_paths['paths']
+    dbs_preclinical_ini_path = "preclinical-databases.ini"
+    preclinical_db_paths = Ini.read(
+        dbs_preclinical_ini_path,
+        extended_interpolation=True,
+        convert_to_dictionary=True,
+        resolve_paths=True,
+    )
+    preclinical_db_paths = preclinical_db_paths['paths']
+except FileNotFoundError as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(2)
+except RuntimeError as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    sys.exit(2)
 
 
 def execute_cmd(command):
