@@ -2,7 +2,9 @@ import argparse
 import datetime
 import time
 import os
+import pathlib
 import subprocess
+import sys
 
 import annotator
 import datasources
@@ -286,6 +288,32 @@ class Load:
                 handle=path, config=config
             )
         return accept, reject
+
+    @staticmethod
+    def validate_and_log_paths(input_files_dictionary):
+        for key, value in input_files_dictionary.items():
+            if value is None or (isinstance(value, str) and value.strip() == ""):
+                logger.Messages.general(
+                    message=f"{key}={value} is empty and will not be loaded."
+                )
+                continue
+            if not isinstance(value, str):
+                logger.Messages.general(
+                    message=f"{key}={value} has an unsupported type {type(value).__name__} and will not be loaded."
+                )
+                continue
+            path = pathlib.Path(value)
+            if path.exists():
+                logger.Messages.general(
+                    message=f"{key}={value} exists and will attempt to load."
+                )
+            else:
+                logger.Messages.general(
+                    message=(
+                        f"[INPUT WARNING] {key}={value} does NOT exist. "
+                        "This input will be loaded as an empty dataframe and downstream results may be incomplete."
+                    )
+                )
 
 
 class Process:
@@ -583,12 +611,12 @@ def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
     logger.Messages.start()
     logger.Messages.general(message=f"Current working directory: {os.getcwd()}")
     logger.Messages.header(label="Inputs")
-    input_dictonaries = [
+    input_dictionaries = [
         ("Patient metadata", patient),
         ("Input files", inputs),
         ("Datasources", dbs),
     ]
-    for label, dictionary in input_dictonaries:
+    for label, dictionary in input_dictionaries:
         logger.Messages.inputs(label=label, dictionary=dictionary)
 
     if dbs_preclinical:
@@ -606,6 +634,9 @@ def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
         logger.Messages.inputs(
             label=f"Config section: {section}", dictionary=section_dictionary
         )
+
+    logger.Messages.header(label='Validating input file paths')
+    Load.validate_and_log_paths(input_files_dictionary=inputs)
 
     logger.Messages.general(
         message="Logging for inputs provided complete.", add_line_break=True
@@ -1128,25 +1159,35 @@ if __name__ == "__main__":
     }
 
     output_directory = args.output_directory if args.output_directory else os.getcwd()
+    try:
+        config_ini = Ini.read(
+            args.config, extended_interpolation=False, convert_to_dictionary=False
+        )
 
-    config_ini = Ini.read(
-        args.config, extended_interpolation=False, convert_to_dictionary=False
-    )
-
-    db_paths = Ini.read(
-        args.dbs, extended_interpolation=True, convert_to_dictionary=True
-    )
-    db_paths = db_paths["paths"]
-
-    if args.preclinical_dbs:
-        preclinical_db_paths = Ini.read(
-            args.preclinical_dbs,
+        db_paths = Ini.read(
+            args.dbs,
             extended_interpolation=True,
             convert_to_dictionary=True,
+            resolve_paths=True,
         )
-        preclinical_db_paths = preclinical_db_paths["paths"]
-    else:
-        preclinical_db_paths = None
+        db_paths = db_paths['paths']
+
+        if args.preclinical_dbs:
+            preclinical_db_paths = Ini.read(
+                args.preclinical_dbs,
+                extended_interpolation=True,
+                convert_to_dictionary=True,
+                resolve_paths=True,
+            )
+            preclinical_db_paths = preclinical_db_paths['paths']
+        else:
+            preclinical_db_paths = None
+    except FileNotFoundError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(2)
+    except RuntimeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(2)
 
     main(
         patient=patient_dict,

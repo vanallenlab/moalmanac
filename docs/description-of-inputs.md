@@ -57,7 +57,7 @@ This config file contains the following sections,
 `--dbs` expects a file path to the [annotation-databases.ini](../moalmanac/annotation-databases.ini) file.
 
 This config file contains a single section `databases` that lists the following:
-- `root` - path to `datasources/` directory
+- `root` - path to `datasources/` directory, relative to repository root.
 - `almanac_handle` - path within `root` that points to the `molecular-oncology-almanac.json` datasource file
 - `cancerhotspots_handle` - path within `root` that points to the Cancer Hotspots datasource file
 - `3dcancerhotspots_handle` - path within `root` that points to the Cancer Hotspots 3D datasource file
@@ -323,7 +323,7 @@ The required fields for this file can be changed from their default expectations
 - Performs genomic similarity to cancer cell lines
 
 This config file contains a single section `preclinical` that lists the following:
-- `root` - path to `datasources/preclinical/` directory
+- `root` - path to `datasources/preclinical/` directory, relative to repository root.
 - `almanac_gdsc_mappings` - path within `root` that points to the `formatted/almanac-gdsc-mappings.json` datasource file
 - `summary` - path within `root` that points to the `formatted/cell-lines.summary.txt` datasource file
 - `variants` - path within `root` that points to the `annotated/cell-lines.somatic-variants.annotated.txt` datasource file

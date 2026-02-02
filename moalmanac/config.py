@@ -1,6 +1,7 @@
 import configparser
+import pathlib
 
-default_colnames = "colnames.ini"
+default_colnames = pathlib.Path(__file__).resolve().parent / "colnames.ini"
 
 
 def create_colnames_dict(config):
