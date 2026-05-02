@@ -582,7 +582,7 @@ class SNF:
                     "features for each data type. Make sure to "
                     "supply data types in the same order."
                 )
-            affinities += [cls.make_affinity(np.row_stack([tr, te]), K=K, mu=mu)]
+            affinities += [cls.make_affinity(np.vstack([tr, te]), K=K, mu=mu)]
 
         # fuse with SNF
         fused_aff = cls.snf(*affinities, K=K, t=t)
