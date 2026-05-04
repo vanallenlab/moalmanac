@@ -1,0 +1,54 @@
+{
+  // Editor
+  "breadcrumbs.enabled": true,
+  "explorer.compactFolders": false,
+  "editor.guides.indentation": true,
+  "editor.linkedEditing": true,
+  "editor.minimap.enabled": false,
+  "editor.rulers": [88],
+
+  // Formatting & linting
+  "editor.codeActionsOnSave": {
+    "source.fixAll.ruff": "explicit",
+    "source.organizeImports.ruff": "explicit"
+  },
+  "editor.defaultFormatter": "charliermarsh.ruff",
+  "editor.formatOnSave": true,
+  "files.trimTrailingWhitespace": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+
+  "markdownlint.config": {
+    "MD024": false,
+  },
+
+  // Jupyter notebooks
+  "jupyter.askForKernelRestart": false,
+  "jupyter.interactiveWindow.creationMode": "perFile",
+
+  // Python & environments
+  // Set python.defaultInterpreterPath locally
+  // Run conda env create -f environment.yaml and then select the interpreter in VS Code
+  "python.analysis.typeCheckingMode": "basic",
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestEnabled": true,
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda",
+
+    // pyproject.toml
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.formatOnSave": true
+  },
+
+  // Testing UI
+  "testing.automaticallyOpenPeekView": "never",
+
+  // Terminal
+  "terminal.integrated.environmentChangesRelaunch": true,
+}

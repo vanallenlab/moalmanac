@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "moalmanac"
+version = "0.8.6"
+description = "Clinical interpretation algorithm for cancer genomics"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.0",
+    "Frozen-Flask>=1.0",
+    "ipykernel>=6.29",
+    "jupyter>=1.0",
+    "matplotlib>=3.10.9",
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "requests>=2.32",
+    "scikit-learn>=1.7",
+    "scipy>=1.13",
+]
+
+[project.urls]
+Repository = "https://github.com/vanallenlab/moalmanac"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["moalmanac*"]
