@@ -38,7 +38,7 @@ cd moalmanac
 
 ### Python dependencies
 
-This repository supports Python $\ge$ 3.12. We recommend managing your environment wih [Conda-forge](https://conda-forge.org)'s installer [Miniforge](https://conda-forge.org/download/).
+This repository supports Python $\ge$3.12. We recommend managing your environment wih [Conda-forge](https://conda-forge.org)'s installer [Miniforge](https://conda-forge.org/download/).
 
 Run the following from this repository's directory to create a virtual environment and install dependencies with Miniforge:
 
