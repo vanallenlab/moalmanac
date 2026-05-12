@@ -1,12 +1,12 @@
-FROM vanallenlab/miniconda:3.12
+FROM python:3.14-slim
 
 WORKDIR /
 
 RUN apt-get update && apt-get install -y
 
-COPY requirements.txt /
+COPY requirements-lock.txt /
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r requirements-lock.txt
 
 COPY example_data/ /example_data/
 COPY example_output/ /example_output/
@@ -34,7 +34,9 @@ COPY datasources/lawrence/ /datasources/lawrence/
 COPY datasources/oncotree/ /datasources/oncotree/
 
 COPY moalmanac/templates/ /moalmanac/templates/
+COPY moalmanac/*.ini /moalmanac/
 COPY moalmanac/*.py moalmanac/*.ini /moalmanac/
+COPY moalmanac/*.sh /moalmanac/
 
 COPY datasources/moalmanac/ /datasources/moalmanac/
 
@@ -52,5 +54,7 @@ COPY datasources/preclinical/formatted/sanger.gdsc.txt /datasources/preclinical/
 
 COPY docs/* /docs/
 COPY README.md /
-COPY LICENSE /
+COPY LICENSE* /
+COPY pyproject.toml /
+COPY environment.yaml /
 COPY Dockerfile /

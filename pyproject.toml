@@ -18,6 +18,7 @@ dependencies = [
   "numpy>=2.0",
   "pandas>=3.0",
   "requests>=2.32",
+  "ruff>=0.15",
   "scikit-learn>=1.7",
   "scipy>=1.13",
 ]
@@ -47,15 +48,16 @@ indent-style = "space"
 ignore = ["COM819"]
 fixable = ["ALL"]
 select = [
-  "B",   # flake8-bugbear
-  "COM", # use trailing commas
-  "E",   # pycodestyle errors
-  "F",   # pyflakes
-  "I",   # isort
-  "SIM", # flake8-simplify
-  "RUF", # ruff-native rules
-  "UP",  # pyupgrade
-  "W",   # pycodestyle warnings
+  "B",      # flake8-bugbear
+  "COM",    # use trailing commas
+  "COM812",
+  "E",      # pycodestyle errors
+  "F",      # pyflakes
+  "I",      # isort
+  "SIM",    # flake8-simplify
+  "RUF",    # ruff-native rules
+  "UP",     # pyupgrade
+  "W",      # pycodestyle warnings
 ]
 
 [tool.ruff.lint.isort]

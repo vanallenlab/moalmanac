@@ -20,7 +20,7 @@ workflow MolecularOncologyAlmanac {
     Int? SSD = 50
     Int? preemptible = 3
 
-    String? docker_tag = "0.4.2_v.2021-02-04"
+    String? docker_tag = "0.9.0_v.2025-02-07"
 
     meta {
         author: "Brendan Reardon"
@@ -109,8 +109,6 @@ task almanacTask {
 
         mv /moalmanac/build/index.html ${patientId}.report.html
 
-        touch ${patientId}.sigs.context.txt ${patientId}.sigs.cosmic.txt
-        touch ${patientId}.sigs.tricontext.counts.png ${patientId}.sigs.tricontext.normalized.png
         touch ${patientId}.validation_overlap.png
         touch ${patientId}.matchmaker.txt
 
@@ -127,15 +125,14 @@ task almanacTask {
         File germlineACMG = "${patientId}.germline.acmg.txt"
         File germlineCancer = "${patientId}.germline.cancer_related.txt"
         File germlineHereditary = "${patientId}.germline.hereditary_cancers.txt"
+        File inputMetadata = "${patientId}.input-metadata.txt"
         File integrated = "${patientId}.integrated.summary.txt"
+        File log = "${patientId}.log"
         File matchmaker = "${patientId}.matchmaker.txt"
+        File execution = "${patientId}.moalmanac-execution.json"
         File msiVariants = "${patientId}.msi_variants.txt"
         File mutationalBurden = "${patientId}.mutational_burden.txt"
         File preclinicalEfficacy = "${patientId}.preclinical.efficacy.txt"
-        File deconstructSigsContext = "${patientId}.sigs.context.txt"
-        File deconstructSigsCosmic = "${patientId}.sigs.cosmic.txt"
-        File triContextCounts = "${patientId}.sigs.tricontext.counts.png"
-        File triContextNormalized = "${patientId}.sigs.tricontext.normalized.png"
         File validationOverlap = "${patientId}.validation_overlap.png"
         File report = "${patientId}.report.html"
         File tarGz = "${patientId}.almanac.tar.gz"
