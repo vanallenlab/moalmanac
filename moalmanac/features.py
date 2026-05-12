@@ -677,10 +677,12 @@ class MAF(Features):
         df.loc[:, Features.alt_count] = CoverageMetrics.format_coverage_col(df[cls.alt_count])
         df.loc[:, Features.ref_count] = CoverageMetrics.format_coverage_col(df[cls.ref_count])
         df.loc[:, Features.coverage] = CoverageMetrics.calculate_coverage(
-            df[cls.alt_count], df[cls.ref_count]
+            df[cls.alt_count],
+            df[cls.ref_count],
         )
         df.loc[:, Features.tumor_f] = CoverageMetrics.calculate_tumor_f(
-            df[cls.alt_count], df[cls.coverage]
+            df[cls.alt_count],
+            df[cls.coverage],
         )
         df.loc[:, Features.alt_type] = cls.rename_coding_classifications(df[cls.alt_type])
         return df
