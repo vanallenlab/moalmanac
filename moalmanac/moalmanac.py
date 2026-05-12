@@ -608,8 +608,11 @@ def start_logging(patient, inputs, output_folder, config, dbs, dbs_preclinical):
     logger.Logger.setup(
         output_folder=output_folder, file_prefix=patient[patient_id], config=config
     )
+    environment_metadata = logger.collect_environment_metadata()
     logger.Messages.start()
+    logger.Messages.environment(environment_metadata)
     logger.Messages.general(message=f"Current working directory: {os.getcwd()}")
+    return environment_metadata
     logger.Messages.header(label="Inputs")
     input_dictionaries = [
         ("Patient metadata", patient),
@@ -668,7 +671,7 @@ def process_preclinical_efficacy(
 def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
     start_time = time.time()
     start_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    start_logging(
+    environment_metadata = start_logging(
         patient=patient,
         inputs=inputs,
         output_folder=output_folder,
@@ -1026,6 +1029,7 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
 
     output_json = writer.Json.write(
         config=config,
+        environment=environment_metadata,
         execution_runtime={"start": start_datetime, "elapsed (seconds)": elapsed_time},
         input_datasources=dbs,
         input_files=inputs,

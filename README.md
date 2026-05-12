@@ -38,7 +38,7 @@ cd moalmanac
 
 ### Python dependencies
 
-This repository supports Python 3.14. We recommend managing your environment wih [Conda-forge](https://conda-forge.org)'s installer [Miniforge](https://conda-forge.org/download/).
+This repository supports Python 3.14. We recommend managing your environment with [Conda-forge](https://conda-forge.org)'s installer [Miniforge](https://conda-forge.org/download/).
 
 Run the following from this repository's directory to create a virtual environment and install dependencies with Miniforge:
 
@@ -54,10 +54,33 @@ Or, if you prefer not to use conda, you can use a standard [virtual environment]
 ```bash
 python3.14 -m venv venv
 source venv/bin/activate
+```
+
+Then install dependencies using one of the two options below.
+
+#### Reproducible install (recommended)
+
+Install from the pinned lockfile to get the exact same package versions used in Docker and the verified test environment:
+
+```bash
+pip install -r requirements-lock.txt
+```
+
+#### Standard install
+
+Install directly from `pyproject.toml` with the latest compatible versions:
+
+```bash
 pip install .
 ```
 
-If using VS Code, open the repository folder and select the interpreter via **Command Palette → Python: Select Interpreter**, then choose `moalmanac` from the list.
+If using VS Code, open the repository folder and select the interpreter via **Command Palette → Python: Select Interpreter**, then choose `moalmanac`, or what you named your virtual environment, from the list.
+
+A new [requirements-lock.txt](./requirements-lock.txt) file can be generated with:
+
+```bash
+pip-compile --output-file=requirements-lock.txt pyproject.toml
+```
 
 ## Usage
 

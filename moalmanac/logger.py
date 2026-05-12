@@ -1,5 +1,31 @@
+import importlib.metadata
 import json
 import logging
+import sys
+
+DIRECT_DEPENDENCIES = [
+    "moalmanac",
+    "flask",
+    "Frozen-Flask",
+    "ipykernel",
+    "jupyter",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "requests",
+    "scikit-learn",
+    "scipy",
+]
+
+
+def collect_environment_metadata():
+    packages = {}
+    for pkg in DIRECT_DEPENDENCIES:
+        try:
+            packages[pkg] = importlib.metadata.version(pkg)
+        except importlib.metadata.PackageNotFoundError:
+            packages[pkg] = "not installed"
+    return {"python": sys.version, "packages": packages}
 
 
 class Logger:
@@ -48,6 +74,10 @@ class Messages:
     def inputs(label, dictionary):
         message = f"Input data, {label}:\n%s"
         logging.info(message, json.dumps(dictionary, indent=4))
+
+    @staticmethod
+    def environment(metadata):
+        logging.info("Environment metadata:\n%s", json.dumps(metadata, indent=4))
 
     @staticmethod
     def start():

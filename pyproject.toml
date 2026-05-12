@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "moalmanac"
-version = "0.8.6"
+version = "0.9.0"
 description = "Clinical interpretation algorithm for cancer genomics"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.14"
+requires-python = ">=3.14, <3.15"
 dependencies = [
   "flask>=3.0",
   "Frozen-Flask>=1.0",
@@ -16,7 +16,7 @@ dependencies = [
   "jupyter>=1.0",
   "matplotlib>=3.10",
   "numpy>=2.0",
-  "pandas>=2.2",
+  "pandas>=3.0",
   "requests>=2.32",
   "scikit-learn>=1.7",
   "scipy>=1.13",
@@ -24,6 +24,12 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/vanallenlab/moalmanac"
+
+[project.optional-dependencies]
+dev = ["pip-tools"]
+
+[tool.setuptools]
+license-files = ["LICENSE*"]
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -38,9 +44,7 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.ruff.lint]
-ignore = [
-  "COM819",
-]
+ignore = ["COM819"]
 fixable = ["ALL"]
 select = [
   "B",   # flake8-bugbear
@@ -55,5 +59,5 @@ select = [
 ]
 
 [tool.ruff.lint.isort]
-force-single-line = false
+force-single-line = true
 split-on-trailing-comma = true

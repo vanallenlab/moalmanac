@@ -260,7 +260,7 @@ The following outputs are produced by the Molecular Oncology Almanac. Each secti
 
 Filename suffix: `.log`
 
-A timestamped log of inputs provided, configuration variables set, and what happens step-by-step as moalmanac.py is running.
+A timestamped log of inputs provided, configuration variables set, and what happens step-by-step as moalmanac.py is running. Environment metadata is recorded at the start of each run, including the Python version and the installed versions of direct dependencies.
 
 ### Actionable
 
@@ -365,6 +365,7 @@ Filename suffix: `.moalmanac-execution.json`
 A JSON output that contains all runtime details for a single execution of moalmanac's main function. The dictionary contains the following keys:
 
 * `config` - all settings present in `config.ini` for the process execution
+* `environment` - environment metadata recorded at runtime, containing `python` (the full Python version string) and `packages` (a mapping of each direct dependency to its installed version)
 * `execution_runtime` - start datetime of moalmanac main function as well as the elapsed seconds for execution
 * `input_files` - paths to input files of case profile provided to moalmanac
 * `input_datasources` - paths to input datasources as provided in `annotation-databases.ini`
