@@ -1,0 +1,9 @@
+Gene name	Mutation AA
+ABL1	p.?
+BCR	p.?
+BRAF	p.V600E
+BRAF	p.?
+CDKN2A	p.?
+IDH1	p.?
+KRAS	p.?
+NTRK1	p.?
