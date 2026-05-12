@@ -121,7 +121,7 @@ class Features:
 
     @classmethod
     def create_empty_series(cls):
-        return pd.Series(index=cls.all_columns, dtype=str)
+        return pd.Series(index=cls.all_columns, dtype=object)
 
     @classmethod
     def drop_duplicate_genes(cls, df, sort_column):
@@ -433,14 +433,12 @@ class CoverageMetrics:
 
     @classmethod
     def format_coverage_col(cls, series):
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            formatted_series = (
-                series.replace("__UNKNOWN__", pd.NA)
-                .replace("", pd.NA)
-                .astype(object)
-                .fillna(pd.NA)
-            )
+        formatted_series = (
+            series.replace("__UNKNOWN__", pd.NA)
+            .replace("", pd.NA)
+            .astype(object)
+            .fillna(pd.NA)
+        )
         formatted_series = cls.apply_min_coverage_for_onps(formatted_series)
         formatted_series = cls.convert_to_pandas_int64(formatted_series)
         return formatted_series

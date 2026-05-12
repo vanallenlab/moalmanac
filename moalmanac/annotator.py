@@ -463,14 +463,12 @@ class Almanac:
                 message=f"...records of {feature_type} in the database: {table.shape[0]}"
             )
 
-            # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-            with pd.option_context("future.no_silent_downcasting", True):
-                table.loc[:, cls.implication_map] = (
-                    table[cls.implication]
-                    .astype(str)
-                    .replace(cls.predictive_implication_map)
-                    .astype(float)
-                )
+            table.loc[:, cls.implication_map] = (
+                table[cls.implication]
+                .astype(str)
+                .replace(cls.predictive_implication_map)
+                .astype(float)
+            )
 
             simple_biomarkers = [
                 config["feature_types"]["mut"],
@@ -1306,7 +1304,7 @@ class ClinVar:
         df.loc[:, cls.chr] = df[cls.chr].astype(str)
         ds.loc[:, cls.chr] = ds[cls.chr].astype(str)
 
-        return df.reset_index().merge(ds, how="left").set_index("index")
+        return df.copy().reset_index().merge(ds, how="left").set_index("index")
 
     @classmethod
     def annotate(cls, df, dbs):
@@ -1838,7 +1836,7 @@ class PreclinicalEfficacy:
 
     @classmethod
     def create_lookup(cls, all_index_values, relevant_index_values, dictionary):
-        series = pd.Series("", index=all_index_values, name=cls.lookup)
+        series = pd.Series("", index=all_index_values, name=cls.lookup, dtype=object)
         for index in relevant_index_values:
             series.loc[index] = [dictionary[index]]
         return series
@@ -2003,9 +2001,7 @@ class PreclinicalMatchmaking:
             axis=1,
         )
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            values = values.fillna(-1.0).idxmax(axis=1)
+        values = values.fillna(-1.0).idxmax(axis=1)
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -2050,9 +2046,7 @@ class PreclinicalMatchmaking:
             axis=1,
         )
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            values = values.fillna(-1.0).idxmax(axis=1)
+        values = values.fillna(-1.0).idxmax(axis=1)
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -2077,9 +2071,7 @@ class PreclinicalMatchmaking:
             axis=1,
         )
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            values = values.fillna(-1.0).idxmax(axis=1)
+        values = values.fillna(-1.0).idxmax(axis=1)
 
         idx_group3 = values[values.eq(cls.group3)].index
         idx_group4 = values[values.eq(cls.group4)].index
@@ -2230,11 +2222,9 @@ class PreclinicalMatchmaking:
         db = db.loc[:, columns].drop_duplicates()
         db.rename(columns=column_map, inplace=True)
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            db[cls.evidence_map_str] = (
-                db[cls.evidence].astype(str).replace(cls.evidence_map).astype(int)
-            )
+        db[cls.evidence_map_str] = (
+            db[cls.evidence].astype(str).replace(cls.evidence_map).astype(int)
+        )
         db.sort_values(
             [cls.evidence_map_str, cls.feature_display],
             ascending=[False, True],

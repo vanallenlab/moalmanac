@@ -106,10 +106,10 @@ class Evaluator:
 
     @classmethod
     def evaluate_almanac(cls, df):
-        df.loc[:, cls.score_bin] = cls.map_almanac_bins(df[cls.almanac_bin])
+        df[cls.score_bin] = cls.map_almanac_bins(df[cls.almanac_bin])
         for bin_column in [cls.sensitive_bin, cls.resistance_bin, cls.prognostic_bin]:
-            df.loc[:, "{}_map".format(bin_column)] = df[bin_column]
-            df.loc[:, bin_column] = cls.map_almanac_bins(df[bin_column])
+            df["{}_map".format(bin_column)] = df[bin_column]
+            df[bin_column] = cls.map_almanac_bins(df[bin_column])
         return df
 
     @classmethod
@@ -474,7 +474,7 @@ class Microsatellite(object):
 
     @classmethod
     def return_msi_variants(cls, df):
-        idx_msi = df[Evaluator.msi_bin].infer_objects(copy=False).fillna(0.0).astype(float) == float(1.0)
+        idx_msi = df[Evaluator.msi_bin].infer_objects().fillna(0.0).astype(float) == float(1.0)
         idx_missense = df[Evaluator.alt_type].fillna("").str.contains("Missense")
         return df[idx_msi & ~idx_missense]
 

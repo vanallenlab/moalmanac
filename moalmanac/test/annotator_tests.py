@@ -500,10 +500,10 @@ class UnitTestValidation(unittest.TestCase):
         dataframe2["A"] = ["a", "b", "g"]
         dataframe2["B"] = [1, 4, 5]
         dataframe2["E"] = ["hello", "goodbye", "good day"]
-        result = OverlapValidation.merge_data_frames(
-            dataframe1, dataframe2, ["A", "B"]
-        ).fillna(pd.NA)
-        self.assertEqual(["hello", pd.NA, pd.NA], result["E"].tolist())
+        result = OverlapValidation.merge_data_frames(dataframe1, dataframe2, ["A", "B"])
+        self.assertEqual("hello", result["E"].iloc[0])
+        self.assertTrue(pd.isna(result["E"].iloc[1]))
+        self.assertTrue(pd.isna(result["E"].iloc[2]))
         self.assertEqual(["A", "B", "C", "D", "E"], result.columns.tolist())
 
     def test_round_series(self):

@@ -132,12 +132,10 @@ class Writer:
 
     @staticmethod
     def convert_dataframe_to_dict(df, reset_index=True, orient="records"):
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            if reset_index:
-                return df.fillna("").reset_index().to_dict(orient=orient)
-            else:
-                return df.fillna("").to_dict(orient=orient)
+        if reset_index:
+            return df.fillna("").reset_index().to_dict(orient=orient)
+        else:
+            return df.fillna("").to_dict(orient=orient)
 
     @staticmethod
     def create_output_name(folder, patient_id, output_suffix):
