@@ -43,8 +43,14 @@
     // pyproject.toml
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
   },
+  "evenBetterToml.formatter.arrayAutoCollapse": false,
+  "evenBetterToml.formatter.arrayAutoExpand": false,
+  "evenBetterToml.formatter.indentTables": false,
+  "evenBetterToml.formatter.indentString": "  ",
 
   // Testing UI
   "testing.automaticallyOpenPeekView": "never",

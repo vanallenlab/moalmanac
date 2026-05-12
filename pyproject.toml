@@ -8,18 +8,18 @@ version = "0.8.6"
 description = "Clinical interpretation algorithm for cancer genomics"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
-    "flask>=3.0",
-    "Frozen-Flask>=1.0",
-    "ipykernel>=6.29",
-    "jupyter>=1.0",
-    "matplotlib>=3.10.9",
-    "numpy>=2.0",
-    "pandas>=2.2",
-    "requests>=2.32",
-    "scikit-learn>=1.7",
-    "scipy>=1.13",
+  "flask>=3.0",
+  "Frozen-Flask>=1.0",
+  "ipykernel>=6.29",
+  "jupyter>=1.0",
+  "matplotlib>=3.10",
+  "numpy>=2.0",
+  "pandas>=2.2",
+  "requests>=2.32",
+  "scikit-learn>=1.7",
+  "scipy>=1.13",
 ]
 
 [project.urls]
@@ -28,3 +28,32 @@ Repository = "https://github.com/vanallenlab/moalmanac"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["moalmanac*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint]
+ignore = [
+  "COM819",
+]
+fixable = ["ALL"]
+select = [
+  "B",   # flake8-bugbear
+  "COM", # use trailing commas
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # isort
+  "SIM", # flake8-simplify
+  "RUF", # ruff-native rules
+  "UP",  # pyupgrade
+  "W",   # pycodestyle warnings
+]
+
+[tool.ruff.lint.isort]
+force-single-line = false
+split-on-trailing-comma = true
