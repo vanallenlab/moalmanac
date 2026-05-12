@@ -38,7 +38,7 @@ cd moalmanac
 
 ### Python dependencies
 
-This repository supports Python $\ge$3.12. We recommend managing your environment wih [Conda-forge](https://conda-forge.org)'s installer [Miniforge](https://conda-forge.org/download/).
+This repository supports Python 3.14. We recommend managing your environment wih [Conda-forge](https://conda-forge.org)'s installer [Miniforge](https://conda-forge.org/download/).
 
 Run the following from this repository's directory to create a virtual environment and install dependencies with Miniforge:
 
@@ -47,17 +47,17 @@ conda env create -f environment.yaml
 conda activate moalmanac
 ```
 
-The [environment.yaml](./environment.yaml) file specifies Python 3.12 and delegates package installation to pip using [pyproject.toml](./pyproject.toml). No separate `pip install` step is needed.
+The [environment.yaml](./environment.yaml) file specifies Python 3.14 and delegates package installation to pip using [pyproject.toml](./pyproject.toml). No separate `pip install` step is needed.
 
 Or, if you prefer not to use conda, you can use a standard [virtual environment](https://docs.python.org/3/tutorial/venv.html):
 
 ```bash
-python3.12 -m venv venv
+python3.14 -m venv venv
 source venv/bin/activate
 pip install .
 ```
 
-If using VS Code, open the repository folder and select the interpreter via **Command Palette → Python: Select Interpreter**, then choose `moalmanac-db` from the list.
+If using VS Code, open the repository folder and select the interpreter via **Command Palette → Python: Select Interpreter**, then choose `moalmanac` from the list.
 
 ## Usage
 
