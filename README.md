@@ -56,11 +56,13 @@ python3.14 -m venv venv
 source venv/bin/activate
 ```
 
-Then install dependencies using one of the two options below.
+If using VS Code, open the repository folder and select the interpreter via **Command Palette → Python: Select Interpreter**, then choose `moalmanac`, or what you named your virtual environment, from the list.
+
+Then install dependencies using one of the following two options:
 
 #### Reproducible install (recommended)
 
-Install from the pinned lockfile to get the exact same package versions used in Docker and the verified test environment:
+Install from the [requirements-lock.txt](./requirements-lock.txt) file to get the exact same package versions used in Docker and the verified test environment:
 
 ```bash
 pip install -r requirements-lock.txt
@@ -74,9 +76,7 @@ Install directly from `pyproject.toml` with the latest compatible versions:
 pip install .
 ```
 
-If using VS Code, open the repository folder and select the interpreter via **Command Palette → Python: Select Interpreter**, then choose `moalmanac`, or what you named your virtual environment, from the list.
-
-A new [requirements-lock.txt](./requirements-lock.txt) file can be generated with:
+A new requirements lock file can be generated with:
 
 ```bash
 pip-compile --output-file=requirements-lock.txt pyproject.toml
