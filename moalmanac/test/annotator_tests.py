@@ -18,7 +18,7 @@ from datasources import Almanac as datasource_Almanac
 from datasources import Preclinical as datasources_Preclinical
 
 TEST_DIR = Path(__file__).parent
-ROOT = TEST_DIR.parent / "datasources"
+ROOT = TEST_DIR.parent.parent / "datasources"
 
 
 class UnitTestAnnotator(unittest.TestCase):

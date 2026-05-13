@@ -81,5 +81,5 @@ class Messages:
 
     @staticmethod
     def start():
-        message = f"Starting to execution of Molecular Oncology Almanac"
+        message = "Starting execution of Molecular Oncology Almanac"
         logging.info(message)

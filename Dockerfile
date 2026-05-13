@@ -35,7 +35,7 @@ COPY datasources/oncotree/ /datasources/oncotree/
 
 COPY moalmanac/templates/ /moalmanac/templates/
 COPY moalmanac/*.ini /moalmanac/
-COPY moalmanac/*.py moalmanac/*.ini /moalmanac/
+COPY moalmanac/*.py /moalmanac/
 COPY moalmanac/*.sh /moalmanac/
 
 COPY datasources/moalmanac/ /datasources/moalmanac/
@@ -58,3 +58,6 @@ COPY LICENSE* /
 COPY pyproject.toml /
 COPY environment.yaml /
 COPY Dockerfile /
+
+ENTRYPOINT []
+CMD ["/bin/bash"]
