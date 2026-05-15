@@ -1160,10 +1160,8 @@ def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
         output_folder=output_folder,
     )
 
-    logger.Messages.general(
-        "Molecular Oncology Almanac process complete. Runtime: %s seconds"
-        % elapsed_time,
-    )
+    logger.Messages.general("Molecular Oncology Almanac process complete")
+    logger.Messages.general(f"Runtime: {elapsed_time} seconds")
     logger.Logger.shutdown()
 
 
