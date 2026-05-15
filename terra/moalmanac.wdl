@@ -3,7 +3,6 @@ version 1.0
 workflow MolecularOncologyAlmanac {
     input {
         String patientId
-        String description = ""
         String tumorType = "Unknown"
         String stage = "Unknown"
         String config = "/moalmanac/config.ini"
@@ -43,7 +42,6 @@ workflow MolecularOncologyAlmanac {
     call almanacTask {
         input:
             patientId = patientId,
-            description = description,
             tumorType = tumorType,
             stage = stage,
             config = config,
@@ -93,7 +91,6 @@ workflow MolecularOncologyAlmanac {
 task almanacTask {
     input {
         String patientId
-        String description
         String tumorType
         String stage
         String config
@@ -124,12 +121,11 @@ task almanacTask {
     command <<<
         python /moalmanac/moalmanac.py \
         --patient_id ~{patientId} \
-        --description ~{description} \
         --tumor_type ~{tumorType} \
         --stage ~{stage} \
         --config ~{config} \
         --dbs ~{dbs} \
-        ~{"--preclinical-dbs " + preclinicalDbs} \
+        --preclinical-dbs ~{preclinicalDbs} \
         ~{"--snv_handle " + snvHandle} \
         ~{"--indel_handle " + indelHandle} \
         ~{"--cnv_handle " + segHandle} \
