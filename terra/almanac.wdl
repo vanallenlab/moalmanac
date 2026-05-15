@@ -1,26 +1,35 @@
+version 1.0
+
 workflow MolecularOncologyAlmanac {
-    String patientId
-    String tumorType
-    String? stage
-    File? snvHandle
-    File? indelHandle
-    File? segHandle
-    File? calledCNHandle
-    File? fusionHandle
-    File? burdenHandle
-    File? germlineHandle
-    File? validationHandle
-    String? purity
-    String? ploidy
-    String? microsatellite_status
-    String? whole_genome_doubling
-    String? disable_matchmaking
+    input {
+        String patientId
+        String description = ""
+        String tumorType = "Unknown"
+        String stage = "Unknown"
+        String config = "/moalmanac/config.ini"
+        String dbs = "/moalmanac/annotation-databases.ini"
+        String preclinicalDbs = "/moalmanac/preclinical-databases.ini"
+        File? snvHandle
+        File? indelHandle
+        File? segHandle
+        File? calledCNHandle
+        File? fusionHandle
+        File? burdenHandle
+        File? germlineHandle
+        File? validationHandle
+        File? mutationalSignatures
+        String purity = "Unknown"
+        String ploidy = "Unknown"
+        String microsatelliteStatus = "unk"
+        Boolean wgd = false
+        Boolean disableMatchmaking = false
 
-    Int? RAM = 8
-    Int? SSD = 50
-    Int? preemptible = 3
+        Int RAM = 8
+        Int SSD = 50
+        Int preemptible = 3
 
-    String? docker_tag = "0.9.0_v.2025-02-07"
+        String docker_tag = "0.9.0_v.2025-02-07"
+    }
 
     meta {
         author: "Brendan Reardon"
@@ -32,116 +41,145 @@ workflow MolecularOncologyAlmanac {
     }
 
     call almanacTask {
-        input: patientId=patientId,
-            tumorType=tumorType,
-            stage=stage,
-            snvHandle=snvHandle,
-            indelHandle=indelHandle,
-            segHandle=segHandle,
-            calledCNHandle=calledCNHandle,
-            fusionHandle=fusionHandle,
-            burdenHandle=burdenHandle,
-            germlineHandle=germlineHandle,
-            validationHandle=validationHandle,
-            purity=purity,
-            ploidy=ploidy,
-            microsatellite_status=microsatellite_status,
-            whole_genome_doubling=whole_genome_doubling,
-            disable_matchmaking=disable_matchmaking,
-            RAM=RAM,
-            SSD=SSD,
-            preemptible=preemptible,
-            docker_tag=docker_tag
+        input:
+            patientId = patientId,
+            description = description,
+            tumorType = tumorType,
+            stage = stage,
+            config = config,
+            dbs = dbs,
+            preclinicalDbs = preclinicalDbs,
+            snvHandle = snvHandle,
+            indelHandle = indelHandle,
+            segHandle = segHandle,
+            calledCNHandle = calledCNHandle,
+            fusionHandle = fusionHandle,
+            burdenHandle = burdenHandle,
+            germlineHandle = germlineHandle,
+            validationHandle = validationHandle,
+            mutationalSignatures = mutationalSignatures,
+            purity = purity,
+            ploidy = ploidy,
+            microsatelliteStatus = microsatelliteStatus,
+            wgd = wgd,
+            disableMatchmaking = disableMatchmaking,
+            RAM = RAM,
+            SSD = SSD,
+            preemptible = preemptible,
+            docker_tag = docker_tag
+    }
+
+    output {
+        File actionable = almanacTask.actionable
+        File somaticScored = almanacTask.somaticScored
+        File somaticFiltered = almanacTask.somaticFiltered
+        File germlineACMG = almanacTask.germlineACMG
+        File germlineCancer = almanacTask.germlineCancer
+        File germlineHereditary = almanacTask.germlineHereditary
+        File inputMetadata = almanacTask.inputMetadata
+        File integrated = almanacTask.integrated
+        File log = almanacTask.log
+        File matchmaker = almanacTask.matchmaker
+        File execution = almanacTask.execution
+        File msiVariants = almanacTask.msiVariants
+        File mutationalBurden = almanacTask.mutationalBurden
+        File preclinicalEfficacy = almanacTask.preclinicalEfficacy
+        File validationOverlap = almanacTask.validationOverlap
+        File report = almanacTask.report
+        File tarGz = almanacTask.tarGz
     }
 }
 
 task almanacTask {
-    String patientId
-    String tumorType
-    String? stage
-    File? snvHandle
-    File? indelHandle
-    File? segHandle
-    File? calledCNHandle
-    File? fusionHandle
-    File? burdenHandle
-    File? germlineHandle
-    File? validationHandle
-    String? purity
-    String? ploidy
-    String? microsatellite_status
-    String? whole_genome_doubling
-    String? disable_matchmaking
+    input {
+        String patientId
+        String description
+        String tumorType
+        String stage
+        String config
+        String dbs
+        String preclinicalDbs
+        File? snvHandle
+        File? indelHandle
+        File? segHandle
+        File? calledCNHandle
+        File? fusionHandle
+        File? burdenHandle
+        File? germlineHandle
+        File? validationHandle
+        File? mutationalSignatures
+        String purity
+        String ploidy
+        String microsatelliteStatus
+        Boolean wgd
+        Boolean disableMatchmaking
 
-    Int? RAM
-    Int? SSD
-    Int? preemptible
+        Int RAM
+        Int SSD
+        Int preemptible
 
-    String? docker_tag
+        String docker_tag
+    }
 
-    command {
-        if [ "${whole_genome_doubling}" == "True" ]; then
-            wgd_arg="--wgd"; else
-            wgd_arg="";
-        fi
-
-        if [ "${disable_matchmaking}" == "True" ]; then
-            matchmaking_arg="--disable_matchmaking"; else
-            matchmaking_arg="";
-        fi
-
+    command <<<
         python /moalmanac/moalmanac.py \
-        --patient_id ${patientId} \
-        --tumor_type ${tumorType} \
-        ${"--stage " + stage} \
-        ${"--snv_handle " + snvHandle} \
-        ${"--indel_handle " + indelHandle} \
-        ${"--cnv_handle " + segHandle} \
-        ${"--called_cn_handle " + calledCNHandle} \
-        ${"--fusion_handle " + fusionHandle} \
-        ${"--bases_covered_handle " + burdenHandle} \
-        ${"--germline_handle " + germlineHandle} \
-        ${"--validation_handle " + validationHandle} \
-        ${"--purity " + purity} \
-        ${"--ploidy " + ploidy} \
-        ${"--ms_status " + microsatellite_status} \
-        $wgd_arg $matchmaking_arg
+        --patient_id ~{patientId} \
+        --description ~{description} \
+        --tumor_type ~{tumorType} \
+        --stage ~{stage} \
+        --config ~{config} \
+        --dbs ~{dbs} \
+        ~{"--preclinical-dbs " + preclinicalDbs} \
+        ~{"--snv_handle " + snvHandle} \
+        ~{"--indel_handle " + indelHandle} \
+        ~{"--cnv_handle " + segHandle} \
+        ~{"--called_cn_handle " + calledCNHandle} \
+        ~{"--fusion_handle " + fusionHandle} \
+        ~{"--bases_covered_handle " + burdenHandle} \
+        ~{"--germline_handle " + germlineHandle} \
+        ~{"--validation_handle " + validationHandle} \
+        ~{"--mutational_signatures " + mutationalSignatures} \
+        ~{"--purity " + purity} \
+        ~{"--ploidy " + ploidy} \
+        ~{"--ms_status " + microsatelliteStatus} \
+        ~{if wgd then "--wgd" else ""} \
+        ~{if disableMatchmaking then "--disable_matchmaking" else ""}
 
-        mv /moalmanac/build/index.html ${patientId}.report.html
+        mv /moalmanac/build/index.html ~{patientId}.report.html
 
-        touch ${patientId}.validation_overlap.png
-        touch ${patientId}.matchmaker.txt
+        touch ~{patientId}.validation_overlap.png
+        touch ~{patientId}.matchmaker.txt
 
         mkdir docs
         cp -r /docs/* docs/
 
-        tar -zcf ${patientId}.almanac.tar.gz ${patientId}* docs almanac.additional.matches.json
-    }
+        tar -zcf ~{patientId}.almanac.tar.gz ~{patientId}* docs almanac.additional.matches.json
+    >>>
 
-    output  {
-        File actionable = "${patientId}.actionable.txt"
-        File somaticScored = "${patientId}.somatic.scored.txt"
-        File somaticFiltered = "${patientId}.somatic.filtered.txt"
-        File germlineACMG = "${patientId}.germline.acmg.txt"
-        File germlineCancer = "${patientId}.germline.cancer_related.txt"
-        File germlineHereditary = "${patientId}.germline.hereditary_cancers.txt"
-        File inputMetadata = "${patientId}.input-metadata.txt"
-        File integrated = "${patientId}.integrated.summary.txt"
-        File log = "${patientId}.log"
-        File matchmaker = "${patientId}.matchmaker.txt"
-        File execution = "${patientId}.moalmanac-execution.json"
-        File msiVariants = "${patientId}.msi_variants.txt"
-        File mutationalBurden = "${patientId}.mutational_burden.txt"
-        File preclinicalEfficacy = "${patientId}.preclinical.efficacy.txt"
-        File validationOverlap = "${patientId}.validation_overlap.png"
-        File report = "${patientId}.report.html"
-        File tarGz = "${patientId}.almanac.tar.gz"
+    output {
+        File actionable = "~{patientId}.actionable.txt"
+        File somaticScored = "~{patientId}.somatic.scored.txt"
+        File somaticFiltered = "~{patientId}.somatic.filtered.txt"
+        File germlineACMG = "~{patientId}.germline.acmg.txt"
+        File germlineCancer = "~{patientId}.germline.cancer_related.txt"
+        File germlineHereditary = "~{patientId}.germline.hereditary_cancers.txt"
+        File inputMetadata = "~{patientId}.input-metadata.txt"
+        File integrated = "~{patientId}.integrated.summary.txt"
+        File log = "~{patientId}.log"
+        File matchmaker = "~{patientId}.matchmaker.txt"
+        File execution = "~{patientId}.moalmanac-execution.json"
+        File msiVariants = "~{patientId}.msi_variants.txt"
+        File mutationalBurden = "~{patientId}.mutational_burden.txt"
+        File preclinicalEfficacy = "~{patientId}.preclinical.efficacy.txt"
+        File validationOverlap = "~{patientId}.validation_overlap.png"
+        File report = "~{patientId}.report.html"
+        File tarGz = "~{patientId}.almanac.tar.gz"
     }
 
     runtime {
-        disks: "local-disk " + SSD + " SSD"
-        docker: "vanallenlab/moalmanac:" + docker_tag
-        memory: RAM + " GB"
+        disks: "local-disk ~{SSD} SSD"
+        docker: "vanallenlab/moalmanac:~{docker_tag}"
+        memory: "~{RAM} GB"
         preemptible: preemptible
     }
 }
