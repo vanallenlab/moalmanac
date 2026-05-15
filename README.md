@@ -17,7 +17,7 @@ You can view additional documentation, including [descriptions of inputs](docs/d
 
 ## Getting Molecular Oncology Almanac
 
-The codebase is available for download through this GitHub repository, [DockerHub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://portal.firecloud.org/#methods/vanallenlab/moalmanac/2). **Accessing Molecular Oncology Almanac through GitHub will require building some of the [datasources](datasources/) but they are also contained in the Docker container**.
+The codebase is available for download through this GitHub repository, [DockerHub](https://hub.docker.com/r/vanallenlab/moalmanac/), and [Terra](https://app.terra.bio/#workflows/vanallenlab/moalmanac). **Accessing Molecular Oncology Almanac through GitHub will require building some of the [datasources](datasources/) but they are also contained in the Docker container**.
 
 ## Installation
 
