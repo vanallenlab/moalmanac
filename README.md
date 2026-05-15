@@ -70,7 +70,7 @@ pip install -r requirements-lock.txt
 
 #### Standard install
 
-Install directly from `pyproject.toml` with the latest compatible versions:
+Install directly from [pyproject.toml](./pyproject.toml) with the latest compatible versions:
 
 ```bash
 pip install .

@@ -141,15 +141,13 @@ task almanacTask {
         ~{if wgd then "--wgd" else ""} \
         ~{if disableMatchmaking then "--disable_matchmaking" else ""}
 
-        mv /moalmanac/build/index.html ~{patientId}.report.html
-
         touch ~{patientId}.validation_overlap.png
         touch ~{patientId}.matchmaker.txt
 
         mkdir docs
         cp -r /docs/* docs/
 
-        tar -zcf ~{patientId}.almanac.tar.gz ~{patientId}* docs almanac.additional.matches.json
+        tar -zcf ~{patientId}.almanac.tar.gz ~{patientId}* docs
     >>>
 
     output {
