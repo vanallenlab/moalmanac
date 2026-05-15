@@ -1,5 +1,3 @@
-# Molecular Oncology Almanac
-
 Molecular Oncology Almanac is a clinical interpretation algorithm for cancer genomics to annotate and evaluate whole-exome and transcriptome genomic data from individual patient samples. Specifically, Molecular Oncology Almanac can:
 
 - Identify mutations and genomic features related to therapeutic sensitivity and resistance and of prognostic relevance.
@@ -12,6 +10,8 @@ Molecular Oncology Almanac is a clinical interpretation algorithm for cancer gen
 - Calculate coding mutational burden and compare your patient to TCGA.
 - Identify genomic features that may be related to one another.
 - Create portable web-based actionability reports, summarizing clinically relevant findings.
+
+It is supported by our [underlying manually curated precision oncology knowledge base](https://github.com/vanallenlab/moalmanac).
 
 You can view additional documentation, including [descriptions of inputs](docs/description-of-inputs.md) and [outputs](docs/description-of-outputs.md), within the [docs](docs/) folder of this repository.
 
