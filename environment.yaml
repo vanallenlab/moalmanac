@@ -1,0 +1,9 @@
+name: moalmanac
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.14,<3.15
+  - pip
+  - pip:
+    - -r requirements-lock.txt
+    - pip-tools

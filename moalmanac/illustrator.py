@@ -236,11 +236,11 @@ class ValidationOverlap(Illustrator):
         data.loc[idx, cls.columns["float"]] = (
             df.loc[idx, cls.columns["float"]].astype(float).fillna(0.0)
         )
-        data[cls.coverage] = pd.to_numeric(data[cls.coverage])
-        data[cls.tumor_f] = pd.to_numeric(data[cls.tumor_f])
-        data[cls.validation_coverage] = pd.to_numeric(data[cls.validation_coverage])
-        data[cls.validation_tumor_f] = pd.to_numeric(data[cls.validation_tumor_f])
-        data[cls.validation_detection_power] = pd.to_numeric(
+        data.loc[:, cls.coverage] = pd.to_numeric(data[cls.coverage])
+        data.loc[:, cls.tumor_f] = pd.to_numeric(data[cls.tumor_f])
+        data.loc[:, cls.validation_coverage] = pd.to_numeric(data[cls.validation_coverage])
+        data.loc[:, cls.validation_tumor_f] = pd.to_numeric(data[cls.validation_tumor_f])
+        data.loc[:, cls.validation_detection_power] = pd.to_numeric(
             data[cls.validation_detection_power]
         )
         return data

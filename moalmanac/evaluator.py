@@ -115,22 +115,22 @@ class Evaluator:
     @classmethod
     def evaluate_somatic(cls, df):
         df = cls.evaluate_almanac(df)
-        df[cls.score_bin] = cls.assign_bin(df, cls.cancerhotspots_bin, "Cancer Hotspot")
-        df[cls.score_bin] = cls.assign_bin(
+        df.loc[:, cls.score_bin] = cls.assign_bin(df, cls.cancerhotspots_bin, "Cancer Hotspot")
+        df.loc[:, cls.score_bin] = cls.assign_bin(
             df, cls.cancerhotspots3d_bin, "Cancer Hotspot 3D"
         )
-        df[cls.score_bin] = cls.assign_bin(df, cls.cgc_bin, "Cancer Gene Census")
-        df[cls.score_bin] = cls.assign_bin(df, cls.gsea_pathways_bin, "Cancer Pathway")
-        df[cls.score_bin] = cls.assign_bin(df, cls.gsea_modules_bin, "Cancer Module")
-        df[cls.score_bin] = cls.assign_bin(df, cls.cosmic_bin, "Cosmic")
-        df[cls.score_bin] = cls.assign_vus(df)
+        df.loc[:, cls.score_bin] = cls.assign_bin(df, cls.cgc_bin, "Cancer Gene Census")
+        df.loc[:, cls.score_bin] = cls.assign_bin(df, cls.gsea_pathways_bin, "Cancer Pathway")
+        df.loc[:, cls.score_bin] = cls.assign_bin(df, cls.gsea_modules_bin, "Cancer Module")
+        df.loc[:, cls.score_bin] = cls.assign_bin(df, cls.cosmic_bin, "Cosmic")
+        df.loc[:, cls.score_bin] = cls.assign_vus(df)
         return df
 
     @classmethod
     def evaluate_germline(cls, df):
         df = cls.evaluate_almanac(df)
-        df[cls.score_bin] = cls.assign_bin(df, cls.cancerhotspots_bin, "Cancer Hotspot")
-        df[cls.score_bin] = cls.assign_bin(df, cls.cgc_bin, "Cancer Gene Census")
+        df.loc[:, cls.score_bin] = cls.assign_bin(df, cls.cancerhotspots_bin, "Cancer Hotspot")
+        df.loc[:, cls.score_bin] = cls.assign_bin(df, cls.cgc_bin, "Cancer Gene Census")
         return df
 
     @classmethod
@@ -288,7 +288,7 @@ class Actionable:
             list_of_dataframes=actionable_list
         ).reset_index(drop=True)
 
-        df[Evaluator.feature_display] = cls.format_feature_display(df=df, config=config)
+        df.loc[:, Evaluator.feature_display] = cls.format_feature_display(df=df, config=config)
         return df.sort_values(cls.sort_columns, ascending=False)
 
     @classmethod
@@ -474,7 +474,7 @@ class Microsatellite(object):
 
     @classmethod
     def return_msi_variants(cls, df):
-        idx_msi = df[Evaluator.msi_bin].fillna(0.0).astype(float) == float(1.0)
+        idx_msi = df[Evaluator.msi_bin].infer_objects().fillna(0.0).astype(float) == float(1.0)
         idx_missense = df[Evaluator.alt_type].fillna("").str.contains("Missense")
         return df[idx_msi & ~idx_missense]
 

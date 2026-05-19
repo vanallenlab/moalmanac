@@ -131,16 +131,14 @@ class Matchmaker:
     @classmethod
     def subset_samples(cls, dbs):
         summary = dbs[cls.summary]
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            idx_samples_to_use = (
-                summary["use"]
-                .astype(str)
-                .replace("True", 1)
-                .replace("False", 0)
-                .astype(int)
-                .eq(1)
-            )
+        idx_samples_to_use = (
+            summary["use"]
+            .astype(str)
+            .replace("True", 1)
+            .replace("False", 0)
+            .astype(int)
+            .eq(1)
+        )
         return summary[idx_samples_to_use]["broad"].tolist() + [cls.case_profile]
 
 

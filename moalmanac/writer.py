@@ -54,6 +54,7 @@ class Writer:
     prognostic_matches = COLNAMES[section]["prognostic_matches"]
 
     config = COLNAMES[section]["config"]
+    environment = COLNAMES[section]["environment"]
     execution_runtime = COLNAMES[section]["execution_runtime"]
     input_datasources = COLNAMES[section]["input_datasources"]
     input_files = COLNAMES[section]["input_files"]
@@ -132,12 +133,10 @@ class Writer:
 
     @staticmethod
     def convert_dataframe_to_dict(df, reset_index=True, orient="records"):
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            if reset_index:
-                return df.fillna("").reset_index().to_dict(orient=orient)
-            else:
-                return df.fillna("").to_dict(orient=orient)
+        if reset_index:
+            return df.fillna("").reset_index().to_dict(orient=orient)
+        else:
+            return df.fillna("").to_dict(orient=orient)
 
     @staticmethod
     def create_output_name(folder, patient_id, output_suffix):
@@ -555,6 +554,7 @@ class Json:
     def write(
         cls,
         config,
+        environment,
         execution_runtime,
         input_datasources,
         input_files,
@@ -577,6 +577,7 @@ class Json:
         config_dictionary = reader.Ini.convert_ini_to_dictionary(ini=config)
         dictionary = {
             Writer.config: config_dictionary,
+            Writer.environment: environment,
             Writer.execution_runtime: execution_runtime,
             Writer.input_datasources: input_datasources,
             Writer.input_files: input_files,

@@ -1,31 +1,33 @@
-import unittest
 import operator as op
+import unittest
+from pathlib import Path
+
 import pandas as pd
 import scipy.stats as stats
-
-from annotator import (
-    Annotator,
-    ACMG,
-    Almanac,
-    ExAC,
-    OverlapValidation,
-    PreclinicalEfficacy,
-    PreclinicalMatchmaking,
-)
-from datasources import Datasources
-from datasources import Almanac as datasource_Almanac
-from datasources import Preclinical as datasources_Preclinical
+from annotator import ACMG
+from annotator import Almanac
+from annotator import Annotator
+from annotator import ExAC
+from annotator import OverlapValidation
+from annotator import PreclinicalEfficacy
+from annotator import PreclinicalMatchmaking
 from features import Features
 from investigator import SensitivityDictionary
+
+from datasources import Almanac as datasource_Almanac
+from datasources import Preclinical as datasources_Preclinical
+
+TEST_DIR = Path(__file__).parent
+ROOT = TEST_DIR.parent.parent / "datasources"
 
 
 class UnitTestAnnotator(unittest.TestCase):
     def test_compare_ids_true_index(self):
         df1 = pd.DataFrame(
-            {"chromosome": [1, 2, 3], "reference_allele": ["C", "A", "T"]}
+            {"chromosome": [1, 2, 3], "reference_allele": ["C", "A", "T"]},
         )
         df2 = pd.DataFrame(
-            {"chromosome": [1, 2, 3], "reference_allele": ["C", "G", "T"]}
+            {"chromosome": [1, 2, 3], "reference_allele": ["C", "G", "T"]},
         )
         id1 = Annotator.create_id(df1, ["chromosome", "reference_allele"])
         id2 = Annotator.create_id(df2, ["chromosome", "reference_allele"])
@@ -34,7 +36,7 @@ class UnitTestAnnotator(unittest.TestCase):
 
     def test_create_id(self):
         df = pd.DataFrame(
-            {"chromosome": [1, 2, 3], "reference_allele": ["C", "A", "T"]}
+            {"chromosome": [1, 2, 3], "reference_allele": ["C", "A", "T"]},
         )
         id1 = Annotator.create_id(df, ["chromosome"])
         id2 = Annotator.create_id(df, ["chromosome", "reference_allele"])
@@ -44,7 +46,8 @@ class UnitTestAnnotator(unittest.TestCase):
     def test_create_id_series(self):
         df = pd.Series({"gene_name": "TP53", "chromosome": 1, "start_position": 100})
         id1 = Annotator.create_id_series(
-            df, ["gene_name", "chromosome", "start_position"]
+            df,
+            ["gene_name", "chromosome", "start_position"],
         )
         id2 = Annotator.create_id_series(df, ["gene_name"])
         id3 = Annotator.create_id_series(df, ["chromosome"])
@@ -73,7 +76,8 @@ class UnitTestACMG(unittest.TestCase):
         gene = ACMG.gene
         bin_name = ACMG.bin_name
         df = pd.DataFrame({gene: ["TP53", "FOO", "PMS2", "TSC1", "AR"]})
-        dbs = {"acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt"}
+
+        dbs = {"acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt"}
 
         annotated = ACMG.annotate(df, dbs)
         expected_result = pd.Series([1, 0, 1, 1, 0], name=bin_name)
@@ -136,7 +140,7 @@ class UnitTestAlmanac(unittest.TestCase):
                     "last_updated": 0,
                     "label": "e",
                 },
-            ]
+            ],
         )
 
         # key, value pair in each record is if the index matched to the corresponding record in `table`
@@ -144,10 +148,12 @@ class UnitTestAlmanac(unittest.TestCase):
         records2 = pd.Series({0: False, 1: False, 2: False, 3: True, 4: True})
         records3 = pd.Series({0: False, 1: False, 2: False, 3: False, 4: False})
         self.assertEqual(
-            "c", Almanac.sort_and_subset_matches(table, records1, records2)[0]["label"]
+            "c",
+            Almanac.sort_and_subset_matches(table, records1, records2)[0]["label"],
         )
         self.assertEqual(
-            "e", Almanac.sort_and_subset_matches(table, records3, records2)[0]["label"]
+            "e",
+            Almanac.sort_and_subset_matches(table, records3, records2)[0]["label"],
         )
 
     def test_sort_dictionary_as_dataframe(self):
@@ -157,13 +163,19 @@ class UnitTestAlmanac(unittest.TestCase):
             {"A": 2, "B": 1, "C": 2},
         ]
         result1 = Almanac.sort_dictionary_as_dataframe(
-            records, ["A", "B", "C"], [True, True, True]
+            records,
+            ["A", "B", "C"],
+            [True, True, True],
         )
         result2 = Almanac.sort_dictionary_as_dataframe(
-            records, ["A", "B", "C"], [False, False, False]
+            records,
+            ["A", "B", "C"],
+            [False, False, False],
         )
         result3 = Almanac.sort_dictionary_as_dataframe(
-            records, ["C", "B", "A"], [True, True, False]
+            records,
+            ["C", "B", "A"],
+            [True, True, False],
         )
         answer1 = [
             {"A": 0, "B": 3, "C": 1},
@@ -236,16 +248,20 @@ class UnitTestAlmanac(unittest.TestCase):
         ]
         list_of_dicts3 = []
         self.assertEqual(
-            3, Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts2)
+            3,
+            Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts2),
         )
         self.assertEqual(
-            4, Almanac.return_best_evidence_level(list_of_dicts2, list_of_dicts1)
+            4,
+            Almanac.return_best_evidence_level(list_of_dicts2, list_of_dicts1),
         )
         self.assertEqual(
-            3, Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts3)
+            3,
+            Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts3),
         )
         self.assertEqual(
-            3, Almanac.return_best_evidence_level(list_of_dicts3, list_of_dicts1)
+            3,
+            Almanac.return_best_evidence_level(list_of_dicts3, list_of_dicts1),
         )
 
     def test_update_series_with_best_match(self):
@@ -297,24 +313,29 @@ class UnitTestAlmanac(unittest.TestCase):
         ]:
             series = Almanac.update_series_with_best_match(matches, columns, series)
             self.assertEqual(
-                "ABL1 p.T315I (Missense)", series.loc[columns["feature_display"]]
+                "ABL1 p.T315I (Missense)",
+                series.loc[columns["feature_display"]],
             )
             self.assertEqual(
-                "Chronic Myelogenous Leukemia", series.loc[columns["oncotree_term"]]
+                "Chronic Myelogenous Leukemia",
+                series.loc[columns["oncotree_term"]],
             )
             self.assertEqual("CML", series.loc[columns["oncotree_code"]])
             self.assertEqual("", series.loc[columns["context"]])
             self.assertEqual(
-                "Preclinical", series.loc[columns["predictive_implication"]]
+                "Preclinical",
+                series.loc[columns["predictive_implication"]],
             )
             self.assertEqual(1.0, series.loc[columns["predictive_implication_map"]])
             self.assertEqual(
-                "the quick fox caught the hen", series.loc[columns["description"]]
+                "the quick fox caught the hen",
+                series.loc[columns["description"]],
             )
             self.assertEqual("Journal", series.loc[columns["source_type"]])
             self.assertEqual("peer reviewed", series.loc[columns["citation"]])
             self.assertEqual(
-                "https://doi.org/10.1126/science.1062538", series.loc[columns["url"]]
+                "https://doi.org/10.1126/science.1062538",
+                series.loc[columns["url"]],
             )
             self.assertEqual("10.1126/science.1062538", series.loc[columns["doi"]])
             self.assertEqual("11423618", series.loc[columns["pmid"]])
@@ -324,7 +345,8 @@ class UnitTestAlmanac(unittest.TestCase):
             self.assertEqual("Imatinib", series.loc[columns["therapy_name"]])
             self.assertEqual("Targeted therapy", series.loc[columns["therapy_type"]])
         self.assertEqual(
-            "", series.loc[Almanac.column_map_prognostic[Almanac.prognosis]]
+            "",
+            series.loc[Almanac.column_map_prognostic[Almanac.prognosis]],
         )
 
 
@@ -347,7 +369,7 @@ class UnitTestExAC(unittest.TestCase):
                 ref: ["C", "A", "T", "C"],
                 alt: ["G", "G", "G", "G"],
                 feature_type: [somatic, germline, somatic, cn],
-            }
+            },
         )
         exac = pd.DataFrame(
             {
@@ -356,7 +378,7 @@ class UnitTestExAC(unittest.TestCase):
                 ref: ["C", "A", "T"],
                 alt: ["G", "G", "G"],
                 af: [1, 0.5, 0.001],
-            }
+            },
         )
         biomarker_types = [somatic, germline]
         result = ExAC.append_exac_af(
@@ -370,7 +392,7 @@ class UnitTestExAC(unittest.TestCase):
     def test_annotate_common_af(self):
         exac_common_threshold = 0.001
         series = pd.Series(
-            [float(exac_common_threshold) - 0.01, float(exac_common_threshold) + 0.01]
+            [float(exac_common_threshold) - 0.01, float(exac_common_threshold) + 0.01],
         )
         result = ExAC.annotate_common_af(series, threshold=exac_common_threshold)
         self.assertEqual(0.0, result.loc[0])
@@ -404,7 +426,7 @@ class UnitTestValidation(unittest.TestCase):
             columns[5]: [152, pd.NA, 50, 111],
             columns[6]: [pd.NA, pd.NA, pd.NA, pd.NA],
             columns[7]: [pd.NA, pd.NA, pd.NA, pd.NA],
-        }
+        },
     )
 
     dataframe2 = pd.DataFrame(
@@ -414,7 +436,7 @@ class UnitTestValidation(unittest.TestCase):
             columns[3]: ["p.V600E", "p.o00n", "p.Q61*", "p.f00n"],
             columns[6]: [0.20, 0.54, 0.66, 0.41],
             columns[7]: [8, 32, 29, 222],
-        }
+        },
     )
 
     def test_append_validation(self):
@@ -430,22 +452,26 @@ class UnitTestValidation(unittest.TestCase):
         )
         self.assertEqual([0.20, "", 0.66, 0.0], result["validation_tumor_f"].tolist())
         self.assertEqual(
-            [8.0, "", 29.0, 0.0], result["validation_total_coverage"].tolist()
+            [8.0, "", 29.0, 0.0],
+            result["validation_total_coverage"].tolist(),
         )
         self.assertEqual(
-            [0.4103, "", 0.9715, 0.0], result["validation_detection_power"].tolist()
+            [0.4103, "", 0.9715, 0.0],
+            result["validation_detection_power"].tolist(),
         )
 
     def test_calculate_beta_binomial(self):
         self.assertAlmostEqual(
-            0.7006851149078945, stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63), places=10
+            0.7006851149078945,
+            stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63),
+            places=10,
         )
         self.assertEqual(0.7007, round(stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63), 4))
         series_n = pd.Series([10, 50, 100])
         series_a = pd.Series([5, 25, 50])
         series_b = pd.Series([15, 40, 100])
         solutions = list(
-            stats.betabinom.sf(k=3, n=series_n, a=series_a, b=series_b, loc=0)
+            stats.betabinom.sf(k=3, n=series_n, a=series_a, b=series_b, loc=0),
         )
         self.assertAlmostEqual(0.25543941316055174, solutions[0], places=10)
         self.assertAlmostEqual(0.9999749071547652, solutions[1], places=10)
@@ -456,7 +482,9 @@ class UnitTestValidation(unittest.TestCase):
         coverage = pd.Series([5, 100, 50, 66])
         validation_coverage = pd.Series([12, 70, 40, 20])
         result = OverlapValidation.calculate_validation_detection_power(
-            tumor_f, coverage, validation_coverage
+            tumor_f,
+            coverage,
+            validation_coverage,
         )
         self.assertAlmostEqual(0.16176470588235325, result[0], places=10)
         self.assertAlmostEqual(0.999998846495356, result[1], places=10)
@@ -478,15 +506,18 @@ class UnitTestValidation(unittest.TestCase):
 
     def test_get_mutation_index(self):
         dataframe = pd.DataFrame(
-            ["Somatic Variant", "bar", "foo"], columns=[OverlapValidation.feature_type]
+            ["Somatic Variant", "bar", "foo"],
+            columns=[OverlapValidation.feature_type],
         )
         solution = ["Somatic Variant"]
         solution_index = pd.Index([0])
         result = OverlapValidation.get_mutation_index(
-            dataframe, biomarker_type="Somatic Variant"
+            dataframe,
+            biomarker_type="Somatic Variant",
         )
         self.assertEqual(
-            solution[0], dataframe.loc[result[0], OverlapValidation.feature_type]
+            solution[0],
+            dataframe.loc[result[0], OverlapValidation.feature_type],
         )
         self.assertEqual(solution_index[0], result[0])
 
@@ -500,10 +531,10 @@ class UnitTestValidation(unittest.TestCase):
         dataframe2["A"] = ["a", "b", "g"]
         dataframe2["B"] = [1, 4, 5]
         dataframe2["E"] = ["hello", "goodbye", "good day"]
-        result = OverlapValidation.merge_data_frames(
-            dataframe1, dataframe2, ["A", "B"]
-        ).fillna(pd.NA)
-        self.assertEqual(["hello", pd.NA, pd.NA], result["E"].tolist())
+        result = OverlapValidation.merge_data_frames(dataframe1, dataframe2, ["A", "B"])
+        self.assertEqual("hello", result["E"].iloc[0])
+        self.assertTrue(pd.isna(result["E"].iloc[1]))
+        self.assertTrue(pd.isna(result["E"].iloc[2]))
         self.assertEqual(["A", "B", "C", "D", "E"], result.columns.tolist())
 
     def test_round_series(self):
@@ -532,26 +563,46 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
     }
     df2 = pd.DataFrame(data_dictionary, index=[0, 1, 2])
     dbs_dictionary = {
-        "almanac_gdsc_mappings": "../datasources/preclinical/formatted/almanac-gdsc-mappings.json",
-        "summary": "../datasources/preclinical/formatted/cell-lines.summary.txt",
-        "variants": "../datasources/preclinical/annotated/cell-lines.somatic-variants.annotated.txt",
-        "copynumbers": "../datasources/preclinical/annotated/cell-lines.copy-numbers.annotated.txt",
-        "fusions": "../datasources/preclinical/annotated/cell-lines.fusions.annotated.txt",
-        "fusions1": "../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene1.txt",
-        "fusions2": "../datasources/preclinical/annotated/cell-lines.fusions.annotated.gene2.txt",
-        "gdsc": "../datasources/preclinical/formatted/sanger.gdsc.txt",
-        "dictionary": "../datasources/preclinical/cell-lines.pkl",
+        "almanac_gdsc_mappings": ROOT
+        / "preclinical"
+        / "formatted"
+        / "almanac-gdsc-mappings.json",
+        "summary": ROOT / "preclinical" / "formatted" / "cell-lines.summary.txt",
+        "variants": ROOT
+        / "preclinical"
+        / "annotated"
+        / "cell-lines.somatic-variants.annotated.txt",
+        "copynumbers": ROOT
+        / "preclinical"
+        / "annotated"
+        / "cell-lines.copy-numbers.annotated.txt",
+        "fusions": ROOT
+        / "preclinical"
+        / "annotated"
+        / "cell-lines.fusions.annotated.txt",
+        "fusions1": ROOT
+        / "preclinical"
+        / "annotated"
+        / "cell-lines.fusions.annotated.gene1.txt",
+        "fusions2": ROOT
+        / "preclinical"
+        / "annotated"
+        / "cell-lines.fusions.annotated.gene2.txt",
+        "gdsc": ROOT / "preclinical" / "formatted" / "sanger.gdsc.txt",
+        "dictionary": ROOT / "preclinical" / "cell-lines.pkl",
     }
     config = {
         "feature_types": {
             "mut": "Somatic Variant",
             "cna": "Copy Number",
             "fusion": "Rearrangement",
-        }
+        },
     }
     dbs_preclinical = datasources_Preclinical.import_dbs(dbs_dictionary)
     efficacy_dictionary = SensitivityDictionary.create(
-        dbs_preclinical, df1, config=config
+        dbs_preclinical,
+        df1,
+        config=config,
     )
 
     def test_annotate(self):
@@ -563,12 +614,12 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
 
         result_braf = result.loc[0, "preclinical_efficacy_lookup"][0]
         result_pvalue_index_0 = float(
-            result_braf["Dabrafenib"]["BRAF"]["comparison"]["pvalue_mww"]
+            result_braf["Dabrafenib"]["BRAF"]["comparison"]["pvalue_mww"],
         )
         result_pvalue_index_1 = float(
             result_braf["Dabrafenib"]["BRAF Somatic Variant"]["comparison"][
                 "pvalue_mww"
-            ]
+            ],
         )
         self.assertEqual(result_pvalue_index_0, float(self.df2.loc[0, "pvalue_mww"]))
         self.assertEqual(result_pvalue_index_1, float(self.df2.loc[1, "pvalue_mww"]))
@@ -583,19 +634,23 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
 class UnitTestPreclinicalMatchmaking(unittest.TestCase):
     def test_annotate_copy_numbers(self):
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
@@ -608,12 +663,14 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             {
                 feature: ["CDKN2A", "CDKN2A", "KRAS"],
                 alteration_type: ["Deletion", "Amplification", "Amplification"],
-            }
+            },
         )
         df[feature_type] = copy_number
         df[alteration] = pd.NA
         result = PreclinicalMatchmaking.annotate_copy_numbers(
-            df, dbs, biomarker_type_string=copy_number
+            df,
+            dbs,
+            biomarker_type_string=copy_number,
         )
 
         expected_cdkn2a_del = {
@@ -669,19 +726,23 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_annotate_fusions(self):
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
@@ -694,14 +755,16 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             {
                 feature: ["BCR", "BCR", "NTRK1", "CDKN2A"],
                 partner: ["ABL1", "foo", "ABL1", "bar"],
-            }
+            },
         )
         df[feature_type] = fusion
         df[alteration_type] = "Fusion"
         df[model_id] = "case"
 
         result, group1, group2 = PreclinicalMatchmaking.annotate_fusions(
-            df, dbs, biomarker_type_string=fusion
+            df,
+            dbs,
+            biomarker_type_string=fusion,
         )
 
         expected_index_0 = {
@@ -719,20 +782,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 0,
         }
         self.assertEqual(
-            result.loc[0, "feature_match_1"], expected_index_0["feature_match_1"]
+            result.loc[0, "feature_match_1"],
+            expected_index_0["feature_match_1"],
         )
         self.assertEqual(
-            result.loc[0, "feature_match_2"], expected_index_0["feature_match_2"]
+            result.loc[0, "feature_match_2"],
+            expected_index_0["feature_match_2"],
         )
         self.assertEqual(
-            result.loc[0, "feature_match_3"], expected_index_0["feature_match_3"]
+            result.loc[0, "feature_match_3"],
+            expected_index_0["feature_match_3"],
         )
         self.assertEqual(
-            result.loc[0, "feature_match_4"], expected_index_0["feature_match_4"]
+            result.loc[0, "feature_match_4"],
+            expected_index_0["feature_match_4"],
         )
         self.assertEqual(result.loc[0, "evidence"], expected_index_0["evidence"])
         self.assertEqual(
-            result.loc[0, "cancerhotspots_bin"], expected_index_0["cancerhotspots_bin"]
+            result.loc[0, "cancerhotspots_bin"],
+            expected_index_0["cancerhotspots_bin"],
         )
         self.assertEqual(
             result.loc[0, "cancerhotspots3D_bin"],
@@ -741,10 +809,12 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(result.loc[0, "cgc_bin"], expected_index_0["cgc_bin"])
         self.assertEqual(result.loc[0, "cosmic_bin"], expected_index_0["cosmic_bin"])
         self.assertEqual(
-            result.loc[0, "gsea_pathways_bin"], expected_index_0["gsea_pathways_bin"]
+            result.loc[0, "gsea_pathways_bin"],
+            expected_index_0["gsea_pathways_bin"],
         )
         self.assertEqual(
-            result.loc[0, "gsea_modules_bin"], expected_index_0["gsea_modules_bin"]
+            result.loc[0, "gsea_modules_bin"],
+            expected_index_0["gsea_modules_bin"],
         )
 
         expected_index_1 = {
@@ -762,20 +832,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 1,
         }
         self.assertEqual(
-            result.loc[1, "feature_match_1"], expected_index_1["feature_match_1"]
+            result.loc[1, "feature_match_1"],
+            expected_index_1["feature_match_1"],
         )
         self.assertEqual(
-            result.loc[1, "feature_match_2"], expected_index_1["feature_match_2"]
+            result.loc[1, "feature_match_2"],
+            expected_index_1["feature_match_2"],
         )
         self.assertEqual(
-            result.loc[1, "feature_match_3"], expected_index_1["feature_match_3"]
+            result.loc[1, "feature_match_3"],
+            expected_index_1["feature_match_3"],
         )
         self.assertEqual(
-            result.loc[1, "feature_match_4"], expected_index_1["feature_match_4"]
+            result.loc[1, "feature_match_4"],
+            expected_index_1["feature_match_4"],
         )
         self.assertEqual(result.loc[1, "evidence"], expected_index_1["evidence"])
         self.assertEqual(
-            result.loc[1, "cancerhotspots_bin"], expected_index_1["cancerhotspots_bin"]
+            result.loc[1, "cancerhotspots_bin"],
+            expected_index_1["cancerhotspots_bin"],
         )
         self.assertEqual(
             result.loc[1, "cancerhotspots3D_bin"],
@@ -784,10 +859,12 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(result.loc[1, "cgc_bin"], expected_index_1["cgc_bin"])
         self.assertEqual(result.loc[1, "cosmic_bin"], expected_index_1["cosmic_bin"])
         self.assertEqual(
-            result.loc[1, "gsea_pathways_bin"], expected_index_1["gsea_pathways_bin"]
+            result.loc[1, "gsea_pathways_bin"],
+            expected_index_1["gsea_pathways_bin"],
         )
         self.assertEqual(
-            result.loc[1, "gsea_modules_bin"], expected_index_1["gsea_modules_bin"]
+            result.loc[1, "gsea_modules_bin"],
+            expected_index_1["gsea_modules_bin"],
         )
 
         expected_index_2 = {
@@ -805,20 +882,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 0,
         }
         self.assertEqual(
-            result.loc[2, "feature_match_1"], expected_index_2["feature_match_1"]
+            result.loc[2, "feature_match_1"],
+            expected_index_2["feature_match_1"],
         )
         self.assertEqual(
-            result.loc[2, "feature_match_2"], expected_index_2["feature_match_2"]
+            result.loc[2, "feature_match_2"],
+            expected_index_2["feature_match_2"],
         )
         self.assertEqual(
-            result.loc[2, "feature_match_3"], expected_index_2["feature_match_3"]
+            result.loc[2, "feature_match_3"],
+            expected_index_2["feature_match_3"],
         )
         self.assertEqual(
-            result.loc[2, "feature_match_4"], expected_index_2["feature_match_4"]
+            result.loc[2, "feature_match_4"],
+            expected_index_2["feature_match_4"],
         )
         self.assertEqual(result.loc[2, "evidence"], expected_index_2["evidence"])
         self.assertEqual(
-            result.loc[2, "cancerhotspots_bin"], expected_index_2["cancerhotspots_bin"]
+            result.loc[2, "cancerhotspots_bin"],
+            expected_index_2["cancerhotspots_bin"],
         )
         self.assertEqual(
             result.loc[2, "cancerhotspots3D_bin"],
@@ -827,10 +909,12 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(result.loc[2, "cgc_bin"], expected_index_2["cgc_bin"])
         self.assertEqual(result.loc[2, "cosmic_bin"], expected_index_2["cosmic_bin"])
         self.assertEqual(
-            result.loc[2, "gsea_pathways_bin"], expected_index_2["gsea_pathways_bin"]
+            result.loc[2, "gsea_pathways_bin"],
+            expected_index_2["gsea_pathways_bin"],
         )
         self.assertEqual(
-            result.loc[2, "gsea_modules_bin"], expected_index_2["gsea_modules_bin"]
+            result.loc[2, "gsea_modules_bin"],
+            expected_index_2["gsea_modules_bin"],
         )
 
         expected_index_3 = {
@@ -848,20 +932,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 1,
         }
         self.assertEqual(
-            result.loc[3, "feature_match_1"], expected_index_3["feature_match_1"]
+            result.loc[3, "feature_match_1"],
+            expected_index_3["feature_match_1"],
         )
         self.assertEqual(
-            result.loc[3, "feature_match_2"], expected_index_3["feature_match_2"]
+            result.loc[3, "feature_match_2"],
+            expected_index_3["feature_match_2"],
         )
         self.assertEqual(
-            result.loc[3, "feature_match_3"], expected_index_3["feature_match_3"]
+            result.loc[3, "feature_match_3"],
+            expected_index_3["feature_match_3"],
         )
         self.assertEqual(
-            result.loc[3, "feature_match_4"], expected_index_3["feature_match_4"]
+            result.loc[3, "feature_match_4"],
+            expected_index_3["feature_match_4"],
         )
         self.assertEqual(result.loc[3, "evidence"], expected_index_3["evidence"])
         self.assertEqual(
-            result.loc[3, "cancerhotspots_bin"], expected_index_3["cancerhotspots_bin"]
+            result.loc[3, "cancerhotspots_bin"],
+            expected_index_3["cancerhotspots_bin"],
         )
         self.assertEqual(
             result.loc[3, "cancerhotspots3D_bin"],
@@ -870,10 +959,12 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(result.loc[3, "cgc_bin"], expected_index_3["cgc_bin"])
         self.assertEqual(result.loc[3, "cosmic_bin"], expected_index_3["cosmic_bin"])
         self.assertEqual(
-            result.loc[3, "gsea_pathways_bin"], expected_index_3["gsea_pathways_bin"]
+            result.loc[3, "gsea_pathways_bin"],
+            expected_index_3["gsea_pathways_bin"],
         )
         self.assertEqual(
-            result.loc[3, "gsea_modules_bin"], expected_index_3["gsea_modules_bin"]
+            result.loc[3, "gsea_modules_bin"],
+            expected_index_3["gsea_modules_bin"],
         )
 
         expected_index_0_group1 = {
@@ -891,16 +982,20 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 1,
         }
         self.assertEqual(
-            group1.loc[0, "feature_match_1"], expected_index_0_group1["feature_match_1"]
+            group1.loc[0, "feature_match_1"],
+            expected_index_0_group1["feature_match_1"],
         )
         self.assertEqual(
-            group1.loc[0, "feature_match_2"], expected_index_0_group1["feature_match_2"]
+            group1.loc[0, "feature_match_2"],
+            expected_index_0_group1["feature_match_2"],
         )
         self.assertEqual(
-            group1.loc[0, "feature_match_3"], expected_index_0_group1["feature_match_3"]
+            group1.loc[0, "feature_match_3"],
+            expected_index_0_group1["feature_match_3"],
         )
         self.assertEqual(
-            group1.loc[0, "feature_match_4"], expected_index_0_group1["feature_match_4"]
+            group1.loc[0, "feature_match_4"],
+            expected_index_0_group1["feature_match_4"],
         )
         self.assertEqual(group1.loc[0, "evidence"], expected_index_0_group1["evidence"])
         self.assertEqual(
@@ -913,7 +1008,8 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         )
         self.assertEqual(group1.loc[0, "cgc_bin"], expected_index_0_group1["cgc_bin"])
         self.assertEqual(
-            group1.loc[0, "cosmic_bin"], expected_index_0_group1["cosmic_bin"]
+            group1.loc[0, "cosmic_bin"],
+            expected_index_0_group1["cosmic_bin"],
         )
         self.assertEqual(
             group1.loc[0, "gsea_pathways_bin"],
@@ -939,16 +1035,20 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 1,
         }
         self.assertEqual(
-            group1.loc[2, "feature_match_1"], expected_index_2_group1["feature_match_1"]
+            group1.loc[2, "feature_match_1"],
+            expected_index_2_group1["feature_match_1"],
         )
         self.assertEqual(
-            group1.loc[2, "feature_match_2"], expected_index_2_group1["feature_match_2"]
+            group1.loc[2, "feature_match_2"],
+            expected_index_2_group1["feature_match_2"],
         )
         self.assertEqual(
-            group1.loc[2, "feature_match_3"], expected_index_2_group1["feature_match_3"]
+            group1.loc[2, "feature_match_3"],
+            expected_index_2_group1["feature_match_3"],
         )
         self.assertEqual(
-            group1.loc[2, "feature_match_4"], expected_index_2_group1["feature_match_4"]
+            group1.loc[2, "feature_match_4"],
+            expected_index_2_group1["feature_match_4"],
         )
         self.assertEqual(group1.loc[2, "evidence"], expected_index_2_group1["evidence"])
         self.assertEqual(
@@ -961,7 +1061,8 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         )
         self.assertEqual(group1.loc[2, "cgc_bin"], expected_index_2_group1["cgc_bin"])
         self.assertEqual(
-            group1.loc[2, "cosmic_bin"], expected_index_2_group1["cosmic_bin"]
+            group1.loc[2, "cosmic_bin"],
+            expected_index_2_group1["cosmic_bin"],
         )
         self.assertEqual(
             group1.loc[2, "gsea_pathways_bin"],
@@ -986,16 +1087,20 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 1,
         }
         self.assertEqual(
-            group1.loc[3, "feature_match_1"], expected_index_3_group1["feature_match_1"]
+            group1.loc[3, "feature_match_1"],
+            expected_index_3_group1["feature_match_1"],
         )
         self.assertEqual(
-            group1.loc[3, "feature_match_2"], expected_index_3_group1["feature_match_2"]
+            group1.loc[3, "feature_match_2"],
+            expected_index_3_group1["feature_match_2"],
         )
         self.assertEqual(
-            group1.loc[3, "feature_match_3"], expected_index_3_group1["feature_match_3"]
+            group1.loc[3, "feature_match_3"],
+            expected_index_3_group1["feature_match_3"],
         )
         self.assertEqual(
-            group1.loc[3, "feature_match_4"], expected_index_3_group1["feature_match_4"]
+            group1.loc[3, "feature_match_4"],
+            expected_index_3_group1["feature_match_4"],
         )
         self.assertEqual(
             group1.loc[3, "cancerhotspots_bin"],
@@ -1007,7 +1112,8 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         )
         self.assertEqual(group1.loc[3, "cgc_bin"], expected_index_3_group1["cgc_bin"])
         self.assertEqual(
-            group1.loc[3, "cosmic_bin"], expected_index_3_group1["cosmic_bin"]
+            group1.loc[3, "cosmic_bin"],
+            expected_index_3_group1["cosmic_bin"],
         )
         self.assertEqual(
             group1.loc[3, "gsea_pathways_bin"],
@@ -1032,16 +1138,20 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 0,
         }
         self.assertEqual(
-            group2.loc[0, "feature_match_1"], expected_index_0_group2["feature_match_1"]
+            group2.loc[0, "feature_match_1"],
+            expected_index_0_group2["feature_match_1"],
         )
         self.assertEqual(
-            group2.loc[0, "feature_match_2"], expected_index_0_group2["feature_match_2"]
+            group2.loc[0, "feature_match_2"],
+            expected_index_0_group2["feature_match_2"],
         )
         self.assertEqual(
-            group2.loc[0, "feature_match_3"], expected_index_0_group2["feature_match_3"]
+            group2.loc[0, "feature_match_3"],
+            expected_index_0_group2["feature_match_3"],
         )
         self.assertEqual(
-            group2.loc[0, "feature_match_4"], expected_index_0_group2["feature_match_4"]
+            group2.loc[0, "feature_match_4"],
+            expected_index_0_group2["feature_match_4"],
         )
         self.assertEqual(
             group2.loc[0, "cancerhotspots_bin"],
@@ -1053,7 +1163,8 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         )
         self.assertEqual(group2.loc[0, "cgc_bin"], expected_index_0_group2["cgc_bin"])
         self.assertEqual(
-            group2.loc[0, "cosmic_bin"], expected_index_0_group2["cosmic_bin"]
+            group2.loc[0, "cosmic_bin"],
+            expected_index_0_group2["cosmic_bin"],
         )
         self.assertEqual(
             group2.loc[0, "gsea_pathways_bin"],
@@ -1079,16 +1190,20 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_modules_bin": 0,
         }
         self.assertEqual(
-            group2.loc[1, "feature_match_1"], expected_index_1_group2["feature_match_1"]
+            group2.loc[1, "feature_match_1"],
+            expected_index_1_group2["feature_match_1"],
         )
         self.assertEqual(
-            group2.loc[1, "feature_match_2"], expected_index_1_group2["feature_match_2"]
+            group2.loc[1, "feature_match_2"],
+            expected_index_1_group2["feature_match_2"],
         )
         self.assertEqual(
-            group2.loc[1, "feature_match_3"], expected_index_1_group2["feature_match_3"]
+            group2.loc[1, "feature_match_3"],
+            expected_index_1_group2["feature_match_3"],
         )
         self.assertEqual(
-            group2.loc[1, "feature_match_4"], expected_index_1_group2["feature_match_4"]
+            group2.loc[1, "feature_match_4"],
+            expected_index_1_group2["feature_match_4"],
         )
         self.assertEqual(group2.loc[1, "evidence"], expected_index_1_group2["evidence"])
         self.assertEqual(
@@ -1101,7 +1216,8 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         )
         self.assertEqual(group2.loc[1, "cgc_bin"], expected_index_1_group2["cgc_bin"])
         self.assertEqual(
-            group2.loc[1, "cosmic_bin"], expected_index_1_group2["cosmic_bin"]
+            group2.loc[1, "cosmic_bin"],
+            expected_index_1_group2["cosmic_bin"],
         )
         self.assertEqual(
             group2.loc[1, "gsea_pathways_bin"],
@@ -1114,19 +1230,23 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_annotate_fusions_matching(self):
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
 
         feature = PreclinicalMatchmaking.feature
@@ -1151,7 +1271,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             {
                 feature: ["BCR", "BCR", "NTRK1", "CDKN2A", ""],
                 partner: ["ABL1", "", "ABL1", "", ""],
-            }
+            },
         )
         df[feature_type] = fusion
         df[alteration_type] = "Fusion"
@@ -1166,7 +1286,10 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         db[alteration_type] = "Fusion"
         db_genes = ["ABL1", "BCR", "NTRK1", "CDKN2A"]
         result = PreclinicalMatchmaking.annotate_fusions_matching(
-            df, db, db_genes, consider_partner=True
+            df,
+            db,
+            db_genes,
+            consider_partner=True,
         ).fillna(0)
 
         expected_0 = {match_1: 1, match_2: 1, match_3: 1, match_4: 1, match: 4}
@@ -1187,19 +1310,23 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_annotate_somatic_variants(self):
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         feature = PreclinicalMatchmaking.feature
         feature_type = PreclinicalMatchmaking.feature_type
@@ -1213,12 +1340,14 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 feature: ["BRAF", "BRAF", "IDH1", "CDKN2A"],
                 alteration_type: ["Missense", "Missense", "Nonsense", "Nonsense"],
                 alteration: ["p.V600E", "p.F00N", "p.F00*", "p.F42*"],
-            }
+            },
         )
         df[feature_type] = somatic_variant
 
         result = PreclinicalMatchmaking.annotate_somatic_variants(
-            df, dbs, biomarker_type_string=somatic_variant
+            df,
+            dbs,
+            biomarker_type_string=somatic_variant,
         )
 
         expected_braf_1 = {
@@ -1294,32 +1423,37 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         match_1 = PreclinicalMatchmaking.match_1
 
         df = pd.DataFrame(
-            {feature: ["Gene1", "Gene2", "", ""], "expectation": [1, 0, 1, 1]}
+            {feature: ["Gene1", "Gene2", "", ""], "expectation": [1, 0, 1, 1]},
         )
         genes = ["Gene1", ""]
         result = PreclinicalMatchmaking.annotate_match_1(df, genes).fillna(0)
         for index in result.index:
             self.assertEqual(
-                result.loc[index, match_1], result.loc[index, "expectation"]
+                result.loc[index, match_1],
+                result.loc[index, "expectation"],
             )
 
     def test_annotate_match_2(self):
         match_2 = PreclinicalMatchmaking.match_2
 
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = "Copy Number"
@@ -1344,13 +1478,17 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             protein_change: alteration,
         }
         db = Almanac.subset_records(
-            almanac["content"], Almanac.feature_type, somatic_variant
+            almanac["content"],
+            Almanac.feature_type,
+            somatic_variant,
         )
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(list(column_map.keys()), column_map, db)
 
         result = PreclinicalMatchmaking.annotate_match_2(
-            df, db, feature=feature
+            df,
+            db,
+            feature=feature,
         ).fillna(0)
         self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation"])
         self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation"])
@@ -1359,13 +1497,17 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         df = pd.DataFrame({feature: ["ERBB2", "KRAS", ""], "expectation": [1, 0, 0]})
         column_map = {gene: feature, direction: alteration_type}
         db = Almanac.subset_records(
-            almanac["content"], Almanac.feature_type, copy_number
+            almanac["content"],
+            Almanac.feature_type,
+            copy_number,
         )
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(list(column_map.keys()), column_map, db)
 
         result = PreclinicalMatchmaking.annotate_match_2(
-            df, db, feature=feature
+            df,
+            db,
+            feature=feature,
         ).fillna(0)
         self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation"])
         self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation"])
@@ -1377,16 +1519,20 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 "gene2": ["ALK", "ABL1", "BCR", ""],
                 "expectation1": [1, 0, 1, 0],
                 "expectation2": [1, 1, 0, 0],
-            }
+            },
         )
         column_map = {rearrangement_type: alteration_type}
         db = Almanac.subset_records(almanac["content"], Almanac.feature_type, fusion)
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(
-            [gene1, gene2, rearrangement_type], column_map, db
+            [gene1, gene2, rearrangement_type],
+            column_map,
+            db,
         )
         result = PreclinicalMatchmaking.annotate_match_2(
-            df, db, feature="gene1"
+            df,
+            db,
+            feature="gene1",
         ).fillna(0)
         self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation1"])
         self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation1"])
@@ -1394,7 +1540,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         self.assertEqual(result.loc[3, match_2], result.loc[3, "expectation1"])
 
         result = PreclinicalMatchmaking.annotate_match_2(
-            df, db, feature="gene2"
+            df,
+            db,
+            feature="gene2",
         ).fillna(0)
         self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation2"])
         self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation2"])
@@ -1405,19 +1553,23 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         match_3 = PreclinicalMatchmaking.match_3
 
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = "Copy Number"
@@ -1440,7 +1592,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 feature: ["BRAF", "CDKN2A", "BRAF"],
                 alteration_type: ["Missense", "Missense", "Nonsense"],
                 "expectation": [1, 0, 0],
-            }
+            },
         )
         column_map = {
             gene: feature,
@@ -1448,17 +1600,23 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             protein_change: alteration,
         }
         db = Almanac.subset_records(
-            almanac["content"], Almanac.feature_type, somatic_variant
+            almanac["content"],
+            Almanac.feature_type,
+            somatic_variant,
         )
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(list(column_map.keys()), column_map, db)
 
         result = PreclinicalMatchmaking.annotate_match_3(
-            df, db, feature=feature, alteration_type=alteration_type
+            df,
+            db,
+            feature=feature,
+            alteration_type=alteration_type,
         ).fillna(0)
         for index in result.index:
             self.assertEqual(
-                result.loc[index, match_3], result.loc[index, "expectation"]
+                result.loc[index, match_3],
+                result.loc[index, "expectation"],
             )
 
         df = pd.DataFrame(
@@ -1466,21 +1624,27 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 feature: ["ERBB2", "KRAS", "CDKN2A"],
                 alteration_type: ["Amplification", "Deletion", "Deletion"],
                 "expectation": [1, 0, 1],
-            }
+            },
         )
         column_map = {gene: feature, direction: alteration_type}
         db = Almanac.subset_records(
-            almanac["content"], Almanac.feature_type, copy_number
+            almanac["content"],
+            Almanac.feature_type,
+            copy_number,
         )
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(list(column_map.keys()), column_map, db)
 
         result = PreclinicalMatchmaking.annotate_match_3(
-            df, db, feature=feature, alteration_type=alteration_type
+            df,
+            db,
+            feature=feature,
+            alteration_type=alteration_type,
         ).fillna(0)
         for index in result.index:
             self.assertEqual(
-                result.loc[index, match_3], result.loc[index, "expectation"]
+                result.loc[index, match_3],
+                result.loc[index, "expectation"],
             )
 
         df = pd.DataFrame(
@@ -1490,23 +1654,31 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 alteration_type: ["Fusion", "Fusion", "Fusion", "Fusion"],
                 "expectation1": [1, 0, 1, 0],
                 "expectation2": [1, 1, 0, 0],
-            }
+            },
         )
         column_map = {rearrangement_type: alteration_type}
         db = Almanac.subset_records(almanac["content"], Almanac.feature_type, fusion)
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(
-            [gene1, gene2, rearrangement_type], column_map, db
+            [gene1, gene2, rearrangement_type],
+            column_map,
+            db,
         )
         result = PreclinicalMatchmaking.annotate_match_3(
-            df, db, feature=gene1, alteration_type=alteration_type
+            df,
+            db,
+            feature=gene1,
+            alteration_type=alteration_type,
         ).fillna(0)
         self.assertEqual(result.loc[0, match_3], result.loc[0, "expectation1"])
         self.assertEqual(result.loc[1, match_3], result.loc[1, "expectation1"])
         self.assertEqual(result.loc[2, match_3], result.loc[2, "expectation1"])
 
         result = PreclinicalMatchmaking.annotate_match_3(
-            df, db, feature=gene2, alteration_type=alteration_type
+            df,
+            db,
+            feature=gene2,
+            alteration_type=alteration_type,
         ).fillna(0)
         self.assertEqual(result.loc[0, match_3], result.loc[0, "expectation2"])
         self.assertEqual(result.loc[1, match_3], result.loc[1, "expectation2"])
@@ -1516,19 +1688,23 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         match_4 = PreclinicalMatchmaking.match_4
 
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = "Copy Number"
@@ -1551,7 +1727,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 alteration_type: ["Missense", "Missense", "Nonsense"],
                 alteration: ["p.V600E", "p.F00N", "p.F00*"],
                 "expectation": [1, 0, 0],
-            }
+            },
         )
         column_map = {
             gene: feature,
@@ -1559,7 +1735,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             protein_change: alteration,
         }
         db = Almanac.subset_records(
-            almanac["content"], Almanac.feature_type, somatic_variant
+            almanac["content"],
+            Almanac.feature_type,
+            somatic_variant,
         )
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(list(column_map.keys()), column_map, db)
@@ -1575,16 +1753,21 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
                 gene2: ["ABL1", "ALK", "BCR", ""],
                 alteration_type: ["Fusion", "Fusion", "Fusion", "Fusion"],
                 "expectation1": [1, 1, 0, 0],
-            }
+            },
         )
         column_map = {rearrangement_type: alteration_type}
         db = Almanac.subset_records(almanac["content"], Almanac.feature_type, fusion)
         db = pd.DataFrame(db)
         db = PreclinicalMatchmaking.format_db(
-            [gene1, gene2, rearrangement_type], column_map, db
+            [gene1, gene2, rearrangement_type],
+            column_map,
+            db,
         )
         result = PreclinicalMatchmaking.annotate_match_4(
-            df, db, feature=gene1, alteration=gene2
+            df,
+            db,
+            feature=gene1,
+            alteration=gene2,
         ).fillna(0)
 
         self.assertEqual(result.loc[0, match_4], result.loc[0, "expectation1"])
@@ -1594,19 +1777,23 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
     def test_format_db(self):
         dbs = {
-            "almanac_handle": "../datasources/moalmanac/molecular-oncology-almanac.json",
-            "cancerhotspots_handle": "../datasources/cancerhotspots/hotspots_v2.txt",
-            "3dcancerhotspots_handle": "../datasources/cancerhotspots/hotspots3d.txt",
-            "cgc_handle": "../datasources/cancergenecensus/cancer_gene_census_v97.genes.tsv",
-            "cosmic_handle": "../datasources/cosmic/CosmicMutantExport_v97.lite.txt",
-            "gsea_pathways_handle": "../datasources/gsea_gene_sets/GSEA_cancer_gene_sets.txt",
-            "gsea_modules_handle": "../datasources/gsea_gene_sets/c4.cm.v6.0.symbols.txt",
-            "exac_handle": "../datasources/exac/exac.expanded.r1.txt",
-            "acmg_handle": "../datasources/acmg/acmg.secondaryfindings.v3.txt",
-            "clinvar_handle": "../datasources/clinvar/variant_summary.lite.txt",
-            "hereditary_handle": "../datasources/hereditary/hereditary.txt",
-            "oncotree_handle": "../datasources/oncotree/oncotree.2023-03-09.txt",
-            "lawrence_handle": "../datasources/lawrence/lawrence_mapped_ontology.txt",
+            "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
+            "cancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots_v2.txt",
+            "3dcancerhotspots_handle": ROOT / "cancerhotspots" / "hotspots3d.txt",
+            "cgc_handle": ROOT
+            / "cancergenecensus"
+            / "cancer_gene_census_test.genes.tsv",
+            "cosmic_handle": ROOT / "cosmic" / "CosmicMutantExport_test.lite.txt",
+            "gsea_pathways_handle": ROOT
+            / "gsea_gene_sets"
+            / "GSEA_cancer_gene_sets.txt",
+            "gsea_modules_handle": ROOT / "gsea_gene_sets" / "c4.cm.v6.0.symbols.txt",
+            "exac_handle": ROOT / "exac" / "exac.expanded.r1.empty.txt",
+            "acmg_handle": ROOT / "acmg" / "acmg.secondaryfindings.v3.txt",
+            "clinvar_handle": ROOT / "clinvar" / "variant_summary.lite.txt",
+            "hereditary_handle": ROOT / "hereditary" / "hereditary.txt",
+            "oncotree_handle": ROOT / "oncotree" / "oncotree.2023-03-09.txt",
+            "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         almanac = datasource_Almanac.import_ds(dbs)
         copy_number = "Copy Number"
@@ -1634,11 +1821,15 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             protein_change: alteration,
         }
         db = Almanac.subset_records(
-            almanac["content"], Almanac.feature_type, somatic_variant
+            almanac["content"],
+            Almanac.feature_type,
+            somatic_variant,
         )
         db = pd.DataFrame(db)
         result = PreclinicalMatchmaking.format_db(
-            list(column_map.keys()), column_map, db
+            list(column_map.keys()),
+            column_map,
+            db,
         )
         for index in result.index:
             self.assertEqual(
@@ -1648,11 +1839,15 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
         column_map = {gene: feature, direction: alteration_type}
         db = Almanac.subset_records(
-            almanac["content"], Almanac.feature_type, copy_number
+            almanac["content"],
+            Almanac.feature_type,
+            copy_number,
         )
         db = pd.DataFrame(db)
         result = PreclinicalMatchmaking.format_db(
-            list(column_map.keys()), column_map, db
+            list(column_map.keys()),
+            column_map,
+            db,
         )
         for index in result.index:
             self.assertEqual(
@@ -1664,7 +1859,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         db = Almanac.subset_records(almanac["content"], Almanac.feature_type, fusion)
         db = pd.DataFrame(db)
         result = PreclinicalMatchmaking.format_db(
-            [gene1, gene2, rearrangement_type], column_map, db
+            [gene1, gene2, rearrangement_type],
+            column_map,
+            db,
         ).fillna("")
         for index in result.index:
             self.assertEqual(
@@ -1686,7 +1883,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
 
         dataframe = pd.Series(list(evidence_map.values()), name=evidence_str).to_frame()
         result = PreclinicalMatchmaking.map_evidence(dataframe).set_index(
-            evidence_map_str
+            evidence_map_str,
         )
         for label, value in evidence_map.items():
             self.assertEqual(result.loc[value, evidence_str], label)

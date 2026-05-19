@@ -177,11 +177,11 @@ class CancerHotspots:
 
     @classmethod
     def format_cancerhotspots(cls, df):
-        df[cls.alt] = "p." + df.loc[:, cls.aa_ref].str.split(":", expand=True).iloc[
+        df.loc[:, cls.alt] = "p." + df.loc[:, cls.aa_ref].str.split(":", expand=True).iloc[
             :, 0
         ].astype(str)
-        df[cls.alt] += df[cls.aa_pos].astype(str)
-        df[cls.alt] += df[cls.aa_var].str.split(":", expand=True).iloc[:, 0].astype(str)
+        df.loc[:, cls.alt] = df[cls.alt] + df[cls.aa_pos].astype(str)
+        df.loc[:, cls.alt] = df[cls.alt] + df[cls.aa_var].str.split(":", expand=True).iloc[:, 0].astype(str)
         return df
 
     @classmethod
@@ -446,13 +446,13 @@ class Preclinical:
         ccle_map = cls.create_convert_names_dict(summary, cls.ccle_name, cls.broad)
         sanger_map = cls.create_convert_names_dict(summary, cls.sanger, cls.broad)
 
-        summary[cls.model_id] = summary[cls.broad]
-        variants[cls.model_id] = variants[cls.model_id].replace(ccle_map)
-        cnas[cls.model_id] = cnas[cls.model_id].replace(ccle_map)
-        fusions[cls.model_id] = fusions[cls.model_id].replace(sanger_map)
-        fusions1[cls.model_id] = fusions1[cls.model_id].replace(sanger_map)
-        fusions2[cls.model_id] = fusions2[cls.model_id].replace(sanger_map)
-        gdsc[cls.model_id] = gdsc[cls.model_id].replace(sanger_map)
+        summary.loc[:, cls.model_id] = summary[cls.broad]
+        variants.loc[:, cls.model_id] = variants[cls.model_id].replace(ccle_map)
+        cnas.loc[:, cls.model_id] = cnas[cls.model_id].replace(ccle_map)
+        fusions.loc[:, cls.model_id] = fusions[cls.model_id].replace(sanger_map)
+        fusions1.loc[:, cls.model_id] = fusions1[cls.model_id].replace(sanger_map)
+        fusions2.loc[:, cls.model_id] = fusions2[cls.model_id].replace(sanger_map)
+        gdsc.loc[:, cls.model_id] = gdsc[cls.model_id].replace(sanger_map)
         samples = cls.generate_sample_list(summary, cls.use_column, cls.model_id)
 
         dbs = {

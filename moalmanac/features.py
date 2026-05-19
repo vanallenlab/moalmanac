@@ -121,7 +121,7 @@ class Features:
 
     @classmethod
     def create_empty_series(cls):
-        return pd.Series(index=cls.all_columns, dtype=str)
+        return pd.Series(index=cls.all_columns, dtype=object)
 
     @classmethod
     def drop_duplicate_genes(cls, df, sort_column):
@@ -295,7 +295,7 @@ class CopyNumber:
             df[Features.feature_type] = Features.annotate_feature_type(
                 biomarker_type, df.index
             )
-            df[Features.feature] = cls.format_cn_gene(df[Features.feature])
+            df.loc[:, Features.feature] = cls.format_cn_gene(df[Features.feature])
             if called_handle:
                 seg_accept, seg_reject = CopyNumberCalled.process_calls(
                     df, amplification_string, deletion_string
@@ -433,14 +433,12 @@ class CoverageMetrics:
 
     @classmethod
     def format_coverage_col(cls, series):
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            formatted_series = (
-                series.replace("__UNKNOWN__", pd.NA)
-                .replace("", pd.NA)
-                .astype(object)
-                .fillna(pd.NA)
-            )
+        formatted_series = (
+            series.replace("__UNKNOWN__", pd.NA)
+            .replace("", pd.NA)
+            .astype(object)
+            .fillna(pd.NA)
+        )
         formatted_series = cls.apply_min_coverage_for_onps(formatted_series)
         formatted_series = cls.convert_to_pandas_int64(formatted_series)
         return formatted_series
@@ -498,7 +496,7 @@ class CosmicSignatures:
             minimum_contribution = config["signatures"]["min_contribution"]
             df[Features.feature_type] = biomarker_type
             df[Features.alt_type] = "v3.4"
-            df[Features.alt] = cls.round_contributions(df[Features.alt])
+            df.loc[:, Features.alt] = cls.round_contributions(df[Features.alt])
             idx = cls.index_for_minimum_contribution(
                 series=df[Features.alt], minimum_value=minimum_contribution
             )
@@ -543,28 +541,28 @@ class Fusion:
         df = Features.import_if_path_exists(handle, "\t", column_map, index_col=False)
         if not df.empty:
             split_genes = cls.split_genes(df[Features.feature])
-            df[Features.left_gene] = split_genes[Features.left_gene]
-            df[Features.right_gene] = split_genes[Features.right_gene]
+            df.loc[:, Features.left_gene] = split_genes[Features.left_gene]
+            df.loc[:, Features.right_gene] = split_genes[Features.right_gene]
 
             leftbreakpoint = config["fusion"]["leftbreakpoint"]
             rightbreakpoint = config["fusion"]["rightbreakpoint"]
             left = cls.split_breakpoint(df[leftbreakpoint])
             right = cls.split_breakpoint(df[rightbreakpoint])
 
-            df[Features.chr] = left[Features.chr]
-            df[Features.start] = left[Features.start]
-            df[Features.left_chr] = left[Features.chr]
-            df[Features.left_start] = left[Features.start]
-            df[Features.right_chr] = right[Features.chr]
-            df[Features.right_start] = right[Features.start]
+            df.loc[:, Features.chr] = left[Features.chr]
+            df.loc[:, Features.start] = left[Features.start]
+            df.loc[:, Features.left_chr] = left[Features.chr]
+            df.loc[:, Features.left_start] = left[Features.start]
+            df.loc[:, Features.right_chr] = right[Features.chr]
+            df.loc[:, Features.right_start] = right[Features.start]
             df.drop([leftbreakpoint, rightbreakpoint], axis=1, inplace=True)
 
             biomarker_type = config["feature_types"]["fusion"]
-            df[Features.feature_type] = Features.annotate_feature_type(
+            df.loc[:, Features.feature_type] = Features.annotate_feature_type(
                 biomarker_type, df.index
             )
-            df[Features.alt_type] = config["fusion"]["alt_Type"]
-            df[Features.alt] = df[Features.feature]
+            df.loc[:, Features.alt_type] = config["fusion"]["alt_Type"]
+            df.loc[:, Features.alt] = df[Features.feature]
 
             min_fragments = config["fusion"]["spanningfrags_min"]
             idx_min_spanning_fragments = cls.filter_by_spanning_fragment_count(
@@ -577,8 +575,8 @@ class Fusion:
 
             fusions_left = fusions_unique.copy(deep=True)
             fusions_right = fusions_unique.copy(deep=True)
-            fusions_left[Features.feature] = fusions_left[Features.left_gene]
-            fusions_right[Features.feature] = fusions_right[Features.right_gene]
+            fusions_left.loc[:, Features.feature] = fusions_left[Features.left_gene]
+            fusions_right.loc[:, Features.feature] = fusions_right[Features.right_gene]
 
             fusions_accept = pd.concat([fusions_left, fusions_right], ignore_index=True)
             fusions_reject = df.loc[df.index.difference(fusions_accept.index), :]
@@ -675,16 +673,18 @@ class MAF(Features):
     @classmethod
     def format_maf(cls, df, feature_type):
         df = Features.preallocate_missing_columns(df)
-        df[Features.feature_type] = cls.annotate_feature_type(feature_type, df.index)
-        df[Features.alt_count] = CoverageMetrics.format_coverage_col(df[cls.alt_count])
-        df[Features.ref_count] = CoverageMetrics.format_coverage_col(df[cls.ref_count])
-        df[Features.coverage] = CoverageMetrics.calculate_coverage(
-            df[cls.alt_count], df[cls.ref_count]
+        df.loc[:, Features.feature_type] = cls.annotate_feature_type(feature_type, df.index)
+        df.loc[:, Features.alt_count] = CoverageMetrics.format_coverage_col(df[cls.alt_count])
+        df.loc[:, Features.ref_count] = CoverageMetrics.format_coverage_col(df[cls.ref_count])
+        df.loc[:, Features.coverage] = CoverageMetrics.calculate_coverage(
+            df[cls.alt_count],
+            df[cls.ref_count],
         )
-        df[Features.tumor_f] = CoverageMetrics.calculate_tumor_f(
-            df[cls.alt_count], df[cls.coverage]
+        df.loc[:, Features.tumor_f] = CoverageMetrics.calculate_tumor_f(
+            df[cls.alt_count],
+            df[cls.coverage],
         )
-        df[Features.alt_type] = cls.rename_coding_classifications(df[cls.alt_type])
+        df.loc[:, Features.alt_type] = cls.rename_coding_classifications(df[cls.alt_type])
         return df
 
     @classmethod

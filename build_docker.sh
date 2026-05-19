@@ -7,6 +7,7 @@ sed -i "" -e "s#../datasources#/datasources#" moalmanac/annotation-databases.ini
 sed -i "" -e "s#../datasources#/datasources#" moalmanac/preclinical-databases.ini
 sed -i "" -e "s#exac.expanded.r1.empty.txt#exac.expanded.r1.txt#" moalmanac/annotation-databases.ini
 
+docker buildx build -t vanallenlab/moalmanac:"${tag}" --load .
 docker buildx build --platform linux/amd64,linux/arm64/v8 -t vanallenlab/moalmanac:"${tag}" --push .
 docker buildx build --platform linux/amd64,linux/arm64/v8 -t vanallenlab/moalmanac:latest --push .
 

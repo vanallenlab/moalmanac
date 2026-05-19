@@ -42,7 +42,7 @@ class Annotator:
         ds = importer.import_ds(dbs)
         logger.Messages.dataframe_size(label="...datasource size", dataframe=ds)
 
-        df[bin_name] = cls.match_ds(df, ds, bin_name, comparison_columns)
+        df.loc[:, bin_name] = cls.match_ds(df, ds, bin_name, comparison_columns)
         message = f"...annotation complete, {df[bin_name].notnull().shape[0]} records annotated"
         logger.Messages.general(message=message)
         for value, group in df.groupby(bin_name):
@@ -53,13 +53,13 @@ class Annotator:
 
     @classmethod
     def annotate_almanac(cls, df, dbs, ontology, config):
-        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df.loc[:, cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
         df = Almanac.annotate(df, dbs, ontology, config)
         return df
 
     @classmethod
     def annotate_germline(cls, df, dbs, ontology, config):
-        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df.loc[:, cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
         df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerGeneCensus.annotate(df, dbs)
@@ -72,7 +72,7 @@ class Annotator:
 
     @classmethod
     def annotate_simple(cls, df, dbs, ontology, config):
-        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df.loc[:, cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
         df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
@@ -87,7 +87,7 @@ class Annotator:
 
     @classmethod
     def annotate_somatic(cls, df, dbs, ontology, config):
-        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df.loc[:, cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
         df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
@@ -101,7 +101,7 @@ class Annotator:
 
     @classmethod
     def annotate_somatic_no_exac(cls, df, dbs, ontology, config):
-        df[cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
+        df.loc[:, cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
         df = Almanac.annotate(df, dbs, ontology, config)
         df = CancerHotspots.annotate(df, dbs)
         df = CancerHotspots3D.annotate(df, dbs)
@@ -164,7 +164,7 @@ class Annotator:
 
     @classmethod
     def match_ds(cls, df, ds, bin_column, compare_columns):
-        df[bin_column] = cls.preallocate_bin(bin_column, df.index)
+        df.loc[:, bin_column] = cls.preallocate_bin(bin_column, df.index)
 
         for i in range(len(compare_columns)):
             cols = compare_columns[: i + 1]
@@ -463,14 +463,12 @@ class Almanac:
                 message=f"...records of {feature_type} in the database: {table.shape[0]}"
             )
 
-            # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-            with pd.option_context("future.no_silent_downcasting", True):
-                table[cls.implication_map] = (
-                    table[cls.implication]
-                    .astype(str)
-                    .replace(cls.predictive_implication_map)
-                    .astype(float)
-                )
+            table.loc[:, cls.implication_map] = (
+                table[cls.implication]
+                .astype(str)
+                .replace(cls.predictive_implication_map)
+                .astype(float)
+            )
 
             simple_biomarkers = [
                 config["feature_types"]["mut"],
@@ -1303,10 +1301,10 @@ class ClinVar:
             df.loc[:, col] = pd.to_numeric(df.loc[:, col])
             ds.loc[:, col] = pd.to_numeric(ds.loc[:, col])
 
-        df[cls.chr] = df[cls.chr].astype(str)
-        ds[cls.chr] = ds[cls.chr].astype(str)
+        df.loc[:, cls.chr] = df[cls.chr].astype(str)
+        ds.loc[:, cls.chr] = ds[cls.chr].astype(str)
 
-        return df.reset_index().merge(ds, how="left").set_index("index")
+        return df.copy().reset_index().merge(ds, how="left").set_index("index")
 
     @classmethod
     def annotate(cls, df, dbs):
@@ -1399,7 +1397,7 @@ class ExAC:
             dataframe=not_variants, column=cls.af, fill_value=0.0, fill_data_type=float
         )
         result = pd.concat([merged, not_variants])
-        result[cls.af] = result[cls.af].astype(float).round(6)
+        result.loc[:, cls.af] = result[cls.af].astype(float).round(6)
         return result
 
     @classmethod
@@ -1432,7 +1430,7 @@ class ExAC:
             ],
         )
         common_allele_frequency_threshold = config["exac"]["exac_common_af_threshold"]
-        subset[cls.bin_name] = cls.annotate_common_af(
+        subset.loc[:, cls.bin_name] = cls.annotate_common_af(
             series_exac_af=subset[cls.af], threshold=common_allele_frequency_threshold
         )
 
@@ -1567,7 +1565,7 @@ class ExACExtended:
         )
 
         common_allele_frequency_threshold = config["exac"]["exac_common_af_threshold"]
-        subset[ExAC.bin_name] = ExAC.annotate_common_af(
+        subset.loc[:, ExAC.bin_name] = ExAC.annotate_common_af(
             series_exac_af=subset[ExAC.af], threshold=common_allele_frequency_threshold
         )
 
@@ -1672,7 +1670,7 @@ class MSI:
             message="...with gene list with containing genes related to microsatellite instability"
         )
         logger.Messages.general(message=f"...genes: {','.join(cls.msi_genes)}")
-        df[cls.bin_name] = Annotator.match_ds(
+        df.loc[:, cls.bin_name] = Annotator.match_ds(
             df, cls.create_msi_df(), cls.bin_name, cls.comparison_columns
         )
         for value, group in df.groupby(cls.bin_name):
@@ -1726,7 +1724,7 @@ class OverlapValidation:
                 df.loc[idx, cls.validation_coverage].astype(float),
             )
         )
-        df[cls.validation_detection_power] = cls.round_series(
+        df.loc[:, cls.validation_detection_power] = cls.round_series(
             df[cls.validation_detection_power], 4
         )
         return df
@@ -1838,7 +1836,7 @@ class PreclinicalEfficacy:
 
     @classmethod
     def create_lookup(cls, all_index_values, relevant_index_values, dictionary):
-        series = pd.Series("", index=all_index_values, name=cls.lookup)
+        series = pd.Series("", index=all_index_values, name=cls.lookup, dtype=object)
         for index in relevant_index_values:
             series.loc[index] = [dictionary[index]]
         return series
@@ -2003,9 +2001,7 @@ class PreclinicalMatchmaking:
             axis=1,
         )
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            values = values.fillna(-1.0).idxmax(axis=1)
+        values = values.fillna(-1.0).idxmax(axis=1)
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -2050,9 +2046,7 @@ class PreclinicalMatchmaking:
             axis=1,
         )
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            values = values.fillna(-1.0).idxmax(axis=1)
+        values = values.fillna(-1.0).idxmax(axis=1)
 
         idx_group1 = values[values.eq(cls.group1)].index
         idx_group2 = values[values.eq(cls.group2)].index
@@ -2077,9 +2071,7 @@ class PreclinicalMatchmaking:
             axis=1,
         )
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            values = values.fillna(-1.0).idxmax(axis=1)
+        values = values.fillna(-1.0).idxmax(axis=1)
 
         idx_group3 = values[values.eq(cls.group3)].index
         idx_group4 = values[values.eq(cls.group4)].index
@@ -2230,11 +2222,9 @@ class PreclinicalMatchmaking:
         db = db.loc[:, columns].drop_duplicates()
         db.rename(columns=column_map, inplace=True)
 
-        # this is required for python 3.12 and pandas 2.2.2 to opt into future behavior for type downcasting
-        with pd.option_context("future.no_silent_downcasting", True):
-            db[cls.evidence_map_str] = (
-                db[cls.evidence].astype(str).replace(cls.evidence_map).astype(int)
-            )
+        db[cls.evidence_map_str] = (
+            db[cls.evidence].astype(str).replace(cls.evidence_map).astype(int)
+        )
         db.sort_values(
             [cls.evidence_map_str, cls.feature_display],
             ascending=[False, True],

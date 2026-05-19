@@ -1,6 +1,10 @@
 import configparser
 import pathlib
 
+import pandas as pd
+
+pd.set_option("future.no_silent_downcasting", True)
+
 default_colnames = pathlib.Path(__file__).resolve().parent / "colnames.ini"
 
 

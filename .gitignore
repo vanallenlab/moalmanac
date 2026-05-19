@@ -1,0 +1,35 @@
+.DS_Store*
+*__pycache__*
+
+# datasources
+datasources/exac/exac.expanded.r1.txt
+datasources/exac/GenomeAnalysisTK-3.8.jar
+datasources/exac/Homo_sapiens*
+datasources/cancergenecensus/cancer_gene_census_v*
+datasources/cosmic/CosmicMutantExport_v*
+datasources/gsea_gene_sets/
+datasources/preclinical/ccle.copy-numbers.evaluated.txt
+datasources/preclinical/ccle.variants.evaluated.txt
+datasources/preclinical/sanger.fusions.evaluated.txt
+datasources/preclinical/sanger.fusions.gene1.evaluated.txt
+datasources/preclinical/sanger.fusions.gene2.evaluated.txt
+datasources/preclinical/source/ccle-2019/*.txt
+datasources/preclinical/source/ccle-2019/*.seg
+datasources/preclinical/source/ccle-2019/*.xlsx
+datasources/preclinical/source/ccle-2019/LICENSE
+datasources/preclinical/source/ccle-2019/case_lists/*.txt
+datasources/preclinical/source/depmap/*.csv
+datasources/preclinical/source/gdsc/*.xlsx
+datasources/preclinical/source/gdsc/*.txt
+datasources/preclinical/source/gdsc/*.pdf
+datasources/preclinical/source/gdsc/*.csv
+
+# environments
+*venv*
+
+# Jupyter notebooks
+*.ipynb_checkpoints*
+moalmanac/*.ipynb
+
+# Generated outputs
+moalmanac/*output*

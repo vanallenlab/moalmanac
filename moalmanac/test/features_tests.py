@@ -346,10 +346,10 @@ class UnitTestCoverageMetrics(unittest.TestCase):
         self.assertEqual(first="", second=result.loc[1, 0])
         self.assertEqual(first="", second=result.loc[2, 0])
         self.assertEqual(first="", second=result.loc[3, 0])
-        self.assertEqual(first=None, second=result.loc[0, 1])
-        self.assertEqual(first=None, second=result.loc[1, 1])
-        self.assertEqual(first=None, second=result.loc[2, 1])
-        self.assertEqual(first=None, second=result.loc[3, 1])
+        self.assertTrue(pd.isna(result.loc[0, 1]))
+        self.assertTrue(pd.isna(result.loc[1, 1]))
+        self.assertTrue(pd.isna(result.loc[2, 1]))
+        self.assertTrue(pd.isna(result.loc[3, 1]))
 
 
 class UnitTestFusion(unittest.TestCase):
@@ -381,7 +381,7 @@ class UnitTestFusion(unittest.TestCase):
         self.assertEqual("foo", result.loc[0, features.Features.left_gene])
         self.assertEqual("bar", result.loc[0, features.Features.right_gene])
         self.assertEqual("foo-bar", result.loc[1, features.Features.left_gene])
-        self.assertEqual(None, result.loc[1, features.Features.right_gene])
+        self.assertTrue(pd.isna(result.loc[1, features.Features.right_gene]))
         self.assertEqual("A", result.loc[2, features.Features.left_gene])
         self.assertEqual("B", result.loc[2, features.Features.right_gene])
 
@@ -393,7 +393,7 @@ class UnitTestFusion(unittest.TestCase):
         self.assertEqual("chr9", result.loc[1, features.Features.chr])
         self.assertEqual("100", result.loc[1, features.Features.start])
         self.assertEqual("", result.loc[2, features.Features.chr])
-        self.assertEqual(None, result.loc[2, features.Features.start])
+        self.assertTrue(pd.isna(result.loc[2, features.Features.start]))
 
 
 class UnitTestMAF(unittest.TestCase):

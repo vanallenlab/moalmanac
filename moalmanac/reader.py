@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import pathlib
 import pickle
+import warnings
 
 
 class Ini:
@@ -113,7 +114,9 @@ class Reader:
     @staticmethod
     def read_pickle(handle):
         with open(handle, "rb") as pickle_handle:
-            return pickle.load(pickle_handle)
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", message="dtype\\(\\)")
+                return pickle.load(pickle_handle)
 
     @staticmethod
     def return_columns_as_lowercase(dataframe):

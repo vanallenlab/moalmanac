@@ -51,7 +51,7 @@ class Reporter:
         lookup = COLNAMES["datasources"]
         columns = [lookup["sensitivity"], lookup["resistance"], lookup["prognosis"]]
         for column in columns:
-            dataframe[column] = cls.format_clinical_columns(
+            dataframe.loc[:, column] = cls.format_clinical_columns(
                 dataframe[column], convert_to_float=True
             )
 
@@ -61,7 +61,7 @@ class Reporter:
             lookup["prognostic_implication"],
         ]
         for column in columns:
-            dataframe[column] = cls.format_clinical_columns(
+            dataframe.loc[:, column] = cls.format_clinical_columns(
                 dataframe[column], convert_to_float=False
             )
 
@@ -72,7 +72,7 @@ class Reporter:
         ]
         for column in columns:
             if column in dataframe.columns:
-                dataframe[column] = cls.preallocate_matches_columns(dataframe[column])
+                dataframe.loc[:, column] = cls.preallocate_matches_columns(dataframe[column])
 
         if "preclinical_efficacy_lookup" in dataframe.columns:
             dataframe.fillna({"preclinical_efficacy_lookup": ""}, inplace=True)
