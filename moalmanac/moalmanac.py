@@ -737,6 +737,7 @@ def process_preclinical_efficacy(
 
 
 def main(patient, inputs, output_folder, config, dbs, dbs_preclinical=None):
+    os.makedirs(output_folder, exist_ok=True)
     start_time = time.time()
     start_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     environment_metadata = start_logging(
