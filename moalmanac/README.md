@@ -1,4 +1,4 @@
-# Molecular Oncology Almanac 
+# Molecular Oncology Almanac
 Molecular Oncology Almanac can be run by executing either `moalmanac.py` with [standard input formats](#standard-usage) or `simplified_input.py` with [simplified inputs](#simplified-input). Please follow the [installation instructions](../README.md#installation) before use.
 
 ## Standard usage
@@ -26,6 +26,7 @@ Optional arguments:
     --ms_status             <string>    microsatellite status as deemed by MSI sensor, MSI or MSS, default=Unknown
     --purity                <float>     tumor purity
     --ploidy                <float>     tumor ploidy
+    --tmb                   <float>     tumor mutational burden
     --wgd                   <boolean>   specify the occurence of whole genome duplication
     --disable_matchmaking   <boolean>   remove patient-to-cell line matchmaking from report
     --description           <string>    description of patient
@@ -56,12 +57,12 @@ python moalmanac.py \
     --preclinical-dbs preclinical-databases.ini
 ```
 
-These example inputs may also be processed by executing `run_example.py`. 
+These example inputs may also be processed by executing `run_example.py`.
 
-Please also view our additional documentation on the [descriptions of inputs](../docs/description-of-inputs.md) for more details about input file formats. 
+Please also view our additional documentation on the [descriptions of inputs](../docs/description-of-inputs.md) for more details about input file formats.
 
 ## Simplified input
-A simplified input of a single file for somatic variants, germline variants, called copy number alterations, and fusions may also be used for a minimal interpretation. This mode also allows for [MSI status](../docs/description-of-inputs.md#microsatellite-status) and [whole-genome doubling](../docs/description-of-inputs.md#whole-genome-doubling) to be considered. With this format, MOAlmanac will be unable to annotate with any datasources that rely on nucleotide position. 
+A simplified input of a single file for somatic variants, germline variants, called copy number alterations, and fusions may also be used for a minimal interpretation. This mode also allows for [MSI status](../docs/description-of-inputs.md#microsatellite-status) and [whole-genome doubling](../docs/description-of-inputs.md#whole-genome-doubling) to be considered. With this format, MOAlmanac will be unable to annotate with any datasources that rely on nucleotide position.
 
 As with the [standard usage](#standard-usage), additional settings can be set by modifying the [config.ini](#configini) file and column names may be modified by editing the [colnames.ini](#colnamesini) file.
 
@@ -131,12 +132,12 @@ MOAlmanac can be customized by modifying the [config.ini](config.ini) file and c
 
 ### config.ini
 The configuration file [config.ini](config.ini) lets users change settings, thresholds, and input string values. The file contains the following sections,
-- `function_toggle` allows users to enable or disable the [actionability report](../docs/description-of-outputs.md#report), [model_similarity](../docs/description-of-outputs.md#profile-to-cell-line-matchmaking), [mutational signature](../docs/description-of-outputs.md#mutational-signatures), and [preclinical efficacy](../docs/description-of-outputs.md#preclinical-efficacy) functions. 
+- `function_toggle` allows users to enable or disable the [actionability report](../docs/description-of-outputs.md#report), [model_similarity](../docs/description-of-outputs.md#profile-to-cell-line-matchmaking), [mutational signature](../docs/description-of-outputs.md#mutational-signatures), and [preclinical efficacy](../docs/description-of-outputs.md#preclinical-efficacy) functions.
 - `versions` are string inputs to describe the MOAlmanac algorithm and database versions
 - `exac` allows users to specify a threshold for [Allele frequency in ExAC](https://gnomad.broadinstitute.org/help/faf) to identify common variants
 - `fusion` allows users to specify the minimum spanning fragments required for fusions
 - `mutation` allows users to specify minimum values for coverage and allelic fraction for evaluation of somatic and germline variants
-- `seg` allows users to specify thresholds for total copy number 
+- `seg` allows users to specify thresholds for total copy number
 - `signatures` allows users to specify the minimum required contribution to consider mutational signatures
 - `validation_sequencing` allows users to specify minimum power and allelic fraction to consider for variants from validation sequencing
 - `feature_types` allows users to specify strings for considered feature types
@@ -154,7 +155,7 @@ The configuration file [annotation-databases.ini](annotation-databases.ini) lets
 Similar to `annotation-databases.ini`, the configuration file [preclinical-databases.ini](preclinical-databases.ini) lets users change paths to datasources being used to for preclinical comparison functions,  [model_similarity](../docs/description-of-outputs.md#profile-to-cell-line-matchmaking) and [preclinical efficacy](../docs/description-of-outputs.md#preclinical-efficacy).
 
 ## Citation
-If you find this tool or any code herein useful, please cite:  
+If you find this tool or any code herein useful, please cite:
 > [Reardon, B., Moore, N.D., Moore, N.S., *et al*. Integrating molecular profiles into clinical frameworks through the Molecular Oncology Almanac to prospectively guide precision oncology. *Nat Cancer* (2021). https://doi.org/10.1038/s43018-021-00243-3](https://www.nature.com/articles/s43018-021-00243-3)
 
 ## Disclaimer - For research use only
