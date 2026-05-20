@@ -47,6 +47,7 @@ purity = COLNAMES[patient_section]["purity"]
 ploidy = COLNAMES[patient_section]["ploidy"]
 wgd = COLNAMES[patient_section]["wgd"]
 ms_status = COLNAMES[patient_section]["ms_status"]
+tmb = COLNAMES[patient_section]["tumor_mutational_burden"]
 
 oncotree_section = "oncotree"
 ontology = COLNAMES[oncotree_section]["ontology"]
@@ -251,38 +252,35 @@ class Load:
             features.BurdenReader.high_burden_boolean,
         ]
 
-        if path:
+        if patient_dictionary[tmb]:
+            tmb_value = patient_dictionary[tmb]
+            logger.Messages.general(
+                message=f"Somatic coding mutational burden provided: {tmb_value}",
+            )
+        elif path:
             logger.Messages.general(message=f"Somatic bases covered from {path}")
-            somatic_burden = features.BurdenReader.import_feature(
-                handle=path,
-                patient=patient_dictionary,
-                variants=variants,
-                dbs=dbs,
-                config=config,
-            )
-            logger.Messages.general(
-                message="Somatic coding tumor mutational burden calculated",
-            )
-            for column in columns:
-                linebreak = True if column == columns[-1] else False
-                logger.Messages.general(
-                    message=f"...{column}: {somatic_burden.loc[0, column]}",
-                    add_line_break=linebreak,
-                )
         else:
-            logger.Messages.general(
-                message="No input file for somatic bases covered provided",
-            )
+            message = "No TMB value or an somatic bases covered file provided."
+            logger.Messages.general(message=message)
             logger.Messages.general(
                 message="...no input file provided to load",
                 add_line_break=True,
             )
-            somatic_burden = features.BurdenReader.import_feature(
-                handle=path,
-                patient=patient_dictionary,
-                variants=variants,
-                dbs=dbs,
-                config=config,
+        somatic_burden = features.BurdenReader.import_feature(
+            handle=path,
+            patient=patient_dictionary,
+            variants=variants,
+            dbs=dbs,
+            config=config,
+        )
+        logger.Messages.general(
+            message="...somatic coding tumor mutational burden calculated",
+        )
+        for column in columns:
+            linebreak = column == columns[-1]
+            logger.Messages.general(
+                message=f"...{column}: {somatic_burden.loc[0, column]}",
+                add_line_break=linebreak,
             )
         return somatic_burden
 
@@ -711,6 +709,16 @@ def plot_preclinical_efficacy(dictionary, folder, label):
             figure = therapy_dictionary["figure"]
             figure_name = therapy_dictionary["figure_name"]
             writer.Illustrations.write(figure, folder, label, f"{figure_name}.png")
+
+
+def positive_float(value):
+    """
+    Custom type for argparse argument, requires a float value > 0.0.
+    """
+    float_value = float(value)
+    if float_value <= 0:
+        raise argparse.ArgumentTypeError(f"{value} is not a positive float")
+    return float_value
 
 
 def process_preclinical_efficacy(
@@ -1243,6 +1251,12 @@ if __name__ == "__main__":
         help="file for SBS signature contributions, version 3.4",
     )
     arg_parser.add_argument(
+        "--tmb",
+        default=None,
+        help="A positive float value for tumor mutational burden",
+        type=positive_float,
+    )
+    arg_parser.add_argument(
         "--purity",
         default="Unknown",
         help="Tumor purity",
@@ -1293,6 +1307,7 @@ if __name__ == "__main__":
         purity: args.purity,
         ploidy: args.ploidy,
         ms_status: args.ms_status,
+        tmb: args.tmb,
         wgd: args.wgd,
     }
 

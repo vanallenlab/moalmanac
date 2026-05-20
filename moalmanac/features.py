@@ -1,14 +1,13 @@
+import os
+import sys
+
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
-import os
-import subprocess
-import sys
-
-from datasources import Lawrence
+from config import COLNAMES
 from reader import Reader
 
-from config import COLNAMES
+from datasources import Lawrence
 
 
 class Features:
@@ -143,7 +142,8 @@ class Features:
     def preallocate_missing_columns(cls, df):
         missing_cols = [col for col in cls.all_columns if col not in df.columns]
         return pd.concat(
-            [df, pd.DataFrame(None, columns=missing_cols, index=df.index)], axis=1
+            [df, pd.DataFrame(None, columns=missing_cols, index=df.index)],
+            axis=1,
         )
 
 
@@ -175,6 +175,7 @@ class BurdenReader:
     percentile_tcga = COLNAMES[burden_section]["percentile_tcga"]
     percentile_tcga_tissue = COLNAMES[burden_section]["percentile_tcga_tissue"]
     high_burden_boolean = COLNAMES[burden_section]["high_burden_boolean"]
+    tumor_mutational_burden = COLNAMES[burden_section]["tumor_mutational_burden"]
 
     high = "High Mutational Burden"
     not_high = "Not high mutational burden"
@@ -216,15 +217,7 @@ class BurdenReader:
         if np.isnan(series[cls.mutational_burden]):
             return False
 
-        if not np.isnan(series[cls.percentile_tcga_tissue]):
-            percentile = series[cls.percentile_tcga_tissue]
-        else:
-            percentile = series[cls.percentile_tcga]
-
-        if (float(percentile) >= 0.80) & (float(series[cls.mutational_burden]) >= 10.0):
-            return True
-        else:
-            return False
+        return float(series[cls.mutational_burden]) >= 10.0
 
     @classmethod
     def evaluate_high_burden_boolean(cls, boolean):
@@ -237,7 +230,7 @@ class BurdenReader:
     def import_feature(cls, handle, patient, variants, dbs, config):
         if os.path.exists(handle):
             bases_covered = float(
-                Reader.read(handle, "\t", index_col=False).columns.tolist()[0]
+                Reader.read(handle, "\t", index_col=False).columns.tolist()[0],
             )
         else:
             bases_covered = np.nan
@@ -248,7 +241,11 @@ class BurdenReader:
         mutations = variants[
             variants[Features.feature_type] == config["feature_types"]["mut"]
         ].shape[0]
-        mutational_burden = cls.calculate_burden(mutations, bases_covered)
+
+        if patient[cls.tumor_mutational_burden]:
+            mutational_burden = float(patient[cls.tumor_mutational_burden])
+        else:
+            mutational_burden = cls.calculate_burden(mutations, bases_covered)
 
         df[cls.n_nonsyn_mutations] = mutations
         df[cls.mutational_burden] = mutational_burden
@@ -256,10 +253,13 @@ class BurdenReader:
         code = patient[cls.code]
         lawrence = Lawrence.import_ds(dbs)
         df[cls.percentile_tcga] = cls.calculate_percentile(
-            lawrence[cls.mutational_burden], mutational_burden
+            lawrence[cls.mutational_burden],
+            mutational_burden,
         )
         df[cls.percentile_tcga_tissue] = cls.calculate_percentile_tissuetype(
-            mutational_burden, lawrence, code
+            mutational_burden,
+            lawrence,
+            code,
         )
 
         burden_boolean = cls.evaluate_high_burden(df)
@@ -285,7 +285,10 @@ class CopyNumber:
             handle = not_called_handle
 
         df = Features.import_if_path_exists(
-            handle, "\t", column_map, comment_character="#"
+            handle,
+            "\t",
+            column_map,
+            comment_character="#",
         )
 
         amplification_string = config["seg"]["amp"]
@@ -293,12 +296,15 @@ class CopyNumber:
         if not df.empty:
             biomarker_type = config["feature_types"]["cna"]
             df[Features.feature_type] = Features.annotate_feature_type(
-                biomarker_type, df.index
+                biomarker_type,
+                df.index,
             )
             df.loc[:, Features.feature] = cls.format_cn_gene(df[Features.feature])
             if called_handle:
                 seg_accept, seg_reject = CopyNumberCalled.process_calls(
-                    df, amplification_string, deletion_string
+                    df,
+                    amplification_string,
+                    deletion_string,
                 )
             else:
                 seg_accept, seg_reject = CopyNumberTotal.process_calls(df, config)
@@ -359,7 +365,12 @@ class CopyNumberTotal(CopyNumber):
 
     @classmethod
     def filter_by_threshold(
-        cls, df, percentile_amp, percentile_del, amp_string, del_string
+        cls,
+        df,
+        percentile_amp,
+        percentile_del,
+        amp_string,
+        del_string,
     ):
         unique_segments = cls.get_unique_segments(df)
         threshold_amp = Features.calculate_percentile(unique_segments, percentile_amp)
@@ -373,11 +384,16 @@ class CopyNumberTotal(CopyNumber):
         ].index
 
         df[Features.alt_type] = cls.annotate_amp_del(
-            df.index, idx_amp, idx_del, amp_string, del_string
+            df.index,
+            idx_amp,
+            idx_del,
+            amp_string,
+            del_string,
         )
         idx_accept = df[df[Features.alt_type] != ""].index
         idx_unique = Features.drop_duplicate_genes(
-            df.loc[idx_accept, :], Features.segment_mean
+            df.loc[idx_accept, :],
+            Features.segment_mean,
         )
 
         df[Features.segment_mean] = df[Features.segment_mean].astype(float).round(3)
@@ -397,7 +413,11 @@ class CopyNumberTotal(CopyNumber):
         amp_string = config["seg"]["amp"]
         del_string = config["seg"]["del"]
         return cls.filter_by_threshold(
-            dataframe, amp_percentile, del_percentile, amp_string, del_string
+            dataframe,
+            amp_percentile,
+            del_percentile,
+            amp_string,
+            del_string,
         )
 
 
@@ -461,7 +481,7 @@ class CoverageMetrics:
     def safe_cast(value):
         try:
             return int(value)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return pd.NA
 
     @staticmethod
@@ -498,7 +518,8 @@ class CosmicSignatures:
             df[Features.alt_type] = "v3.4"
             df.loc[:, Features.alt] = cls.round_contributions(df[Features.alt])
             idx = cls.index_for_minimum_contribution(
-                series=df[Features.alt], minimum_value=minimum_contribution
+                series=df[Features.alt],
+                minimum_value=minimum_contribution,
             )
             return df[idx]
         else:
@@ -559,17 +580,20 @@ class Fusion:
 
             biomarker_type = config["feature_types"]["fusion"]
             df.loc[:, Features.feature_type] = Features.annotate_feature_type(
-                biomarker_type, df.index
+                biomarker_type,
+                df.index,
             )
             df.loc[:, Features.alt_type] = config["fusion"]["alt_Type"]
             df.loc[:, Features.alt] = df[Features.feature]
 
             min_fragments = config["fusion"]["spanningfrags_min"]
             idx_min_spanning_fragments = cls.filter_by_spanning_fragment_count(
-                series=df[Features.spanningfrags], minimum=min_fragments
+                series=df[Features.spanningfrags],
+                minimum=min_fragments,
             )
             idx_unique = Features.drop_duplicate_genes(
-                df.loc[idx_min_spanning_fragments, :], Features.feature
+                df.loc[idx_min_spanning_fragments, :],
+                Features.feature,
             )
             fusions_unique = df.loc[idx_unique, :]
 
@@ -588,7 +612,7 @@ class Fusion:
     @staticmethod
     def split_genes(series_gene):
         return series_gene.str.split("--", expand=True).rename(
-            columns={0: Features.left_gene, 1: Features.right_gene}
+            columns={0: Features.left_gene, 1: Features.right_gene},
         )
 
     @staticmethod
@@ -648,7 +672,7 @@ class MAF(Features):
             return "gdc_maf_input"
         else:
             sys.exit(
-                "Neither 'Protein_Change' nor 'HGVSp_Short' are present columns, cannot map to MAF format"
+                "Neither 'Protein_Change' nor 'HGVSp_Short' are present columns, cannot map to MAF format",
             )
 
     @classmethod
@@ -673,9 +697,16 @@ class MAF(Features):
     @classmethod
     def format_maf(cls, df, feature_type):
         df = Features.preallocate_missing_columns(df)
-        df.loc[:, Features.feature_type] = cls.annotate_feature_type(feature_type, df.index)
-        df.loc[:, Features.alt_count] = CoverageMetrics.format_coverage_col(df[cls.alt_count])
-        df.loc[:, Features.ref_count] = CoverageMetrics.format_coverage_col(df[cls.ref_count])
+        df.loc[:, Features.feature_type] = cls.annotate_feature_type(
+            feature_type,
+            df.index,
+        )
+        df.loc[:, Features.alt_count] = CoverageMetrics.format_coverage_col(
+            df[cls.alt_count],
+        )
+        df.loc[:, Features.ref_count] = CoverageMetrics.format_coverage_col(
+            df[cls.ref_count],
+        )
         df.loc[:, Features.coverage] = CoverageMetrics.calculate_coverage(
             df[cls.alt_count],
             df[cls.ref_count],
@@ -684,7 +715,9 @@ class MAF(Features):
             df[cls.alt_count],
             df[cls.coverage],
         )
-        df.loc[:, Features.alt_type] = cls.rename_coding_classifications(df[cls.alt_type])
+        df.loc[:, Features.alt_type] = cls.rename_coding_classifications(
+            df[cls.alt_type],
+        )
         return df
 
     @classmethod
@@ -799,7 +832,7 @@ class Simple:
             return cls.column_map_gene
         else:
             sys.exit(
-                "Neither 'feature' nor 'gene' are present columns, cannot read input file"
+                "Neither 'feature' nor 'gene' are present columns, cannot read input file",
             )
 
     @classmethod
