@@ -481,7 +481,7 @@ class CoverageMetrics:
     def safe_cast(value):
         try:
             return int(value)
-        except ValueError, TypeError:
+        except (ValueError, TypeError):
             return pd.NA
 
     @staticmethod
