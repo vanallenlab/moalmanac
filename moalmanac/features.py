@@ -482,7 +482,7 @@ class CoverageMetrics:
         try:
             return int(value)
             # fmt: off
-        except ValueError, TypeError:
+        except (ValueError, TypeError):  # fmt: off
             # fmt: on
             return pd.NA
 
