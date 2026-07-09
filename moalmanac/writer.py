@@ -1,7 +1,7 @@
 import json
-import pandas as pd
 
 import logger
+import pandas as pd
 import reader
 from config import COLNAMES
 
@@ -52,6 +52,7 @@ class Writer:
     sensitive_matches = COLNAMES[section]["sensitivity_matches"]
     resistance_matches = COLNAMES[section]["resistance_matches"]
     prognostic_matches = COLNAMES[section]["prognostic_matches"]
+    aetiology = COLNAMES[section]["aetiology"]
 
     config = COLNAMES[section]["config"]
     environment = COLNAMES[section]["environment"]
@@ -171,7 +172,8 @@ class Writer:
     @staticmethod
     def log_message(label, filename, add_line_break=False):
         logger.Messages.general(
-            message=f"Writing {label} to {filename}", add_line_break=add_line_break
+            message=f"Writing {label} to {filename}",
+            add_line_break=add_line_break,
         )
 
     @staticmethod
@@ -243,6 +245,7 @@ class Actionable:
         Writer.validation_detection_power,
         Writer.feature_display,
         Writer.preclinical_efficacy,
+        Writer.aetiology,
         Writer.patient_id,
         Writer.tumor,
         Writer.normal,
@@ -254,7 +257,9 @@ class Actionable:
     def write(cls, df, patient_id, folder):
         df.loc[df.index, Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(
-            df=df, columns=cls.sort_columns, ascending_boolean=False
+            df=df,
+            columns=cls.sort_columns,
+            ascending_boolean=False,
         )
         output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
@@ -314,7 +319,9 @@ class GermlineACMG:
     def write(cls, df, patient_id, folder):
         df.loc[df.index, Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(
-            df=df, columns=cls.sort_columns, ascending_boolean=False
+            df=df,
+            columns=cls.sort_columns,
+            ascending_boolean=False,
         )
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
         output_dataframe = df_sorted.loc[idx, cls.output_columns]
@@ -399,7 +406,9 @@ class GermlineCancer:
     def write(cls, df, patient_id, folder):
         df.loc[df.index, Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(
-            df=df, columns=cls.sort_columns, ascending_boolean=cls.sort_ascending
+            df=df,
+            columns=cls.sort_columns,
+            ascending_boolean=cls.sort_ascending,
         )
         idx = cls.get_cancer_idx(df)
         output_dataframe = df_sorted.loc[idx, cls.output_columns]
@@ -460,7 +469,9 @@ class GermlineHereditary:
     def write(cls, df, patient_id, folder):
         df.loc[df.index, Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(
-            df=df, columns=cls.sort_columns, ascending_boolean=False
+            df=df,
+            columns=cls.sort_columns,
+            ascending_boolean=False,
         )
         idx = Writer.return_nonzero_bin_idx(df.loc[:, cls.bin])
         output_dataframe = df_sorted.loc[idx, cls.output_columns]
@@ -498,10 +509,14 @@ class Integrated:
         output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
         Writer.log_dataframe(
-            label="Integrated summary", filename=output_name, dataframe=output_dataframe
+            label="Integrated summary",
+            filename=output_name,
+            dataframe=output_dataframe,
         )
         Writer.export_dataframe_indexed(
-            df=output_dataframe, output_name=output_name, index_label=Writer.feature
+            df=output_dataframe,
+            output_name=output_name,
+            index_label=Writer.feature,
         )
         return output_dataframe
 
@@ -530,10 +545,14 @@ class Json:
                 alternate_value=[],
             )
             alt_type = Writer.check_dtype(
-                obj=series.loc[Writer.alt_type], expected_type=str, alternate_value=""
+                obj=series.loc[Writer.alt_type],
+                expected_type=str,
+                alternate_value="",
             )
             alt = Writer.check_dtype(
-                obj=series.loc[Writer.alt], expected_type=str, alternate_value=""
+                obj=series.loc[Writer.alt],
+                expected_type=str,
+                alternate_value="",
             )
 
             item = {
@@ -585,26 +604,28 @@ class Json:
             Writer.actionable: cls.format_actionable(actionable),
             Writer.germline_acmg: Writer.convert_dataframe_to_dict(df=germline_acmg),
             Writer.germline_cancer: Writer.convert_dataframe_to_dict(
-                df=germline_cancer
+                df=germline_cancer,
             ),
             Writer.germline_hereditary: Writer.convert_dataframe_to_dict(
-                df=germline_hereditary
+                df=germline_hereditary,
             ),
             Writer.integrated: Writer.convert_dataframe_to_dict(df=integrated),
             Writer.msi_variants: Writer.convert_dataframe_to_dict(df=msi_variants),
             Writer.somatic_filtered: Writer.convert_dataframe_to_dict(
-                df=somatic_filtered
+                df=somatic_filtered,
             ),
             Writer.somatic_scored: Writer.convert_dataframe_to_dict(df=somatic_scored),
             Writer.therapeutic_strategies: Writer.convert_dataframe_to_dict(
-                df=therapeutic_strategies
+                df=therapeutic_strategies,
             ),
             Writer.tumor_mutational_burden: Writer.convert_dataframe_to_dict(
-                df=tumor_mutational_burden
+                df=tumor_mutational_burden,
             ),
         }
         output_name = Writer.create_output_name(
-            output_folder, patient_id, cls.output_suffix
+            output_folder,
+            patient_id,
+            cls.output_suffix,
         )
         Writer.log_message(label="JSON output", filename=output_name)
         Writer.export_json(dictionary=dictionary, file=output_name)
@@ -623,7 +644,7 @@ class Metadata:
             series = dictionary
         else:
             print(
-                "Patient dictionary provided was neither a dictionary nor pandas Series"
+                "Patient dictionary provided was neither a dictionary nor pandas Series",
             )
             series = pd.Series()
 
@@ -811,7 +832,9 @@ class SomaticFiltered:
     def write(cls, df, patient_id, folder):
         df.loc[df.index, Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(
-            df=df, columns=cls.sort_columns, ascending_boolean=False
+            df=df,
+            columns=cls.sort_columns,
+            ascending_boolean=False,
         )
         output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
@@ -903,7 +926,9 @@ class SomaticScored:
     def write(cls, df, patient_id, folder):
         df.loc[df.index, Writer.patient_id] = patient_id
         df_sorted = Writer.sort_columns(
-            df=df, columns=cls.sort_columns, ascending_boolean=cls.sort_ascending
+            df=df,
+            columns=cls.sort_columns,
+            ascending_boolean=cls.sort_ascending,
         )
         output_dataframe = df_sorted.loc[:, cls.output_columns]
         output_name = Writer.create_output_name(folder, patient_id, cls.output_suffix)
@@ -928,6 +953,8 @@ class Strategies:
             dataframe=df,
         )
         Writer.export_dataframe_indexed(
-            df=df, output_name=output_name, index_label="Assertion / Strategy"
+            df=df,
+            output_name=output_name,
+            index_label="Assertion / Strategy",
         )
         return df

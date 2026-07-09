@@ -32,6 +32,8 @@ COPY datasources/gsea_gene_sets/ /datasources/gsea_gene_sets/
 COPY datasources/hereditary/ /datasources/hereditary/
 COPY datasources/lawrence/ /datasources/lawrence/
 COPY datasources/oncotree/ /datasources/oncotree/
+COPY datasources/signatures/aetiologies.empty.tsv datasources/signatures/
+COPY datasources/signatures/README.md datasources/signatures/
 
 COPY moalmanac/templates/ /moalmanac/templates/
 COPY moalmanac/*.ini /moalmanac/
