@@ -11,7 +11,17 @@
                     {% for label, group in report.alterations[report.alterations['score_bin'] == 'Biologically Relevant'].groupby('feature_type') %}
                     <tr>
                         <td>{{ label }}</td>
-                        <td>{{ ', '.join(group['feature_display'].sort_values().tolist()) }}</td>
+                        <td>
+                            {% set display_list = [] %}
+                            {% for _, row in group.sort_values('feature_display').iterrows() %}
+                                {% if row['aetiology'] != "" %}
+                                    {% set _ = display_list.append(row['feature_display'].replace('%)', '%, ' + row['aetiology'] + ')')) %}
+                                {% else %}
+                                    {% set _ = display_list.append(row['feature_display']) %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ display_list | join(', ') }}
+                        </td>
                     </tr>
                     {% endfor %}
                 {% endif %}

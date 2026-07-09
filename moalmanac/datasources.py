@@ -1,7 +1,6 @@
 import pandas as pd
-
-from reader import Reader
 from config import COLNAMES
+from reader import Reader
 
 
 class Datasources:
@@ -73,6 +72,9 @@ class Datasources:
     an_sas = COLNAMES[datasources_section]["exac_sas_an"]
     an_oth = COLNAMES[datasources_section]["exac_oth_an"]
 
+    signature_id = COLNAMES[datasources_section]["signature_id"]
+    aetiology = COLNAMES[datasources_section]["aetiology"]
+
 
 class ACMG:
     gene = Datasources.feature
@@ -82,7 +84,10 @@ class ACMG:
     @classmethod
     def import_ds(cls, dbs):
         return Reader.safe_read(
-            dbs["acmg_handle"], "\t", cls.column_map, comment_character="#"
+            dbs["acmg_handle"],
+            "\t",
+            cls.column_map,
+            comment_character="#",
         )
 
 
@@ -177,11 +182,18 @@ class CancerHotspots:
 
     @classmethod
     def format_cancerhotspots(cls, df):
-        df.loc[:, cls.alt] = "p." + df.loc[:, cls.aa_ref].str.split(":", expand=True).iloc[
-            :, 0
+        df.loc[:, cls.alt] = "p." + df.loc[:, cls.aa_ref].str.split(
+            ":",
+            expand=True,
+        ).iloc[
+            :,
+            0,
         ].astype(str)
         df.loc[:, cls.alt] = df[cls.alt] + df[cls.aa_pos].astype(str)
-        df.loc[:, cls.alt] = df[cls.alt] + df[cls.aa_var].str.split(":", expand=True).iloc[:, 0].astype(str)
+        df.loc[:, cls.alt] = df[cls.alt] + df[cls.aa_var].str.split(
+            ":",
+            expand=True,
+        ).iloc[:, 0].astype(str)
         return df
 
     @classmethod
@@ -425,19 +437,29 @@ class Preclinical:
     def import_dbs(cls, paths_dictionary):
         summary = Reader.read(paths_dictionary["summary"], delimiter="\t")
         variants = Reader.read(
-            paths_dictionary["variants"], delimiter="\t", low_memory=False
+            paths_dictionary["variants"],
+            delimiter="\t",
+            low_memory=False,
         )
         cnas = Reader.read(
-            paths_dictionary["copynumbers"], delimiter="\t", low_memory=False
+            paths_dictionary["copynumbers"],
+            delimiter="\t",
+            low_memory=False,
         )
         fusions = Reader.read(
-            paths_dictionary["fusions"], delimiter="\t", low_memory=False
+            paths_dictionary["fusions"],
+            delimiter="\t",
+            low_memory=False,
         )
         fusions1 = Reader.read(
-            paths_dictionary["fusions1"], delimiter="\t", low_memory=False
+            paths_dictionary["fusions1"],
+            delimiter="\t",
+            low_memory=False,
         )
         fusions2 = Reader.read(
-            paths_dictionary["fusions2"], delimiter="\t", low_memory=False
+            paths_dictionary["fusions2"],
+            delimiter="\t",
+            low_memory=False,
         )
         gdsc = Reader.read(paths_dictionary["gdsc"], delimiter="\t", low_memory=False)
         mappings = Reader.read_json(paths_dictionary["almanac_gdsc_mappings"])
@@ -465,7 +487,9 @@ class Preclinical:
             cls.dictionary: dictionary,
         }
         dbs[cls.gene] = cls.record_gene_hits(
-            dbs[cls.variants], dbs[cls.cnas], dbs[cls.fusions]
+            dbs[cls.variants],
+            dbs[cls.cnas],
+            dbs[cls.fusions],
         )
         return dbs
 
@@ -481,8 +505,26 @@ class Preclinical:
                 copy_numbers.loc[:, [cls.feature, cls.model_id]],
                 fusions.loc[:, [cls.feature, cls.model_id]],
                 fusions.loc[:, [cls.partner, cls.model_id]].rename(
-                    columns={cls.partner: cls.feature}
+                    columns={cls.partner: cls.feature},
                 ),
-            ]
+            ],
         ).drop_duplicates()
         return df
+
+
+class SignatureAetiology:
+    signature_id = Datasources.feature
+    aetiology = Datasources.aetiology
+
+    column_map = {
+        "id": Datasources.feature,
+        "aetiology": aetiology,
+    }
+
+    @classmethod
+    def import_ds(cls, dbs):
+        return Reader.safe_read(
+            handle=dbs["signature_aetiology_handle"],
+            delimiter="\t",
+            column_map=cls.column_map,
+        )

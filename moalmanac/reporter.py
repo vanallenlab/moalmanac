@@ -1,10 +1,10 @@
 import datetime
+import os
+
 import flask
 import flask_frozen
 import logger
 import pandas
-import os
-
 from config import COLNAMES
 
 
@@ -45,14 +45,16 @@ class Reporter:
             return dataframe
 
         dataframe = cls.drop_double_fusion(
-            dataframe, biomarker_type_string=config["feature_types"]["fusion"]
+            dataframe,
+            biomarker_type_string=config["feature_types"]["fusion"],
         )
 
         lookup = COLNAMES["datasources"]
         columns = [lookup["sensitivity"], lookup["resistance"], lookup["prognosis"]]
         for column in columns:
             dataframe.loc[:, column] = cls.format_clinical_columns(
-                dataframe[column], convert_to_float=True
+                dataframe[column],
+                convert_to_float=True,
             )
 
         columns = [
@@ -62,7 +64,8 @@ class Reporter:
         ]
         for column in columns:
             dataframe.loc[:, column] = cls.format_clinical_columns(
-                dataframe[column], convert_to_float=False
+                dataframe[column],
+                convert_to_float=False,
             )
 
         columns = [
@@ -72,10 +75,14 @@ class Reporter:
         ]
         for column in columns:
             if column in dataframe.columns:
-                dataframe.loc[:, column] = cls.preallocate_matches_columns(dataframe[column])
+                dataframe.loc[:, column] = cls.preallocate_matches_columns(
+                    dataframe[column],
+                )
 
         if "preclinical_efficacy_lookup" in dataframe.columns:
             dataframe.fillna({"preclinical_efficacy_lookup": ""}, inplace=True)
+
+        dataframe.fillna({"aetiology": ""}, inplace=True)
 
         return dataframe
 
@@ -113,7 +120,8 @@ class Reporter:
 
         versions = cls.generate_version_dictionary(config)
         report.add_versions(
-            software=versions["software"], database=versions["database"]
+            software=versions["software"],
+            database=versions["database"],
         )
 
         actionable = cls.format_alterations(dataframe=actionable, config=config)
@@ -121,6 +129,7 @@ class Reporter:
         report.add_similar_profiles(similarity)
 
         app = flask.Flask(__name__, static_folder=None)
+        app.config["TESTING"] = True
 
         output_path = f"/{report.metadata['patient_id']}.report.html"
         logger.Messages.general(message=f"Rendering report to: {output_path}")
@@ -175,7 +184,7 @@ class Reporter:
     @staticmethod
     def preallocate_matches_columns(series):
         return series.apply(
-            lambda x: [] if not isinstance(x, list) and pandas.isna(x) else x
+            lambda x: [] if not isinstance(x, list) and pandas.isna(x) else x,
         )
 
     @classmethod
