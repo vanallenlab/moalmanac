@@ -1,14 +1,14 @@
-import pandas as pd
-import numpy as np
-import scipy.stats as stats
-import operator as op
 import copy
+import operator as op
 
-import datasources
 import features
 import logger
-
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
 from config import COLNAMES
+
+import datasources
 
 
 class Annotator:
@@ -36,6 +36,7 @@ class Annotator:
     hereditary_bin = COLNAMES[bin_section]["hereditary"]
     msi_bin = COLNAMES[bin_section]["msi"]
     exac_common_bin = COLNAMES[bin_section]["exac_common"]
+    signature_aetiology_bin = COLNAMES[bin_section]["aetiology"]
 
     @classmethod
     def annotate(cls, df, dbs, importer, bin_name, comparison_columns):
@@ -169,7 +170,8 @@ class Annotator:
         for i in range(len(compare_columns)):
             cols = compare_columns[: i + 1]
             idx_match = cls.compare_ids_true_index(
-                cls.create_id(df, cols), cls.create_id(ds, cols)
+                cls.create_id(df, cols),
+                cls.create_id(ds, cols),
             )
             df.loc[idx_match, bin_column] = int(i + 1)
         return df[bin_column]
@@ -194,7 +196,11 @@ class ACMG:
     @classmethod
     def annotate(cls, df, dbs):
         return Annotator.annotate(
-            df, dbs, datasources.ACMG, cls.bin_name, cls.comparison_columns
+            df,
+            dbs,
+            datasources.ACMG,
+            cls.bin_name,
+            cls.comparison_columns,
         )
 
 
@@ -453,14 +459,16 @@ class Almanac:
 
         for feature_type, group in df.groupby(cls.feature_type):
             logger.Messages.general(
-                message=f"...annotating inputs of type {feature_type} with MOAlmanac's database"
+                message=f"...annotating inputs of type {feature_type} with MOAlmanac's database",
             )
             feature_type_records = cls.subset_records(
-                ds, cls.feature_type, feature_type
+                ds,
+                cls.feature_type,
+                feature_type,
             )
             table = pd.DataFrame(feature_type_records)
             logger.Messages.general(
-                message=f"...records of {feature_type} in the database: {table.shape[0]}"
+                message=f"...records of {feature_type} in the database: {table.shape[0]}",
             )
 
             table.loc[:, cls.implication_map] = (
@@ -482,12 +490,14 @@ class Almanac:
                 group = group[group[cls.feature].isin(list_genes)]
 
             logger.Messages.general(
-                message=f"...records of {feature_type} provided: {group.shape[0]}"
+                message=f"...records of {feature_type} provided: {group.shape[0]}",
             )
             for index in group.index:
                 annotation_function = annotation_function_dict[feature_type]
                 new_series = annotation_function(
-                    sliced_series=df.loc[index, :], ontology=ontology, table=table
+                    sliced_series=df.loc[index, :],
+                    ontology=ontology,
+                    table=table,
                 )
                 df.loc[index, new_series.index] = new_series
             message = f"...annotating input {feature_type}s with MOAlmanac's database complete"
@@ -515,7 +525,7 @@ class Almanac:
             query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(
-                cls.assertion_types_dict[assertion_type][cls.columns]
+                cls.assertion_types_dict[assertion_type][cls.columns],
             )
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][
                 cls.feature_type
@@ -540,7 +550,9 @@ class Almanac:
                 continue
 
             matches = cls.sort_and_subset_matches(
-                table, results_same_ontology, results_diff_ontology
+                table,
+                results_same_ontology,
+                results_diff_ontology,
             )
             series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
@@ -575,7 +587,7 @@ class Almanac:
             query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(
-                cls.assertion_types_dict[assertion_type][cls.columns]
+                cls.assertion_types_dict[assertion_type][cls.columns],
             )
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][
                 cls.feature_type
@@ -602,7 +614,9 @@ class Almanac:
                 continue
 
             matches = cls.sort_and_subset_matches(
-                table, results_same_ontology, results_diff_ontology
+                table,
+                results_same_ontology,
+                results_diff_ontology,
             )
             series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
@@ -641,7 +655,7 @@ class Almanac:
             query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(
-                cls.assertion_types_dict[assertion_type][cls.columns]
+                cls.assertion_types_dict[assertion_type][cls.columns],
             )
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][
                 cls.feature_type
@@ -692,7 +706,9 @@ class Almanac:
                 continue
 
             matches = cls.sort_and_subset_matches(
-                table, results_same_ontology, results_diff_ontology
+                table,
+                results_same_ontology,
+                results_diff_ontology,
             )
             series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
@@ -739,7 +755,7 @@ class Almanac:
             query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(
-                cls.assertion_types_dict[assertion_type][cls.columns]
+                cls.assertion_types_dict[assertion_type][cls.columns],
             )
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][
                 cls.feature_type
@@ -876,7 +892,7 @@ class Almanac:
                     "bin": match_bin,
                     "results_same_ontology": results_same_ontology,
                     "results_diff_ontology": results_diff_ontology,
-                    "alt": "{}--{}".format(gene1, gene2),
+                    "alt": f"{gene1}--{gene2}",
                     "feature_col": feature_col,
                 }
                 fusion_matches.append(tmp_dict)
@@ -890,7 +906,9 @@ class Almanac:
             results_same_ontology = better_match["results_same_ontology"]
             results_diff_ontology = better_match["results_diff_ontology"]
             matches = cls.sort_and_subset_matches(
-                table, results_same_ontology, results_diff_ontology
+                table,
+                results_same_ontology,
+                results_diff_ontology,
             )
 
             feature_col = better_match["feature_col"]
@@ -929,7 +947,7 @@ class Almanac:
             query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(
-                cls.assertion_types_dict[assertion_type][cls.columns]
+                cls.assertion_types_dict[assertion_type][cls.columns],
             )
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][
                 cls.feature_type
@@ -954,7 +972,9 @@ class Almanac:
                 continue
 
             matches = cls.sort_and_subset_matches(
-                table, results_same_ontology, results_diff_ontology
+                table,
+                results_same_ontology,
+                results_diff_ontology,
             )
             series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
@@ -989,7 +1009,7 @@ class Almanac:
             query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(
-                cls.assertion_types_dict[assertion_type][cls.columns]
+                cls.assertion_types_dict[assertion_type][cls.columns],
             )
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][
                 cls.feature_type
@@ -1016,7 +1036,9 @@ class Almanac:
                 continue
 
             matches = cls.sort_and_subset_matches(
-                table, results_same_ontology, results_diff_ontology
+                table,
+                results_same_ontology,
+                results_diff_ontology,
             )
             series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
@@ -1060,7 +1082,7 @@ class Almanac:
             query = table[query_key].isin(query_values)
             score_bin = cls.assertion_types_dict[assertion_type][cls.score_bin]
             columns = copy.deepcopy(
-                cls.assertion_types_dict[assertion_type][cls.columns]
+                cls.assertion_types_dict[assertion_type][cls.columns],
             )
             columns[cls.feature_type] = cls.assertion_types_dict[assertion_type][
                 cls.feature_type
@@ -1125,7 +1147,9 @@ class Almanac:
                 continue
 
             matches = cls.sort_and_subset_matches(
-                table, results_same_ontology, results_diff_ontology
+                table,
+                results_same_ontology,
+                results_diff_ontology,
             )
             series = cls.update_series_with_best_match(matches, columns, series)
             series.loc[score_bin] = feature_match_to_assertion_bin
@@ -1156,38 +1180,49 @@ class Almanac:
 
     @classmethod
     def sort_and_subset_matches(
-        cls, table, results_same_ontology, results_diff_ontology
+        cls,
+        table,
+        results_same_ontology,
+        results_diff_ontology,
     ):
         sort_columns = [cls.implication_map, cls.publication_date, cls.last_updated]
         sort_ascending = [False, False, False]
         if results_same_ontology.any():
             results_same_ontology_sorted = cls.sort_dataframe(
-                table[results_same_ontology], sort_columns, sort_ascending
+                table[results_same_ontology],
+                sort_columns,
+                sort_ascending,
             )
             results_same_ontology_records = cls.convert_dataframe_to_records(
-                results_same_ontology_sorted
+                results_same_ontology_sorted,
             )
         else:
             results_same_ontology_records = []
 
         if results_diff_ontology.any():
             results_diff_ontology_sorted = cls.sort_dataframe(
-                table[results_diff_ontology], sort_columns, sort_ascending
+                table[results_diff_ontology],
+                sort_columns,
+                sort_ascending,
             )
             results_diff_ontology_records = cls.convert_dataframe_to_records(
-                results_diff_ontology_sorted
+                results_diff_ontology_sorted,
             )
         else:
             results_diff_ontology_records = []
 
         best_evidence = cls.return_best_evidence_level(
-            results_same_ontology_records, results_diff_ontology_records
+            results_same_ontology_records,
+            results_diff_ontology_records,
         )
 
         matches = []
         for results in [results_same_ontology_records, results_diff_ontology_records]:
             results_returned = cls.subset_list_of_dictionaries(
-                results, cls.implication_map, op.ge, best_evidence
+                results,
+                cls.implication_map,
+                op.ge,
+                best_evidence,
             )
             matches.extend(results_returned)
         return matches
@@ -1200,7 +1235,8 @@ class Almanac:
     def sort_dictionary_as_dataframe(dictionary, sort_columns, ascending_boolean):
         return (
             pd.DataFrame(dictionary).sort_values(
-                sort_columns, ascending=ascending_boolean
+                sort_columns,
+                ascending=ascending_boolean,
             )
         ).to_dict(orient="records")
 
@@ -1223,10 +1259,12 @@ class Almanac:
     @classmethod
     def return_best_evidence_level(cls, results_same_ontology, results_diff_ontology):
         evidence_same_ontology = cls.extract_values_from_list_of_dicts(
-            cls.implication_map, results_same_ontology
+            cls.implication_map,
+            results_same_ontology,
         )
         evidence_diff_ontology = cls.extract_values_from_list_of_dicts(
-            cls.implication_map, results_diff_ontology
+            cls.implication_map,
+            results_diff_ontology,
         )
 
         if evidence_same_ontology:
@@ -1254,7 +1292,11 @@ class CancerHotspots:
     def annotate(cls, df, dbs):
         logger.Messages.general(message="...with Cancer Hotspots")
         return Annotator.annotate(
-            df, dbs, datasources.CancerHotspots, cls.bin_name, cls.comparison_columns
+            df,
+            dbs,
+            datasources.CancerHotspots,
+            cls.bin_name,
+            cls.comparison_columns,
         )
 
 
@@ -1269,7 +1311,11 @@ class CancerHotspots3D:
     def annotate(cls, df, dbs):
         logger.Messages.general(message="...with Cancer Hotspots 3D")
         return Annotator.annotate(
-            df, dbs, datasources.CancerHotspots3D, cls.bin_name, cls.comparison_columns
+            df,
+            dbs,
+            datasources.CancerHotspots3D,
+            cls.bin_name,
+            cls.comparison_columns,
         )
 
 
@@ -1283,7 +1329,11 @@ class CancerGeneCensus:
     def annotate(cls, df, dbs):
         logger.Messages.general(message="...with Cancer Gene Census")
         return Annotator.annotate(
-            df, dbs, datasources.CancerGeneCensus, cls.bin_name, cls.comparison_columns
+            df,
+            dbs,
+            datasources.CancerGeneCensus,
+            cls.bin_name,
+            cls.comparison_columns,
         )
 
 
@@ -1311,7 +1361,9 @@ class ClinVar:
         logger.Messages.general(message="...with ClinVar")
         columns = [cls.chr, cls.start, cls.end]
         idx = Annotator.get_idx_without_na(
-            dataframe=df, columns=columns, datasource_label="ClinVar"
+            dataframe=df,
+            columns=columns,
+            datasource_label="ClinVar",
         )
         idx_result = df.index.copy(deep=True)
 
@@ -1337,11 +1389,12 @@ class ClinVar:
         else:
             subset = features.Features.preallocate_missing_columns(subset)
             remaining_variants = features.Features.preallocate_missing_columns(
-                remaining_variants
+                remaining_variants,
             )
             list_dataframes = [subset, remaining_variants]
             result = features.Features.concat_list_of_dataframes(
-                list_of_dataframes=list_dataframes, ignore_index=False
+                list_of_dataframes=list_dataframes,
+                ignore_index=False,
             )
             result = result.loc[idx_result]
         return features.Features.preallocate_missing_columns(result)
@@ -1358,7 +1411,11 @@ class Cosmic:
     def annotate(cls, df, dbs):
         logger.Messages.general(message="...with COSMIC")
         return Annotator.annotate(
-            df, dbs, datasources.Cosmic, cls.bin_name, cls.comparison_columns
+            df,
+            dbs,
+            datasources.Cosmic,
+            cls.bin_name,
+            cls.comparison_columns,
         )
 
 
@@ -1391,10 +1448,16 @@ class ExAC:
 
         merged = variants.reset_index().merge(ds, how="left").set_index("index")
         merged.loc[merged.index, cls.af] = Annotator.fill_na(
-            dataframe=merged, column=cls.af, fill_value=0.0, fill_data_type=float
+            dataframe=merged,
+            column=cls.af,
+            fill_value=0.0,
+            fill_data_type=float,
         )
         not_variants.loc[not_variants.index, cls.af] = Annotator.fill_na(
-            dataframe=not_variants, column=cls.af, fill_value=0.0, fill_data_type=float
+            dataframe=not_variants,
+            column=cls.af,
+            fill_value=0.0,
+            fill_data_type=float,
         )
         result = pd.concat([merged, not_variants])
         result.loc[:, cls.af] = result[cls.af].astype(float).round(6)
@@ -1405,7 +1468,9 @@ class ExAC:
         logger.Messages.general(message="...with ExAC")
         columns = [cls.chr, cls.start, cls.ref, cls.alt]
         idx = Annotator.get_idx_without_na(
-            dataframe=df, columns=columns, datasource_label="ExAC"
+            dataframe=df,
+            columns=columns,
+            datasource_label="ExAC",
         )
         idx_result = df.index.copy(deep=True)
 
@@ -1431,7 +1496,8 @@ class ExAC:
         )
         common_allele_frequency_threshold = config["exac"]["exac_common_af_threshold"]
         subset.loc[:, cls.bin_name] = cls.annotate_common_af(
-            series_exac_af=subset[cls.af], threshold=common_allele_frequency_threshold
+            series_exac_af=subset[cls.af],
+            threshold=common_allele_frequency_threshold,
         )
 
         for value, group in subset.groupby(cls.bin_name):
@@ -1444,11 +1510,12 @@ class ExAC:
         else:
             subset = features.Features.preallocate_missing_columns(subset)
             remaining_variants = features.Features.preallocate_missing_columns(
-                remaining_variants
+                remaining_variants,
             )
             list_dataframes = [subset, remaining_variants]
             result = features.Features.concat_list_of_dataframes(
-                list_of_dataframes=list_dataframes, ignore_index=False
+                list_of_dataframes=list_dataframes,
+                ignore_index=False,
             )
             result = result.loc[idx_result]
         return features.Features.preallocate_missing_columns(result)
@@ -1456,7 +1523,7 @@ class ExAC:
     @classmethod
     def annotate_common_af(cls, series_exac_af, threshold):
         if not series_exac_af.empty:
-            series = pd.Series(float(0.0), index=series_exac_af.index.tolist())
+            series = pd.Series(0.0, index=series_exac_af.index.tolist())
             condition = (
                 series_exac_af.astype(str)
                 .str.split(",", expand=True)
@@ -1466,7 +1533,7 @@ class ExAC:
                 .fillna(0.0)
             )
             idx = condition.astype(float) >= float(threshold)
-            series[idx] = float(1.0)
+            series[idx] = 1.0
             return series
         else:
             return pd.Series()
@@ -1474,7 +1541,8 @@ class ExAC:
     @classmethod
     def drop_existing_columns(cls, dataframe):
         return dataframe.drop(
-            dataframe.columns[dataframe.columns.str.contains("exac")], axis=1
+            dataframe.columns[dataframe.columns.str.contains("exac")],
+            axis=1,
         )
 
     @classmethod
@@ -1539,7 +1607,9 @@ class ExACExtended:
         logger.Messages.general(message="...with ExAC, Extended")
         columns = [cls.chr, cls.start, cls.ref, cls.alt]
         idx = Annotator.get_idx_without_na(
-            dataframe=df, columns=columns, datasource_label="ExAC"
+            dataframe=df,
+            columns=columns,
+            datasource_label="ExAC",
         )
         idx_result = df.index.copy(deep=True)
 
@@ -1566,7 +1636,8 @@ class ExACExtended:
 
         common_allele_frequency_threshold = config["exac"]["exac_common_af_threshold"]
         subset.loc[:, ExAC.bin_name] = ExAC.annotate_common_af(
-            series_exac_af=subset[ExAC.af], threshold=common_allele_frequency_threshold
+            series_exac_af=subset[ExAC.af],
+            threshold=common_allele_frequency_threshold,
         )
 
         for value, group in subset.groupby(ExAC.bin_name):
@@ -1579,11 +1650,12 @@ class ExACExtended:
         else:
             subset = features.Features.preallocate_missing_columns(subset)
             remaining_variants = features.Features.preallocate_missing_columns(
-                remaining_variants
+                remaining_variants,
             )
             list_dataframes = [subset, remaining_variants]
             result = features.Features.concat_list_of_dataframes(
-                list_of_dataframes=list_dataframes, ignore_index=False
+                list_of_dataframes=list_dataframes,
+                ignore_index=False,
             )
             result = result.loc[idx_result]
             # result = pd.concat([subset, remaining_variants]).loc[idx_result, :]
@@ -1600,7 +1672,11 @@ class GSEACancerModules:
     def annotate(cls, df, dbs):
         logger.Messages.general(message="...with GSEA Cancer Modules")
         return Annotator.annotate(
-            df, dbs, datasources.GSEACancerModules, cls.bin_name, cls.comparison_columns
+            df,
+            dbs,
+            datasources.GSEACancerModules,
+            cls.bin_name,
+            cls.comparison_columns,
         )
 
 
@@ -1631,10 +1707,14 @@ class Hereditary:
     @classmethod
     def annotate(cls, df, dbs):
         logger.Messages.general(
-            message="...with gene list containing genes related to hereditary cancers"
+            message="...with gene list containing genes related to hereditary cancers",
         )
         return Annotator.annotate(
-            df, dbs, datasources.Hereditary, cls.bin_name, cls.comparison_columns
+            df,
+            dbs,
+            datasources.Hereditary,
+            cls.bin_name,
+            cls.comparison_columns,
         )
 
 
@@ -1667,11 +1747,14 @@ class MSI:
     @classmethod
     def annotate(cls, df):
         logger.Messages.general(
-            message="...with gene list with containing genes related to microsatellite instability"
+            message="...with gene list with containing genes related to microsatellite instability",
         )
         logger.Messages.general(message=f"...genes: {','.join(cls.msi_genes)}")
         df.loc[:, cls.bin_name] = Annotator.match_ds(
-            df, cls.create_msi_df(), cls.bin_name, cls.comparison_columns
+            df,
+            cls.create_msi_df(),
+            cls.bin_name,
+            cls.comparison_columns,
         )
         for value, group in df.groupby(cls.bin_name):
             message = f"...{cls.bin_name} == {value} for {group.shape[0]} records"
@@ -1715,7 +1798,7 @@ class OverlapValidation:
         logger.Messages.general(message=message)
 
         logger.Messages.general(
-            message="...calculating power to detect variants in validation sequencing"
+            message="...calculating power to detect variants in validation sequencing",
         )
         df.loc[idx, cls.validation_detection_power] = (
             cls.calculate_validation_detection_power(
@@ -1725,7 +1808,8 @@ class OverlapValidation:
             )
         )
         df.loc[:, cls.validation_detection_power] = cls.round_series(
-            df[cls.validation_detection_power], 4
+            df[cls.validation_detection_power],
+            4,
         )
         return df
 
@@ -1735,12 +1819,18 @@ class OverlapValidation:
 
     @classmethod
     def calculate_validation_detection_power(
-        cls, primary_tumor_f, primary_coverage, validation_coverage
+        cls,
+        primary_tumor_f,
+        primary_coverage,
+        validation_coverage,
     ):
         alt_count = primary_tumor_f.multiply(primary_coverage)
         ref_count = primary_coverage.subtract(alt_count)
         return cls.calculate_beta_binomial(
-            k=3, n=validation_coverage, a=alt_count.add(1), b=ref_count.add(1)
+            k=3,
+            n=validation_coverage,
+            a=alt_count.add(1),
+            b=ref_count.add(1),
         )
 
     @classmethod
@@ -1788,7 +1878,8 @@ class OverlapSomaticGermline:
         merged_df = cls.merge_germline_hits(somatic, germline_counts)
 
         count_match = merged_df.loc[
-            merged_df[cls.number_germline_mutations].notnull(), :
+            merged_df[cls.number_germline_mutations].notnull(),
+            :,
         ].shape[0]
         count_total = merged_df.shape[0]
         message = f"...{count_match} of {count_total} somatic variants had germline variants in the same gene"
@@ -1802,7 +1893,7 @@ class OverlapSomaticGermline:
             {
                 cls.gene: value_counts.index,
                 cls.number_germline_mutations: value_counts.values,
-            }
+            },
         )
 
 
@@ -1828,7 +1919,9 @@ class PreclinicalEfficacy:
         idx = actionable.index
         if append_lookup:
             actionable.loc[idx, cls.lookup] = cls.create_lookup(
-                idx, series_features.index, dictionary
+                idx,
+                series_features.index,
+                dictionary,
             )
         else:
             actionable.loc[idx, cls.lookup] = ""
@@ -1909,10 +2002,14 @@ class PreclinicalMatchmaking:
 
         variants = cls.annotate_somatic_variants(input_variants, dbs, somatic_variant)
         copy_number_alterations = cls.annotate_copy_numbers(
-            input_copy_number_alterations, dbs, copy_number
+            input_copy_number_alterations,
+            dbs,
+            copy_number,
         )
         fusions, fusions_gene1, fusions_gene2 = cls.annotate_fusions(
-            input_fusions, dbs, fusion
+            input_fusions,
+            dbs,
+            fusion,
         )
         return {
             cls.variants: variants,
@@ -1929,7 +2026,9 @@ class PreclinicalMatchmaking:
 
         df = df[df[cls.feature_type].eq(biomarker_type_string)]
         db = Almanac.subset_records(
-            almanac["content"], cls.feature_type, biomarker_type_string
+            almanac["content"],
+            cls.feature_type,
+            biomarker_type_string,
         )
         db = pd.DataFrame(db)
 
@@ -1949,13 +2048,17 @@ class PreclinicalMatchmaking:
 
         df = df[df[cls.feature_type].eq(biomarker_type_string)]
         db = Almanac.subset_records(
-            almanac["content"], cls.feature_type, biomarker_type_string
+            almanac["content"],
+            cls.feature_type,
+            biomarker_type_string,
         )
         db = pd.DataFrame(db)
 
         column_map = {cls.rearrangement_type: cls.alteration_type}
         db = cls.format_db(
-            [cls.gene1, cls.gene2, cls.rearrangement_type], column_map, db
+            [cls.gene1, cls.gene2, cls.rearrangement_type],
+            column_map,
+            db,
         )
         df = cls.preallocate_almanac_matches(df)
 
@@ -1964,7 +2067,8 @@ class PreclinicalMatchmaking:
         df_gene1[cls.alteration] = df[cls.feature] + "--" + df[cls.partner]
         df_gene2[cls.alteration] = df[cls.partner] + "--" + df[cls.feature]
         df_gene2.rename(
-            columns={cls.partner: cls.feature, cls.feature: cls.partner}, inplace=True
+            columns={cls.partner: cls.feature, cls.feature: cls.partner},
+            inplace=True,
         )
         db_gene1 = (
             db.copy(deep=True)
@@ -1979,16 +2083,28 @@ class PreclinicalMatchmaking:
 
         # Consider both genes
         group1 = cls.annotate_fusions_matching(
-            df_gene1, db_gene1, almanac_genes, consider_partner=True
+            df_gene1,
+            db_gene1,
+            almanac_genes,
+            consider_partner=True,
         )
         group2 = cls.annotate_fusions_matching(
-            df_gene1, db_gene2, almanac_genes, consider_partner=True
+            df_gene1,
+            db_gene2,
+            almanac_genes,
+            consider_partner=True,
         )
         group3 = cls.annotate_fusions_matching(
-            df_gene2, db_gene1, almanac_genes, consider_partner=True
+            df_gene2,
+            db_gene1,
+            almanac_genes,
+            consider_partner=True,
         )
         group4 = cls.annotate_fusions_matching(
-            df_gene2, db_gene2, almanac_genes, consider_partner=True
+            df_gene2,
+            db_gene2,
+            almanac_genes,
+            consider_partner=True,
         )
 
         values = pd.concat(
@@ -2030,7 +2146,8 @@ class PreclinicalMatchmaking:
             df.loc[index, columns] = sorted(df.loc[index, columns].astype(str).tolist())
 
         df = df.sort_values(
-            [cls.evidence, cls.feature_match], ascending=False
+            [cls.evidence, cls.feature_match],
+            ascending=False,
         ).drop_duplicates([cls.feature, cls.partner, cls.model_id], keep="first")
         df[cls.alteration] = ""
 
@@ -2055,7 +2172,8 @@ class PreclinicalMatchmaking:
         group1.loc[idx_group2, columns] = group2.loc[idx_group2, columns]
 
         group1 = group1.sort_values(
-            [cls.evidence, cls.feature_match], ascending=False
+            [cls.evidence, cls.feature_match],
+            ascending=False,
         ).drop_duplicates([cls.feature, cls.model_id], keep="first")
         group1[cls.alteration] = ""
 
@@ -2080,7 +2198,8 @@ class PreclinicalMatchmaking:
         group3.loc[idx_group4, columns] = group4.loc[idx_group4, columns]
 
         group3 = group3.sort_values(
-            [cls.evidence, cls.feature_match], ascending=False
+            [cls.evidence, cls.feature_match],
+            ascending=False,
         ).drop_duplicates([cls.feature, cls.model_id], keep="first")
 
         group3[cls.alteration] = ""
@@ -2111,13 +2230,15 @@ class PreclinicalMatchmaking:
 
         df = df[df[cls.feature_type].eq(biomarker_type_string)]
         db = Almanac.subset_records(
-            almanac["content"], cls.feature_type, biomarker_type_string
+            almanac["content"],
+            cls.feature_type,
+            biomarker_type_string,
         )
         db = pd.DataFrame(db)
 
         replacement_dictionary = {"Oncogenic Mutations": "", "Activating mutation": ""}
         db[cls.variant_annotation] = db[cls.variant_annotation].replace(
-            replacement_dictionary
+            replacement_dictionary,
         )
 
         column_map = {
@@ -2248,3 +2369,36 @@ class PreclinicalMatchmaking:
         df[cls.feature_match] = 0
         df[cls.evidence] = pd.NA
         return df
+
+
+class SignatureAetiology:
+    feature = datasources.SignatureAetiology.signature_id
+
+    bin_name = Annotator.signature_aetiology_bin
+    comparison_columns = [
+        feature,
+    ]
+
+    @classmethod
+    def annotate(cls, df, dbs):
+        logger.Messages.general(
+            message="...with signature aetiologies",
+        )
+
+        ds = datasources.SignatureAetiology.import_ds(dbs)
+        logger.Messages.dataframe_size(label="...datasource size", dataframe=ds)
+
+        df = df.drop(cls.bin_name, axis=1)
+        merged = df.merge(
+            ds,
+            how="left",
+            on=datasources.SignatureAetiology.signature_id,
+        )
+        if datasources.SignatureAetiology.aetiology not in merged.columns:
+            merged.loc[:, datasources.SignatureAetiology.aetiology] = (
+                features.Features.create_empty_series()
+            )
+        merged[datasources.SignatureAetiology.aetiology] = merged[
+            datasources.SignatureAetiology.aetiology
+        ].fillna("")
+        return merged

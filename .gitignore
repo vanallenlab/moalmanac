@@ -23,6 +23,7 @@ datasources/preclinical/source/gdsc/*.xlsx
 datasources/preclinical/source/gdsc/*.txt
 datasources/preclinical/source/gdsc/*.pdf
 datasources/preclinical/source/gdsc/*.csv
+datasources/signatures/aetiologies.tsv
 
 # environments
 *venv*

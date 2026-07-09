@@ -45,7 +45,9 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.ruff.lint]
-ignore = ["COM819"]
+ignore = [
+  "COM819", # prohibit trailing commas
+]
 fixable = ["ALL"]
 select = [
   "B",      # flake8-bugbear

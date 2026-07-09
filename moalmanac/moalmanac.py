@@ -383,6 +383,10 @@ class Process:
                 ontology=cancer_type,
                 config=config,
             )
+            annotated = annotator.SignatureAetiology.annotate(
+                df=df,
+                dbs=dbs,
+            )
             logger.Messages.general(
                 message="Annotation of COSMIC mutational signatures complete",
                 add_line_break=True,
