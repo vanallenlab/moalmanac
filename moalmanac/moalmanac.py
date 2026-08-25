@@ -2,7 +2,6 @@ import argparse
 import datetime
 import os
 import pathlib
-import subprocess
 import sys
 import time
 
@@ -610,10 +609,6 @@ def create_metadata_dictionary(input_dictionary):
     return dictionary
 
 
-def execute_cmd(command):
-    subprocess.call(command, shell=True)
-
-
 def format_metadata_dictionary(dictionary):
     dictionary[tumor_type] = (
         "Unknown"
@@ -652,7 +647,7 @@ def manage_output_directory(folder):
         logger.Messages.general(
             message=f"{folder} specified as output directory, creating...",
         )
-        execute_cmd(f"mkdir -p {folder}")
+        os.makedirs(folder, exist_ok=True)
         logger.Messages.general(message=f"{folder} created.", add_line_break=True)
     else:
         logger.Messages.general(
