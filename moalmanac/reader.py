@@ -72,8 +72,7 @@ class Ini:
                 continue
 
             p = pathlib.Path(value)
-            if not p.is_absolute():
-                revised_path = (base_directory / p).resolve()
+            revised_path = p if p.is_absolute() else (base_directory / p).resolve()
             out[key] = str(revised_path)
 
         resolved["paths"] = out
@@ -84,7 +83,7 @@ class Reader:
     @staticmethod
     def check_comment_rows(handle, comment_character):
         skip_rows = 0
-        with open(handle, "r") as f:
+        with open(handle, encoding="utf-8") as f:
             for line in f:
                 if line.startswith(comment_character):
                     skip_rows += 1
@@ -94,13 +93,12 @@ class Reader:
 
     @staticmethod
     def check_column_names(df, columns_map):
-        for column_name in columns_map.keys():
-            assert (
-                str.lower(column_name) in df.columns.str.lower()
-            ), 'Expected column %s not found among %s' % (
-                str.lower(column_name),
-                df.columns.str.lower(),
-            )
+        for column_name in columns_map:
+            if str.lower(column_name) not in df.columns.str.lower():
+                raise ValueError(
+                    f"Expected column {str.lower(column_name)} not found among "
+                    f"{df.columns.str.lower()}",
+                )
 
     @staticmethod
     def read(handle, delimiter, **kwargs):
@@ -108,7 +106,7 @@ class Reader:
 
     @staticmethod
     def read_json(handle):
-        with open(handle, "r") as json_handle:
+        with open(handle, encoding="utf-8") as json_handle:
             return json.load(json_handle)
 
     @staticmethod
