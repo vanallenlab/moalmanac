@@ -83,7 +83,7 @@ class Reader:
     @staticmethod
     def check_comment_rows(handle, comment_character):
         skip_rows = 0
-        with open(handle, encoding="utf-8") as f:
+        with open(handle, "r", encoding="utf-8") as f:
             for line in f:
                 if line.startswith(comment_character):
                     skip_rows += 1
@@ -106,7 +106,7 @@ class Reader:
 
     @staticmethod
     def read_json(handle):
-        with open(handle, encoding="utf-8") as json_handle:
+        with open(handle, "r", encoding="utf-8") as json_handle:
             return json.load(json_handle)
 
     @staticmethod
