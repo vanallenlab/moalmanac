@@ -146,15 +146,33 @@ class Writer:
 
     @staticmethod
     def export_series(series, output_name):
-        series.to_csv(output_name, sep="\t", header=False, lineterminator="\n")
+        series.to_csv(
+            output_name,
+            encoding="utf-8",
+            header=False,
+            lineterminator="\n",
+            sep="\t",
+        )
 
     @staticmethod
     def export_dataframe(df, output_name):
-        df.to_csv(output_name, sep="\t", index=False, lineterminator="\n")
+        df.to_csv(
+            output_name,
+            encoding="utf-8",
+            index=False,
+            lineterminator="\n",
+            sep="\t",
+        )
 
     @staticmethod
     def export_dataframe_indexed(df, output_name, index_label):
-        df.to_csv(output_name, sep="\t", index_label=index_label, lineterminator="\n")
+        df.to_csv(
+            output_name,
+            encoding="utf-8",
+            index_label=index_label,
+            lineterminator="\n",
+            sep="\t",
+        )
 
     @staticmethod
     def export_json(dictionary, file):
