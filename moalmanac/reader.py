@@ -97,7 +97,7 @@ class Reader:
             if str.lower(column_name) not in df.columns.str.lower():
                 raise ValueError(
                     f"Expected column {str.lower(column_name)} not found among "
-                    f"{df.columns.str.lower()}",
+                    f"{df.columns.str.lower().tolist()}",
                 )
 
     @staticmethod
