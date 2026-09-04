@@ -32,7 +32,7 @@ class Ini:
         else:
             config = configparser.ConfigParser()
 
-        read_okay = config.read(path)
+        read_okay = config.read(path, encoding="utf-8")
         if not read_okay:
             raise RuntimeError(f"Failed to read Ini file: {path}")
         return config
