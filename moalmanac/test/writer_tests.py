@@ -10,7 +10,7 @@ class UnitTestWriter(unittest.TestCase):
         string2 = "Foo"
         string3 = "Bar"
         self.assertEqual(
-            "./Foo.Bar", Writer.create_output_name(string1, string2, string3)
+            "Foo.Bar", Writer.create_output_name(string1, string2, string3)
         )
 
     def test_sort_columns(self):

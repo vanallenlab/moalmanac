@@ -125,7 +125,7 @@ class Features:
     @classmethod
     def drop_duplicate_genes(cls, df, sort_column):
         return (
-            df.sort_values(sort_column, ascending=False)
+            df.sort_values(sort_column, ascending=False, kind="stable")
             .drop_duplicates([Features.feature], keep="first")
             .index
         )
@@ -358,7 +358,7 @@ class CopyNumberTotal(CopyNumber):
     @classmethod
     def drop_duplicate_genes(cls, df):
         return (
-            df.sort_values(Features.segment_mean, ascending=False)
+            df.sort_values(Features.segment_mean, ascending=False, kind="stable")
             .drop_duplicates([Features.feature], keep="first")
             .index
         )

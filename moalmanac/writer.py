@@ -1,4 +1,5 @@
 import json
+import pathlib
 
 import logger
 import pandas as pd
@@ -141,24 +142,42 @@ class Writer:
 
     @staticmethod
     def create_output_name(folder, patient_id, output_suffix):
-        return f"{folder}/{patient_id}.{output_suffix}"
+        return str(pathlib.Path(folder) / f"{patient_id}.{output_suffix}")
 
     @staticmethod
     def export_series(series, output_name):
-        series.to_csv(output_name, sep="\t", header=False)
+        series.to_csv(
+            output_name,
+            encoding="utf-8",
+            header=False,
+            lineterminator="\n",
+            sep="\t",
+        )
 
     @staticmethod
     def export_dataframe(df, output_name):
-        df.to_csv(output_name, sep="\t", index=False)
+        df.to_csv(
+            output_name,
+            encoding="utf-8",
+            index=False,
+            lineterminator="\n",
+            sep="\t",
+        )
 
     @staticmethod
     def export_dataframe_indexed(df, output_name, index_label):
-        df.to_csv(output_name, sep="\t", index_label=index_label)
+        df.to_csv(
+            output_name,
+            encoding="utf-8",
+            index_label=index_label,
+            lineterminator="\n",
+            sep="\t",
+        )
 
     @staticmethod
     def export_json(dictionary, file):
         json_object = json.dumps(dictionary, indent=4)
-        with open(file, "w") as f:
+        with open(file, mode="w", encoding="utf-8", newline="") as f:
             f.write(json_object)
 
     @staticmethod
