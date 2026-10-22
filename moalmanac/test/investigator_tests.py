@@ -110,6 +110,10 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
             places=10,
         )
 
+        actionable.loc[0, "sensitive_therapy_name"] = "Unmapped therapy"
+        result = SensitivityDictionary.create(dbs, actionable, config)
+        self.assertEqual(result, {})
+
     def test_create_drug_dict(self):
         all_samples = ["A", "B", "C", "D"]
         test_dataframe = pd.DataFrame(
@@ -130,6 +134,31 @@ class UnitTestSensitivityDictionary(unittest.TestCase):
         self.assertEqual(result["expects A"]["samples"][1], ["A"])
         self.assertEqual(result["expects None"]["samples"][0], ["A", "B", "C", "D"])
         self.assertEqual(result["expects None"]["samples"][1], [])
+
+    def test_get_mapped_therapies(self):
+        mappings = {
+            "Dabrafenib + Trametinib": {
+                "gdsc": ["Dabrafenib", "Trametinib"],
+                "type": "Targeted therapy",
+            },
+            "Abiraterone": {"gdsc": [], "type": "Hormone therapy"},
+        }
+        self.assertEqual(
+            SensitivityDictionary.get_mapped_therapies(
+                mappings, "Dabrafenib + Trametinib"
+            ),
+            ["Dabrafenib", "Trametinib"],
+        )
+        self.assertEqual(
+            SensitivityDictionary.get_mapped_therapies(mappings, "Abiraterone"), []
+        )
+        self.assertEqual(
+            SensitivityDictionary.get_mapped_therapies(mappings, "Unmapped therapy"),
+            [],
+        )
+        self.assertEqual(
+            SensitivityDictionary.get_mapped_therapies(mappings, float("nan")), []
+        )
 
     def test_generate_feature_string(self):
         labels = ["BRAF", "Somatic Variant", "Missense", "p.V600E"]

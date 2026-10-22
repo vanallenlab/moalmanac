@@ -624,6 +624,27 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
         self.assertEqual(result_pvalue_index_0, float(self.df2.loc[0, "pvalue_mww"]))
         self.assertEqual(result_pvalue_index_1, float(self.df2.loc[1, "pvalue_mww"]))
 
+    def test_annotate_no_efficacy_results(self):
+        actionable = pd.DataFrame(
+            {
+                "feature_type": ["Somatic Variant"],
+                "feature": ["KRAS"],
+                "alteration_type": ["Missense"],
+                "alteration": ["p.G12C"],
+                "feature_display": ["KRAS p.G12C"],
+                "sensitive_therapy_name": ["Unmapped therapy"],
+            },
+            index=[0],
+        )
+        efficacy = pd.DataFrame(columns=["feature_display", "pvalue_mww"])
+        result = PreclinicalEfficacy.annotate(
+            actionable=actionable,
+            efficacy=efficacy,
+            dictionary={},
+        )
+        self.assertTrue(result["preclinical_efficacy_observed"].isna().all())
+        self.assertEqual(result.loc[0, "preclinical_efficacy_lookup"], "")
+
     def test_series_for_significance(self):
         series1 = pd.Series([0, 0.06, pd.NA])
         series2 = pd.Series([0.65, 0.062, pd.NA])
