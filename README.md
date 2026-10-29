@@ -108,7 +108,7 @@ Where relevant, please also cite the version of the database used with its Zenod
 ## License
 
 - Database content: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/), see [LICENSE](./LICENSE).
-- Code: [GNU General Public License, Version 2 (GPL v2)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html), see [LICENSE-code.md](./LICENSE-code).
+- Code: [GNU General Public License, Version 2 (GPL v2)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html), see [LICENSE-code](./LICENSE-code).
 - Third-party files in [datasources/](./datasources) are not covered by the CC BY license; see [datasources/README.md](./datasources/README.md).
 
 ## Disclaimer

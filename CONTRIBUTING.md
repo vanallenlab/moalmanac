@@ -14,7 +14,7 @@ Replace `{new-branch-name}` with something short that is self-descriptive. All c
 
 ## Creating a Pull Request
 
-Navigate to the [branches](https://github.com/vanallenlab/moalmanac/branches) page of this GitHub repository and click `New pull request`, found on the right side of the `Your branches` section. Revise the pull request title to be self-descriptive and copy the [pull request template](pull_request_template.md) to the comment body. Fill out the pull request template and click `Create pull request`. Comment on the pull request as the pull request is reviewed and the pre-pull request check list is completed.
+Navigate to the [branches](https://github.com/vanallenlab/moalmanac/branches) page of this GitHub repository and click `New pull request`, found on the right side of the `Your branches` section. Revise the pull request title to be self-descriptive and copy the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) to the comment body. Fill out the pull request template and click `Create pull request`. Comment on the pull request as the pull request is reviewed and the pre-pull request check list is completed.
 
 ## Merging a Pull Request
 
@@ -22,4 +22,4 @@ Upon completing review of a pull request and all items on the pre-pull request c
 
 ## Creating a Release
 
-Releases follow [semantic versioning](https://semver.org/) and should be created, at minimum, for every minor patch. Navigate to the [releases](https://github.com/vanallenlab/moalmanac/releases) page and click `Draft new release`. Enter the major, minor, and patch numbers delimited by periods as the tag number, such as `0.4.2`. The release title should be `Release {major}.{minor}.{patch}`, such as `Release 0.4.2`. For the release description, follow the [release template](template-release.md) to describe the merged pull requests since the previous release.
+Releases follow [semantic versioning](https://semver.org/) and should be created, at minimum, for every minor patch. Navigate to the [releases](https://github.com/vanallenlab/moalmanac/releases) page and click `Draft new release`. Enter the major, minor, and patch numbers delimited by periods as the tag number, such as `0.4.2`. The release title should be `Release {major}.{minor}.{patch}`, such as `Release 0.4.2`. For the release description, follow the [release template](.github/RELEASE_TEMPLATE.md) to describe the merged pull requests since the previous release.
