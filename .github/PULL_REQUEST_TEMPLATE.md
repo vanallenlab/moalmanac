@@ -1,15 +1,19 @@
 Plain language description of pull request.
 
 Additions:
+
 - Item
 
 Revisions:
+
 - Item
 
 Bug fixes:
+
 - Item
 
-Pre-pull request check list,
+Pre-pull request check list:
+
 - [ ] Relevant documentation has been updated
 - [ ] All unit tests pass
 - [ ] All outputs pre- and post- changes match by md5 hash
