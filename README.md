@@ -86,9 +86,9 @@ pip-compile --output-file=requirements-lock.txt pyproject.toml
 
 Usage documentation can be found within the [moalmanac/](moalmanac) directory of this repository.
 
-## How to contribute
+## Contributing
 
-Please follow [our contribution instructions](docs/how-to-contribute.md) if you are interested in contributing to this project.
+Please follow [our contribution instructions](./CONTRIBUTING.md) if you are interested in contributing to this project.
 
 ## Citation
 
