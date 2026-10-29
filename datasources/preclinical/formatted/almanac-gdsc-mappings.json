@@ -27,6 +27,28 @@
         "gdsc": [],
         "type": "Hormone therapy"
     },
+    "Abiraterone + Olaparib + Prednisone": {
+        "gdsc": [
+            "Olaparib"
+        ],
+        "type": "Combination therapy"
+    },
+    "Abiraterone acetate + Niraparib": {
+        "gdsc": [
+            "Niraparib"
+        ],
+        "type": "Combination therapy"
+    },
+    "Adagrasib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Adagrasib + Cetuximab": {
+        "gdsc": [
+            "Cetuximab"
+        ],
+        "type": "Targeted therapy"
+    },
     "Ado-Trastuzumab Emtansine": {
         "gdsc": [],
         "type": "Hormone therapy"
@@ -34,6 +56,12 @@
     "Afatinib": {
         "gdsc": [
             "Afatinib"
+        ],
+        "type": "Targeted therapy"
+    },
+    "Akt Inhibitor MK2206": {
+        "gdsc": [
+            "MK-2206"
         ],
         "type": "Targeted therapy"
     },
@@ -53,13 +81,49 @@
         ],
         "type": "Targeted therapy"
     },
+    "Alpelisib + Sapanisertib": {
+        "gdsc": [
+            "Alpelisib"
+        ],
+        "type": "Targeted therapy"
+    },
+    "Amivantamab": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Amivantamab + Carboplatin + Pemetrexed": {
+        "gdsc": [
+            "Pemetrexed"
+        ],
+        "type": "Combination therapy"
+    },
+    "Amivantamab + Lazertinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Asciminib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Atezolizumab": {
         "gdsc": [],
         "type": "Immunotherapy"
     },
+    "Avapritinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Avutometinib + Defactinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Azacitidine": {
         "gdsc": [],
         "type": "Chemotherapy"
+    },
+    "Azacitidine + Ivosidenib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
     },
     "Azacitidine + Panobinostat": {
         "gdsc": [],
@@ -77,7 +141,17 @@
         "gdsc": [],
         "type": "Targeted therapy"
     },
+    "Bevacizumab + Dabrafenib": {
+        "gdsc": [
+            "Dabrafenib"
+        ],
+        "type": "Targeted therapy"
+    },
     "Bevacizumab + Olaparib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Binimetinib + Encorafenib": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
@@ -106,19 +180,38 @@
         ],
         "type": "Targeted therapy"
     },
+    "CDK Inhibitor AT7519": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Cabozantinib": {
         "gdsc": [
             "Cabozantinib"
         ],
         "type": "Targeted therapy"
     },
+    "Capecitabine + Neratinib": {
+        "gdsc": [],
+        "type": "Combination therapy"
+    },
     "Capecitabine + Trastuzumab + Tucatinib": {
         "gdsc": [],
+        "type": "Combination therapy"
+    },
+    "Capivasertib + Fulvestrant": {
+        "gdsc": [
+            "Capivasertib",
+            "Fulvestrant"
+        ],
         "type": "Combination therapy"
     },
     "Capmatinib": {
         "gdsc": [],
         "type": "Targeted therapy"
+    },
+    "Carbogen + Radiation Therapy": {
+        "gdsc": [],
+        "type": "Radiation therapy"
     },
     "Carbogen and nicotinamide  + radiotherapy": {
         "gdsc": [],
@@ -142,6 +235,14 @@
         "gdsc": [],
         "type": "Targeted therapy"
     },
+    "Cetuximab + Encorafenib + Fluorouracil + Oxaliplatin": {
+        "gdsc": [
+            "Cetuximab",
+            "5-Fluorouracil",
+            "Oxaliplatin"
+        ],
+        "type": "Combination therapy"
+    },
     "Cetuximab + Vemurafenib": {
         "gdsc": [
             "PLX-4720",
@@ -153,7 +254,21 @@
         "gdsc": [],
         "type": "Combination therapy"
     },
+    "Chemotherapy + Margetuximab": {
+        "gdsc": [],
+        "type": "Combination therapy"
+    },
     "Chemotherapy + Pembrolizumab": {
+        "gdsc": [],
+        "type": "Combination therapy"
+    },
+    "Chemotherapy + Ponatinib": {
+        "gdsc": [
+            "Ponatinib"
+        ],
+        "type": "Combination therapy"
+    },
+    "Chemotherapy + Surgery": {
         "gdsc": [],
         "type": "Combination therapy"
     },
@@ -166,6 +281,14 @@
             "Cisplatin"
         ],
         "type": "Chemotherapy"
+    },
+    "Cisplatin + Osimertinib + Pemetrexed": {
+        "gdsc": [
+            "Cisplatin",
+            "Osimertinib",
+            "Pemetrexed"
+        ],
+        "type": "Combination therapy"
     },
     "Cobimetinib + Vemurafenib": {
         "gdsc": [
@@ -182,6 +305,13 @@
     "Dabrafenib": {
         "gdsc": [
             "Dabrafenib"
+        ],
+        "type": "Targeted therapy"
+    },
+    "Dabrafenib + Omipalisib": {
+        "gdsc": [
+            "Dabrafenib",
+            "Omipalisib"
         ],
         "type": "Targeted therapy"
     },
@@ -206,9 +336,27 @@
         ],
         "type": "Targeted therapy"
     },
+    "Datopotamab deruxtecan": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Dinaciclib": {
+        "gdsc": [
+            "Dinaciclib"
+        ],
+        "type": "Targeted therapy"
+    },
     "Docetaxel + Hyaluronidase-zzxf + Pertuzumab + Trastuzumab": {
         "gdsc": [],
         "type": "Combination therapy"
+    },
+    "Dordaviprone": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Dostarlimab": {
+        "gdsc": [],
+        "type": "Immunotherapy"
     },
     "Durvalumab": {
         "gdsc": [],
@@ -236,11 +384,23 @@
         "gdsc": [],
         "type": "Targeted therapy"
     },
+    "Elacestrant": {
+        "gdsc": [],
+        "type": "Hormone therapy"
+    },
+    "Elimusertib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Enasidenib": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
     "Encorafenib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Ensartinib": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
@@ -251,6 +411,12 @@
     "Enzalutamide": {
         "gdsc": [],
         "type": "Hormone therapy"
+    },
+    "Enzalutamide + Talazoparib": {
+        "gdsc": [
+            "Talazoparib"
+        ],
+        "type": "Combination therapy"
     },
     "Erdafitinib": {
         "gdsc": [],
@@ -273,6 +439,27 @@
         "type": "Targeted therapy"
     },
     "FGFR1 inhibitor + Trametinib ": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Fexagratinib": {
+        "gdsc": [
+            "AZD4547"
+        ],
+        "type": "Targeted therapy"
+    },
+    "Fluoropyrimidine + Pembrolizumab + Platinum Compound + Trastuzumab": {
+        "gdsc": [],
+        "type": "Combination therapy"
+    },
+    "Fulvestrant + Inavolisib + Palbociclib": {
+        "gdsc": [
+            "Fulvestrant",
+            "Palbociclib"
+        ],
+        "type": "Combination therapy"
+    },
+    "Futibatinib": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
@@ -310,6 +497,10 @@
         "gdsc": [],
         "type": "Targeted therapy"
     },
+    "Interferon Alpha + Ixazomib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Interferon-alpha + Ixazomib": {
         "gdsc": [],
         "type": "Targeted therapy"
@@ -336,6 +527,14 @@
         "gdsc": [
             "JQ1"
         ],
+        "type": "Targeted therapy"
+    },
+    "KU0058684": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "KU0058948": {
+        "gdsc": [],
         "type": "Targeted therapy"
     },
     "LOXO-292": {
@@ -388,11 +587,27 @@
         "gdsc": [],
         "type": "Combination therapy"
     },
+    "Mavelertinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Mito-CP": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
+    "Mobocertinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Momelotinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "NSC59984": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Nazartinib": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
@@ -440,7 +655,18 @@
         ],
         "type": "Targeted therapy"
     },
+    "Olaparib + Talazoparib": {
+        "gdsc": [
+            "Olaparib",
+            "Talazoparib"
+        ],
+        "type": "Targeted therapy"
+    },
     "Olmutinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Olutasidenib": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
@@ -460,8 +686,20 @@
         ],
         "type": "Targeted therapy"
     },
+    "PD173074": {
+        "gdsc": [
+            "PD173074"
+        ],
+        "type": "Targeted therapy"
+    },
     "PF-06747775": {
         "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "PI3Kbeta Inhibitor AZD8186": {
+        "gdsc": [
+            "AZD8186"
+        ],
         "type": "Targeted therapy"
     },
     "PU-H71": {
@@ -483,6 +721,12 @@
     },
     "Panitumumab": {
         "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Panitumumab + Sotorasib": {
+        "gdsc": [
+            "KRAS (G12C) Inhibitor-12"
+        ],
         "type": "Targeted therapy"
     },
     "Pazopanib": {
@@ -513,6 +757,10 @@
         "gdsc": [],
         "type": "Chemotherapy"
     },
+    "Platinum Compound": {
+        "gdsc": [],
+        "type": "Chemotherapy"
+    },
     "Ponatinib": {
         "gdsc": [
             "Ponatinib"
@@ -533,6 +781,10 @@
         ],
         "type": "Targeted therapy"
     },
+    "Radiation Therapy": {
+        "gdsc": [],
+        "type": "Radiation therapy"
+    },
     "Radiation therapy": {
         "gdsc": [],
         "type": "Radiation therapy"
@@ -542,6 +794,14 @@
         "type": "Radiation therapy"
     },
     "Regorafenib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Repotrectinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Revumenib": {
         "gdsc": [],
         "type": "Targeted therapy"
     },
@@ -598,16 +858,30 @@
         ],
         "type": "Targeted therapy"
     },
+    "Sotorasib": {
+        "gdsc": [
+            "KRAS (G12C) Inhibitor-12"
+        ],
+        "type": "Targeted therapy"
+    },
     "Sunitinib": {
         "gdsc": [
             "Sunitinib"
         ],
         "type": "Targeted therapy"
     },
+    "Sunvozertinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Talazoparib": {
         "gdsc": [
             "Talazoparib"
         ],
+        "type": "Targeted therapy"
+    },
+    "Taletrectinib": {
+        "gdsc": [],
         "type": "Targeted therapy"
     },
     "Tamoxifen": {
@@ -620,8 +894,22 @@
         "gdsc": [],
         "type": "Targeted therapy"
     },
+    "Tepotinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
     "Tofacitinib": {
         "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Tovorafenib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Tozasertib Lactate": {
+        "gdsc": [
+            "Tozasertib"
+        ],
         "type": "Targeted therapy"
     },
     "Trametinib": {
@@ -640,6 +928,14 @@
     "Trastuzumab": {
         "gdsc": [],
         "type": "Targeted therapy"
+    },
+    "Trastuzumab + Tucatinib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Trastuzumab Emtansine": {
+        "gdsc": [],
+        "type": "Hormone therapy"
     },
     "U0126": {
         "gdsc": [],
@@ -662,6 +958,28 @@
     "Vemurafenib": {
         "gdsc": [
             "PLX-4720"
+        ],
+        "type": "Targeted therapy"
+    },
+    "Vorasidenib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Zelavespib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Zenocutuzumab": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Ziftomenib": {
+        "gdsc": [],
+        "type": "Targeted therapy"
+    },
+    "Zorifertinib": {
+        "gdsc": [
+            "AZD3759"
         ],
         "type": "Targeted therapy"
     },

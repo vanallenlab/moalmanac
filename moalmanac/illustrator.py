@@ -54,8 +54,23 @@ class PreclinicalEfficacy(Illustrator):
 
     @classmethod
     def create_y_range(cls, values):
-        minimum = min(values)
-        maximum = max(values)
+        """Create log10 y-axis ticks spanning the positive values.
+
+        Values at or below zero (e.g. IC50s that round to 0.0) cannot be placed
+        on a log axis and are ignored.
+
+        Args:
+            values (list): IC50 values to span.
+
+        Returns:
+            list: Powers of ten to use as y ticks, or an empty list if no value
+                is positive.
+        """
+        positive_values = [value for value in values if value > 0]
+        if not positive_values:
+            return []
+        minimum = min(positive_values)
+        maximum = max(positive_values)
 
         yaxis_minimum_log10 = math.floor(math.log10(minimum)) - 0
         yaxis_maximum_log10 = math.ceil(math.log10(maximum)) + 1
@@ -179,7 +194,9 @@ class PreclinicalEfficacy(Illustrator):
 
         plt.xlim([0.5, feature_length + 0.5])
         plt.yscale("log")
-        ax.set_yticks(cls.create_y_range(wt_values[0] + mut_values[0]))
+        yticks = cls.create_y_range(wt_values[0] + mut_values[0])
+        if yticks:
+            ax.set_yticks(yticks)
         ax.set_xticks(np.arange(1, len(features) + 1))
         ax.set_xticklabels([s.replace(" ", "\n") for s in features])
 

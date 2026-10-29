@@ -1906,6 +1906,8 @@ class PreclinicalEfficacy:
 
     @classmethod
     def annotate(cls, actionable, efficacy, dictionary, append_lookup=True):
+        if cls.efficacy not in actionable.columns:
+            actionable[cls.efficacy] = pd.NA
         series_all_features = actionable[cls.feature_display]
         series_features = series_all_features[
             series_all_features.isin(efficacy[cls.feature_display])

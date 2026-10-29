@@ -128,9 +128,7 @@ class SensitivityDictionary(Investigator):
         dictionary = {}
         for index in df_actionable[idx_feature_type & idx_sensitive].index:
             sensitive_therapy = df_actionable.loc[index, cls.sensitive_therapy]
-            if sensitive_therapy not in list(mappings.keys()):
-                continue
-            mapped = list(mappings[sensitive_therapy][cls.gdsc])
+            mapped = cls.get_mapped_therapies(mappings, sensitive_therapy)
             feature_display = df_actionable.loc[index, cls.feature_display]
             index_dict = {}
             if mapped:
@@ -216,6 +214,21 @@ class SensitivityDictionary(Investigator):
                 cls.generate_feature_string(series.loc[list_of_labels].tolist())
             )
         return feature_strings
+
+    @classmethod
+    def get_mapped_therapies(cls, mappings, therapy):
+        """Look up the GDSC therapy names mapped to an Almanac therapy.
+
+        Args:
+            mappings (dict): Almanac to GDSC mappings, keyed by Almanac therapy.
+            therapy (str): Almanac therapy name to look up.
+
+        Returns:
+            list: GDSC therapy names, or an empty list if the therapy is not mapped.
+        """
+        if not isinstance(therapy, str) or therapy not in mappings:
+            return []
+        return list(mappings[therapy].get(cls.gdsc, []))
 
     @classmethod
     def populate_feature_dictionary(cls, groups, all_samples):

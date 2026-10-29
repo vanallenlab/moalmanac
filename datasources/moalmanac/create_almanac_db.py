@@ -136,7 +136,7 @@ class DisplayAlteration:
     @classmethod
     def generate(cls, record, config_dictionary):
         feature_type_dictionary = generate_feature_type_string_lookup_dictionary(
-            config_dictionary
+            config_dictionary,
         )
         feature_type = record["feature_type"]
         if feature_type == feature_type_dictionary["somatic_variants"]:
@@ -159,7 +159,7 @@ class DisplayAlteration:
             return cls.knockdown(record)
         else:
             print(
-                f"ERROR: {feature_type} does not have a feature display format function."
+                f"ERROR: {feature_type} does not have a feature display format function.",
             )
 
 
@@ -208,7 +208,7 @@ def extract_genes(records):
 
 def get_feature_type_fields(feature_type, config_dictionary):
     feature_type_dictionary = generate_feature_type_string_lookup_dictionary(
-        config_dictionary
+        config_dictionary,
     )
     if feature_type == feature_type_dictionary["somatic_variants"]:
         return VARIANT_FIELDS
@@ -230,7 +230,7 @@ def get_feature_type_fields(feature_type, config_dictionary):
         return KNOCKDOWN_FIELDS
     else:
         sys.exit(
-            f"feature type {feature_type} present in database but not accounted for."
+            f"feature type {feature_type} present in database but not accounted for.",
         )
 
 
@@ -245,7 +245,7 @@ def load_config(file_path):
 
 
 def load_json(json_file):
-    with open(json_file, "r") as f:
+    with open(json_file) as f:
         json_data = json.load(f)
     return json_data
 
@@ -289,9 +289,15 @@ if __name__ == "__main__":
         help="Molecular Oncology Almanac db file from https://github.com/vanallenlab/moalmanac-db",
     )
     arg_parser.add_argument(
-        "--release", "-r", help="Database content release; e.g. v.2022-12-01"
+        "--release",
+        "-r",
+        help="Database content release; e.g. v.2022-12-01",
     )
-    arg_parser.add_argument("--version", "-v", help="Database version; e.g. 1.0.0")
+    arg_parser.add_argument(
+        "--version",
+        "-v",
+        help="Database version; e.g. 1.0.0",
+    )
     args = arg_parser.parse_args()
     print(args)
 
