@@ -1,0 +1,14 @@
+patient_id	feature_display	tested_subfeature	therapy_name	n_mut	n_wt	n_mut_tested	n_wt_tested	mut_ic50_median	mut_ic50_mean	mut_ic50_std	wt_ic50_median	wt_ic50_mean	wt_ic50_std	pvalue_mww	statistic
+example_output	BRAF p.V600E (Missense)	BRAF	Trametinib	264	1558	137	634	0.516	5.862	27.545	2.112	7.605	32.168	2.344e-09	57546.5
+example_output	BRAF p.V600E (Missense)	BRAF Somatic Variant	Trametinib	184	1638	99	672	0.364	4.887	30.17	2.152	7.65	31.568	9.083e-13	48043.5
+example_output	BRAF p.V600E (Missense)	BRAF Somatic Variant Missense	Trametinib	170	1652	90	681	0.271	5.095	31.639	2.147	7.586	31.365	2.900e-13	45139.0
+example_output	BRAF p.V600E (Missense)	BRAF Somatic Variant Missense p.V600E	Trametinib	101	1721	50	721	0.085	0.659	1.336	2.059	7.755	32.406	1.793e-14	29698.0
+example_output	CDK4 Amplification	CDK4	Palbociclib	59	1763	36	734	49.696	163.578	360.733	38.309	106.273	249.057	0.4	12116.0
+example_output	CDK4 Amplification	CDK4 Copy Number	Palbociclib	39	1783	23	747	82.802	238.396	435.829	37.669	104.967	247.125	0.01	5880.0
+example_output	CDK4 Amplification	CDK4 Copy Number Amplification	Palbociclib	34	1788	20	750	83.864	265.172	462.432	37.503	104.787	246.661	0.008	4877.0
+example_output	CDKN2A Deletion	CDKN2A	Palbociclib	564	1258	303	467	49.412	121.001	250.126	34.376	101.135	258.62	0.016	63514.0
+example_output	CDKN2A Deletion	CDKN2A Copy Number	Palbociclib	440	1382	239	531	46.91	116.861	254.771	35.917	105.393	255.745	0.194	59748.0
+example_output	CDKN2A Deletion	CDKN2A Copy Number Deletion	Palbociclib	432	1390	233	537	46.91	117.866	257.775	35.922	105.085	254.41	0.219	59077.0
+example_output	TP53 Deletion	TP53	Talazoparib	1041	781	543	205	32.421	100.013	217.635	15.532	51.305	119.583	7.932e-07	42643.5
+example_output	TP53 Deletion	TP53 Copy Number	Talazoparib	169	1653	86	662	40.757	139.85	347.591	25.917	79.754	166.832	0.058	24893.5
+example_output	TP53 Deletion	TP53 Copy Number Deletion	Talazoparib	161	1661	80	668	36.648	139.093	358.782	26.005	80.385	166.661	0.157	24135.5
