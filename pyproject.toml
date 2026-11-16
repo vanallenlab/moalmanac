@@ -27,7 +27,7 @@ dependencies = [
 Repository = "https://github.com/vanallenlab/moalmanac"
 
 [project.optional-dependencies]
-dev = ["pip-tools"]
+dev = ["pip-tools", "pytest>=8"]
 
 [tool.setuptools]
 license-files = ["LICENSE*"]
@@ -35,6 +35,10 @@ license-files = ["LICENSE*"]
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["moalmanac*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["moalmanac"]
 
 [tool.ruff]
 line-length = 88

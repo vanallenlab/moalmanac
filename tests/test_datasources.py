@@ -1,10 +1,10 @@
-import unittest
 import pandas as pd
 
-from datasources import CancerHotspots, Preclinical
+from datasources import CancerHotspots
+from datasources import Preclinical
 
 
-class UnitTestCancerHotspots(unittest.TestCase):
+class TestCancerHotspots:
     def test_format_cancerhotspots(self):
         alt = CancerHotspots.alt
         aa_pos = CancerHotspots.aa_pos
@@ -17,13 +17,13 @@ class UnitTestCancerHotspots(unittest.TestCase):
                 aa_pos: ["1", "2", "3"],
                 aa_var: ["A:50", "T:1", "L:123"],
                 alt: ["", "", ""],
-            }
+            },
         )
         df = CancerHotspots.format_cancerhotspots(initial_df)
-        self.assertEqual(["p.Q1A", "p.V2T", "p.S3L"], df.loc[:, alt].tolist())
+        assert df.loc[:, alt].tolist() == ["p.Q1A", "p.V2T", "p.S3L"]
 
 
-class UnitTestPreclinical(unittest.TestCase):
+class TestPreclinical:
     def test_import_dbs(self):
         summary = Preclinical.summary
         variants = Preclinical.variants
@@ -45,22 +45,22 @@ class UnitTestPreclinical(unittest.TestCase):
         dbs = Preclinical.import_dbs(dbs_dictionary)
 
         for label in [summary, variants, cnas, fusions, gdsc]:
-            self.assertEqual(type(dbs[label]), type(pd.DataFrame()))
+            assert isinstance(dbs[label], pd.DataFrame)
         for dictionary in [dbs[mappings], dbs]:
-            self.assertEqual(type(dictionary), type({}))
+            assert isinstance(dictionary, dict)
 
     def test_subset_dataframe(self):
         dataframe = pd.DataFrame({"A": [1, 2, 3], "B": [3, 4, 5]})
         result = Preclinical.subset_dataframe(dataframe, "B", [3, 4])
-        self.assertEqual(result["A"].tolist(), [1, 2])
+        assert result["A"].tolist() == [1, 2]
 
     def test_record_gene_hits(self):
         variants = pd.DataFrame({"feature": ["A", "B"], "model_id": [1, 2]})
         cnas = pd.DataFrame({"feature": ["B", "C"], "model_id": [2, 3]})
         fusions = pd.DataFrame(
-            {"feature": ["C", "D"], "model_id": [1, 3], "partner": ["A", "B"]}
+            {"feature": ["C", "D"], "model_id": [1, 3], "partner": ["A", "B"]},
         )
 
         results = Preclinical.record_gene_hits(variants, cnas, fusions)
-        self.assertEqual(results["feature"].tolist(), ["A", "B", "C", "C", "D", "B"])
-        self.assertEqual(results["model_id"].tolist(), [1, 2, 3, 1, 3, 3])
+        assert results["feature"].tolist() == ["A", "B", "C", "C", "D", "B"]
+        assert results["model_id"].tolist() == [1, 2, 3, 1, 3, 3]

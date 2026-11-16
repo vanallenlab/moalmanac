@@ -83,6 +83,8 @@ idna==3.14
     #   httpx
     #   jsonschema
     #   requests
+iniconfig==2.3.1
+    # via pytest
 ipykernel==7.2.0
     # via
     #   jupyter
@@ -223,6 +225,7 @@ packaging==26.2
     #   jupyterlab-server
     #   matplotlib
     #   nbconvert
+    #   pytest
 pandas==3.0.3
     # via moalmanac (pyproject.toml)
 pandocfilters==1.5.1
@@ -235,6 +238,8 @@ pillow==12.2.0
     # via matplotlib
 platformdirs==4.9.6
     # via jupyter-core
+pluggy==1.7.0
+    # via pytest
 prometheus-client==0.25.0
     # via jupyter-server
 prompt-toolkit==3.0.52
@@ -259,8 +264,11 @@ pygments==2.20.0
     #   ipython-pygments-lexers
     #   jupyter-console
     #   nbconvert
+    #   pytest
 pyparsing==3.3.2
     # via matplotlib
+pytest==9.2.0
+    # via moalmanac (dev)
 python-dateutil==2.9.0.post0
     # via
     #   arrow
