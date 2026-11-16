@@ -32,10 +32,6 @@ The following describes required and optional arguments to run `moalmanac/moalma
   * [Output directory](#output-directory)
   * [Preclinical databases](#preclinical-databases)
 
-Alternatively, a simplified version of the interpretation algorithm can be run by using `moalmanac/simplified_input.py`.
-
-* [Simplified input arguments](#simplified-input)
-
 ## Required arguments
 
 The following arguments are required to run Molecular Oncology Almanac.
@@ -402,30 +398,3 @@ This config file contains a single section `preclinical` that lists the followin
 * `dictionarey` - path within `root` that points to the `cell-lines.pkl` datasource file
 
 For more information about each datasource, view the [datasources/preclinical/ directory](../datasources/preclinical/README.md)
-
-## Simplified input
-
-`--input` is an argument only used with `simplified_input.py`. It accepts a tab delimited file with one genomic alteration per row based on MOAlmanac's [standardized feature columns](../docs/description-of-outputs.md#standardized-feature-columns). In short the following columns are expected,
-
-1. `feature_type`, the data type of the molecular features and accepts `Somatic Variant`, `Germline Variant`, `Copy Number`, or `Rearrangement`. These strings can be customized in the `feature_types` section of [config.ini](config.ini).
-2. `gene` or `feature`, the gene name of the genomic alteration.
-3. `alteration_type`, classification or consequence of the genomic alteration
-    * For somatic and germline variants: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
-    * For copy number alterations: `Amplification` or `Deletion`
-    * For rearrangements: `Fusion` or `Translocation`
-4. `alteration`, specific genomic alteration,
-    * For somatic and germline variants: the protein change with [1-letter amino acid codes](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/), `p.HGVSp_Short`
-    * For copy number alterations: Leave blank
-    * For rearrangements: the full fusion separated by two dashes, `--`
-
-For example,
-
-| feature_type | feature | alteration_type | alteration |
-| --- | --- | --- | --- |
-| Somatic Variant | BRAF | Missense | p.V600E |
-| Copy Number | CDK4 | Amplification | |
-| Rearrangement | COL1A1 | Fusion | COL1A1--CITED4 |
-| Germline Variant | BRCA2 | Frameshift | p.S1982fs |
-
-If you use this method, please cite our publication:
-> [Reardon, B., Moore, N.D., Moore, N.S., _et al_. Integrating molecular profiles into clinical frameworks through the Molecular Oncology Almanac to prospectively guide precision oncology. _Nat Cancer_ (2021). https://doi.org/10.1038/s43018-021-00243-3](https://www.nature.com/articles/s43018-021-00243-3)

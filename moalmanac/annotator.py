@@ -72,21 +72,6 @@ class Annotator:
         return df
 
     @classmethod
-    def annotate_simple(cls, df, dbs, ontology, config):
-        df.loc[:, cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
-        df = Almanac.annotate(df, dbs, ontology, config)
-        df = CancerHotspots.annotate(df, dbs)
-        df = CancerHotspots3D.annotate(df, dbs)
-        df = CancerGeneCensus.annotate(df, dbs)
-        df = Cosmic.annotate(df, dbs)
-        df = GSEACancerPathways.annotate(df, dbs)
-        df = GSEACancerModules.annotate(df, dbs)
-        df = ACMG.annotate(df, dbs)
-        df = Hereditary.annotate(df, dbs)
-        df = MSI.annotate(df)
-        return df
-
-    @classmethod
     def annotate_somatic(cls, df, dbs, ontology, config):
         df.loc[:, cls.score_bin] = cls.preallocate_bin(cls.score_bin, df.index)
         df = Almanac.annotate(df, dbs, ontology, config)
