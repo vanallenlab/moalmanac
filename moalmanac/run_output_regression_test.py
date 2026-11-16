@@ -1,4 +1,5 @@
 import argparse
+import collections
 import difflib
 import json
 import pathlib
@@ -10,7 +11,6 @@ import pandas as pd
 VOLATILE_KEYS = {"execution_runtime", "environment"}
 DATE_LINE = re.compile(r"Generated on:.*")
 BASE64_IMAGE = re.compile(r"data:image/png;base64,[A-Za-z0-9+/=]+")
-CHECK_PNG_SIZE = False
 
 
 def list_files(folder):
@@ -34,15 +34,64 @@ def row_hashes(df):
         df (pandas.DataFrame): Data frame to hash.
 
     Returns:
-        set[int]: The unique row hashes.
+        list[int]: One hash per row, in row order.
     """
-    return set(pd.util.hash_pandas_object(df, index=False).tolist())
+    return pd.util.hash_pandas_object(df, index=False).tolist()
+
+
+def unmatched_rows(df1, df2):
+    """
+    Finds the rows of each data frame that have no identical row in the other,
+    counting duplicate rows separately.
+
+    Args:
+        df1 (pandas.DataFrame): First data frame.
+        df2 (pandas.DataFrame): Second data frame, with the same columns.
+
+    Returns:
+        tuple[pandas.DataFrame, pandas.DataFrame]: The unmatched rows of each.
+    """
+    hashes1, hashes2 = row_hashes(df1), row_hashes(df2)
+    remaining = collections.Counter(hashes2)
+    keep1 = []
+    for h in hashes1:
+        if remaining[h] > 0:
+            remaining[h] -= 1
+            keep1.append(False)
+        else:
+            keep1.append(True)
+    remaining = collections.Counter(hashes1)
+    keep2 = []
+    for h in hashes2:
+        if remaining[h] > 0:
+            remaining[h] -= 1
+            keep2.append(False)
+        else:
+            keep2.append(True)
+    return df1[keep1], df2[keep2]
+
+
+def describe_row(row, columns):
+    """
+    Describes a row by its values in the first few columns.
+
+    Args:
+        row (pandas.Series): The row.
+        columns (list[str]): Column names, in order.
+
+    Returns:
+        str: The row's values in up to three columns, such as "gene='BRAF', ...".
+    """
+    return ", ".join(f"{c}={row[c]!r}" for c in columns[:3])
 
 
 def compare_tsv(path1, path2, ignore_columns):
     """
     Compares two tab-delimited files, ignoring row order and any ignored columns.
     Reports column, row count, row order, and cell differences separately.
+    Rows identical in both files are set aside first; if the same number of rows
+    remain on each side, they are sorted and paired to report differing cells,
+    otherwise a few unmatched rows from each side are shown.
 
     Args:
         path1 (str | pathlib.Path): First file.
@@ -52,7 +101,6 @@ def compare_tsv(path1, path2, ignore_columns):
     Returns:
         list[str]: Descriptions of differences; empty if the files match.
     """
-    """Returns a list of difference descriptions (empty if identical)."""
     df1 = pd.read_csv(path1, sep="\t", dtype=str, keep_default_na=False)
     df2 = pd.read_csv(path2, sep="\t", dtype=str, keep_default_na=False)
     messages = []
@@ -69,49 +117,44 @@ def compare_tsv(path1, path2, ignore_columns):
         c for c in df2.columns if c in columns
     ]:
         messages.append("shared columns are in a different order")
-    df1, df2 = df1[columns], df2[columns]
+    df1 = df1[columns].reset_index(drop=True)
+    df2 = df2[columns].reset_index(drop=True)
 
     if df1.shape[0] != df2.shape[0]:
         messages.append(f"row count differs: {df1.shape[0]} vs. {df2.shape[0]}")
+    if not columns:
+        return messages
 
-    def canonical(df):
-        """
-        Sorts a data frame by all compared columns and resets its index.
+    left1, left2 = unmatched_rows(df1, df2)
+    if left1.empty and left2.empty:
+        if not df1.equals(df2):
+            messages.append("same content, different row order")
+        return messages
 
-        Args:
-            df (pandas.DataFrame): Data frame to sort.
-
-        Returns:
-            pandas.DataFrame: The sorted data frame.
-        """
-        if df.empty or not columns:
-            return df.reset_index(drop=True)
-        return df.sort_values(columns, kind="stable").reset_index(drop=True)
-
-    s1, s2 = canonical(df1), canonical(df2)
-    if s1.shape == s2.shape:
-        try:
-            pd.testing.assert_frame_equal(s1, s2)
-            if not messages and not df1.equals(df2):
-                messages.append("same content, different row order")
-            return messages
-        except AssertionError:
-            pass
-        if df1.shape == df2.shape:
+    messages.append(
+        f"rows only in folder 1: {len(left1)}; only in folder 2: {len(left2)}",
+    )
+    left1 = left1.sort_values(columns, kind="stable").reset_index(drop=True)
+    left2 = left2.sort_values(columns, kind="stable").reset_index(drop=True)
+    if len(left1) == len(left2):
+        for i in range(min(len(left1), 10)):
+            row1, row2 = left1.iloc[i], left2.iloc[i]
             for column in columns:
-                diff = df1.index[df1[column] != df2[column]]
-                for i in list(diff)[:10]:
+                if row1[column] != row2[column]:
                     messages.append(
-                        f"row {i} {column}: {df1.at[i, column]!r} "
-                        f"vs. {df2.at[i, column]!r}",
+                        f"changed row ({describe_row(row1, columns)}) {column}: "
+                        f"{row1[column]!r} vs. {row2[column]!r}",
                     )
-                if len(diff) > 10:
-                    messages.append(f"{column}: {len(diff) - 10} more differing rows")
-    h1, h2 = row_hashes(s1), row_hashes(s2)
-    if h1 != h2:
-        messages.append(
-            f"rows only in folder 1: {len(h1 - h2)}; only in folder 2: {len(h2 - h1)}",
-        )
+        if len(left1) > 10:
+            messages.append(f"{len(left1) - 10} more changed rows")
+    else:
+        for label, left in (("folder 1", left1), ("folder 2", left2)):
+            for i in range(min(len(left), 5)):
+                messages.append(
+                    f"only in {label}: {describe_row(left.iloc[i], columns)}",
+                )
+            if len(left) > 5:
+                messages.append(f"only in {label}: {len(left) - 5} more rows")
     return messages
 
 
@@ -224,15 +267,7 @@ def compare_html(path1, path2):
     lines = []
     for p in (path1, path2):
         text = pathlib.Path(p).read_text(errors="replace")
-        lines.append(
-            [
-                BASE64_IMAGE.sub(
-                    "data:image/png;base64,<stripped>",
-                    DATE_LINE.sub("Generated on:", ln),
-                )[:300]
-                for ln in text.splitlines()
-            ],
-        )
+        lines.append([normalize_html_line(ln) for ln in text.splitlines()])
     if lines[0] == lines[1]:
         return []
     diff = list(
@@ -249,26 +284,27 @@ def compare_html(path1, path2):
     return [f"differs ({changed} lines)", *[d[:160] for d in diff[:40]]]
 
 
-def compare_png(path1, path2):
+def compare_png(path1, path2, check_size):
     """
-    Compares the byte sizes of two figures, only when enabled by CHECK_PNG_SIZE.
+    Compares the byte sizes of two figures, only when check_size is True.
 
     Args:
         path1 (str | pathlib.Path): First file.
         path2 (str | pathlib.Path): Second file.
+        check_size (bool): Whether to compare byte sizes at all.
 
     Returns:
         list[str]: A description of the size difference; empty if sizes match
             or the check is disabled.
     """
     # Figures are not byte-reproducible between runs; presence only by default
-    if not CHECK_PNG_SIZE:
+    if not check_size:
         return []
     s1, s2 = pathlib.Path(path1).stat().st_size, pathlib.Path(path2).stat().st_size
     return [] if s1 == s2 else [f"size differs: {s1} vs. {s2} bytes"]
 
 
-def compare_folders(folder1, folder2, ignore_columns):
+def compare_folders(folder1, folder2, ignore_columns, png_size=False):
     """
     Compares every file in two output folders, using a comparison suited to each
     file type.
@@ -278,12 +314,12 @@ def compare_folders(folder1, folder2, ignore_columns):
         folder1 (str | pathlib.Path): First output folder.
         folder2 (str | pathlib.Path): Second output folder.
         ignore_columns (list[str]): Column names to exclude from table comparisons.
+        png_size (bool): Also compare figure byte sizes (default: False).
 
     Returns:
         dict[str, list[str]]: Difference descriptions keyed by file name; an
             empty list means the file matches.
     """
-    """Returns a dict of file name to list of difference messages."""
     folder1, folder2 = pathlib.Path(folder1), pathlib.Path(folder2)
     files1, files2 = list_files(folder1), list_files(folder2)
     results = {}
@@ -299,7 +335,7 @@ def compare_folders(folder1, folder2, ignore_columns):
         elif name.endswith(".report.html"):
             results[name] = compare_html(folder1 / name, folder2 / name)
         elif name.endswith(".png"):
-            results[name] = compare_png(folder1 / name, folder2 / name)
+            results[name] = compare_png(folder1 / name, folder2 / name, png_size)
         # example.log and other files are intentionally not compared
     return results
 
@@ -320,7 +356,7 @@ def print_results(results):
             print(f"    {message}")
 
 
-def main(folder1, folder2, ignore_columns=()):
+def main(folder1, folder2, ignore_columns=(), png_size=False):
     """
     Compares two output folders and prints the results.
 
@@ -329,17 +365,33 @@ def main(folder1, folder2, ignore_columns=()):
         folder2 (str): Second output folder.
         ignore_columns (list[str]): Column names to exclude from table
             comparisons (default: ()).
+        png_size (bool): Also compare figure byte sizes (default: False).
 
     Returns:
         int: 1 if any file differs, otherwise 0.
     """
     print(f"Comparing {folder1} and {folder2}")
-    results = compare_folders(folder1, folder2, ignore_columns)
+    results = compare_folders(folder1, folder2, ignore_columns, png_size)
     print_results(results)
     return 1 if any(results.values()) else 0
 
 
-def main_all(manifest1, manifest2, ignore_columns=()):
+def read_manifest(path):
+    """
+    Reads a manifest and resolves its run folders relative to the manifest's folder.
+
+    Args:
+        path (str | pathlib.Path): Manifest JSON, written by the regression run script.
+
+    Returns:
+        dict[str, pathlib.Path]: Output folder keyed by run name.
+    """
+    path = pathlib.Path(path)
+    runs = json.loads(path.read_text())["runs"]
+    return {name: path.parent / folder for name, folder in runs.items()}
+
+
+def main_all(manifest1, manifest2, ignore_columns=(), png_size=False):
     """
     Compares all four example runs listed in two manifests and prints a summary.
 
@@ -348,19 +400,22 @@ def main_all(manifest1, manifest2, ignore_columns=()):
         manifest2 (str): Second manifest JSON.
         ignore_columns (list[str]): Column names to exclude from table
             comparisons (default: ()).
+        png_size (bool): Also compare figure byte sizes (default: False).
 
     Returns:
-        int: 1 if any run differs or is missing from the second manifest, otherwise 0.
+        int: 1 if any run differs or is listed in only one manifest, otherwise 0.
     """
-    runs1 = json.loads(pathlib.Path(manifest1).read_text())["runs"]
-    runs2 = json.loads(pathlib.Path(manifest2).read_text())["runs"]
+    runs1, runs2 = read_manifest(manifest1), read_manifest(manifest2)
     summary = []
-    for name in runs1:
+    for name in list(runs1) + [n for n in runs2 if n not in runs1]:
         if name not in runs2:
-            summary.append((name, "missing in second manifest"))
+            summary.append((name, "only in first manifest"))
+            continue
+        if name not in runs1:
+            summary.append((name, "only in second manifest"))
             continue
         print(f"=== {name}")
-        results = compare_folders(runs1[name], runs2[name], ignore_columns)
+        results = compare_folders(runs1[name], runs2[name], ignore_columns, png_size)
         print_results(results)
         n = sum(1 for m in results.values() if m)
         summary.append((name, "identical" if n == 0 else f"{n} file(s) differ"))
@@ -373,24 +428,19 @@ def main_all(manifest1, manifest2, ignore_columns=()):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="Molecular Oncology Almanac output regression test",
-        description="Compare output folders (or all four runs via manifests)",
+        description="Compare all four runs from two manifests, or two output folders",
     )
     parser.add_argument(
         "--folder1",
         "-f1",
         required=True,
-        help="Folder, or manifest json with --all",
+        help="Output folder, or manifest json to compare all four runs",
     )
     parser.add_argument(
         "--folder2",
         "-f2",
         required=True,
-        help="Folder, or manifest json with --all",
-    )
-    parser.add_argument(
-        "--all",
-        action="store_true",
-        help="Compare all four runs from two manifests",
+        help="Output folder, or manifest json to compare all four runs",
     )
     parser.add_argument(
         "--ignore-columns",
@@ -404,9 +454,15 @@ if __name__ == "__main__":
         help="Also compare PNG byte sizes (noisy)",
     )
     args = parser.parse_args()
-    CHECK_PNG_SIZE = args.png_size
-    if args.all:
-        code = main_all(args.folder1, args.folder2, args.ignore_columns)
+    paths = [pathlib.Path(args.folder1), pathlib.Path(args.folder2)]
+    for path in paths:
+        if not path.exists():
+            parser.error(f"{path} does not exist")
+    manifests = [path.is_file() and path.suffix == ".json" for path in paths]
+    if any(manifests) and not all(manifests):
+        parser.error("pass either two output folders or two manifest json files")
+    if all(manifests):
+        code = main_all(args.folder1, args.folder2, args.ignore_columns, args.png_size)
     else:
-        code = main(args.folder1, args.folder2, args.ignore_columns)
+        code = main(args.folder1, args.folder2, args.ignore_columns, args.png_size)
     sys.exit(code)
