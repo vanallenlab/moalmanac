@@ -1,16 +1,15 @@
-import os
-import subprocess
+import argparse
+import datetime
+import json
+import pathlib
 import time
-from datetime import date
 
 from reader import Ini
 
 import moalmanac
 
-pre_or_post_code_changes = "pre"
-# pre_or_post_code_changes = "post"
-
-metadata_dictionary = {
+# ruff: noqa: E501
+METADATA = {
     "patient_id": "example",
     "reported_tumor_type": "MEL",
     "stage": "Metastatic",
@@ -22,7 +21,7 @@ metadata_dictionary = {
     "tumor_mutational_burden": 10.1,
 }
 
-input_dictionary_empty = {
+INPUTS_EMPTY = {
     "snv_handle": "",
     "indel_handle": "",
     "bases_covered_handle": "",
@@ -35,7 +34,7 @@ input_dictionary_empty = {
     "disable_matchmaking": False,
 }
 
-input_dictionary = {
+INPUTS_FULL = {
     "snv_handle": "../example_data/example_patient.capture.somatic.snvs.maf",
     "indel_handle": "../example_data/example_patient.capture.somatic.indels.maf",
     "bases_covered_handle": "../example_data/example_patient.capture.somatic.coverage.txt",
@@ -48,158 +47,89 @@ input_dictionary = {
     "disable_matchmaking": False,
 }
 
-config_ini_path = "config.ini"
-config_ini = Ini.read(
-    config_ini_path,
-    extended_interpolation=False,
-    convert_to_dictionary=False,
-)
-
-dbs_ini_path = "annotation-databases.ini"
-db_paths = Ini.read(
-    dbs_ini_path,
-    extended_interpolation=True,
-    convert_to_dictionary=True,
-    resolve_paths=True,
-)
-db_paths = db_paths["paths"]
-
-dbs_preclinical_ini_path = "preclinical-databases.ini"
-preclinical_db_paths = Ini.read(
-    dbs_preclinical_ini_path,
-    extended_interpolation=True,
-    convert_to_dictionary=True,
-    resolve_paths=True,
-)
-preclinical_db_paths = preclinical_db_paths["paths"]
+# (name, inputs, function toggle value)
+RUNS = [
+    ("full-all-enabled", INPUTS_FULL, "on"),
+    ("empty-all-enabled", INPUTS_EMPTY, "on"),
+    ("full-all-disabled", INPUTS_FULL, "off"),
+    ("empty-all-disabled", INPUTS_EMPTY, "off"),
+]
 
 
-def execute_cmd(command):
-    subprocess.call(command, shell=True)
+def read_ini_files():
+    """
+    Reads the configuration and datasource path files from the working directory.
+
+    Returns:
+        tuple[configparser.ConfigParser, dict, dict]: The runtime configuration, the annotation datasource paths, and the preclinical datasource paths.
+    """
+    config_ini = Ini.read(
+        "config.ini",
+        extended_interpolation=False,
+        convert_to_dictionary=False,
+    )
+    db_paths = Ini.read(
+        "annotation-databases.ini",
+        extended_interpolation=True,
+        convert_to_dictionary=True,
+        resolve_paths=True,
+    )["paths"]
+    preclinical_db_paths = Ini.read(
+        "preclinical-databases.ini",
+        extended_interpolation=True,
+        convert_to_dictionary=True,
+        resolve_paths=True,
+    )["paths"]
+    return config_ini, db_paths, preclinical_db_paths
 
 
-today = date.today().isoformat()
+def main(label, output_root, date):
+    """
+    Runs the four example executions and writes a manifest of their output folders.
+    The runs are full and empty inputs, each with all function toggles on and off.
 
-"""
-First execution, all example inputs with all settings within the function toggle enabled
-"""
-for key, value in config_ini.items("function_toggle"):
-    config_ini["function_toggle"][key] = "on"
+    Args:
+        label (str): Either "pre" or "post", appended to each output folder name.
+        output_root (str): Folder in which output folders and the manifest are created.
+        date (str): ISO 8601 date prefixed to each output folder and the manifest name.
+    """
+    config_ini, db_paths, preclinical_db_paths = read_ini_files()
+    output_root = pathlib.Path(output_root)
+    manifest = {"label": label, "date": date, "runs": {}}
 
-output_directory = (
-    f"{today}-example-outputs-full-all-enabled-{pre_or_post_code_changes}"
-)
-if output_directory != "":
-    cmd = f"mkdir -p {output_directory}"
-    execute_cmd(cmd)
-else:
-    output_directory = os.getcwd()
+    for name, inputs, toggle in RUNS:
+        for key, _ in config_ini.items("function_toggle"):
+            config_ini["function_toggle"][key] = toggle
 
-start_time = time.time()
+        output_directory = output_root / f"{date}-example-outputs-{name}-{label}"
+        output_directory.mkdir(parents=True, exist_ok=True)
 
-moalmanac.main(
-    patient=metadata_dictionary,
-    inputs=input_dictionary,
-    output_folder=output_directory,
-    config=config_ini,
-    dbs=db_paths,
-    dbs_preclinical=preclinical_db_paths,
-)
+        start_time = time.time()
+        moalmanac.main(
+            patient=METADATA,
+            inputs=inputs,
+            output_folder=str(output_directory),
+            config=config_ini,
+            dbs=db_paths,
+            dbs_preclinical=preclinical_db_paths,
+        )
+        elapsed = round(time.time() - start_time, 4)
+        n_files = len(list(output_directory.iterdir()))
+        print(f"[{name}] {elapsed} seconds, {n_files} files -> {output_directory}")
+        manifest["runs"][name] = str(output_directory)
 
-end_time = time.time()
+    manifest_path = output_root / f"{date}-regression-{label}.json"
+    manifest_path.write_text(json.dumps(manifest, indent=4) + "\n")
+    print(f"Wrote manifest {manifest_path}")
 
-elapsed_time = round(end_time - start_time, 4)
-time_statement = f"Molecular Oncology Almanac runtime: {elapsed_time} seconds"
-print(time_statement)
 
-"""
-Second execution, all empty example inputs with all settings within the function toggle enabled
-"""
-for key, value in config_ini.items("function_toggle"):
-    config_ini["function_toggle"][key] = "on"
-
-output_directory = (
-    f"{today}-example-outputs-empty-all-enabled-{pre_or_post_code_changes}"
-)
-if output_directory != "":
-    cmd = f"mkdir -p {output_directory}"
-    execute_cmd(cmd)
-else:
-    output_directory = os.getcwd()
-
-start_time = time.time()
-moalmanac.main(
-    patient=metadata_dictionary,
-    inputs=input_dictionary_empty,
-    output_folder=output_directory,
-    config=config_ini,
-    dbs=db_paths,
-    dbs_preclinical=preclinical_db_paths,
-)
-end_time = time.time()
-
-elapsed_time = round(end_time - start_time, 4)
-time_statement = f"Molecular Oncology Almanac runtime: {elapsed_time} seconds"
-print(time_statement)
-
-"""
-Third execution, all example inputs with all settings within the function toggle disabled
-"""
-for key, value in config_ini.items("function_toggle"):
-    config_ini["function_toggle"][key] = "off"
-
-output_directory = (
-    f"{today}-example-outputs-full-all-disabled-{pre_or_post_code_changes}"
-)
-if output_directory != "":
-    cmd = f"mkdir -p {output_directory}"
-    execute_cmd(cmd)
-else:
-    output_directory = os.getcwd()
-
-start_time = time.time()
-
-moalmanac.main(
-    patient=metadata_dictionary,
-    inputs=input_dictionary,
-    output_folder=output_directory,
-    config=config_ini,
-    dbs=db_paths,
-    dbs_preclinical=preclinical_db_paths,
-)
-
-end_time = time.time()
-
-elapsed_time = round(end_time - start_time, 4)
-time_statement = f"Molecular Oncology Almanac runtime: {elapsed_time} seconds"
-print(time_statement)
-
-"""
-Fourth execution, all empty example inputs with all settings within the function toggle disabled
-"""
-for key, value in config_ini.items("function_toggle"):
-    config_ini["function_toggle"][key] = "off"
-
-output_directory = (
-    f"{today}-example-outputs-empty-all-disabled-{pre_or_post_code_changes}"
-)
-if output_directory != "":
-    cmd = f"mkdir -p {output_directory}"
-    execute_cmd(cmd)
-else:
-    output_directory = os.getcwd()
-
-start_time = time.time()
-moalmanac.main(
-    patient=metadata_dictionary,
-    inputs=input_dictionary_empty,
-    output_folder=output_directory,
-    config=config_ini,
-    dbs=db_paths,
-    dbs_preclinical=preclinical_db_paths,
-)
-end_time = time.time()
-
-elapsed_time = round(end_time - start_time, 4)
-time_statement = f"Molecular Oncology Almanac runtime: {elapsed_time} seconds"
-print(time_statement)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog="Molecular Oncology Almanac regression runs",
+        description="Run the four example executions used for output regression tests",
+    )
+    parser.add_argument("--label", choices=["pre", "post"], default="pre")
+    parser.add_argument("--output-root", default=".")
+    parser.add_argument("--date", default=datetime.date.today().isoformat())
+    args = parser.parse_args()
+    main(args.label, args.output_root, args.date)
