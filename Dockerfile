@@ -15,7 +15,7 @@ RUN mkdir /moalmanac/
 RUN mkdir /datasources
 RUN mkdir /docs/
 
-COPY moalmanac/test/ moalmanac/test/
+COPY tests/ /tests/
 
 COPY datasources/acmg/ /datasources/acmg/
 COPY datasources/cancergenecensus/cancer_gene_census_empty.genes.tsv /datasources/cancergenecensus/
@@ -38,7 +38,6 @@ COPY datasources/signatures/README.md datasources/signatures/
 COPY moalmanac/templates/ /moalmanac/templates/
 COPY moalmanac/*.ini /moalmanac/
 COPY moalmanac/*.py /moalmanac/
-COPY moalmanac/*.sh /moalmanac/
 
 COPY datasources/moalmanac/ /datasources/moalmanac/
 

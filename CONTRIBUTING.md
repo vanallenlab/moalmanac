@@ -12,6 +12,16 @@ git checkout -b {new-branch-name}
 
 Replace `{new-branch-name}` with something short that is self-descriptive. All changes should be made in this GitHub repository. Changes should be [committed](https://github.com/git-guides/git-commit) and [pushed](https://github.com/git-guides/git-push) to the repository frequently.
 
+## Running tests
+
+Unit tests are in the `tests/` directory and run with [pytest](https://docs.pytest.org). From the root of this repository, run:
+
+```bash
+pytest
+```
+
+All tests should pass before creating a Pull Request. New tests should be added to the `tests/test_{module}.py` file corresponding to the module being changed.
+
 ## Creating a Pull Request
 
 Navigate to the [branches](https://github.com/vanallenlab/moalmanac/branches) page of this GitHub repository and click `New pull request`, found on the right side of the `Your branches` section. Revise the pull request title to be self-descriptive and copy the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) to the comment body. Fill out the pull request template and click `Create pull request`. Comment on the pull request as the pull request is reviewed and the pre-pull request check list is completed.

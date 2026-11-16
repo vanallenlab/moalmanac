@@ -1,8 +1,9 @@
 import operator as op
-import unittest
+import typing
 from pathlib import Path
 
 import pandas as pd
+import pytest
 import scipy.stats as stats
 from annotator import ACMG
 from annotator import Almanac
@@ -18,10 +19,10 @@ from datasources import Almanac as datasource_Almanac
 from datasources import Preclinical as datasources_Preclinical
 
 TEST_DIR = Path(__file__).parent
-ROOT = TEST_DIR.parent.parent / "datasources"
+ROOT = TEST_DIR.parent / "datasources"
 
 
-class UnitTestAnnotator(unittest.TestCase):
+class TestAnnotator:
     def test_compare_ids_true_index(self):
         df1 = pd.DataFrame(
             {"chromosome": [1, 2, 3], "reference_allele": ["C", "A", "T"]},
@@ -32,7 +33,7 @@ class UnitTestAnnotator(unittest.TestCase):
         id1 = Annotator.create_id(df1, ["chromosome", "reference_allele"])
         id2 = Annotator.create_id(df2, ["chromosome", "reference_allele"])
         result = Annotator.compare_ids_true_index(id1, id2)
-        self.assertEqual([0, 2], result.tolist())
+        assert result.tolist() == [0, 2]
 
     def test_create_id(self):
         df = pd.DataFrame(
@@ -40,8 +41,8 @@ class UnitTestAnnotator(unittest.TestCase):
         )
         id1 = Annotator.create_id(df, ["chromosome"])
         id2 = Annotator.create_id(df, ["chromosome", "reference_allele"])
-        self.assertEqual(["1", "2", "3"], id1.tolist())
-        self.assertEqual(["1_C", "2_A", "3_T"], id2.tolist())
+        assert id1.tolist() == ["1", "2", "3"]
+        assert id2.tolist() == ["1_C", "2_A", "3_T"]
 
     def test_create_id_series(self):
         df = pd.Series({"gene_name": "TP53", "chromosome": 1, "start_position": 100})
@@ -51,16 +52,16 @@ class UnitTestAnnotator(unittest.TestCase):
         )
         id2 = Annotator.create_id_series(df, ["gene_name"])
         id3 = Annotator.create_id_series(df, ["chromosome"])
-        self.assertEqual("TP53_1_100", id1)
-        self.assertEqual("TP53", id2)
-        self.assertEqual("1", id3)
+        assert id1 == "TP53_1_100"
+        assert id2 == "TP53"
+        assert id3 == "1"
 
     def test_preallocate_bin(self):
         index = [0, 1, 5, 7]
         column_list = "Column"
         series = pd.Series(0, name=column_list, index=index)
         result = Annotator.preallocate_bin(column_list, index)
-        self.assertEqual(True, series.equals(result))
+        assert series.equals(result)
 
     def test_preallocate_empty_columns(self):
         index = [0, 1, 5, 7]
@@ -68,10 +69,10 @@ class UnitTestAnnotator(unittest.TestCase):
         dataframe1 = pd.DataFrame(None, index=index, columns=columns)
         dataframe2 = pd.DataFrame(None, index=index, columns=columns[0:2])
         result = Annotator.preallocate_empty_columns(dataframe2, [columns[2]])
-        self.assertEqual(True, dataframe1.equals(result))
+        assert dataframe1.equals(result)
 
 
-class UnitTestACMG(unittest.TestCase):
+class TestACMG:
     def test_annotate(self):
         gene = ACMG.gene
         bin_name = ACMG.bin_name
@@ -81,17 +82,17 @@ class UnitTestACMG(unittest.TestCase):
 
         annotated = ACMG.annotate(df, dbs)
         expected_result = pd.Series([1, 0, 1, 1, 0], name=bin_name)
-        self.assertEqual(True, annotated[bin_name].equals(expected_result))
+        assert annotated[bin_name].equals(expected_result)
 
 
-class UnitTestAlmanac(unittest.TestCase):
+class TestAlmanac:
     def test_extract_values_from_list_of_dicts(self):
         dict1 = {"A": 0, "B": 1, "C": 2}
         dict2 = {"A": 1, "B": 2, "C": 3}
         list_dicts = [dict1, dict2]
         for key, value in [("A", 1), ("B", 3), ("C", 5)]:
             values = Almanac.extract_values_from_list_of_dicts(key, list_dicts)
-            self.assertEqual(value, sum(values))
+            assert value == sum(values)
 
     def test_select_better_fusion_match(self):
         list_of_dictionaries = [
@@ -101,12 +102,11 @@ class UnitTestAlmanac(unittest.TestCase):
             {"bin": 1, "a": 4},
         ]
         better_match = Almanac.select_better_fusion_match(list_of_dictionaries)
-        self.assertEqual(1, better_match["bin"])
+        assert better_match["bin"] == 1
 
     def test_sort_and_subset_matches(self):
         implication_map = Almanac.implication_map
         publication_date = Almanac.publication_date
-        last_updated = Almanac.last_updated
 
         table = pd.DataFrame(
             [
@@ -143,17 +143,17 @@ class UnitTestAlmanac(unittest.TestCase):
             ],
         )
 
-        # key, value pair in each record is if the index matched to the corresponding record in `table`
+        # Each record maps an index of `table` to whether that row matched
         records1 = pd.Series({0: True, 1: True, 2: True, 3: False, 4: False})
         records2 = pd.Series({0: False, 1: False, 2: False, 3: True, 4: True})
         records3 = pd.Series({0: False, 1: False, 2: False, 3: False, 4: False})
-        self.assertEqual(
-            "c",
-            Almanac.sort_and_subset_matches(table, records1, records2)[0]["label"],
+        assert (
+            Almanac.sort_and_subset_matches(table, records1, records2)[0]["label"]
+            == "c"
         )
-        self.assertEqual(
-            "e",
-            Almanac.sort_and_subset_matches(table, records3, records2)[0]["label"],
+        assert (
+            Almanac.sort_and_subset_matches(table, records3, records2)[0]["label"]
+            == "e"
         )
 
     def test_sort_dictionary_as_dataframe(self):
@@ -197,7 +197,7 @@ class UnitTestAlmanac(unittest.TestCase):
             (answer2, result2),
             (answer3, result3),
         ]:
-            self.assertEqual(answer, result)
+            assert answer == result
 
     def test_subset_dataframe_by_condition(self):
         df = pd.DataFrame({"A": [-1, 0, 1, 2], "B": ["cat", "dog", "car", "dare"]})
@@ -209,7 +209,7 @@ class UnitTestAlmanac(unittest.TestCase):
             ([1, 3], df["B"].str.contains("d")),
             ([1], df["B"].str.match("dog")),
         ]:
-            self.assertEqual(answer, list(df[condition].index))
+            assert answer == list(df[condition].index)
 
     def test_subset_list_of_dictionaries(self):
         list_of_dicts = [
@@ -230,7 +230,7 @@ class UnitTestAlmanac(unittest.TestCase):
             (answer2, result2),
             (answer3, result3),
         ]:
-            self.assertEqual(answer, result)
+            assert answer == result
 
     def test_return_best_evidence_level(self):
         implication_map = Almanac.implication_map
@@ -247,22 +247,10 @@ class UnitTestAlmanac(unittest.TestCase):
             {implication_map: 1},
         ]
         list_of_dicts3 = []
-        self.assertEqual(
-            3,
-            Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts2),
-        )
-        self.assertEqual(
-            4,
-            Almanac.return_best_evidence_level(list_of_dicts2, list_of_dicts1),
-        )
-        self.assertEqual(
-            3,
-            Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts3),
-        )
-        self.assertEqual(
-            3,
-            Almanac.return_best_evidence_level(list_of_dicts3, list_of_dicts1),
-        )
+        assert Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts2) == 3
+        assert Almanac.return_best_evidence_level(list_of_dicts2, list_of_dicts1) == 4
+        assert Almanac.return_best_evidence_level(list_of_dicts1, list_of_dicts3) == 3
+        assert Almanac.return_best_evidence_level(list_of_dicts3, list_of_dicts1) == 3
 
     def test_update_series_with_best_match(self):
         matches = [
@@ -303,7 +291,6 @@ class UnitTestAlmanac(unittest.TestCase):
             },
             {},
         ]
-        somatic_variant = "Somatic Variant"
         series = pd.Series(dtype=object)
 
         for columns in [
@@ -312,45 +299,31 @@ class UnitTestAlmanac(unittest.TestCase):
             Almanac.column_map_prognostic,
         ]:
             series = Almanac.update_series_with_best_match(matches, columns, series)
-            self.assertEqual(
-                "ABL1 p.T315I (Missense)",
-                series.loc[columns["feature_display"]],
+            assert series.loc[columns["feature_display"]] == "ABL1 p.T315I (Missense)"
+            assert (
+                series.loc[columns["oncotree_term"]] == "Chronic Myelogenous Leukemia"
             )
-            self.assertEqual(
-                "Chronic Myelogenous Leukemia",
-                series.loc[columns["oncotree_term"]],
+            assert series.loc[columns["oncotree_code"]] == "CML"
+            assert series.loc[columns["context"]] == ""
+            assert series.loc[columns["predictive_implication"]] == "Preclinical"
+            assert series.loc[columns["predictive_implication_map"]] == 1.0
+            assert series.loc[columns["description"]] == "the quick fox caught the hen"
+            assert series.loc[columns["source_type"]] == "Journal"
+            assert series.loc[columns["citation"]] == "peer reviewed"
+            assert (
+                series.loc[columns["url"]] == "https://doi.org/10.1126/science.1062538"
             )
-            self.assertEqual("CML", series.loc[columns["oncotree_code"]])
-            self.assertEqual("", series.loc[columns["context"]])
-            self.assertEqual(
-                "Preclinical",
-                series.loc[columns["predictive_implication"]],
-            )
-            self.assertEqual(1.0, series.loc[columns["predictive_implication_map"]])
-            self.assertEqual(
-                "the quick fox caught the hen",
-                series.loc[columns["description"]],
-            )
-            self.assertEqual("Journal", series.loc[columns["source_type"]])
-            self.assertEqual("peer reviewed", series.loc[columns["citation"]])
-            self.assertEqual(
-                "https://doi.org/10.1126/science.1062538",
-                series.loc[columns["url"]],
-            )
-            self.assertEqual("10.1126/science.1062538", series.loc[columns["doi"]])
-            self.assertEqual("11423618", series.loc[columns["pmid"]])
-            self.assertEqual("", series.loc[columns["nct"]])
+            assert series.loc[columns["doi"]] == "10.1126/science.1062538"
+            assert series.loc[columns["pmid"]] == "11423618"
+            assert series.loc[columns["nct"]] == ""
 
         for columns in [Almanac.column_map_sensitive, Almanac.column_map_resistance]:
-            self.assertEqual("Imatinib", series.loc[columns["therapy_name"]])
-            self.assertEqual("Targeted therapy", series.loc[columns["therapy_type"]])
-        self.assertEqual(
-            "",
-            series.loc[Almanac.column_map_prognostic[Almanac.prognosis]],
-        )
+            assert series.loc[columns["therapy_name"]] == "Imatinib"
+            assert series.loc[columns["therapy_type"]] == "Targeted therapy"
+        assert series.loc[Almanac.column_map_prognostic[Almanac.prognosis]] == ""
 
 
-class UnitTestExAC(unittest.TestCase):
+class TestExAC:
     def test_append_exac_af(self):
         chr = ExAC.chr
         start = ExAC.start
@@ -387,7 +360,7 @@ class UnitTestExAC(unittest.TestCase):
             ds_columns=[chr, start, ref, alt, af],
             variant_biomarker_types=biomarker_types,
         )
-        self.assertEqual([1, 0, 0, 0], result[af].tolist())
+        assert result[af].tolist() == [1, 0, 0, 0]
 
     def test_annotate_common_af(self):
         exac_common_threshold = 0.001
@@ -395,12 +368,12 @@ class UnitTestExAC(unittest.TestCase):
             [float(exac_common_threshold) - 0.01, float(exac_common_threshold) + 0.01],
         )
         result = ExAC.annotate_common_af(series, threshold=exac_common_threshold)
-        self.assertEqual(0.0, result.loc[0])
-        self.assertEqual(1.0, result.loc[1])
+        assert result.loc[0] == 0.0
+        assert result.loc[1] == 1.0
 
 
-class UnitTestValidation(unittest.TestCase):
-    columns = [
+class TestValidation:
+    columns: typing.ClassVar[list[str]] = [
         "feature",
         "feature_type",
         "alteration_type",
@@ -441,41 +414,41 @@ class UnitTestValidation(unittest.TestCase):
 
     def test_append_validation(self):
         result = OverlapValidation.append_validation(
-            UnitTestValidation.dataframe1,
-            UnitTestValidation.dataframe2,
+            TestValidation.dataframe1,
+            TestValidation.dataframe2,
             biomarker_type="Somatic Variant",
         )
         result = result.fillna("")
-        self.assertEqual(
-            UnitTestValidation.dataframe1["feature"].tolist(),
-            result["feature"].tolist(),
+        assert (
+            TestValidation.dataframe1["feature"].tolist() == result["feature"].tolist()
         )
-        self.assertEqual([0.20, "", 0.66, 0.0], result["validation_tumor_f"].tolist())
-        self.assertEqual(
-            [8.0, "", 29.0, 0.0],
-            result["validation_total_coverage"].tolist(),
-        )
-        self.assertEqual(
-            [0.4103, "", 0.9715, 0.0],
-            result["validation_detection_power"].tolist(),
-        )
+        assert result["validation_tumor_f"].tolist() == [0.20, "", 0.66, 0.0]
+        assert result["validation_total_coverage"].tolist() == [8.0, "", 29.0, 0.0]
+        assert result["validation_detection_power"].tolist() == [
+            0.4103,
+            "",
+            0.9715,
+            0.0,
+        ]
 
     def test_calculate_beta_binomial(self):
-        self.assertAlmostEqual(
-            0.7006851149078945,
-            stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63),
-            places=10,
+        assert (
+            pytest.approx(
+                stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63),
+                abs=1e-10,
+            )
+            == 0.7006851149078945
         )
-        self.assertEqual(0.7007, round(stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63), 4))
+        assert round(stats.betabinom.sf(k=3, n=5, a=2.3, b=0.63), 4) == 0.7007
         series_n = pd.Series([10, 50, 100])
         series_a = pd.Series([5, 25, 50])
         series_b = pd.Series([15, 40, 100])
         solutions = list(
             stats.betabinom.sf(k=3, n=series_n, a=series_a, b=series_b, loc=0),
         )
-        self.assertAlmostEqual(0.25543941316055174, solutions[0], places=10)
-        self.assertAlmostEqual(0.9999749071547652, solutions[1], places=10)
-        self.assertAlmostEqual(0.9999999996130999, solutions[2], places=10)
+        assert pytest.approx(solutions[0], abs=1e-10) == 0.25543941316055174
+        assert pytest.approx(solutions[1], abs=1e-10) == 0.9999749071547652
+        assert pytest.approx(solutions[2], abs=1e-10) == 0.9999999996130999
 
     def test_calculate_validation_detection_power(self):
         tumor_f = pd.Series([0, 0.33, 0.5, 1])
@@ -486,10 +459,10 @@ class UnitTestValidation(unittest.TestCase):
             coverage,
             validation_coverage,
         )
-        self.assertAlmostEqual(0.16176470588235325, result[0], places=10)
-        self.assertAlmostEqual(0.999998846495356, result[1], places=10)
-        self.assertAlmostEqual(0.9999945730050155, result[2], places=10)
-        self.assertAlmostEqual(0.9999999999999977, result[3], places=10)
+        assert pytest.approx(result[0], abs=1e-10) == 0.16176470588235325
+        assert pytest.approx(result[1], abs=1e-10) == 0.999998846495356
+        assert pytest.approx(result[2], abs=1e-10) == 0.9999945730050155
+        assert pytest.approx(result[3], abs=1e-10) == 0.9999999999999977
 
     def test_drop_validation_columns(self):
         columns = [
@@ -502,7 +475,7 @@ class UnitTestValidation(unittest.TestCase):
         solution = pd.Index(["A", "B", "C"])
         dataframe = pd.DataFrame(columns=columns)
         result = OverlapValidation.drop_validation_columns(dataframe)
-        self.assertEqual(True, solution.equals(result.columns))
+        assert solution.equals(result.columns)
 
     def test_get_mutation_index(self):
         dataframe = pd.DataFrame(
@@ -515,11 +488,8 @@ class UnitTestValidation(unittest.TestCase):
             dataframe,
             biomarker_type="Somatic Variant",
         )
-        self.assertEqual(
-            solution[0],
-            dataframe.loc[result[0], OverlapValidation.feature_type],
-        )
-        self.assertEqual(solution_index[0], result[0])
+        assert solution[0] == dataframe.loc[result[0], OverlapValidation.feature_type]
+        assert solution_index[0] == result[0]
 
     def test_merge_data_frames(self):
         dataframe1 = pd.DataFrame(columns=["A", "B", "C", "D"])
@@ -532,36 +502,21 @@ class UnitTestValidation(unittest.TestCase):
         dataframe2["B"] = [1, 4, 5]
         dataframe2["E"] = ["hello", "goodbye", "good day"]
         result = OverlapValidation.merge_data_frames(dataframe1, dataframe2, ["A", "B"])
-        self.assertEqual("hello", result["E"].iloc[0])
-        self.assertTrue(pd.isna(result["E"].iloc[1]))
-        self.assertTrue(pd.isna(result["E"].iloc[2]))
-        self.assertEqual(["A", "B", "C", "D", "E"], result.columns.tolist())
+        assert result["E"].iloc[0] == "hello"
+        assert pd.isna(result["E"].iloc[1])
+        assert pd.isna(result["E"].iloc[2])
+        assert result.columns.tolist() == ["A", "B", "C", "D", "E"]
 
     def test_round_series(self):
         series = pd.Series([0.000000, 0.1111111, 0.66888])
         result = OverlapValidation.round_series(series, 2)
-        self.assertEqual(0.00, result.loc[0])
-        self.assertEqual(0.11, result.loc[1])
-        self.assertEqual(0.67, result.loc[2])
+        assert result.loc[0] == 0.00
+        assert result.loc[1] == 0.11
+        assert result.loc[2] == 0.67
 
 
-class UnitTestPreclinicalEfficacy(unittest.TestCase):
-    data_dictionary = {
-        "feature_type": ["Somatic Variant", "Rearrangement"],
-        "feature": ["BRAF", "COL1A1"],
-        "alteration_type": ["Missense", "Fusion"],
-        "alteration": ["p.V600E", "COL1A1--CITED4"],
-        "feature_display": ["BRAF p.V600E", "COL1A1--CITED4 Fusion"],
-        "sensitive_therapy_name": ["Dabrafenib + Trametinib", "Imatinib"],
-        "preclinical_efficacy_observed": [1, 0],
-    }
-    df1 = pd.DataFrame(data_dictionary, index=[0, 1])
-    data_dictionary = {
-        "feature_display": ["BRAF p.V600E", "BRAF p.V600E", "COL1A1--CITED4"],
-        "tested_subfeatre": ["BRAF", "BRAF Somatic Variant", "COL1A1"],
-        "pvalue_mww": [2.322e-12, 7.627e-17, 0.835],
-    }
-    df2 = pd.DataFrame(data_dictionary, index=[0, 1, 2])
+@pytest.fixture(scope="module")
+def efficacy_dictionary():
     dbs_dictionary = {
         "almanac_gdsc_mappings": ROOT
         / "preclinical"
@@ -601,15 +556,35 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
     dbs_preclinical = datasources_Preclinical.import_dbs(dbs_dictionary)
     efficacy_dictionary = SensitivityDictionary.create(
         dbs_preclinical,
-        df1,
+        TestPreclinicalEfficacy.df1,
         config=config,
     )
+    return efficacy_dictionary
 
-    def test_annotate(self):
+
+class TestPreclinicalEfficacy:
+    data_dictionary: typing.ClassVar[dict[str, list]] = {
+        "feature_type": ["Somatic Variant", "Rearrangement"],
+        "feature": ["BRAF", "COL1A1"],
+        "alteration_type": ["Missense", "Fusion"],
+        "alteration": ["p.V600E", "COL1A1--CITED4"],
+        "feature_display": ["BRAF p.V600E", "COL1A1--CITED4 Fusion"],
+        "sensitive_therapy_name": ["Dabrafenib + Trametinib", "Imatinib"],
+        "preclinical_efficacy_observed": [1, 0],
+    }
+    df1 = pd.DataFrame(data_dictionary, index=[0, 1])
+    data_dictionary: typing.ClassVar[dict[str, list]] = {
+        "feature_display": ["BRAF p.V600E", "BRAF p.V600E", "COL1A1--CITED4"],
+        "tested_subfeatre": ["BRAF", "BRAF Somatic Variant", "COL1A1"],
+        "pvalue_mww": [2.322e-12, 7.627e-17, 0.835],
+    }
+    df2 = pd.DataFrame(data_dictionary, index=[0, 1, 2])
+
+    def test_annotate(self, efficacy_dictionary):
         result = PreclinicalEfficacy.annotate(
             actionable=self.df1,
             efficacy=self.df2,
-            dictionary=self.efficacy_dictionary,
+            dictionary=efficacy_dictionary,
         )
 
         result_braf = result.loc[0, "preclinical_efficacy_lookup"][0]
@@ -621,8 +596,8 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
                 "pvalue_mww"
             ],
         )
-        self.assertEqual(result_pvalue_index_0, float(self.df2.loc[0, "pvalue_mww"]))
-        self.assertEqual(result_pvalue_index_1, float(self.df2.loc[1, "pvalue_mww"]))
+        assert result_pvalue_index_0 == float(self.df2.loc[0, "pvalue_mww"])
+        assert result_pvalue_index_1 == float(self.df2.loc[1, "pvalue_mww"])
 
     def test_annotate_no_efficacy_results(self):
         actionable = pd.DataFrame(
@@ -642,17 +617,17 @@ class UnitTestPreclinicalEfficacy(unittest.TestCase):
             efficacy=efficacy,
             dictionary={},
         )
-        self.assertTrue(result["preclinical_efficacy_observed"].isna().all())
-        self.assertEqual(result.loc[0, "preclinical_efficacy_lookup"], "")
+        assert result["preclinical_efficacy_observed"].isna().all()
+        assert result.loc[0, "preclinical_efficacy_lookup"] == ""
 
     def test_series_for_significance(self):
         series1 = pd.Series([0, 0.06, pd.NA])
         series2 = pd.Series([0.65, 0.062, pd.NA])
-        self.assertEqual(PreclinicalEfficacy.search_for_significance(series1), 1)
-        self.assertEqual(PreclinicalEfficacy.search_for_significance(series2), 0)
+        assert PreclinicalEfficacy.search_for_significance(series1) == 1
+        assert PreclinicalEfficacy.search_for_significance(series2) == 0
 
 
-class UnitTestPreclinicalMatchmaking(unittest.TestCase):
+class TestPreclinicalMatchmaking:
     def test_annotate_copy_numbers(self):
         dbs = {
             "almanac_handle": ROOT / "moalmanac" / "molecular-oncology-almanac.json",
@@ -739,11 +714,11 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         }
 
         for key, value in expected_cdkn2a_del.items():
-            self.assertEqual(result.loc[0, key], expected_cdkn2a_del[key])
+            assert result.loc[0, key] == value
         for key, value in expected_cdkn2a_amp.items():
-            self.assertEqual(result.loc[1, key], expected_cdkn2a_amp[key])
+            assert result.loc[1, key] == value
         for key, value in expected_kras_amp.items():
-            self.assertEqual(result.loc[2, key], expected_kras_amp[key])
+            assert result.loc[2, key] == value
 
     def test_annotate_fusions(self):
         dbs = {
@@ -802,41 +777,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 0,
         }
-        self.assertEqual(
-            result.loc[0, "feature_match_1"],
-            expected_index_0["feature_match_1"],
+        assert result.loc[0, "feature_match_1"] == expected_index_0["feature_match_1"]
+        assert result.loc[0, "feature_match_2"] == expected_index_0["feature_match_2"]
+        assert result.loc[0, "feature_match_3"] == expected_index_0["feature_match_3"]
+        assert result.loc[0, "feature_match_4"] == expected_index_0["feature_match_4"]
+        assert result.loc[0, "evidence"] == expected_index_0["evidence"]
+        assert (
+            result.loc[0, "cancerhotspots_bin"]
+            == expected_index_0["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            result.loc[0, "feature_match_2"],
-            expected_index_0["feature_match_2"],
+        assert (
+            result.loc[0, "cancerhotspots3D_bin"]
+            == expected_index_0["cancerhotspots3D_bin"]
         )
-        self.assertEqual(
-            result.loc[0, "feature_match_3"],
-            expected_index_0["feature_match_3"],
+        assert result.loc[0, "cgc_bin"] == expected_index_0["cgc_bin"]
+        assert result.loc[0, "cosmic_bin"] == expected_index_0["cosmic_bin"]
+        assert (
+            result.loc[0, "gsea_pathways_bin"] == expected_index_0["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            result.loc[0, "feature_match_4"],
-            expected_index_0["feature_match_4"],
-        )
-        self.assertEqual(result.loc[0, "evidence"], expected_index_0["evidence"])
-        self.assertEqual(
-            result.loc[0, "cancerhotspots_bin"],
-            expected_index_0["cancerhotspots_bin"],
-        )
-        self.assertEqual(
-            result.loc[0, "cancerhotspots3D_bin"],
-            expected_index_0["cancerhotspots3D_bin"],
-        )
-        self.assertEqual(result.loc[0, "cgc_bin"], expected_index_0["cgc_bin"])
-        self.assertEqual(result.loc[0, "cosmic_bin"], expected_index_0["cosmic_bin"])
-        self.assertEqual(
-            result.loc[0, "gsea_pathways_bin"],
-            expected_index_0["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            result.loc[0, "gsea_modules_bin"],
-            expected_index_0["gsea_modules_bin"],
-        )
+        assert result.loc[0, "gsea_modules_bin"] == expected_index_0["gsea_modules_bin"]
 
         expected_index_1 = {
             "feature_match_1": 1,
@@ -852,41 +811,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 1,
         }
-        self.assertEqual(
-            result.loc[1, "feature_match_1"],
-            expected_index_1["feature_match_1"],
+        assert result.loc[1, "feature_match_1"] == expected_index_1["feature_match_1"]
+        assert result.loc[1, "feature_match_2"] == expected_index_1["feature_match_2"]
+        assert result.loc[1, "feature_match_3"] == expected_index_1["feature_match_3"]
+        assert result.loc[1, "feature_match_4"] == expected_index_1["feature_match_4"]
+        assert result.loc[1, "evidence"] == expected_index_1["evidence"]
+        assert (
+            result.loc[1, "cancerhotspots_bin"]
+            == expected_index_1["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            result.loc[1, "feature_match_2"],
-            expected_index_1["feature_match_2"],
+        assert (
+            result.loc[1, "cancerhotspots3D_bin"]
+            == expected_index_1["cancerhotspots3D_bin"]
         )
-        self.assertEqual(
-            result.loc[1, "feature_match_3"],
-            expected_index_1["feature_match_3"],
+        assert result.loc[1, "cgc_bin"] == expected_index_1["cgc_bin"]
+        assert result.loc[1, "cosmic_bin"] == expected_index_1["cosmic_bin"]
+        assert (
+            result.loc[1, "gsea_pathways_bin"] == expected_index_1["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            result.loc[1, "feature_match_4"],
-            expected_index_1["feature_match_4"],
-        )
-        self.assertEqual(result.loc[1, "evidence"], expected_index_1["evidence"])
-        self.assertEqual(
-            result.loc[1, "cancerhotspots_bin"],
-            expected_index_1["cancerhotspots_bin"],
-        )
-        self.assertEqual(
-            result.loc[1, "cancerhotspots3D_bin"],
-            expected_index_1["cancerhotspots3D_bin"],
-        )
-        self.assertEqual(result.loc[1, "cgc_bin"], expected_index_1["cgc_bin"])
-        self.assertEqual(result.loc[1, "cosmic_bin"], expected_index_1["cosmic_bin"])
-        self.assertEqual(
-            result.loc[1, "gsea_pathways_bin"],
-            expected_index_1["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            result.loc[1, "gsea_modules_bin"],
-            expected_index_1["gsea_modules_bin"],
-        )
+        assert result.loc[1, "gsea_modules_bin"] == expected_index_1["gsea_modules_bin"]
 
         expected_index_2 = {
             "feature_match_1": 1,
@@ -902,41 +845,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 0,
         }
-        self.assertEqual(
-            result.loc[2, "feature_match_1"],
-            expected_index_2["feature_match_1"],
+        assert result.loc[2, "feature_match_1"] == expected_index_2["feature_match_1"]
+        assert result.loc[2, "feature_match_2"] == expected_index_2["feature_match_2"]
+        assert result.loc[2, "feature_match_3"] == expected_index_2["feature_match_3"]
+        assert result.loc[2, "feature_match_4"] == expected_index_2["feature_match_4"]
+        assert result.loc[2, "evidence"] == expected_index_2["evidence"]
+        assert (
+            result.loc[2, "cancerhotspots_bin"]
+            == expected_index_2["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            result.loc[2, "feature_match_2"],
-            expected_index_2["feature_match_2"],
+        assert (
+            result.loc[2, "cancerhotspots3D_bin"]
+            == expected_index_2["cancerhotspots3D_bin"]
         )
-        self.assertEqual(
-            result.loc[2, "feature_match_3"],
-            expected_index_2["feature_match_3"],
+        assert result.loc[2, "cgc_bin"] == expected_index_2["cgc_bin"]
+        assert result.loc[2, "cosmic_bin"] == expected_index_2["cosmic_bin"]
+        assert (
+            result.loc[2, "gsea_pathways_bin"] == expected_index_2["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            result.loc[2, "feature_match_4"],
-            expected_index_2["feature_match_4"],
-        )
-        self.assertEqual(result.loc[2, "evidence"], expected_index_2["evidence"])
-        self.assertEqual(
-            result.loc[2, "cancerhotspots_bin"],
-            expected_index_2["cancerhotspots_bin"],
-        )
-        self.assertEqual(
-            result.loc[2, "cancerhotspots3D_bin"],
-            expected_index_2["cancerhotspots3D_bin"],
-        )
-        self.assertEqual(result.loc[2, "cgc_bin"], expected_index_2["cgc_bin"])
-        self.assertEqual(result.loc[2, "cosmic_bin"], expected_index_2["cosmic_bin"])
-        self.assertEqual(
-            result.loc[2, "gsea_pathways_bin"],
-            expected_index_2["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            result.loc[2, "gsea_modules_bin"],
-            expected_index_2["gsea_modules_bin"],
-        )
+        assert result.loc[2, "gsea_modules_bin"] == expected_index_2["gsea_modules_bin"]
 
         expected_index_3 = {
             "feature_match_1": 1,
@@ -952,41 +879,25 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 1,
         }
-        self.assertEqual(
-            result.loc[3, "feature_match_1"],
-            expected_index_3["feature_match_1"],
+        assert result.loc[3, "feature_match_1"] == expected_index_3["feature_match_1"]
+        assert result.loc[3, "feature_match_2"] == expected_index_3["feature_match_2"]
+        assert result.loc[3, "feature_match_3"] == expected_index_3["feature_match_3"]
+        assert result.loc[3, "feature_match_4"] == expected_index_3["feature_match_4"]
+        assert result.loc[3, "evidence"] == expected_index_3["evidence"]
+        assert (
+            result.loc[3, "cancerhotspots_bin"]
+            == expected_index_3["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            result.loc[3, "feature_match_2"],
-            expected_index_3["feature_match_2"],
+        assert (
+            result.loc[3, "cancerhotspots3D_bin"]
+            == expected_index_3["cancerhotspots3D_bin"]
         )
-        self.assertEqual(
-            result.loc[3, "feature_match_3"],
-            expected_index_3["feature_match_3"],
+        assert result.loc[3, "cgc_bin"] == expected_index_3["cgc_bin"]
+        assert result.loc[3, "cosmic_bin"] == expected_index_3["cosmic_bin"]
+        assert (
+            result.loc[3, "gsea_pathways_bin"] == expected_index_3["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            result.loc[3, "feature_match_4"],
-            expected_index_3["feature_match_4"],
-        )
-        self.assertEqual(result.loc[3, "evidence"], expected_index_3["evidence"])
-        self.assertEqual(
-            result.loc[3, "cancerhotspots_bin"],
-            expected_index_3["cancerhotspots_bin"],
-        )
-        self.assertEqual(
-            result.loc[3, "cancerhotspots3D_bin"],
-            expected_index_3["cancerhotspots3D_bin"],
-        )
-        self.assertEqual(result.loc[3, "cgc_bin"], expected_index_3["cgc_bin"])
-        self.assertEqual(result.loc[3, "cosmic_bin"], expected_index_3["cosmic_bin"])
-        self.assertEqual(
-            result.loc[3, "gsea_pathways_bin"],
-            expected_index_3["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            result.loc[3, "gsea_modules_bin"],
-            expected_index_3["gsea_modules_bin"],
-        )
+        assert result.loc[3, "gsea_modules_bin"] == expected_index_3["gsea_modules_bin"]
 
         expected_index_0_group1 = {
             "feature_match_1": 1,
@@ -1002,43 +913,40 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 1,
         }
-        self.assertEqual(
-            group1.loc[0, "feature_match_1"],
-            expected_index_0_group1["feature_match_1"],
+        assert (
+            group1.loc[0, "feature_match_1"]
+            == expected_index_0_group1["feature_match_1"]
         )
-        self.assertEqual(
-            group1.loc[0, "feature_match_2"],
-            expected_index_0_group1["feature_match_2"],
+        assert (
+            group1.loc[0, "feature_match_2"]
+            == expected_index_0_group1["feature_match_2"]
         )
-        self.assertEqual(
-            group1.loc[0, "feature_match_3"],
-            expected_index_0_group1["feature_match_3"],
+        assert (
+            group1.loc[0, "feature_match_3"]
+            == expected_index_0_group1["feature_match_3"]
         )
-        self.assertEqual(
-            group1.loc[0, "feature_match_4"],
-            expected_index_0_group1["feature_match_4"],
+        assert (
+            group1.loc[0, "feature_match_4"]
+            == expected_index_0_group1["feature_match_4"]
         )
-        self.assertEqual(group1.loc[0, "evidence"], expected_index_0_group1["evidence"])
-        self.assertEqual(
-            group1.loc[0, "cancerhotspots_bin"],
-            expected_index_0_group1["cancerhotspots_bin"],
+        assert group1.loc[0, "evidence"] == expected_index_0_group1["evidence"]
+        assert (
+            group1.loc[0, "cancerhotspots_bin"]
+            == expected_index_0_group1["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            group1.loc[0, "cancerhotspots3D_bin"],
-            expected_index_0_group1["cancerhotspots3D_bin"],
+        assert (
+            group1.loc[0, "cancerhotspots3D_bin"]
+            == expected_index_0_group1["cancerhotspots3D_bin"]
         )
-        self.assertEqual(group1.loc[0, "cgc_bin"], expected_index_0_group1["cgc_bin"])
-        self.assertEqual(
-            group1.loc[0, "cosmic_bin"],
-            expected_index_0_group1["cosmic_bin"],
+        assert group1.loc[0, "cgc_bin"] == expected_index_0_group1["cgc_bin"]
+        assert group1.loc[0, "cosmic_bin"] == expected_index_0_group1["cosmic_bin"]
+        assert (
+            group1.loc[0, "gsea_pathways_bin"]
+            == expected_index_0_group1["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            group1.loc[0, "gsea_pathways_bin"],
-            expected_index_0_group1["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            group1.loc[0, "gsea_modules_bin"],
-            expected_index_0_group1["gsea_modules_bin"],
+        assert (
+            group1.loc[0, "gsea_modules_bin"]
+            == expected_index_0_group1["gsea_modules_bin"]
         )
 
         expected_index_2_group1 = {
@@ -1055,43 +963,40 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 1,
         }
-        self.assertEqual(
-            group1.loc[2, "feature_match_1"],
-            expected_index_2_group1["feature_match_1"],
+        assert (
+            group1.loc[2, "feature_match_1"]
+            == expected_index_2_group1["feature_match_1"]
         )
-        self.assertEqual(
-            group1.loc[2, "feature_match_2"],
-            expected_index_2_group1["feature_match_2"],
+        assert (
+            group1.loc[2, "feature_match_2"]
+            == expected_index_2_group1["feature_match_2"]
         )
-        self.assertEqual(
-            group1.loc[2, "feature_match_3"],
-            expected_index_2_group1["feature_match_3"],
+        assert (
+            group1.loc[2, "feature_match_3"]
+            == expected_index_2_group1["feature_match_3"]
         )
-        self.assertEqual(
-            group1.loc[2, "feature_match_4"],
-            expected_index_2_group1["feature_match_4"],
+        assert (
+            group1.loc[2, "feature_match_4"]
+            == expected_index_2_group1["feature_match_4"]
         )
-        self.assertEqual(group1.loc[2, "evidence"], expected_index_2_group1["evidence"])
-        self.assertEqual(
-            group1.loc[2, "cancerhotspots_bin"],
-            expected_index_2_group1["cancerhotspots_bin"],
+        assert group1.loc[2, "evidence"] == expected_index_2_group1["evidence"]
+        assert (
+            group1.loc[2, "cancerhotspots_bin"]
+            == expected_index_2_group1["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            group1.loc[2, "cancerhotspots3D_bin"],
-            expected_index_2_group1["cancerhotspots3D_bin"],
+        assert (
+            group1.loc[2, "cancerhotspots3D_bin"]
+            == expected_index_2_group1["cancerhotspots3D_bin"]
         )
-        self.assertEqual(group1.loc[2, "cgc_bin"], expected_index_2_group1["cgc_bin"])
-        self.assertEqual(
-            group1.loc[2, "cosmic_bin"],
-            expected_index_2_group1["cosmic_bin"],
+        assert group1.loc[2, "cgc_bin"] == expected_index_2_group1["cgc_bin"]
+        assert group1.loc[2, "cosmic_bin"] == expected_index_2_group1["cosmic_bin"]
+        assert (
+            group1.loc[2, "gsea_pathways_bin"]
+            == expected_index_2_group1["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            group1.loc[2, "gsea_pathways_bin"],
-            expected_index_2_group1["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            group1.loc[2, "gsea_modules_bin"],
-            expected_index_2_group1["gsea_modules_bin"],
+        assert (
+            group1.loc[2, "gsea_modules_bin"]
+            == expected_index_2_group1["gsea_modules_bin"]
         )
 
         expected_index_3_group1 = {
@@ -1107,42 +1012,39 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 1,
         }
-        self.assertEqual(
-            group1.loc[3, "feature_match_1"],
-            expected_index_3_group1["feature_match_1"],
+        assert (
+            group1.loc[3, "feature_match_1"]
+            == expected_index_3_group1["feature_match_1"]
         )
-        self.assertEqual(
-            group1.loc[3, "feature_match_2"],
-            expected_index_3_group1["feature_match_2"],
+        assert (
+            group1.loc[3, "feature_match_2"]
+            == expected_index_3_group1["feature_match_2"]
         )
-        self.assertEqual(
-            group1.loc[3, "feature_match_3"],
-            expected_index_3_group1["feature_match_3"],
+        assert (
+            group1.loc[3, "feature_match_3"]
+            == expected_index_3_group1["feature_match_3"]
         )
-        self.assertEqual(
-            group1.loc[3, "feature_match_4"],
-            expected_index_3_group1["feature_match_4"],
+        assert (
+            group1.loc[3, "feature_match_4"]
+            == expected_index_3_group1["feature_match_4"]
         )
-        self.assertEqual(
-            group1.loc[3, "cancerhotspots_bin"],
-            expected_index_3_group1["cancerhotspots_bin"],
+        assert (
+            group1.loc[3, "cancerhotspots_bin"]
+            == expected_index_3_group1["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            group1.loc[3, "cancerhotspots3D_bin"],
-            expected_index_3_group1["cancerhotspots3D_bin"],
+        assert (
+            group1.loc[3, "cancerhotspots3D_bin"]
+            == expected_index_3_group1["cancerhotspots3D_bin"]
         )
-        self.assertEqual(group1.loc[3, "cgc_bin"], expected_index_3_group1["cgc_bin"])
-        self.assertEqual(
-            group1.loc[3, "cosmic_bin"],
-            expected_index_3_group1["cosmic_bin"],
+        assert group1.loc[3, "cgc_bin"] == expected_index_3_group1["cgc_bin"]
+        assert group1.loc[3, "cosmic_bin"] == expected_index_3_group1["cosmic_bin"]
+        assert (
+            group1.loc[3, "gsea_pathways_bin"]
+            == expected_index_3_group1["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            group1.loc[3, "gsea_pathways_bin"],
-            expected_index_3_group1["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            group1.loc[3, "gsea_modules_bin"],
-            expected_index_3_group1["gsea_modules_bin"],
+        assert (
+            group1.loc[3, "gsea_modules_bin"]
+            == expected_index_3_group1["gsea_modules_bin"]
         )
 
         expected_index_0_group2 = {
@@ -1158,42 +1060,39 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 1,
             "gsea_modules_bin": 0,
         }
-        self.assertEqual(
-            group2.loc[0, "feature_match_1"],
-            expected_index_0_group2["feature_match_1"],
+        assert (
+            group2.loc[0, "feature_match_1"]
+            == expected_index_0_group2["feature_match_1"]
         )
-        self.assertEqual(
-            group2.loc[0, "feature_match_2"],
-            expected_index_0_group2["feature_match_2"],
+        assert (
+            group2.loc[0, "feature_match_2"]
+            == expected_index_0_group2["feature_match_2"]
         )
-        self.assertEqual(
-            group2.loc[0, "feature_match_3"],
-            expected_index_0_group2["feature_match_3"],
+        assert (
+            group2.loc[0, "feature_match_3"]
+            == expected_index_0_group2["feature_match_3"]
         )
-        self.assertEqual(
-            group2.loc[0, "feature_match_4"],
-            expected_index_0_group2["feature_match_4"],
+        assert (
+            group2.loc[0, "feature_match_4"]
+            == expected_index_0_group2["feature_match_4"]
         )
-        self.assertEqual(
-            group2.loc[0, "cancerhotspots_bin"],
-            expected_index_0_group2["cancerhotspots_bin"],
+        assert (
+            group2.loc[0, "cancerhotspots_bin"]
+            == expected_index_0_group2["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            group2.loc[0, "cancerhotspots3D_bin"],
-            expected_index_0_group2["cancerhotspots3D_bin"],
+        assert (
+            group2.loc[0, "cancerhotspots3D_bin"]
+            == expected_index_0_group2["cancerhotspots3D_bin"]
         )
-        self.assertEqual(group2.loc[0, "cgc_bin"], expected_index_0_group2["cgc_bin"])
-        self.assertEqual(
-            group2.loc[0, "cosmic_bin"],
-            expected_index_0_group2["cosmic_bin"],
+        assert group2.loc[0, "cgc_bin"] == expected_index_0_group2["cgc_bin"]
+        assert group2.loc[0, "cosmic_bin"] == expected_index_0_group2["cosmic_bin"]
+        assert (
+            group2.loc[0, "gsea_pathways_bin"]
+            == expected_index_0_group2["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            group2.loc[0, "gsea_pathways_bin"],
-            expected_index_0_group2["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            group2.loc[0, "gsea_modules_bin"],
-            expected_index_0_group2["gsea_modules_bin"],
+        assert (
+            group2.loc[0, "gsea_modules_bin"]
+            == expected_index_0_group2["gsea_modules_bin"]
         )
 
         expected_index_1_group2 = {
@@ -1210,43 +1109,40 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "gsea_pathways_bin": 0,
             "gsea_modules_bin": 0,
         }
-        self.assertEqual(
-            group2.loc[1, "feature_match_1"],
-            expected_index_1_group2["feature_match_1"],
+        assert (
+            group2.loc[1, "feature_match_1"]
+            == expected_index_1_group2["feature_match_1"]
         )
-        self.assertEqual(
-            group2.loc[1, "feature_match_2"],
-            expected_index_1_group2["feature_match_2"],
+        assert (
+            group2.loc[1, "feature_match_2"]
+            == expected_index_1_group2["feature_match_2"]
         )
-        self.assertEqual(
-            group2.loc[1, "feature_match_3"],
-            expected_index_1_group2["feature_match_3"],
+        assert (
+            group2.loc[1, "feature_match_3"]
+            == expected_index_1_group2["feature_match_3"]
         )
-        self.assertEqual(
-            group2.loc[1, "feature_match_4"],
-            expected_index_1_group2["feature_match_4"],
+        assert (
+            group2.loc[1, "feature_match_4"]
+            == expected_index_1_group2["feature_match_4"]
         )
-        self.assertEqual(group2.loc[1, "evidence"], expected_index_1_group2["evidence"])
-        self.assertEqual(
-            group2.loc[1, "cancerhotspots_bin"],
-            expected_index_1_group2["cancerhotspots_bin"],
+        assert group2.loc[1, "evidence"] == expected_index_1_group2["evidence"]
+        assert (
+            group2.loc[1, "cancerhotspots_bin"]
+            == expected_index_1_group2["cancerhotspots_bin"]
         )
-        self.assertEqual(
-            group2.loc[1, "cancerhotspots3D_bin"],
-            expected_index_1_group2["cancerhotspots3D_bin"],
+        assert (
+            group2.loc[1, "cancerhotspots3D_bin"]
+            == expected_index_1_group2["cancerhotspots3D_bin"]
         )
-        self.assertEqual(group2.loc[1, "cgc_bin"], expected_index_1_group2["cgc_bin"])
-        self.assertEqual(
-            group2.loc[1, "cosmic_bin"],
-            expected_index_1_group2["cosmic_bin"],
+        assert group2.loc[1, "cgc_bin"] == expected_index_1_group2["cgc_bin"]
+        assert group2.loc[1, "cosmic_bin"] == expected_index_1_group2["cosmic_bin"]
+        assert (
+            group2.loc[1, "gsea_pathways_bin"]
+            == expected_index_1_group2["gsea_pathways_bin"]
         )
-        self.assertEqual(
-            group2.loc[1, "gsea_pathways_bin"],
-            expected_index_1_group2["gsea_pathways_bin"],
-        )
-        self.assertEqual(
-            group2.loc[1, "gsea_modules_bin"],
-            expected_index_1_group2["gsea_modules_bin"],
+        assert (
+            group2.loc[1, "gsea_modules_bin"]
+            == expected_index_1_group2["gsea_modules_bin"]
         )
 
     def test_annotate_fusions_matching(self):
@@ -1327,7 +1223,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             (4, expected_4),
         ]:
             for key, value in dictionary.items():
-                self.assertEqual(result.loc[index, key], value)
+                assert result.loc[index, key] == value
 
     def test_annotate_somatic_variants(self):
         dbs = {
@@ -1431,13 +1327,13 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         }
 
         for key, value in expected_braf_1.items():
-            self.assertEqual(result.loc[0, key], expected_braf_1[key])
+            assert result.loc[0, key] == value
         for key, value in expected_braf_2.items():
-            self.assertEqual(result.loc[1, key], expected_braf_2[key])
+            assert result.loc[1, key] == value
         for key, value in expected_idh1.items():
-            self.assertEqual(result.loc[2, key], expected_idh1[key])
+            assert result.loc[2, key] == value
         for key, value in expected_cdkn2a.items():
-            self.assertEqual(result.loc[3, key], expected_cdkn2a[key])
+            assert result.loc[3, key] == value
 
     def test_annotate_match_1(self):
         feature = PreclinicalMatchmaking.feature
@@ -1449,10 +1345,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         genes = ["Gene1", ""]
         result = PreclinicalMatchmaking.annotate_match_1(df, genes).fillna(0)
         for index in result.index:
-            self.assertEqual(
-                result.loc[index, match_1],
-                result.loc[index, "expectation"],
-            )
+            assert result.loc[index, match_1] == result.loc[index, "expectation"]
 
     def test_annotate_match_2(self):
         match_2 = PreclinicalMatchmaking.match_2
@@ -1511,9 +1404,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             db,
             feature=feature,
         ).fillna(0)
-        self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation"])
-        self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation"])
-        self.assertEqual(result.loc[2, match_2], result.loc[2, "expectation"])
+        assert result.loc[0, match_2] == result.loc[0, "expectation"]
+        assert result.loc[1, match_2] == result.loc[1, "expectation"]
+        assert result.loc[2, match_2] == result.loc[2, "expectation"]
 
         df = pd.DataFrame({feature: ["ERBB2", "KRAS", ""], "expectation": [1, 0, 0]})
         column_map = {gene: feature, direction: alteration_type}
@@ -1530,9 +1423,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             db,
             feature=feature,
         ).fillna(0)
-        self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation"])
-        self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation"])
-        self.assertEqual(result.loc[2, match_2], result.loc[2, "expectation"])
+        assert result.loc[0, match_2] == result.loc[0, "expectation"]
+        assert result.loc[1, match_2] == result.loc[1, "expectation"]
+        assert result.loc[2, match_2] == result.loc[2, "expectation"]
 
         df = pd.DataFrame(
             {
@@ -1555,20 +1448,20 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             db,
             feature="gene1",
         ).fillna(0)
-        self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation1"])
-        self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation1"])
-        self.assertEqual(result.loc[2, match_2], result.loc[2, "expectation1"])
-        self.assertEqual(result.loc[3, match_2], result.loc[3, "expectation1"])
+        assert result.loc[0, match_2] == result.loc[0, "expectation1"]
+        assert result.loc[1, match_2] == result.loc[1, "expectation1"]
+        assert result.loc[2, match_2] == result.loc[2, "expectation1"]
+        assert result.loc[3, match_2] == result.loc[3, "expectation1"]
 
         result = PreclinicalMatchmaking.annotate_match_2(
             df,
             db,
             feature="gene2",
         ).fillna(0)
-        self.assertEqual(result.loc[0, match_2], result.loc[0, "expectation2"])
-        self.assertEqual(result.loc[1, match_2], result.loc[1, "expectation2"])
-        self.assertEqual(result.loc[2, match_2], result.loc[2, "expectation2"])
-        self.assertEqual(result.loc[3, match_2], result.loc[3, "expectation2"])
+        assert result.loc[0, match_2] == result.loc[0, "expectation2"]
+        assert result.loc[1, match_2] == result.loc[1, "expectation2"]
+        assert result.loc[2, match_2] == result.loc[2, "expectation2"]
+        assert result.loc[3, match_2] == result.loc[3, "expectation2"]
 
     def test_annotate_match_3(self):
         match_3 = PreclinicalMatchmaking.match_3
@@ -1635,10 +1528,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             alteration_type=alteration_type,
         ).fillna(0)
         for index in result.index:
-            self.assertEqual(
-                result.loc[index, match_3],
-                result.loc[index, "expectation"],
-            )
+            assert result.loc[index, match_3] == result.loc[index, "expectation"]
 
         df = pd.DataFrame(
             {
@@ -1663,10 +1553,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             alteration_type=alteration_type,
         ).fillna(0)
         for index in result.index:
-            self.assertEqual(
-                result.loc[index, match_3],
-                result.loc[index, "expectation"],
-            )
+            assert result.loc[index, match_3] == result.loc[index, "expectation"]
 
         df = pd.DataFrame(
             {
@@ -1691,9 +1578,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             feature=gene1,
             alteration_type=alteration_type,
         ).fillna(0)
-        self.assertEqual(result.loc[0, match_3], result.loc[0, "expectation1"])
-        self.assertEqual(result.loc[1, match_3], result.loc[1, "expectation1"])
-        self.assertEqual(result.loc[2, match_3], result.loc[2, "expectation1"])
+        assert result.loc[0, match_3] == result.loc[0, "expectation1"]
+        assert result.loc[1, match_3] == result.loc[1, "expectation1"]
+        assert result.loc[2, match_3] == result.loc[2, "expectation1"]
 
         result = PreclinicalMatchmaking.annotate_match_3(
             df,
@@ -1701,9 +1588,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             feature=gene2,
             alteration_type=alteration_type,
         ).fillna(0)
-        self.assertEqual(result.loc[0, match_3], result.loc[0, "expectation2"])
-        self.assertEqual(result.loc[1, match_3], result.loc[1, "expectation2"])
-        self.assertEqual(result.loc[2, match_3], result.loc[2, "expectation2"])
+        assert result.loc[0, match_3] == result.loc[0, "expectation2"]
+        assert result.loc[1, match_3] == result.loc[1, "expectation2"]
+        assert result.loc[2, match_3] == result.loc[2, "expectation2"]
 
     def test_annotate_match_4(self):
         match_4 = PreclinicalMatchmaking.match_4
@@ -1728,7 +1615,6 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         almanac = datasource_Almanac.import_ds(dbs)
-        copy_number = "Copy Number"
         fusion = "Rearrangement"
         somatic_variant = "Somatic Variant"
 
@@ -1764,9 +1650,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
         db = PreclinicalMatchmaking.format_db(list(column_map.keys()), column_map, db)
 
         result = PreclinicalMatchmaking.annotate_match_4(df, db).fillna(0)
-        self.assertEqual(result.loc[0, match_4], result.loc[0, "expectation"])
-        self.assertEqual(result.loc[1, match_4], result.loc[1, "expectation"])
-        self.assertEqual(result.loc[2, match_4], result.loc[2, "expectation"])
+        assert result.loc[0, match_4] == result.loc[0, "expectation"]
+        assert result.loc[1, match_4] == result.loc[1, "expectation"]
+        assert result.loc[2, match_4] == result.loc[2, "expectation"]
 
         df = pd.DataFrame(
             {
@@ -1791,10 +1677,10 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             alteration=gene2,
         ).fillna(0)
 
-        self.assertEqual(result.loc[0, match_4], result.loc[0, "expectation1"])
-        self.assertEqual(result.loc[1, match_4], result.loc[1, "expectation1"])
-        self.assertEqual(result.loc[2, match_4], result.loc[2, "expectation1"])
-        self.assertEqual(result.loc[3, match_4], result.loc[3, "expectation1"])
+        assert result.loc[0, match_4] == result.loc[0, "expectation1"]
+        assert result.loc[1, match_4] == result.loc[1, "expectation1"]
+        assert result.loc[2, match_4] == result.loc[2, "expectation1"]
+        assert result.loc[3, match_4] == result.loc[3, "expectation1"]
 
     def test_format_db(self):
         dbs = {
@@ -1853,9 +1739,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             db,
         )
         for index in result.index:
-            self.assertEqual(
-                result.loc[index, evidence_map_str],
-                evidence_map[result.loc[index, evidence_str]],
+            assert (
+                result.loc[index, evidence_map_str]
+                == evidence_map[result.loc[index, evidence_str]]
             )
 
         column_map = {gene: feature, direction: alteration_type}
@@ -1871,9 +1757,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             db,
         )
         for index in result.index:
-            self.assertEqual(
-                result.loc[index, evidence_map_str],
-                evidence_map[result.loc[index, evidence_str]],
+            assert (
+                result.loc[index, evidence_map_str]
+                == evidence_map[result.loc[index, evidence_str]]
             )
 
         column_map = {rearrangement_type: alteration_type}
@@ -1885,9 +1771,9 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             db,
         ).fillna("")
         for index in result.index:
-            self.assertEqual(
-                result.loc[index, evidence_map_str],
-                evidence_map[result.loc[index, evidence_str]],
+            assert (
+                result.loc[index, evidence_map_str]
+                == evidence_map[result.loc[index, evidence_str]]
             )
 
     def test_map_evidence(self):
@@ -1907,7 +1793,7 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             evidence_map_str,
         )
         for label, value in evidence_map.items():
-            self.assertEqual(result.loc[value, evidence_str], label)
+            assert result.loc[value, evidence_str] == label
 
     def test_preallocate_almanac_matches(self):
         empty = pd.DataFrame(index=[0])
@@ -1920,8 +1806,4 @@ class UnitTestPreclinicalMatchmaking(unittest.TestCase):
             PreclinicalMatchmaking.feature_match,
         ]
         for column in columns:
-            self.assertEqual(result.loc[0, column], 0)
-
-
-if __name__ == "__main__":
-    unittest.main()
+            assert result.loc[0, column] == 0
