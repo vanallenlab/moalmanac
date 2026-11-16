@@ -86,6 +86,14 @@ A new requirements lock file can be generated with:
 pip-compile --output-file=requirements-lock.txt pyproject.toml
 ```
 
+#### Running tests
+
+Unit tests are in [tests](./tests) and run with [pytest](https://docs.pytest.org). Run the following from this repository's directory:
+
+```bash
+pytest
+```
+
 ## Usage
 
 Usage documentation can be found within the [moalmanac/](moalmanac) directory of this repository.
