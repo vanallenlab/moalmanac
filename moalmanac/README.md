@@ -1,5 +1,5 @@
 # Molecular Oncology Almanac
-Molecular Oncology Almanac can be run by executing either `moalmanac.py` with [standard input formats](#standard-usage) or `simplified_input.py` with [simplified inputs](#simplified-input). Please follow the [installation instructions](../README.md#installation) before use.
+Molecular Oncology Almanac can be run by executing `moalmanac.py` with [standard input formats](#standard-usage). Please follow the [installation instructions](../README.md#installation) before use.
 
 ## Standard usage
 Molecular Oncology Almanac may be executed on any combination of input data but does require a patient_id to label output files. Additional settings can be set by modifying the [config.ini](#configini) file and column names may be modified by editing the [colnames.ini](#colnamesini) file. The [config.ini](config.ini) and [annotation-databases.ini](annotation-databases.ini) must be passed as arguments to moalmanac.py.
@@ -60,72 +60,6 @@ python moalmanac.py \
 These example inputs may also be processed by executing `run_example.py`.
 
 Please also view our additional documentation on the [descriptions of inputs](../docs/description-of-inputs.md) for more details about input file formats.
-
-## Simplified input
-A simplified input of a single file for somatic variants, germline variants, called copy number alterations, and fusions may also be used for a minimal interpretation. This mode also allows for [MSI status](../docs/description-of-inputs.md#microsatellite-status) and [whole-genome doubling](../docs/description-of-inputs.md#whole-genome-doubling) to be considered. With this format, MOAlmanac will be unable to annotate with any datasources that rely on nucleotide position.
-
-As with the [standard usage](#standard-usage), additional settings can be set by modifying the [config.ini](#configini) file and column names may be modified by editing the [colnames.ini](#colnamesini) file.
-
-Input for simplified input is a tab delimited file with one genomic alteration per row based on MOAlmanac's [standardized feature columns](../docs/description-of-outputs.md#standardized-feature-columns). In short the following columns are expected,
-1. `feature_type`, the data type of the molecular features and accepts `Somatic Variant`, `Germline Variant`, `Copy Number`, or `Rearrangement`. These strings can be customized in the `feature_types` section of [config.ini](#configini).
-2. `gene` or `feature`, the gene name of the genomic alteration.
-3. `alteration_type`, classification or consequence of the genomic alteration
-    - For somatic and germline variants: `Missense`, `Nonsense`, `Nonstop`, `Splice_Site`, `Frame_Shift_Ins`, `Frame_Shift_Del`, `In_Frame_Ins`, or `In_Frame_Del`
-    - For copy number alterations: `Amplification` or `Deletion`
-    - For rearrangements: `Fusion` or `Translocation`
-4. `alteration`, specific genomic alteration,
-    - For somatic and germline variants: the protein change with [1-letter amino acid codes](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/), `p.HGVSp_Short`
-    - For copy number alterations: Leave blank
-    - For rearrangements: the full fusion separated by two dashes, `--`
-
-For example,
-
-| feature_type | feature | alteration_type | alteration |
-|---|---|---|---|
-| Somatic Variant | BRAF | Missense | p.V600E |
-| Copy Number | CDK4 | Amplification |  |
-| Rearrangement | COL1A1 | Fusion | COL1A1--CITED4 |
-| Germline Variant | BRCA2 | Frameshift | p.S1982fs |
-
-This is also described in the [description of inputs](../docs/description-of-inputs.md#simplified-input) document within the [docs/](../docs/) folder of this repository.
-
-Required arguments:
-```
-    --patient_id            <string>    patient identifier
-    --config                <string>    ini file that contains configuration details, config.ini
-    --dbs                   <string>    ini file that contains database paths for annotation, annotation-databases.ini
-```
-
-Optional arguments:
-```
-    --tumor_type            <string>    tumor ontology, default=Unknown
-    --stage                 <string>    tumor stage, default=Unknown
-    --input                 <string>    handle for simplified tab delimited input table
-    --ms_status             <string>    microsatellite status as deemed by MSI sensor, MSI or MSS, default=Unknown
-    --purity                <float>     tumor purity
-    --ploidy                <float>     tumor ploidy
-    --wgd                   <boolean>   specify the occurence of whole genome duplication
-    --description           <string>    description of patient
-    --output-directory      <string>    specify location of produced outputs
-    --preclinical-dbs       <string>    path to preclinical-databases.ini file
-```
-
-Example:
-```
-python simplified_input.py \
-    --patient_id "example" \
-    --tumor_type "SKCM" \
-    --stage "Metastatic" \
-    --description "Example profile for interpretation with the Molecular Oncology Almanac" \
-    --input "../example_data/example_patient.simplified_input.txt" \
-    --purity 0.85 \
-    --ploidy 4.02 \
-    --ms_status "msih" \
-    --wgd \
-    --config config.ini \
-    --dbs annotation-databases.ini \
-    --preclinical-dbs preclinical-databases.ini
-```
 
 ## Configuration
 MOAlmanac can be customized by modifying the [config.ini](config.ini) file and column names may be modified by editing the [colnames.ini](colnames.ini) file.
