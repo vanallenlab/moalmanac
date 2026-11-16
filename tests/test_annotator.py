@@ -1,4 +1,5 @@
 import operator as op
+import typing
 from pathlib import Path
 
 import pandas as pd
@@ -106,7 +107,6 @@ class TestAlmanac:
     def test_sort_and_subset_matches(self):
         implication_map = Almanac.implication_map
         publication_date = Almanac.publication_date
-        last_updated = Almanac.last_updated
 
         table = pd.DataFrame(
             [
@@ -143,7 +143,7 @@ class TestAlmanac:
             ],
         )
 
-        # key, value pair in each record is if the index matched to the corresponding record in `table`
+        # Each record maps an index of `table` to whether that row matched
         records1 = pd.Series({0: True, 1: True, 2: True, 3: False, 4: False})
         records2 = pd.Series({0: False, 1: False, 2: False, 3: True, 4: True})
         records3 = pd.Series({0: False, 1: False, 2: False, 3: False, 4: False})
@@ -291,7 +291,6 @@ class TestAlmanac:
             },
             {},
         ]
-        somatic_variant = "Somatic Variant"
         series = pd.Series(dtype=object)
 
         for columns in [
@@ -374,7 +373,7 @@ class TestExAC:
 
 
 class TestValidation:
-    columns = [
+    columns: typing.ClassVar[list[str]] = [
         "feature",
         "feature_type",
         "alteration_type",
@@ -564,7 +563,7 @@ def efficacy_dictionary():
 
 
 class TestPreclinicalEfficacy:
-    data_dictionary = {
+    data_dictionary: typing.ClassVar[dict[str, list]] = {
         "feature_type": ["Somatic Variant", "Rearrangement"],
         "feature": ["BRAF", "COL1A1"],
         "alteration_type": ["Missense", "Fusion"],
@@ -574,7 +573,7 @@ class TestPreclinicalEfficacy:
         "preclinical_efficacy_observed": [1, 0],
     }
     df1 = pd.DataFrame(data_dictionary, index=[0, 1])
-    data_dictionary = {
+    data_dictionary: typing.ClassVar[dict[str, list]] = {
         "feature_display": ["BRAF p.V600E", "BRAF p.V600E", "COL1A1--CITED4"],
         "tested_subfeatre": ["BRAF", "BRAF Somatic Variant", "COL1A1"],
         "pvalue_mww": [2.322e-12, 7.627e-17, 0.835],
@@ -715,11 +714,11 @@ class TestPreclinicalMatchmaking:
         }
 
         for key, value in expected_cdkn2a_del.items():
-            assert result.loc[0, key] == expected_cdkn2a_del[key]
+            assert result.loc[0, key] == value
         for key, value in expected_cdkn2a_amp.items():
-            assert result.loc[1, key] == expected_cdkn2a_amp[key]
+            assert result.loc[1, key] == value
         for key, value in expected_kras_amp.items():
-            assert result.loc[2, key] == expected_kras_amp[key]
+            assert result.loc[2, key] == value
 
     def test_annotate_fusions(self):
         dbs = {
@@ -1328,13 +1327,13 @@ class TestPreclinicalMatchmaking:
         }
 
         for key, value in expected_braf_1.items():
-            assert result.loc[0, key] == expected_braf_1[key]
+            assert result.loc[0, key] == value
         for key, value in expected_braf_2.items():
-            assert result.loc[1, key] == expected_braf_2[key]
+            assert result.loc[1, key] == value
         for key, value in expected_idh1.items():
-            assert result.loc[2, key] == expected_idh1[key]
+            assert result.loc[2, key] == value
         for key, value in expected_cdkn2a.items():
-            assert result.loc[3, key] == expected_cdkn2a[key]
+            assert result.loc[3, key] == value
 
     def test_annotate_match_1(self):
         feature = PreclinicalMatchmaking.feature
@@ -1616,7 +1615,6 @@ class TestPreclinicalMatchmaking:
             "lawrence_handle": ROOT / "lawrence" / "lawrence_mapped_ontology.txt",
         }
         almanac = datasource_Almanac.import_ds(dbs)
-        copy_number = "Copy Number"
         fusion = "Rearrangement"
         somatic_variant = "Somatic Variant"
 

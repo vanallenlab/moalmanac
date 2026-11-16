@@ -155,7 +155,7 @@ class TestCopyNumberTotal:
                 features.Features.segment_mean: values,
             },
         )
-        accept, reject = features.CopyNumberTotal.filter_by_threshold(
+        accept, _ = features.CopyNumberTotal.filter_by_threshold(
             df=df,
             percentile_amp=97.5,
             percentile_del=2.5,
@@ -281,7 +281,8 @@ class TestCoverageMetrics:
 
     def test_get_minimum_values_dataframe(self):
         """
-        This function is run after format_coverage_col, apply_min_coverage_for_onps, get_onp_boolean, split_counts.
+        This function is run after format_coverage_col, apply_min_coverage_for_onps,
+        get_onp_boolean, split_counts.
         It is also only run on the index values that contain an ONP boolean.
         """
         series = pd.Series([3, "", None, pd.NA, "4|5", "4|", "5"])
@@ -405,7 +406,10 @@ class TestMAF:
         df = pd.DataFrame(columns=[])
         with pytest.raises(SystemExit) as system_exit:
             features.MAF.check_format(df)
-        code = "Neither 'Protein_Change' nor 'HGVSp_Short' are present columns, cannot map to MAF format"
+        code = (
+            "Neither 'Protein_Change' nor 'HGVSp_Short' are present columns, "
+            "cannot map to MAF format"
+        )
         assert system_exit.value.code == code
 
     def test_create_column_map(self):
